@@ -742,10 +742,12 @@ function factionOOC(thePlayer, commandName, ...)
 				end
 			
 				for index, arrayPlayer in ipairs( getElementsByType( "player" ) ) do
-					if getElementData( arrayPlayer, "bigearsfaction" ) == theTeam then
-						outputChatBox("((" .. theTeamName .. ")) " .. playerName .. ": " .. message, arrayPlayer, 3, 157, 157)
-					elseif getPlayerTeam( arrayPlayer ) == theTeam and getElementData(thePlayer, "loggedin") == 1 then
-						outputChatBox("((OOC Faction Chat)) " .. playerName .. ": " .. message, arrayPlayer, 3, 237, 237)
+					if isElement( arrayPlayer ) then
+						if getElementData( arrayPlayer, "bigearsfaction" ) == theTeam then
+							outputChatBox("((" .. theTeamName .. ")) " .. playerName .. ": " .. message, arrayPlayer, 3, 157, 157)
+						elseif getPlayerTeam( arrayPlayer ) == theTeam and getElementData(thePlayer, "loggedin") == 1 then
+							outputChatBox("((OOC Faction Chat)) " .. playerName .. ": " .. message, arrayPlayer, 3, 237, 237)
+						end
 					end
 				end
 			end
