@@ -523,7 +523,7 @@ addCommandHandler("cr", closeReport, false, false)
 function endReport(thePlayer, commandName)
 	local report = getElementData(thePlayer, "report")
 	
-	if not (report) then
+	if not (report) or not reports[report] then
 		outputChatBox("You have no pending reports. Press F2 to create one.", thePlayer, 255, 0, 0)
 	else
 		local hours, minutes = getTime()
