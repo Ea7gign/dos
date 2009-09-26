@@ -290,7 +290,7 @@ function talkPhone(thePlayer, commandName, ...)
 				
 				if (phoneState>=1) then -- The player is in a call, not just dialing (2= loudspeaker)
 					local message = table.concat({...}, " ")
-					local username = getPlayerName(thePlayer)
+					local username = getPlayerName(thePlayer):gsub("_", " ")
 					local phoneNumber = getElementData(thePlayer, "cellnumber")
 					
 					local languageslot = getElementData(thePlayer, "languages.current")
@@ -303,18 +303,7 @@ function talkPhone(thePlayer, commandName, ...)
 					if (callprogress) then
 						outputChatBox("You [Cellphone]: " ..message, thePlayer)
 						-- Send it to nearby players of the speaker
-						local x, y, z = getElementPosition(thePlayer)
-						local chatSphere = createColSphere(x, y, z, 10)
-						exports.pool:allocateElement(chatSphere)
-						local nearbyPlayers = getElementsWithinColShape(chatSphere, "player")
-						
-						destroyElement(chatSphere)
-						
-						for index, nearbyPlayer in ipairs(nearbyPlayers) do
-							if nearbyPlayer ~= thePlayer and getElementDimension(nearbyPlayer) == getElementDimension(thePlayer) then
-								outputChatBox(username .. " [Cellphone]: " .. message, nearbyPlayer)
-							end
-						end
+						exports.global:sendLocalText(thePlayer, username .. " [Cellphone]: " .. message, nil, nil, nil, 10, {thePlayer = true})
 					
 						if (tonumber(target)==911) then -- EMERGENCY SERVICES
 							if (callprogress==1) then -- Requesting the location
@@ -390,32 +379,16 @@ function talkPhone(thePlayer, commandName, ...)
 					outputChatBox("[" .. languagename .. "] You [Cellphone]: " ..message, thePlayer)
 					
 					-- Send it to nearby players of the speaker
-					local x, y, z = getElementPosition(thePlayer)
-					local chatSphere = createColSphere(x, y, z, 10)
-					exports.pool:allocateElement(chatSphere)
-					local nearbyPlayers = getElementsWithinColShape(chatSphere, "player")
-					
-					destroyElement(chatSphere)
-					
-					for index, nearbyPlayer in ipairs(nearbyPlayers) do
-						if nearbyPlayer ~= thePlayer and getElementDimension(nearbyPlayer) == getElementDimension(thePlayer) then
-							outputChatBox(username .. " [Cellphone]: " .. message, nearbyPlayer)
-						end
-					end
+					exports.global:sendLocalText(thePlayer, username .. " [Cellphone]: " .. message, nil, nil, nil, 10, {thePlayer = true})
 					
 					local phoneState = getElementData(target, "phonestate")
 					-- Send it to the listener, if they have loud speaker
 					if (phoneState==2) then -- Loudspeaker
 						local x, y, z = getElementPosition(target)
-						local chatSphere = createColSphere(x, y, z, 40)
-						exports.pool:allocateElement(chatSphere)
-						local nearbyPlayers = getElementsWithinColShape(chatSphere, "player")
-						local username = getPlayerName(target)
+						local username = getPlayerName(target):gsub("_", " ")
 						
-						destroyElement(chatSphere)
-						
-						for index, nearbyPlayer in ipairs(nearbyPlayers) do
-							if nearbyPlayer ~= target and getElementDimension(nearbyPlayer) == getElementDimension(target) then
+						for index, nearbyPlayer in ipairs(getElementsByType("player")) do
+							if isElement(nearbyPlayer) and nearbyPlayer ~= target and getDistanceBetweenPoints3D(x, y, z, getElementPosition(nearbyPlayer) < 40 and getElementDimension(nearbyPlayer) == getElementDimension(target) then
 								local message2 = call(getResourceFromName("language-system"), "applyLanguage", thePlayer, nearbyPlayer, message, language)
 								outputChatBox("[" .. languagename .. "] " .. username .. "'s Cellphone Loudspeaker: " .. message2, nearbyPlayer)
 							end

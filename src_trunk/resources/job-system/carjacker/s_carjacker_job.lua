@@ -75,15 +75,7 @@ function dropOffCar()
 				local health = getElementHealth(vehicle)
 				local profit = math.floor(health*1.5)
 				exports.global:giveMoney(thePlayer, profit)
-				local pedX, pedY, pedZ = getElementPosition( thePlayer )
-				local chatSphere = createColSphere( pedX, pedY, pedZ, 10 )
-				exports.pool:allocateElement(chatSphere) -- Create the colSphere for chat output to local players.
-				local targetPlayers = getElementsWithinColShape( chatSphere, "player" )
-				local name = string.gsub(getPlayerName(thePlayer), "_", " ")
-				for i, player in ipairs( targetPlayers ) do
-					outputChatBox("Hunter says: Thanks, man. Here's $" .. profit .. " for the car. I'll call you again soon.", player, 255, 255, 255)
-				end
-				destroyElement(chatSphere)
+				exports.global:sendLocalText(thePlayer, "Hunter says: Thanks, man. Here's $" .. profit .. " for the car. I'll call you again soon.", nil, nil, nil, 20)
 				
 				-- cleanup
 				setElementData(thePlayer, "realinvehicle", 0, false)

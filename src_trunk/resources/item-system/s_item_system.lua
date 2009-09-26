@@ -134,21 +134,7 @@ function useItem(itemSlot, additional)
 			exports.global:sendLocalMeAction(source, "drinks a sprunk.")
 			takeItemFromSlot(source, itemSlot)
 		elseif (itemID==10) then -- red dice
-			local output = math.random(1, 6)
-			local x, y, z = getElementPosition(source)
-			local chatSphere = createColSphere(x, y, z, 20)
-			exports.pool:allocateElement(chatSphere)
-			local nearbyPlayers = getElementsWithinColShape(chatSphere, "player")
-			local playerName = string.gsub(getPlayerName(source), "_", " ")
-			
-			destroyElement(chatSphere)
-
-			for index, nearbyPlayer in ipairs(nearbyPlayers) do
-				local logged = getElementData(nearbyPlayer, "loggedin")
-				if not(isPedDead(nearbyPlayer)) and (logged==1) then
-					outputChatBox(" *((Dice)) " .. playerName .. " rolls a dice and gets " .. output ..".", nearbyPlayer, 255, 51, 102)
-				end
-			end
+			exports.global:sendLocalText(source, " *((Dice)) " .. getPlayerName(source):gsub("_", " ") .. " rolls a dice and gets " .. math.random( 1, 6 ) ..".", 255, 51, 102)
 		elseif (itemID==11) then -- taco
 			giveHealth(source, 10)
 			exports.global:applyAnimation(source, "FOOD", "EAT_Burger", 4000, false, true, true)

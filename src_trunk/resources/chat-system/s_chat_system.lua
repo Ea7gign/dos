@@ -48,6 +48,20 @@ function trunklateText(thePlayer, text, factor)
 	return text
 end
 
+function getElementDistance( a, b )
+	if not isElement(a) or not isElement(b) then
+		return math.huge
+	else
+		local x, y, z = getElementPosition( a )
+		return getDistanceBetweenPoints3D( x, y, z, getElementPosition( b ) )
+	end
+end
+
+local gpn = getPlayerName
+function getPlayerName(p)
+	return gpn(p):gsub("_", " ")
+end
+
 -- Taxi
 function taxi(thePlayer, commandName)
 	local logged = tonumber(getElementData(thePlayer, "loggedin"))
@@ -107,12 +121,8 @@ addCommandHandler("ad", advertMessage, false, false)
 -- Main chat: Local IC, Me Actions & Faction IC Radio
 function localIC(source, message, language)
 	local x, y, z = getElementPosition(source)
-	local chatSphere = createColSphere(x, y, z, 20)
-	exports.pool:allocateElement(chatSphere)
-	local nearbyPlayers = getElementsWithinColShape(chatSphere, "player")
 	local playerName = string.gsub(getPlayerName(source), "_", " ")
 	
-	destroyElement(chatSphere)
 	message = string.gsub(message, "#%x%x%x%x%x%x", "") -- Remove colour codes
 	local languagename = call(getResourceFromName("language-system"), "getLanguageName", language)
 	message = trunklateText( source, message )
@@ -125,32 +135,34 @@ function localIC(source, message, language)
 	local dimension = getElementDimension(source)
 	local interior = getElementInterior(source)
 	
-	for index, nearbyPlayer in ipairs(nearbyPlayers) do
-		local nearbyPlayerDimension = getElementDimension(nearbyPlayer)
-		local nearbyPlayerInterior = getElementInterior(nearbyPlayer)
+	for index, nearbyPlayer in ipairs(getElementsByType( "player" )) do
+		local dist = getElementDistance( thePlayer, nearbyPlayer )
+		if dist < 20 then
+			local nearbyPlayerDimension = getElementDimension(nearbyPlayer)
+			local nearbyPlayerInterior = getElementInterior(nearbyPlayer)
 
-		if (nearbyPlayerDimension==dimension) and (nearbyPlayerInterior==interior) then
-			local logged = tonumber(getElementData(nearbyPlayer, "loggedin"))
-			if not (isPedDead(nearbyPlayer)) and (logged==1) and (nearbyPlayer~=source) then
-				local message2 = call(getResourceFromName("language-system"), "applyLanguage", source, nearbyPlayer, message, language)
-				message2 = trunklateText( nearbyPlayer, message2 )
-				
-				local mode = tonumber(getElementData(nearbyPlayer, "chatbubbles"))
-				if mode > 0 then
-					triggerClientEvent(nearbyPlayer, "onMessageIncome", source, message2, mode)
-				end
-				local nx, ny, nz = getElementPosition(nearbyPlayer)
-				local distance = getDistanceBetweenPoints3D(x, y, z, nx, ny, nz)
-				if distance < 4 then
-					outputChatBox( "#EEEEEE [" .. languagename .. "] " .. playerName .. " Says: " .. message2, nearbyPlayer, 255, 255, 255, true)
-				elseif distance < 8 then
-					outputChatBox( "#DDDDDD [" .. languagename .. "] " .. playerName .. " Says: " .. message2, nearbyPlayer, 255, 255, 255, true)
-				elseif distance < 12 then
-					outputChatBox( "#CCCCCC [" .. languagename .. "] " .. playerName .. " Says: " .. message2, nearbyPlayer, 255, 255, 255, true)
-				elseif distance < 16 then
-					outputChatBox( "#BBBBBB [" .. languagename .. "] " .. playerName .. " Says: " .. message2, nearbyPlayer, 255, 255, 255, true)
-				else
-					outputChatBox( "#AAAAAA [" .. languagename .. "] " .. playerName .. " Says: " .. message2, nearbyPlayer, 255, 255, 255, true)
+			if (nearbyPlayerDimension==dimension) and (nearbyPlayerInterior==interior) then
+				local logged = tonumber(getElementData(nearbyPlayer, "loggedin"))
+				if not (isPedDead(nearbyPlayer)) and (logged==1) and (nearbyPlayer~=source) then
+					local message2 = call(getResourceFromName("language-system"), "applyLanguage", source, nearbyPlayer, message, language)
+					message2 = trunklateText( nearbyPlayer, message2 )
+					
+					local mode = tonumber(getElementData(nearbyPlayer, "chatbubbles"))
+					if mode > 0 then
+						triggerClientEvent(nearbyPlayer, "onMessageIncome", source, message2, mode)
+					end
+					
+					if dist < 4 then
+						outputChatBox( "#EEEEEE [" .. languagename .. "] " .. playerName .. " Says: " .. message2, nearbyPlayer, 255, 255, 255, true)
+					elseif dist < 8 then
+						outputChatBox( "#DDDDDD [" .. languagename .. "] " .. playerName .. " Says: " .. message2, nearbyPlayer, 255, 255, 255, true)
+					elseif dist < 12 then
+						outputChatBox( "#CCCCCC [" .. languagename .. "] " .. playerName .. " Says: " .. message2, nearbyPlayer, 255, 255, 255, true)
+					elseif dist < 16 then
+						outputChatBox( "#BBBBBB [" .. languagename .. "] " .. playerName .. " Says: " .. message2, nearbyPlayer, 255, 255, 255, true)
+					else
+						outputChatBox( "#AAAAAA [" .. languagename .. "] " .. playerName .. " Says: " .. message2, nearbyPlayer, 255, 255, 255, true)
+					end
 				end
 			end
 		end
@@ -184,28 +196,10 @@ function chatMain(message, messageType)
 			if not (message) then
 				outputChatBox("SYNTAX: /me [Action]", source, 255, 194, 14)
 			else
-				local x, y, z = getElementPosition(source)
-				local chatSphere = createColSphere(x, y, z, 20)
-				exports.pool:allocateElement(chatSphere)
-				local nearbyPlayers = getElementsWithinColShape(chatSphere, "player")
-				local playerName = string.gsub(getPlayerName(source), "_", " ")
+				exports.irc:sendMessage("[IC OOC: ME ACTION] *" .. getPlayerName(source) .. " " .. message)
+				exports.logs:logMessage("[IC OOC: ME ACTION] *" .. getPlayerName(source) .. " " .. message, 7)
 				
-				destroyElement(chatSphere)
-				
-				exports.irc:sendMessage("[IC OOC: ME ACTION] *" .. playerName .. " " .. message)
-				exports.logs:logMessage("[IC OOC: ME ACTION] *" .. playerName .. " " .. message, 7)
-				
-				for index, nearbyPlayer in ipairs(nearbyPlayers) do
-					local nearbyPlayerDimension = getElementDimension(nearbyPlayer)
-					local nearbyPlayerInterior = getElementInterior(nearbyPlayer)
-				
-					if (nearbyPlayerDimension==dimension) and (nearbyPlayerInterior==interior) then
-						local logged = getElementData(nearbyPlayer, "loggedin")
-						if not(isPedDead(nearbyPlayer)) and (logged==1) then
-							outputChatBox(" *" .. playerName .. " " .. message, nearbyPlayer, 255, 51, 102)
-						end
-					end
-				end
+				exports.global:sendLocalMeAction(source, message)
 			end
 		end
 	elseif (messageType==2) and (logged==1) then -- Radio
@@ -247,18 +241,13 @@ function chatMain(message, messageType)
 							outputChatBox("[" .. languagename .. "] [RADIO #" .. theChannel .. "] " .. factionRankTitle .. username .. " says: " .. trunklateText( value, message2 ), value, 0, 102, 255)
 							
 							-- Show it to people near who can hear his radio
-							local x, y, z = getElementPosition(value)
-							local chatSphere = createColSphere(x, y, z, 10)
-							exports.pool:allocateElement(chatSphere)
-							local nearbyPlayers = getElementsWithinColShape(chatSphere, "player")
-							
-							destroyElement(chatSphere)
-							
-							for k, v in ipairs(nearbyPlayers) do
-								local channel = getElementData(v, "radiochannel")
-								if (v~=source) and (channel~=targetChannel) then
-									local message2 = call(getResourceFromName("language-system"), "applyLanguage", source, v, message, language)
-									outputChatBox("[" .. languagename .. "] " .. getPlayerName(value) .. "'s Radio: " .. trunklateText( v, message2 ), v, 255, 255, 255)
+							for k, v in ipairs(getElementsByType("player")) do
+								if getElementDistance(value, v) < 10 then
+									local channel = getElementData(v, "radiochannel")
+									if (v~=source) and (channel~=targetChannel) then
+										local message2 = call(getResourceFromName("language-system"), "applyLanguage", source, v, message, language)
+										outputChatBox("[" .. languagename .. "] " .. getPlayerName(value) .. "'s Radio: " .. trunklateText( v, message2 ), v, 255, 255, 255)
+									end
 								end
 							end
 							setTimer(playSoundFrontEnd, 700, 1, value, 48)
@@ -268,15 +257,11 @@ function chatMain(message, messageType)
 				end
 				
 				-- Show the radio to nearby listening in people near the speaker
-				local x, y, z = getElementPosition(source)
-				local chatSphere = createColSphere(x, y, z, 10)
-				exports.pool:allocateElement(chatSphere)
-				local nearbyPlayers = getElementsWithinColShape(chatSphere, "player")
-				destroyElement(chatSphere)
-				
-				for key, value in ipairs(nearbyPlayers) do
-					if (value~=source) then
-						outputChatBox(getPlayerName(source) .. " [RADIO] Says: " .. message, value, 255, 255, 255)
+				for key, value in ipairs(getElementsByType("player")) do
+					if getElementDistance(source, value) < 10 then
+						if (value~=source) then
+							outputChatBox(getPlayerName(source) .. " [RADIO] Says: " .. message, value, 255, 255, 255)
+						end
 					end
 				end
 			else
@@ -525,28 +510,7 @@ function localOOC(thePlayer, commandName, ...)
 		elseif (muted==1) then
 			outputChatBox("You are currenty muted from the OOC Chat.", thePlayer, 255, 0, 0)
 		else
-			local x, y, z = getElementPosition(thePlayer)
-			local chatSphere = createColSphere(x, y, z, 20)
-			exports.pool:allocateElement(chatSphere)
-			local nearbyPlayers = getElementsWithinColShape(chatSphere, "player")
-			local playerName = string.gsub(getPlayerName(thePlayer), "_", " ")
-			local message = table.concat({...}, " ")
-			
-			destroyElement(chatSphere)
-			
-			exports.irc:sendMessage("[OOC: Local Chat] " .. playerName .. ": " .. message)
-			exports.logs:logMessage("[OOC: Local Chat] " .. playerName .. ": " .. message, 1)
-			for index, nearbyPlayer in ipairs(nearbyPlayers) do
-				local nearbyPlayerDimension = getElementDimension(nearbyPlayer)
-				local nearbyPlayerInterior = getElementInterior(nearbyPlayer)
-				
-				if (nearbyPlayerDimension==dimension) and (nearbyPlayerInterior==interior) then
-					local logged = getElementData(nearbyPlayer, "loggedin")
-					if not (isPedDead(nearbyPlayer)) and (logged==1) then
-						outputChatBox(playerName .. ": (( " .. message .. " ))", nearbyPlayer, 196, 255, 255)
-					end
-				end
-			end
+			exports.global:sendLocalText(thePlayer, getPlayerName(thePlayer) .. ": (( " .. table.concat({...}, " ") .. " ))", 196, 255, 255)
 		end
 	end
 end
@@ -592,28 +556,9 @@ function localDo(thePlayer, commandName, ...)
 		if not (...) then
 			outputChatBox("SYNTAX: /" .. commandName .. " [Action/Event]", thePlayer, 255, 194, 14)
 		else
-			local x, y, z = getElementPosition(thePlayer)
-			local chatSphere = createColSphere(x, y, z, 40)
-			exports.pool:allocateElement(chatSphere)
-			local nearbyPlayers = getElementsWithinColShape(chatSphere, "player")
-			local playerName = string.gsub(getPlayerName(thePlayer), "_", " ")
 			local message = table.concat({...}, " ")
-			
-			destroyElement(chatSphere)
-			
-			exports.irc:sendMessage("[IC: Local Do] * " .. message .. " *      ((" .. playerName .. "))")
-			for index, nearbyPlayer in ipairs(nearbyPlayers) do
-				local nearbyPlayerDimension = getElementDimension(nearbyPlayer)
-				local nearbyPlayerInterior = getElementInterior(nearbyPlayer)
-				
-				if (nearbyPlayerDimension==dimension) and (nearbyPlayerInterior==interior) then
-					local logged = getElementData(nearbyPlayer, "loggedin")
-				
-					if (logged==1) and not (isPedDead(nearbyPlayer)) then
-						outputChatBox(" * " .. message .. " *      ((" .. playerName .. "))", nearbyPlayer, 255, 51, 102)
-					end
-				end
-			end
+			exports.irc:sendMessage("[IC: Local Do] * " .. message .. " *      ((" .. getPlayerName(thePlayer) .. "))")
+			exports.global:sendLocalDoAction(thePlayer, message)
 		end
 	end
 end
@@ -629,10 +574,6 @@ function localShout(thePlayer, commandName, ...)
 		if not (...) then
 			outputChatBox("SYNTAX: /" .. commandName .. " [Message]", thePlayer, 255, 194, 14)
 		else
-			local x, y, z = getElementPosition(thePlayer)
-			local chatSphere = createColSphere(x, y, z, 40)
-			exports.pool:allocateElement(chatSphere)
-			local nearbyPlayers = getElementsWithinColShape(chatSphere, "player")
 			local playerName = string.gsub(getPlayerName(thePlayer), "_", " ")
 			
 			local languageslot = getElementData(thePlayer, "languages.current")
@@ -642,25 +583,25 @@ function localShout(thePlayer, commandName, ...)
 			local message = trunklateText(thePlayer, table.concat({...}, " "))
 			outputChatBox("[" .. languagename .. "] " .. playerName .. " shouts: " .. message .. "!!", thePlayer, 255, 255, 255)
 			
-			destroyElement(chatSphere)
-			
 			exports.irc:sendMessage("[IC: Local Shout] " .. playerName .. ": " .. message)
 			exports.logs:logMessage("[IC: Local Shout] " .. playerName .. ": " .. message, 1)
-			for index, nearbyPlayer in ipairs(nearbyPlayers) do
-				local nearbyPlayerDimension = getElementDimension(nearbyPlayer)
-				local nearbyPlayerInterior = getElementInterior(nearbyPlayer)
-				
-				if (nearbyPlayerDimension==dimension) and (nearbyPlayerInterior==interior) and (nearbyPlayer~=thePlayer) then
-					local logged = getElementData(nearbyPlayer, "loggedin")
+			for index, nearbyPlayer in ipairs(getElementsByType("player")) do
+				if getElementDistance( thePlayer, nearbyPlayer ) < 40 then
+					local nearbyPlayerDimension = getElementDimension(nearbyPlayer)
+					local nearbyPlayerInterior = getElementInterior(nearbyPlayer)
 					
-					if (logged==1) and not (isPedDead(nearbyPlayer)) then
-						local mode = tonumber(getElementData(nearbyPlayer, "chatbubbles"))
-						local message2 = call(getResourceFromName("language-system"), "applyLanguage", thePlayer, nearbyPlayer, message, language)
-						message2 = trunklateText(nearbyPlayer, message2)
-						if mode > 0 then
-							triggerClientEvent(nearbyPlayer, "onMessageIncome", thePlayer, message2, mode)
+					if (nearbyPlayerDimension==dimension) and (nearbyPlayerInterior==interior) and (nearbyPlayer~=thePlayer) then
+						local logged = getElementData(nearbyPlayer, "loggedin")
+						
+						if (logged==1) and not (isPedDead(nearbyPlayer)) then
+							local mode = tonumber(getElementData(nearbyPlayer, "chatbubbles"))
+							local message2 = call(getResourceFromName("language-system"), "applyLanguage", thePlayer, nearbyPlayer, message, language)
+							message2 = trunklateText(nearbyPlayer, message2)
+							if mode > 0 then
+								triggerClientEvent(nearbyPlayer, "onMessageIncome", thePlayer, message2, mode)
+							end
+							outputChatBox("[" .. languagename .. "] " .. playerName .. " shouts: " .. message2 .. "!!", nearbyPlayer, 255, 255, 255)
 						end
-						outputChatBox("[" .. languagename .. "] " .. playerName .. " shouts: " .. message2 .. "!!", nearbyPlayer, 255, 255, 255)
 					end
 				end
 			end
@@ -682,14 +623,8 @@ function megaphoneShout(thePlayer, commandName, ...)
 			if not (...) then
 				outputChatBox("SYNTAX: /" .. commandName .. " [Message]", thePlayer, 255, 194, 14)
 			else
-				local x, y, z = getElementPosition(thePlayer)
-				local chatSphere = createColSphere(x, y, z, 40)
-				exports.pool:allocateElement(chatSphere)
-				local nearbyPlayers = getElementsWithinColShape(chatSphere, "player")
 				local playerName = string.gsub(getPlayerName(thePlayer), "_", " ")
 				local message = trunklateText(thePlayer, table.concat({...}, " "))
-				
-				destroyElement(chatSphere)
 				
 				exports.irc:sendMessage("[IC: Megaphone] " .. playerName .. ": " .. message)
 				
@@ -697,19 +632,21 @@ function megaphoneShout(thePlayer, commandName, ...)
 				local language = getElementData(thePlayer, "languages.lang" .. languageslot)
 				local langname = call(getResourceFromName("language-system"), "getLanguageName", language)
 				
-				for index, nearbyPlayer in ipairs(nearbyPlayers) do
-					local nearbyPlayerDimension = getElementDimension(nearbyPlayer)
-					local nearbyPlayerInterior = getElementInterior(nearbyPlayer)
-					
-					if (nearbyPlayerDimension==dimension) and (nearbyPlayerInterior==interior) then
-						local logged = getElementData(nearbyPlayer, "loggedin")
-					
-						if (logged==1) and not (isPedDead(nearbyPlayer)) then
-							local message2 = message
-							if nearbyPlayer ~= thePlayer then
-								message2 = call(getResourceFromName("language-system"), "applyLanguage", thePlayer, nearbyPlayer, message, language)
+				for index, nearbyPlayer in ipairs(getElementsByType("player")) do
+					if getElementDistance( thePlayer, nearbyPlayer ) < 40 then
+						local nearbyPlayerDimension = getElementDimension(nearbyPlayer)
+						local nearbyPlayerInterior = getElementInterior(nearbyPlayer)
+						
+						if (nearbyPlayerDimension==dimension) and (nearbyPlayerInterior==interior) then
+							local logged = getElementData(nearbyPlayer, "loggedin")
+						
+							if (logged==1) and not (isPedDead(nearbyPlayer)) then
+								local message2 = message
+								if nearbyPlayer ~= thePlayer then
+									message2 = call(getResourceFromName("language-system"), "applyLanguage", thePlayer, nearbyPlayer, message, language)
+								end
+								outputChatBox(" [" .. langname .. "] ((" .. playerName .. ")) Megaphone <O: " .. trunklateText(nearbyPlayer, message2), nearbyPlayer, 255, 255, 0)
 							end
-							outputChatBox(" [" .. langname .. "] ((" .. playerName .. ")) Megaphone <O: " .. trunklateText(nearbyPlayer, message2), nearbyPlayer, 255, 255, 0)
 						end
 					end
 				end
@@ -1121,13 +1058,6 @@ function localClose(thePlayer, commandName, ...)
 		if not (...) then
 			outputChatBox("SYNTAX: /" .. commandName .. " [Message]", thePlayer, 255, 194, 14)
 		else
-			local chatRadius = 2
-			local posX, posY, posZ = getElementPosition(thePlayer)
-			local chatSphere = createColSphere( posX, posY, posZ, 5)
-			exports.pool:allocateElement(chatSphere)
-			local targetPlayers = getElementsWithinColShape( chatSphere, "player" )
-			destroyElement( chatSphere )
-			
 			local message = table.concat({...}, " ")
 			local name = string.gsub(getPlayerName(thePlayer), "_", " ")
 			
@@ -1135,12 +1065,14 @@ function localClose(thePlayer, commandName, ...)
 			local language = getElementData(thePlayer, "languages.lang" .. languageslot)
 			local languagename = call(getResourceFromName("language-system"), "getLanguageName", language)
 			
-			for index, targetPlayers in ipairs( targetPlayers ) do
-				local message2 = message
-				if targetPlayers ~= thePlayer then
-					message2 = call(getResourceFromName("language-system"), "applyLanguage", thePlayer, targetPlayers, message, language)
+			for index, targetPlayers in ipairs( getElementsByType( "player" ) ) do
+				if getElementDistance( thePlayer, targetPlayers ) < 5 then
+					local message2 = message
+					if targetPlayers ~= thePlayer then
+						message2 = call(getResourceFromName("language-system"), "applyLanguage", thePlayer, targetPlayers, message, language)
+					end
+					outputChatBox( " [" .. languagename .. "] " .. name .. " whispers: " .. message2, targetPlayers, 255, 255, 255)
 				end
-				outputChatBox( " [" .. languagename .. "] " .. name .. " whispers: " .. message2, targetPlayers, 255, 255, 255)
 			end
 		end
 	end
@@ -1350,14 +1282,9 @@ function newsHotline(thePlayer, commandName, ...)
 		if not (...) then
 			outputChatBox("SYNTAX: /" .. commandName .. " [Description of Situation]", thePlayer, 255, 194, 14)
 		else
-			local x, y, z = getElementPosition(thePlayer)
-			local chatSphere = createColSphere(x, y, z, 20)
-			exports.pool:allocateElement(chatSphere)
-			local nearbyPlayers = getElementsWithinColShape(chatSphere, "player")
 			local playerName = string.gsub(getPlayerName(thePlayer), "_", " ")
 			local dimension = getElementDimension(thePlayer)
 			local interior = getElementInterior(thePlayer)
-			destroyElement(chatSphere)
 			
 			local message = table.concat({...}, " ")
 			message = string.gsub(message, "#%x%x%x%x%x%x", "") -- Remove colour codes
@@ -1365,37 +1292,25 @@ function newsHotline(thePlayer, commandName, ...)
 			-- Show chat to console, for admins + log
 			exports.irc:sendMessage("[IC: Local Chat] " .. playerName .. ": " .. message)
 			exports.global:sendLocalMeAction(thePlayer,"dials a number on their cellphone.")
-			for index, nearbyPlayer in ipairs(nearbyPlayers) do
-				local nearbyPlayerDimension = getElementDimension(nearbyPlayer)
-				local nearbyPlayerInterior = getElementInterior(nearbyPlayer)
-				if (nearbyPlayerDimension==dimension) and (nearbyPlayerInterior==interior) then
-					local logged = tonumber(getElementData(nearbyPlayer, "loggedin"))
-					if not (isPedDead(nearbyPlayer)) and (logged==1) then
-						chatSphere = createColSphere(x, y, z, 20*0.2)
-						exports.pool:allocateElement(chatSphere)
-						if isElementWithinColShape(nearbyPlayer, chatSphere) then
-							outputChatBox( "#EEEEEE" .. playerName .. " [Cellphone]: " .. message, nearbyPlayer, 255, 255, 255, true)
-							destroyElement(chatSphere)
-							chatSphere = createColSphere(x, y, z, 20*0.4)
-							exports.pool:allocateElement(chatSphere)
-						elseif isElementWithinColShape(nearbyPlayer, chatSphere) then
-							outputChatBox( "#DDDDDD" .. playerName .. " [Cellphone]: " .. message, nearbyPlayer, 255, 255, 255, true)
-							destroyElement(chatSphere)
-							chatSphere = createColSphere(x, y, z, 20*0.6)
-							exports.pool:allocateElement(chatSphere)
-						elseif isElementWithinColShape(nearbyPlayer, chatSphere) then          
-							outputChatBox( "#CCCCCC" .. playerName .. " [Cellphone]: " .. message, nearbyPlayer, 255, 255, 255, true)
-							destroyElement(chatSphere)
-							chatSphere = createColSphere(x, y, z, 20*0.8)
-							exports.pool:allocateElement(chatSphere)
-						elseif isElementWithinColShape(nearbyPlayer, chatSphere) then
-							outputChatBox( "#BBBBBB" .. playerName .. " [Cellphone]: " .. message, nearbyPlayer, 255, 255, 255, true)
-						else
-							outputChatBox( "#AAAAAA" .. playerName .. " [Cellphone]: " .. message, nearbyPlayer, 255, 255, 255, true)
-						end
-						
-						if (chatSphere) then
-							destroyElement(chatSphere)
+			for index, nearbyPlayer in ipairs(getElementsByType("player")) do
+				local dist = getElementDistance( thePlayer, targetPlayers )
+				if dist < 20 then
+					local nearbyPlayerDimension = getElementDimension(nearbyPlayer)
+					local nearbyPlayerInterior = getElementInterior(nearbyPlayer)
+					if (nearbyPlayerDimension==dimension) and (nearbyPlayerInterior==interior) then
+						local logged = tonumber(getElementData(nearbyPlayer, "loggedin"))
+						if not (isPedDead(nearbyPlayer)) and (logged==1) then
+							if dist < 4 then
+								outputChatBox( "#EEEEEE" .. playerName .. " [Cellphone]: " .. message, nearbyPlayer, 255, 255, 255, true)
+							elseif dist < 8 then
+								outputChatBox( "#DDDDDD" .. playerName .. " [Cellphone]: " .. message, nearbyPlayer, 255, 255, 255, true)
+							elseif dist < 12 then          
+								outputChatBox( "#CCCCCC" .. playerName .. " [Cellphone]: " .. message, nearbyPlayer, 255, 255, 255, true)
+							elseif dist < 16 then
+								outputChatBox( "#BBBBBB" .. playerName .. " [Cellphone]: " .. message, nearbyPlayer, 255, 255, 255, true)
+							else
+								outputChatBox( "#AAAAAA" .. playerName .. " [Cellphone]: " .. message, nearbyPlayer, 255, 255, 255, true)
+							end
 						end
 					end
 				end

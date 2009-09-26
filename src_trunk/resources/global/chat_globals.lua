@@ -67,39 +67,25 @@ function findPlayerByPartialNick(partialNick)
 	end
 end
 
-function sendLocalMeAction(thePlayer, message)
-	local x, y, z = getElementPosition(thePlayer)
-	local chatSphere = createColSphere(x, y, z, 20)
-	exports.pool:allocateElement(chatSphere)
-	local nearbyPlayers = getElementsWithinColShape(chatSphere, "player")
-	local playerName = string.gsub(getPlayerName(thePlayer), "_", " ")
+function sendLocalText(root, message, r, g, b, distance, exclude)
+	local x, y, z = getElementPosition(root)
 	
-	destroyElement(chatSphere)
-	
-
-	for index, nearbyPlayer in ipairs(nearbyPlayers) do
-		local logged = getElementData(nearbyPlayer, "loggedin")
-		if not isPedDead(nearbyPlayer) and logged==1 and getElementDimension(thePlayer) == getElementDimension(nearbyPlayer) then
-			outputChatBox(" *" .. playerName .. " " .. message, nearbyPlayer, 255, 51, 102)
+	for index, nearbyPlayer in ipairs(getElementsByType("player")) do
+		if isElement(nearbyPlayer) and getDistanceBetweenPoints3D(x, y, z, getElementPosition(nearbyPlayer)) < ( distance or 20 ) then
+			local logged = getElementData(nearbyPlayer, "loggedin")
+			if not exclude[nearbyPlayer] and not isPedDead(nearbyPlayer) and logged==1 and getElementDimension(root) == getElementDimension(nearbyPlayer) then
+				outputChatBox(message, nearbyPlayer, r, g, b)
+			end
 		end
 	end
+end
+
+function sendLocalMeAction(thePlayer, message)
+	sendLocalText(thePlayer, " *" .. getPlayerName(thePlayer) .. " " .. message, 255, 51, 102)
 end
 addEvent("sendLocalMeAction", true)
 addEventHandler("sendLocalMeAction", getRootElement(), sendLocalMeAction)
 
 function sendLocalDoAction(thePlayer, message)
-	local x, y, z = getElementPosition(thePlayer)
-	local chatSphere = createColSphere(x, y, z, 20)
-	exports.pool:allocateElement(chatSphere)
-	local nearbyPlayers = getElementsWithinColShape(chatSphere, "player")
-	local playerName = string.gsub(getPlayerName(thePlayer), "_", " ")
-	
-	destroyElement(chatSphere)
-
-	for index, nearbyPlayer in ipairs(nearbyPlayers) do
-		local logged = getElementData(nearbyPlayer, "loggedin")
-		if not isPedDead(nearbyPlayer) and logged==1 and getElementDimension(thePlayer) == getElementDimension(nearbyPlayer) then
-			outputChatBox(" * " .. message .. " *      ((" .. playerName .. "))", nearbyPlayer, 255, 51, 102)
-		end
-	end
+	sendLocalText(thePlayer, " * " .. message .. " *      ((" .. getPlayerName(thePlayer) .. "))", 255, 51, 102)
 end
