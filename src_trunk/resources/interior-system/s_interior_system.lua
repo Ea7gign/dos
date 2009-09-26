@@ -844,6 +844,7 @@ end
 function getNearbyInteriors(thePlayer, commandName)
 	if (exports.global:isPlayerAdmin(thePlayer)) then
 		local posX, posY, posZ = getElementPosition(thePlayer)
+		local dimension = getElementDimension(thePlayer)
 		outputChatBox("Nearby Interiors:", thePlayer, 255, 126, 0)
 		local count = 0
 		
@@ -852,7 +853,7 @@ function getNearbyInteriors(thePlayer, commandName)
 			if name then
 				local x, y, z = getElementPosition(thePickup)
 				local distance = getDistanceBetweenPoints3D(posX, posY, posZ, x, y, z)
-				if (distance<=10) then
+				if (distance<=10 and getElementDimension(thePickup) == dimension) then
 					local dbid = getElementData(thePickup, "dbid")
 					outputChatBox("   Interior with ID " .. dbid .. ": " .. name, thePlayer, 255, 126, 0)
 					count = count + 1
