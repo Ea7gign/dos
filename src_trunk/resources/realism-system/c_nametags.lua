@@ -80,10 +80,9 @@ function renderNametags()
 						--local lx, ly, lz = getPedBonePosition(localPlayer, 7)
 						local lx, ly, lz = getCameraMatrix()
 						local vehicle = getPedOccupiedVehicle(player)
-						local collision = processLineOfSight(lx, ly, lz, rx, ry, rz+1, true, true, false, true, false, false, true, false, vehicle)
+						local collision, cx, cy, cz, element = processLineOfSight(lx, ly, lz, rx, ry, rz+1, true, true, true, true, false, false, true, false, vehicle)
 
 						if not (collision) or (reconx) then
-							--local x, y, z = getPedBonePosition(player, 7)
 							local x, y, z = getElementPosition(player)
 							
 							if not (isPedDucked(player)) then
@@ -114,8 +113,6 @@ function renderNametags()
 									if (reconx) then distance = 1 end
 
 									local offset = 45 / distance
-									
-									
 									
 									-- DRAW BG
 									dxDrawRectangle(sx-offset-5, sy, 95 / distance, 20 / distance, tocolor(0, 0, 0, 100), false)
