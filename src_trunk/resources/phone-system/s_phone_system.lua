@@ -305,7 +305,7 @@ function talkPhone(thePlayer, commandName, ...)
 					if (callprogress) then
 						outputChatBox("You [Cellphone]: " ..message, thePlayer)
 						-- Send it to nearby players of the speaker
-						exports.global:sendLocalText(thePlayer, username .. " [Cellphone]: " .. message, nil, nil, nil, 10, {thePlayer = true})
+						exports.global:sendLocalText(thePlayer, username .. " [Cellphone]: " .. message, nil, nil, nil, 10, {[thePlayer] = true})
 					
 						if (tonumber(target)==911) then -- EMERGENCY SERVICES
 							if (callprogress==1) then -- Requesting the location
@@ -381,7 +381,7 @@ function talkPhone(thePlayer, commandName, ...)
 					outputChatBox("[" .. languagename .. "] You [Cellphone]: " ..message, thePlayer)
 					
 					-- Send it to nearby players of the speaker
-					exports.global:sendLocalText(thePlayer, username .. " [Cellphone]: " .. message, nil, nil, nil, 10, {thePlayer = true})
+					exports.global:sendLocalText(thePlayer, username .. " [Cellphone]: " .. message, nil, nil, nil, 10, {[thePlayer] = true})
 					
 					local phoneState = getElementData(target, "phonestate")
 					-- Send it to the listener, if they have loud speaker
