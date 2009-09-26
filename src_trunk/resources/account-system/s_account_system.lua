@@ -916,8 +916,8 @@ function sendAccounts(thePlayer, id, isChangeChar)
 			accounts[i][1] = mysql_result(result, i, 1)
 			accounts[i][2] = mysql_result(result, i, 2)
 			
-			if (tonumber(mysql_result(result, i, 3))==1) then
-				accounts[i][3] = tonumber(mysql_result(result, i, 3))
+			if (tonumber(mysql_result(result, i, 3)) or 0) > 0 then
+				accounts[i][3] = 1
 			end
 			
 			accounts[i][4] = mysql_result(result, i, 4)
