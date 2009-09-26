@@ -207,7 +207,7 @@ function renderNametags()
 									sy = sy - 20
 								end
 									
-								if (sx) and (sy) then
+								if (sx) and (sy) and (oldsy) and (oldsx) then
 									if (distance < 1) then distance = 1 end
 									if (distance > 2) then distance = 2 end
 									local offset = 75 / distance
