@@ -93,7 +93,7 @@ function advertMessage(thePlayer, commandName, showNumber, ...)
 				
 				local cost = math.ceil(string.len(message)/6)
 				if exports.global:takeMoney(thePlayer, cost) then
-					local name = string.gsub(getPlayerName(thePlayer), "_", " ")
+					local name = getPlayerName(thePlayer)
 					local phoneNumber = getElementData(thePlayer, "cellnumber")
 					
 					exports.logs:logMessage("ADVERT: " .. message .. ". ((" .. name .. "))", 2)
@@ -121,7 +121,7 @@ addCommandHandler("ad", advertMessage, false, false)
 -- Main chat: Local IC, Me Actions & Faction IC Radio
 function localIC(source, message, language)
 	local x, y, z = getElementPosition(source)
-	local playerName = string.gsub(getPlayerName(source), "_", " ")
+	local playerName = getPlayerName(source)
 	
 	message = string.gsub(message, "#%x%x%x%x%x%x", "") -- Remove colour codes
 	local languagename = call(getResourceFromName("language-system"), "getLanguageName", language)
@@ -206,13 +206,13 @@ function chatMain(message, messageType)
 		if (exports.global:hasItem(source, 6)) then
 			local theChannel = getElementData(source, "radiochannel")
 			if theChannel > 0 then
-				local username = string.gsub(getPlayerName(source), "_", " ")
+				local username = getPlayerName(source)
 				local languageslot = getElementData(source, "languages.current")
 				local language = getElementData(source, "languages.lang" .. languageslot)
 				local languagename = call(getResourceFromName("language-system"), "getLanguageName", language)
 				
 				-- get faction rank title
-				local result = mysql_query(handler, "SELECT faction_id, faction_rank FROM characters WHERE charactername='" .. getPlayerName(source) .. "' LIMIT 1")
+				local result = mysql_query(handler, "SELECT faction_id, faction_rank FROM characters WHERE charactername='" .. username:gsub(" ", "_") .. "' LIMIT 1")
 									
 				local factionID = tonumber(mysql_result(result, 1, 1))
 				local factionRank = tonumber(mysql_result(result, 1, 2))
@@ -294,13 +294,15 @@ function govAnnouncement(thePlayer, commandName, ...)
 		if (teamID==1 or teamID==2 or teamID==4) then
 			local message = table.concat({...}, " ")
 			
-			local result = mysql_query(handler, "SELECT faction_id, faction_rank FROM characters WHERE charactername='" .. getPlayerName(thePlayer) .. "' LIMIT 1")
+			local result = mysql_query(handler, "SELECT faction_id, faction_rank FROM characters WHERE charactername='" .. getPlayerName(thePlayer):gsub(" ", "_") .. "' LIMIT 1")
 								
 			local factionID = tonumber(mysql_result(result, 1, 1))
 			local factionRank = tonumber(mysql_result(result, 1, 2))
 			
 			if (factionRank<10) then
 				outputChatBox("You do not have permission to use this command.", thePlayer, 255, 0, 0)
+			elseif #message == 0 then
+				outputChatBox("SYNTAX: " .. commandName .. " [message]", thePlayer, 255, 194, 14)
 			else
 				mysql_free_result(result)
 				
@@ -317,7 +319,7 @@ function govAnnouncement(thePlayer, commandName, ...)
 					local logged = getElementData(value, "loggedin")
 					
 					if (logged==1) then
-						outputChatBox(">> Government Announcement from " .. factionRankTitle .. " " .. string.gsub(getPlayerName(thePlayer), "_", " "), value, 0, 183, 239)
+						outputChatBox(">> Government Announcement from " .. factionRankTitle .. " " .. getPlayerName(thePlayer), value, 0, 183, 239)
 						outputChatBox(message, value, 0, 183, 239)
 					end
 				end
@@ -339,7 +341,7 @@ function departmentradio(thePlayer, commandName, ...)
 				local PDFaction = getPlayersInTeam(getTeamFromName("Los Santos Police Department"))
 				local ESFaction = getPlayersInTeam(getTeamFromName("Los Santos Emergency Services"))
 				local TowFaction = getPlayersInTeam(getTeamFromName("Best's Towing and Recovery"))
-				local playerName = string.gsub(getPlayerName(thePlayer), "_", " ")
+				local playerName = getPlayerName(thePlayer)
 				
 				for key, value in ipairs(PDFaction) do
 					outputChatBox("[DEPARTMENT RADIO] " .. playerName .. " says: " .. message, value, 0, 102, 255)
@@ -384,7 +386,7 @@ function globalOOC(thePlayer, commandName, ...)
 				outputChatBox("You are currenty muted from the OOC Chat.", thePlayer, 255, 0, 0)
 			else	
 				local players = exports.pool:getPoolElementsByType("player")
-				local playerName = string.gsub(getPlayerName(thePlayer), "_", " ")
+				local playerName = getPlayerName(thePlayer)
 				local playerID = getElementData(thePlayer, "playerid")
 					
 				exports.irc:sendMessage("[OOC: Global Chat] " .. playerName .. ": " .. message)
@@ -453,8 +455,8 @@ function pmPlayer(thePlayer, commandName, who, ...)
 				end
 				
 				if (logged==1) and (pmblocked==0 or exports.global:isPlayerAdmin(thePlayer) or getElementData(thePlayer, "reportadmin") == targetPlayer or isFriendOf(thePlayer, targetPlayer)) then
-					local playerName = string.gsub(getPlayerName(thePlayer), "_", " ")
-					local targetPlayerName = string.gsub(getPlayerName(targetPlayer), "_", " ")
+					local playerName = getPlayerName(thePlayer)
+					local targetPlayerName = getPlayerName(targetPlayer)
 				
 					-- Check for advertisements
 					for k,v in ipairs(advertisementMessages) do
@@ -526,7 +528,7 @@ function districtIC(thePlayer, commandName, ...)
 		if not (...) then
 			outputChatBox("SYNTAX: /" .. commandName .. " [Message]", thePlayer, 255, 194, 14)
 		else
-			local playerName = string.gsub(getPlayerName(thePlayer), "_", " ")
+			local playerName = getPlayerName(thePlayer)
 			local message = table.concat({...}, " ")
 			local zonename = exports.global:getElementZoneName(thePlayer)
 			
@@ -574,7 +576,7 @@ function localShout(thePlayer, commandName, ...)
 		if not (...) then
 			outputChatBox("SYNTAX: /" .. commandName .. " [Message]", thePlayer, 255, 194, 14)
 		else
-			local playerName = string.gsub(getPlayerName(thePlayer), "_", " ")
+			local playerName = getPlayerName(thePlayer)
 			
 			local languageslot = getElementData(thePlayer, "languages.current")
 			local language = getElementData(thePlayer, "languages.lang" .. languageslot)
@@ -623,7 +625,7 @@ function megaphoneShout(thePlayer, commandName, ...)
 			if not (...) then
 				outputChatBox("SYNTAX: /" .. commandName .. " [Message]", thePlayer, 255, 194, 14)
 			else
-				local playerName = string.gsub(getPlayerName(thePlayer), "_", " ")
+				local playerName = getPlayerName(thePlayer)
 				local message = trunklateText(thePlayer, table.concat({...}, " "))
 				
 				exports.irc:sendMessage("[IC: Megaphone] " .. playerName .. ": " .. message)
@@ -667,7 +669,7 @@ function factionOOC(thePlayer, commandName, ...)
 		else
 			local theTeam = getPlayerTeam(thePlayer)
 			local theTeamName = getTeamName(theTeam)
-			local playerName = string.gsub(getPlayerName(thePlayer), "_", " ")
+			local playerName = getPlayerName(thePlayer)
 			
 			if not(theTeam) or (theTeamName=="Citizen") then
 				outputChatBox("You are not in a faction.", thePlayer)
@@ -749,7 +751,7 @@ function adminChat(thePlayer, commandName, ...)
 		else
 			local message = table.concat({...}, " ")
 			local players = exports.pool:getPoolElementsByType("player")
-			local username = string.gsub(getPlayerName(thePlayer), "_", " ")
+			local username = getPlayerName(thePlayer)
 			local adminTitle = exports.global:getPlayerAdminTitle(thePlayer)
 			exports.logs:logMessage("[Admin Chat] " .. username .. ": " .. message, 3)
 			
@@ -776,7 +778,7 @@ function adminAnnouncement(thePlayer, commandName, ...)
 		else
 			local message = table.concat({...}, " ")
 			local players = exports.pool:getPoolElementsByType("player")
-			local username = string.gsub(getPlayerName(thePlayer), "_", " ")
+			local username = getPlayerName(thePlayer)
 
 			for k, arrayPlayer in ipairs(players) do
 				local logged = getElementData(arrayPlayer, "loggedin")
@@ -803,7 +805,7 @@ function leadAdminChat(thePlayer, commandName, ...)
 		else
 			local message = table.concat({...}, " ")
 			local players = exports.pool:getPoolElementsByType("player")
-			local username = string.gsub(getPlayerName(thePlayer), "_", " ")
+			local username = getPlayerName(thePlayer)
 			local adminTitle = exports.global:getPlayerAdminTitle(thePlayer)
 
 			for k, arrayPlayer in ipairs(players) do
@@ -828,7 +830,7 @@ function headAdminChat(thePlayer, commandName, ...)
 		else
 			local message = table.concat({...}, " ")
 			local players = exports.pool:getPoolElementsByType("player")
-			local username = string.gsub(getPlayerName(thePlayer), "_", " ")
+			local username = getPlayerName(thePlayer)
 			local adminTitle = exports.global:getPlayerAdminTitle(thePlayer)
 
 			for k, arrayPlayer in ipairs(players) do
@@ -1035,8 +1037,8 @@ function localWhisper(thePlayer, commandName, targetPlayerNick, ...)
 					local languagename = call(getResourceFromName("language-system"), "getLanguageName", language)
 					local message2 = call(getResourceFromName("language-system"), "applyLanguage", thePlayer, targetPlayer, message, language)
 					
-					local name = string.gsub(getPlayerName(thePlayer), "_", " ")
-					local targetName = string.gsub(getPlayerName(targetPlayer), "_", " ")
+					local name = getPlayerName(thePlayer)
+					local targetName = getPlayerName(targetPlayer)
 					
 					exports.global:sendLocalMeAction(thePlayer, "whispers to " .. targetName .. ".")
 					outputChatBox("[" .. languagename .. "] " .. name .. " whispers: " .. message, thePlayer, 255, 255, 255)
@@ -1059,7 +1061,7 @@ function localClose(thePlayer, commandName, ...)
 			outputChatBox("SYNTAX: /" .. commandName .. " [Message]", thePlayer, 255, 194, 14)
 		else
 			local message = table.concat({...}, " ")
-			local name = string.gsub(getPlayerName(thePlayer), "_", " ")
+			local name = getPlayerName(thePlayer)
 			
 			local languageslot = getElementData(thePlayer, "languages.current")
 			local language = getElementData(thePlayer, "languages.lang" .. languageslot)
@@ -1104,7 +1106,7 @@ function localCarWhisper(thePlayer, commandName, ...)
 					local languagename = call(getResourceFromName("language-system"), "getLanguageName", language)
 					
 					message = table.concat({...}, " ")
-					local name = string.gsub(getPlayerName(thePlayer), "_", " ")
+					local name = getPlayerName(thePlayer)
 					
 					for i = 0, getVehicleMaxPassengers(vehicle) do
 						player = getVehicleOccupant(vehicle, i)
@@ -1140,7 +1142,7 @@ function newsMessage(thePlayer, commandName, ...)
 				outputChatBox("SYNTAX: /" .. commandName .. " [Message]", thePlayer, 255, 194, 14)
 			else
 				message = table.concat({...}, " ")
-				local name = string.gsub(getPlayerName(thePlayer), "_", " ")
+				local name = getPlayerName(thePlayer)
 				for key, value in ipairs(exports.pool:getPoolElementsByType("player")) do
 						
 					if (getElementData(value, "loggedin")==1) then
@@ -1197,8 +1199,8 @@ function StartInterview(thePlayer, commandName, targetPartialPlayer)
 							outputChatBox("This player is already being interviewed.", thePlayer, 255, 0, 0)
 						else
 							setElementData(targetPlayer, "interview", true, false)
-							local playerName = string.gsub(getPlayerName(thePlayer), "_", " ")
-							local targetPlayerName = string.gsub(getPlayerName(targetPlayer), "_", " ")
+							local playerName = getPlayerName(thePlayer)
+							local targetPlayerName = getPlayerName(targetPlayer)
 							outputChatBox(playerName .." has offered you for an interview.", targetPlayer, 0, 255, 0)
 							outputChatBox("((Use /i to talk during the interview.))", targetPlayer, 0, 255, 0)
 							local NewsFaction = getPlayersInTeam(getPlayerTeam(thePlayer))
@@ -1234,8 +1236,8 @@ function endInterview(thePlayer, commandName, targetPartialPlayer)
 							outputChatBox("This player is not being interviewed.", thePlayer, 255, 0, 0)
 						else
 							removeElementData(targetPlayer, "interview")
-							local playerName = string.gsub(getPlayerName(thePlayer), "_", " ")
-							local targetPlayerName = string.gsub(getPlayerName(targetPlayer), "_", " ")
+							local playerName = getPlayerName(thePlayer)
+							local targetPlayerName = getPlayerName(targetPlayer)
 							outputChatBox(playerName .." has ended your interview.", targetPlayer, 255, 0, 0)
 						
 							local NewsFaction = getPlayersInTeam(getPlayerTeam(thePlayer))
@@ -1260,7 +1262,7 @@ function interviewChat(thePlayer, commandName, ...)
 				outputChatBox("SYNTAX: /" .. commandName .. "[Message]", thePlayer, 255, 194, 14)
 			else
 				message = table.concat({...}, " ")
-				local name = string.gsub(getPlayerName(thePlayer), "_", " ")
+				local name = getPlayerName(thePlayer)
 				for key, value in ipairs(exports.pool:getPoolElementsByType("player")) do
 					if (getElementData(value, "loggedin")==1) then
 						if not (getElementData(value, "tognews")==1) then
@@ -1282,7 +1284,7 @@ function newsHotline(thePlayer, commandName, ...)
 		if not (...) then
 			outputChatBox("SYNTAX: /" .. commandName .. " [Description of Situation]", thePlayer, 255, 194, 14)
 		else
-			local playerName = string.gsub(getPlayerName(thePlayer), "_", " ")
+			local playerName = getPlayerName(thePlayer)
 			local dimension = getElementDimension(thePlayer)
 			local interior = getElementInterior(thePlayer)
 			
@@ -1374,7 +1376,7 @@ function charityCash(thePlayer, commandName, amount)
 			else
 				outputChatBox("You have donated $".. donation .." to charity.", thePlayer, 0, 255, 0)
 				if(donation>=1000)then
-					local name = string.gsub(getPlayerName(thePlayer), "_", " ")
+					local name = getPlayerName(thePlayer)
 					outputChatBox("The hungry orphans would like to thank " ..name.. " for his sizable $" ..donation.. " donation to charity.", getRootElement())
 					exports.global:givePlayerAchievement(thePlayer, 37) -- The Good Samaritan
 				end
@@ -1399,7 +1401,7 @@ function bigEars(thePlayer, commandName, targetPlayerNick)
 			if not targetPlayer then
 				outputChatBox("Player not found or multiple were found.", thePlayer, 255, 0, 0)
 			else
-				outputChatBox("Now Listening to " .. getPlayerName(targetPlayer):gsub("_", " ") .. ".", thePlayer, 0, 255, 0)
+				outputChatBox("Now Listening to " .. getPlayerName(targetPlayer) .. ".", thePlayer, 0, 255, 0)
 				setElementData(thePlayer, "bigears", targetPlayer, false)
 			end
 		end
