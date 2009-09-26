@@ -476,6 +476,8 @@ function sendSMS(thePlayer, commandName, number, ...)
 			number = tonumber( number )
 			if not (...) or not number then
 				outputChatBox("SYNTAX: /" .. commandName .. " [number] [message]", thePlayer, 255, 194, 14)
+			elseif getElementData(thePlayer, "phoneoff") == 1 then
+				outputChatBox("Your phone is off.", thePlayer, 255, 0, 0)
 			elseif exports.global:hasMoney(thePlayer, 1) or exports.global:isPlayerSilverDonator(thePlayer) then
 				local target = nil
 				
