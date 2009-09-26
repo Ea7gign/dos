@@ -1351,8 +1351,8 @@ function showRoadmap(thePlayer)
 		callRemote("http://vg-lvpd.net/remote/roadmap.php", displayRoadmap, thePlayer)
 	end
 end
-addCommandHandler("roadmap", showRoadmap)
-addCommandHandler("progress", showRoadmap)
+--addCommandHandler("roadmap", showRoadmap)
+--addCommandHandler("progress", showRoadmap)
 
 function displayRoadmap(thePlayer, version1, percent1, changes1, version2, percent2, changes2, version3, percent3, changes3, mtaversion, mtapercent, mtachanges)
 	if (thePlayer~="ERROR") then
