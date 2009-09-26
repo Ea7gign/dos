@@ -63,3 +63,23 @@ function drawBox()
 		end
 	end
 end
+
+
+local cam = false
+function togGta1()
+	if (cam) then
+		removeEventHandler("onClientPreRender", getRootElement(), gta1cam)
+		setCameraTarget(getLocalPlayer())
+		cam = false
+	else
+		addEventHandler("onClientPreRender", getRootElement(), gta1cam)
+		cam = true
+	end
+end
+addCommandHandler("gta1", togGta1)
+
+function gta1cam()
+	local player = getLocalPlayer()
+	local x, y, z = getElementPosition(player)
+	setCameraMatrix(x, y, z+20, x, y, z)
+end
