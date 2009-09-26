@@ -82,11 +82,11 @@ function sendLocalText(root, message, r, g, b, distance, exclude)
 end
 
 function sendLocalMeAction(thePlayer, message)
-	sendLocalText(thePlayer, " *" .. getPlayerName(thePlayer) .. " " .. message, 255, 51, 102)
+	sendLocalText(thePlayer, " *" .. getPlayerName(thePlayer):gsub("_", " ") .. " " .. message, 255, 51, 102)
 end
 addEvent("sendLocalMeAction", true)
 addEventHandler("sendLocalMeAction", getRootElement(), sendLocalMeAction)
 
 function sendLocalDoAction(thePlayer, message)
-	sendLocalText(thePlayer, " * " .. message .. " *      ((" .. getPlayerName(thePlayer) .. "))", 255, 51, 102)
+	sendLocalText(thePlayer, " * " .. message .. " *      ((" .. getPlayerName(thePlayer):gsub("_", " ") .. "))", 255, 51, 102)
 end
