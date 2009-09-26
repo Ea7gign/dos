@@ -388,7 +388,7 @@ function talkPhone(thePlayer, commandName, ...)
 						local username = getPlayerName(target):gsub("_", " ")
 						
 						for index, nearbyPlayer in ipairs(getElementsByType("player")) do
-							if isElement(nearbyPlayer) and nearbyPlayer ~= target and getDistanceBetweenPoints3D(x, y, z, getElementPosition(nearbyPlayer) < 40 and getElementDimension(nearbyPlayer) == getElementDimension(target) then
+							if isElement(nearbyPlayer) and nearbyPlayer ~= target and getDistanceBetweenPoints3D(x, y, z, getElementPosition(nearbyPlayer)) < 40 and getElementDimension(nearbyPlayer) == getElementDimension(target) then
 								local message2 = call(getResourceFromName("language-system"), "applyLanguage", thePlayer, nearbyPlayer, message, language)
 								outputChatBox("[" .. languagename .. "] " .. username .. "'s Cellphone Loudspeaker: " .. message2, nearbyPlayer)
 							end
