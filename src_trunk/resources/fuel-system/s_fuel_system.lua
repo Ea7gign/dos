@@ -215,7 +215,7 @@ function fillVehicle(thePlayer, commandName)
 		if (colShape) then
 			local veh = getPedOccupiedVehicle(thePlayer)
 			local currFuel = tonumber(getElementData(veh, "fuel"))
-			outputDebugString(tostring(vehiclesFueling[veh]))
+			--outputDebugString(tostring(vehiclesFueling[veh]))
 			if (math.ceil(currFuel)==MAX_FUEL) then
 				outputChatBox("This vehicle is already full.", thePlayer, 255, 0, 0)
 			elseif (vehiclesFueling[veh] ~= nil) then
