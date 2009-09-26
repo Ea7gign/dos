@@ -61,8 +61,10 @@ setTimer(scanMoneyHacks, 3600000, 0) -- Every 60 minutes
 -- [WEAPON HACKS]
 -- wrapper functions
 function giveSafeWeapon(player, weapon, ammo, ascurrent)
-	triggerClientEvent(player, "giveSafeWeapon", player, weapon, ammo)
-	return giveWeapon(player, weapon, ammo, ascurrent)
+	if (isElement(player)) then
+		triggerClientEvent(player, "giveSafeWeapon", player, weapon, ammo)
+		return giveWeapon(player, weapon, ammo, ascurrent)
+	end
 end
 
 function setSafeWeaponAmmo(player, weapon, ammo, inclip)
