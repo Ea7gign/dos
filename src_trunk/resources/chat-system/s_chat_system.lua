@@ -135,8 +135,9 @@ function localIC(source, message, language)
 	local dimension = getElementDimension(source)
 	local interior = getElementInterior(source)
 	
-	for index, nearbyPlayer in ipairs(getElementsByType( "player" )) do
-		local dist = getElementDistance( thePlayer, nearbyPlayer )
+	for key, nearbyPlayer in ipairs(getElementsByType( "player" )) do
+		local dist = getElementDistance( source, nearbyPlayer )
+
 		if dist < 20 then
 			local nearbyPlayerDimension = getElementDimension(nearbyPlayer)
 			local nearbyPlayerInterior = getElementInterior(nearbyPlayer)
@@ -185,7 +186,6 @@ function chatMain(message, messageType)
 	if not (isPedDead(source)) and (logged==1) and not (messageType==2) then -- Player cannot chat while dead or not logged in, unless its OOC
 		local dimension = getElementDimension(source)
 		local interior = getElementInterior(source)
-		
 		-- Local IC
 		if (messageType==0) then
 			local languageslot = getElementData(source, "languages.current")
