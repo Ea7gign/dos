@@ -974,12 +974,14 @@ function payPlayer(thePlayer, commandName, targetPlayerNick, amount)
 				local distance = getDistanceBetweenPoints3D(x, y, z, tx, ty, tz)
 				
 				if (distance<=10) then
-					amount = math.abs(tonumber(amount))
+					amount = math.floor(math.abs(tonumber(amount)))
 					
 					local hoursplayed = getElementData(thePlayer, "hoursplayed")
 					
 					if (targetPlayer==thePlayer) then
 						outputChatBox("You cannot pay money to yourself.", thePlayer, 255, 0, 0)
+					elseif amount == 0 then
+						outputChatBox("You need to enter an amount larger than 0.", thePlayer, 255, 0, 0)
 					elseif (hoursplayed<5) and (amount>50) then
 						outputChatBox("You must play atleast 5 hours before transferring over 50$", thePlayer, 255, 0, 0)
 					elseif exports.global:takeMoney(thePlayer, amount) then
