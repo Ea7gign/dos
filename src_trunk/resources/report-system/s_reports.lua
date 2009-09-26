@@ -122,7 +122,7 @@ function playerQuit()
 			for key, value in ipairs(exports.global:getAdmins()) do
 				local adminduty = getElementData(value, "adminduty")
 				if adminduty == 1 then
-					outputChatBox(" [#" .. i .."] Player " .. getPlayerName(source) .. " left the game.", value, 0, 255, 255)
+					outputChatBox(" [#" .. report .."] Player " .. getPlayerName(source) .. " left the game.", value, 0, 255, 255)
 					update = true
 				end
 			end
