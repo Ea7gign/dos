@@ -952,25 +952,27 @@ addEventHandler( "lockUnlockHouse", getRootElement(),
 		local found = nil
 		local elevatorres = getResourceRootElement(getResourceFromName("elevator-system"))
 		for key, value in ipairs(exports.pool:getPoolElementsByType("pickup")) do
-			local vx, vy, vz = getElementPosition(value)
-			local x, y, z = getElementPosition(source)
-
-			if getDistanceBetweenPoints3D(x, y, z, vx, vy, vz) <= 5 then
-				local dbid = getElementData(value, "dbid")
-				if hasKey(source, dbid)then -- house found
-					found = value
-					itemValue = dbid
-					break
-				elseif getElementData( value, "other" ) and getElementParent( getElementParent( value ) ) == elevatorres then
-					-- it's an elevator
-					if hasKey(source, getElementDimension( value ) ) then
+			if isElement( value ) then
+				local vx, vy, vz = getElementPosition(value)
+				local x, y, z = getElementPosition(source)
+				
+				if getDistanceBetweenPoints3D(x, y, z, vx, vy, vz) <= 5 then
+					local dbid = getElementData(value, "dbid")
+					if hasKey(source, dbid)then -- house found
 						found = value
-						itemValue = getElementDimension( value )
+						itemValue = dbid
 						break
-					elseif hasKey(source, getElementDimension( getElementData( value, "other" ) ) ) then
-						found = value
-						itemValue = getElementDimension( getElementData( value, "other" ) )
-						break
+					elseif getElementData( value, "other" ) and getElementParent( getElementParent( value ) ) == elevatorres then
+						-- it's an elevator
+						if hasKey(source, getElementDimension( value ) ) then
+							found = value
+							itemValue = getElementDimension( value )
+							break
+						elseif hasKey(source, getElementDimension( getElementData( value, "other" ) ) ) then
+							found = value
+							itemValue = getElementDimension( getElementData( value, "other" ) )
+							break
+						end
 					end
 				end
 			end
