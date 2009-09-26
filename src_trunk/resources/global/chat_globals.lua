@@ -68,6 +68,7 @@ function findPlayerByPartialNick(partialNick)
 end
 
 function sendLocalText(root, message, r, g, b, distance, exclude)
+	exclude = exclude or {}
 	local x, y, z = getElementPosition(root)
 	
 	for index, nearbyPlayer in ipairs(getElementsByType("player")) do

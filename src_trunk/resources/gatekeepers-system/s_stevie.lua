@@ -432,15 +432,8 @@ end
 function declineDeal_S ()
 	
 	-- Output the text from the last option to all player in radius
-	local pedX, pedY, pedZ = getElementPosition( source )
-	local chatSphere = createColSphere( pedX, pedY, pedZ, 10 )
-	exports.pool:allocateElement(chatSphere) -- Create the colSphere for chat output to local players
-	local targetPlayers = getElementsWithinColShape( chatSphere, "player" )
 	local name = string.gsub(getPlayerName(source), "_", " ")
-	for i, player in ipairs( targetPlayers ) do
-		outputChatBox(name.. " says: Maybe another time.", player, 255, 255, 255)
-	end			
-	destroyElement (chatSphere)
+	exports.global:sendLocalText(source, name.. " says: Maybe another time.", 255, 255, 255, 10)
 	outputChatBox("((Steven Pullman)) #081016 [Cellphone]: Sure thing.", source)
 	
 	endCall()

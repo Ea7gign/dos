@@ -62,26 +62,12 @@ function hunterIntro () -- When player enters the colSphere create GUI with intr
 		local huntersFriend = tonumber(mysql_result(query, 1, 1))
 		mysql_free_result(query)
 		if(huntersFriend==1)then -- If they are already a friend.
-			local pedX, pedY, pedZ = getElementPosition( hunter )
-			local chatSphere = createColSphere( pedX, pedY, pedZ, 10 )
-			exports.pool:allocateElement(chatSphere) -- Create the colSphere for chat output to local players
-			local targetPlayers = getElementsWithinColShape( chatSphere, "player" )
-			for i, player in ipairs( targetPlayers ) do
-				outputChatBox("Hunter says: Hey, man.  I'll call you when I got some work for you.", player, 255, 255, 255)
-			end
-			destroyElement(chatSphere)	
+			exports.global:sendLocalText( hunter, "Hunter says: Hey, man.  I'll call you when I got some work for you.", 255, 255, 255, 10 )
 		else -- If they are not a friend.
 		
 			triggerClientEvent ( source, "hunterIntroEvent", getRootElement()) -- Trigger Client side function to create GUI.
 			
-			local pedX, pedY, pedZ = getElementPosition( hunter )
-			local chatSphere = createColSphere( pedX, pedY, pedZ, 10 )
-			exports.pool:allocateElement(chatSphere) -- Create the colSphere for chat output to local players
-			local targetPlayers = getElementsWithinColShape( chatSphere, "player" )
-			for i, player in ipairs( targetPlayers ) do
-				outputChatBox("* A muscular man works under the car's hood.", player, 255, 51, 102)
-			end
-			destroyElement(chatSphere)
+			exports.global:sendLocalText( hunter, "* A muscular man works under the car's hood.", 255, 51, 102, 10 )
 			setElementData (hunter, "activeConvo", 1) -- set the NPCs conversation state to active so no one else can begin to talk to him.
 			talkingToHunter = source
 			addEventHandler("onPlayerQuit", source, resetHunterConvoStateDelayed)

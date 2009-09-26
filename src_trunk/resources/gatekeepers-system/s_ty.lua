@@ -33,39 +33,17 @@ function tyIntro () -- When player enters the colSphere create GUI with intro ou
 	exports.global:sendLocalMeAction(source,"knocks on the door")
 	
 	if(getElementData( tyrese, "activeConvo" )==1)then
-		
-		local pedX, pedY, pedZ = getElementPosition( source )
-		local chatSphere = createColSphere( pedX, pedY, pedZ, 10 )
-		exports.pool:allocateElement(chatSphere) -- Create the colSphere for chat output to local players
-		local targetPlayers = getElementsWithinColShape( chatSphere, "player" )
-		for i, player in ipairs( targetPlayers ) do
-			outputChatBox("Ty shouts: Yo', I'm busy!", player, 255, 255, 255)
-		end
-		destroyElement(chatSphere)
-		
+		exports.global:sendLocalText(source, "Ty shouts: Yo', I'm busy!", 255, 255, 255, 10)
 		triggerClientEvent(source, "closeTyWindow", getRootElement())
-	
 	else
-		-- Friend of Ty's?
-		local query = mysql_query(handler, "SELECT tyrese FROM characters WHERE charactername='" .. mysql_escape_string(handler, getPlayerName(source)) .."'")
+		-- Friend of Ty/Rook
+		local query = mysql_query(handler, "SELECT tyrese, rook FROM characters WHERE charactername='" .. mysql_escape_string(handler, getPlayerName(source)) .."'")
 		local tysFriend = tonumber(mysql_result(query, 1, 1))
-		mysql_free_result(query)
-		
-		-- Friend of Rook's?
-		local query = mysql_query(handler, "SELECT rook FROM characters WHERE charactername='" .. mysql_escape_string(handler, getPlayerName(source)) .."'")
-		local rooksFriend = tonumber(mysql_result(query, 1, 1))
+		local rooksFriend = tonumber(mysql_result(query, 1, 2))
 		mysql_free_result(query)
 		
 		-- Output chat.
-		local pedX, pedY, pedZ = getElementPosition( source )
-		local chatSphere = createColSphere( pedX, pedY, pedZ, 10 )
-		exports.pool:allocateElement(chatSphere) -- Create the colSphere for chat output to local players
-		local targetPlayers = getElementsWithinColShape( chatSphere, "player" )
-		for i, player in ipairs( targetPlayers ) do
-			outputChatBox("Ty shouts: Yo', who is it?!", player, 255, 255, 255)
-		end
-		
-		destroyElement(chatSphere)
+		exports.global:sendLocalText(source, "Ty shouts: Yo', who is it?!", 255, 255, 255, 10)
 		
 		setElementData (tyrese, "activeConvo",  1)
 		talkingToTy = source
@@ -83,16 +61,9 @@ addEventHandler( "startTyConvo", getRootElement(), tyIntro )
 -- Statement 4
 function tyStatement4_S()
 	-- Output the text from the last option to all player in radius
-	local pedX, pedY, pedZ = getElementPosition( source )
-	local chatSphere = createColSphere( pedX, pedY, pedZ, 5 )
-	exports.pool:allocateElement(chatSphere) -- Create the colSphere for chat output to local players
-	local targetPlayers = getElementsWithinColShape( chatSphere, "player" )
 	local name = string.gsub(getPlayerName(source), "_", " ")
-	for i, player in ipairs( targetPlayers ) do
-		outputChatBox(name .. " shouts: Yo', c'mon open the fuckin' door, homie.", player, 255, 255, 255)
-		outputChatBox("Ty shouts: I don't know you. Get the fuck up outta here!", player, 255, 255, 255)
-	end
-	destroyElement (chatSphere)
+	exports.global:sendLocalText(source, name .. " shouts: Yo', c'mon open the fuckin' door, homie.", 255, 255, 255, 5)
+	exports.global:sendLocalText(source, "Ty shouts: I don't know you. Get the fuck up outta here!", 255, 255, 255, 5)
 	
 	setElementData (tyrese, "activeConvo",  0)
 	
@@ -103,19 +74,11 @@ addEventHandler( "tyStatement4ServerEvent", getRootElement(), tyStatement4_S )
 -- Statement 5
 function tyStatement5_S()
 	-- Output the text from the last option to all player in radius
-	local pedX, pedY, pedZ = getElementPosition( source )
-	local chatSphere = createColSphere( pedX, pedY, pedZ, 10 )
-	exports.pool:allocateElement(chatSphere) -- Create the colSphere for chat output to local players
-	local targetPlayers = getElementsWithinColShape( chatSphere, "player" )
 	local name = string.gsub(getPlayerName(source), "_", " ")
-	for i, player in ipairs( targetPlayers ) do
-		outputChatBox(name .. " shouts: Rook sent me. He said you needed some help with some business.", player, 255, 255, 255)
-		outputChatBox("Ty shouts: A'ight, hold up!", player, 255, 255, 255)
-		outputChatBox("* The door unlocks", player, 255, 51, 102)
-		outputChatBox("Ty says: Only you. Anyone else is gonna have to wait outside.", player, 255, 255, 255)
-	end
-	
-	destroyElement (chatSphere)
+	exports.global:sendLocalText(source, name .. " shouts: Rook sent me. He said you needed some help with some business.", 255, 255, 255, 10)
+	exports.global:sendLocalText(source, "Ty shouts: A'ight, hold up!", 255, 255, 255, 10)
+	exports.global:sendLocalText(source, "* The door unlocks", 255, 51, 102, 10)
+	exports.global:sendLocalText(source, "Ty says: Only you. Anyone else is gonna have to wait outside.", 255, 255, 255, 10)
 	
 	setElementPosition(source, 2260, -1136, 1049.6)
 	setElementDimension(source, 1165)
@@ -130,18 +93,11 @@ addEventHandler( "tyStatement5ServerEvent", getRootElement(), tyStatement5_S )
 -- Statement 6
 function tyStatement6_S()
 	-- Output the text from the last option to all player in radius
-	local pedX, pedY, pedZ = getElementPosition( tyrese )
-	local chatSphere = createColSphere( pedX, pedY, pedZ, 5 )
-	exports.pool:allocateElement(chatSphere) -- Create the colSphere for chat output to local players
-	local targetPlayers = getElementsWithinColShape( chatSphere, "player" )
 	local name = string.gsub(getPlayerName(source), "_", " ")
-	for i, player in ipairs( targetPlayers ) do
-		outputChatBox(name .. " says: He said you had connects but needed someone to put it all to use.", player, 255, 255, 255)
-		outputChatBox("Ty says: Yeah that's right. So you down? Here's how it'll work.", player, 255, 255, 255)
-		outputChatBox("Ty says: I got some people's I can call up on when I need that produce.", player, 255, 255, 255)
-		outputChatBox("Ty says: I'll act as middle man and sell to you at wholesale. You then can do whatever you want with it.", player, 255, 255, 255)
-	end
-	destroyElement (chatSphere)
+	exports.global:sendLocalText(source, name .. " says: He said you had connects but needed someone to put it all to use.", 255, 255, 255, 5)
+	exports.global:sendLocalText(source, "Ty says: Yeah that's right. So you down? Here's how it'll work.", 255, 255, 255, 5)
+	exports.global:sendLocalText(source, "Ty says: I got some people's I can call up on when I need that produce.", 255, 255, 255, 5)
+	exports.global:sendLocalText(source, "Ty says: I'll act as middle man and sell to you at wholesale. You then can do whatever you want with it.", 255, 255, 255, 5)
 end
 addEvent( "tyStatement6ServerEvent", true )
 addEventHandler( "tyStatement6ServerEvent", getRootElement(), tyStatement6_S )
@@ -149,16 +105,9 @@ addEventHandler( "tyStatement6ServerEvent", getRootElement(), tyStatement6_S )
 -- Statement 7
 function tyStatement7_S()
 	-- Output the text from the last option to all player in radius
-	local pedX, pedY, pedZ = getElementPosition( source )
-	local chatSphere = createColSphere( pedX, pedY, pedZ, 5 )
-	exports.pool:allocateElement(chatSphere) -- Create the colSphere for chat output to local players
-	local targetPlayers = getElementsWithinColShape( chatSphere, "player" )
 	local name = string.gsub(getPlayerName(source), "_", " ")
-	for i, player in ipairs( targetPlayers ) do
-		outputChatBox(name .. " says: He said you had connects but didn't know what to do with them.", player, 255, 255, 255)
-		outputChatBox("Ty says: Fuck you! I ain't no amateur. Get the fuck up out of here. ", player, 255, 255, 255)
-	end
-	destroyElement (chatSphere)
+	exports.global:sendLocalText(source, name .. " says: He said you had connects but didn't know what to do with them.", 255, 255, 255, 5)
+	exports.global:sendLocalText(source, "Ty says: Fuck you! I ain't no amateur. Get the fuck up out of here. ", 255, 255, 255, 5)
 	
 	setElementPosition(source, 2242.52, -1170.7, 1028.79)
 	setElementDimension(source, 1160)
@@ -173,16 +122,9 @@ addEventHandler( "tyStatement7ServerEvent", getRootElement(), tyStatement7_S )
 -- Statement 8
 function tyStatement8_S()
 	-- Output the text from the last option to all player in radius
-	local pedX, pedY, pedZ = getElementPosition( source )
-	local chatSphere = createColSphere( pedX, pedY, pedZ, 5 )
-	exports.pool:allocateElement(chatSphere) -- Create the colSphere for chat output to local players
-	local targetPlayers = getElementsWithinColShape( chatSphere, "player" )
 	local name = string.gsub(getPlayerName(source), "_", " ")
-	for i, player in ipairs( targetPlayers ) do
-		outputChatBox(name .. " says: Sounds a'ight.", player, 255, 255, 255)
-		outputChatBox("Ty says: You ever need the shit just come by.", player, 255, 255, 255)
-	end
-	destroyElement (chatSphere)
+	exports.global:sendLocalText(source, name .. " says: Sounds a'ight.", 255, 255, 255, 5)
+	exports.global:sendLocalText(source, "Ty says: You ever need the shit just come by.", 255, 255, 255, 5)
 	
 	setElementPosition(source, 2242.52, -1170.7, 1028.79)
 	setElementDimension(source, 1160)
@@ -199,17 +141,9 @@ addEventHandler( "tyStatement8ServerEvent", getRootElement(), tyStatement8_S )
 -- Statement 9
 function tyStatement9_S()
 	-- Output the text from the last option to all player in radius
-	local pedX, pedY, pedZ = getElementPosition( source )
-	local chatSphere = createColSphere( pedX, pedY, pedZ, 5 )
-	exports.pool:allocateElement(chatSphere) -- Create the colSphere for chat output to local players
-	local targetPlayers = getElementsWithinColShape( chatSphere, "player" )
 	local name = string.gsub(getPlayerName(source), "_", " ")
-	for i, player in ipairs( targetPlayers ) do
-		outputChatBox(name .. " says: Wholesale? I thought we were partners.", player, 255, 255, 255)
-		outputChatBox("Ty says: If you ain't down I can find some other niggas.", player, 255, 255, 255)
-	end
-	destroyElement (chatSphere)
-	
+	exports.global:sendLocalText(source, name .. " says: Wholesale? I thought we were partners.", 255, 255, 255, 5)
+	exports.global:sendLocalText(source, "Ty says: If you ain't down I can find some other niggas.", 255, 255, 255, 5)
 end
 addEvent( "tyStatement9ServerEvent", true )
 addEventHandler( "tyStatement9ServerEvent", getRootElement(), tyStatement9_S )
@@ -217,16 +151,9 @@ addEventHandler( "tyStatement9ServerEvent", getRootElement(), tyStatement9_S )
 -- Statement 10
 function tyStatement10_S()
 	-- Output the text from the last option to all player in radius
-	local pedX, pedY, pedZ = getElementPosition( source )
-	local chatSphere = createColSphere( pedX, pedY, pedZ, 5 )
-	exports.pool:allocateElement(chatSphere) -- Create the colSphere for chat output to local players
-	local targetPlayers = getElementsWithinColShape( chatSphere, "player" )
 	local name = string.gsub(getPlayerName(source), "_", " ")
-	for i, player in ipairs( targetPlayers ) do
-		outputChatBox(name .. " says: Na, it's cool. We got a deal.", player, 255, 255, 255)
-		outputChatBox("Ty says: You ever need me to hook you up, just stop by.", player, 255, 255, 255)
-	end
-	destroyElement (chatSphere)
+	exports.global:sendLocalText(source, name .. " says: Na, it's cool. We got a deal.", 255, 255, 255, 5)
+	exports.global:sendLocalText(source, "Ty says: You ever need me to hook you up, just stop by.", 255, 255, 255, 5)
 	
 	setElementPosition(source, 2242.52, -1170.7, 1028.79)
 	setElementDimension(source, 1160)
@@ -243,16 +170,9 @@ addEventHandler( "tyStatement10ServerEvent", getRootElement(), tyStatement10_S )
 -- Statement 11
 function tyStatement11_S()
 	-- Output the text from the last option to all player in radius
-	local pedX, pedY, pedZ = getElementPosition( source )
-	local chatSphere = createColSphere( pedX, pedY, pedZ, 5 )
-	exports.pool:allocateElement(chatSphere) -- Create the colSphere for chat output to local players
-	local targetPlayers = getElementsWithinColShape( chatSphere, "player" )
 	local name = string.gsub(getPlayerName(source), "_", " ")
-	for i, player in ipairs( targetPlayers ) do
-		outputChatBox(name .. " says: Yeah you do that.", player, 255, 255, 255)
-		outputChatBox("Ty says: Then we're done here.  Get the steppin'.", player, 255, 255, 255)
-	end
-	destroyElement (chatSphere)
+	exports.global:sendLocalText(source, name .. " says: Yeah you do that.", 255, 255, 255, 5)
+	exports.global:sendLocalText(source, "Ty says: Then we're done here.  Get the steppin'.", 255, 255, 255, 5)
 	
 	setElementPosition(source, 2242.52, -1170.7, 1028.79)
 	setElementDimension(source, 1160)
@@ -267,17 +187,10 @@ addEventHandler( "tyStatement11ServerEvent", getRootElement(), tyStatement11_S )
 ---------------- friends----------------------
 function tyFriendStatement2_S()
 	-- Output the text from the last option to all player in radius
-	local pedX, pedY, pedZ = getElementPosition( source )
-	local chatSphere = createColSphere( pedX, pedY, pedZ, 10 )
-	exports.pool:allocateElement(chatSphere) -- Create the colSphere for chat output to local players
-	local targetPlayers = getElementsWithinColShape( chatSphere, "player" )
 	local name = string.gsub(getPlayerName(source), "_", " ")
-	for i, player in ipairs( targetPlayers ) do
-		outputChatBox(name .. " shouts: Yo it's me. Open the door.", player, 255, 255, 255)
-		outputChatBox("Ty shouts: A'ight hold up..", player, 255, 255, 255)
-		outputChatBox("* The door unlocks", player, 255, 51, 102)
-	end
-	destroyElement (chatSphere)
+	exports.global:sendLocalText(source, name .. " shouts: Yo it's me. Open the door.", 255, 255, 255, 10)
+	exports.global:sendLocalText(source, "Ty shouts: A'ight hold up..", 255, 255, 255, 10)
+	exports.global:sendLocalText(source, "* The door unlocks", 255, 51, 102, 10)
 	
 	setElementPosition(source, 2260, -1136, 1049.6)
 	setElementDimension(source, 1165)
@@ -307,17 +220,7 @@ function giveTyItems( itemNumber )
 		
 	-- does the player have enough money?
 	if not exports.global:takeMoney(source, cost) then
-		
-		local pedX, pedY, pedZ = getElementPosition( tyrese )
-		local chatSphere = createColSphere( pedX, pedY, pedZ, 5 )
-		exports.pool:allocateElement(chatSphere) -- Create the colSphere for chat output to local players
-		local targetPlayers = getElementsWithinColShape( chatSphere, "player" )
-		local name = string.gsub(getPlayerName(source), "_", " ")
-		for i, player in ipairs( targetPlayers ) do
-			outputChatBox("Ty says: I ain't givin' this shit away. Come back when you got the money.", player, 255, 255, 255)
-		end
-		
-		destroyElement (chatSphere)
+		exports.global:sendLocalText(tyrese, "Ty says: I ain't givin' this shit away. Come back when you got the money.", 255, 255, 255, 5)
 		
 		setElementPosition(source, 2242.52, -1170.7, 1028.79)
 		setElementDimension(source, 1160)
@@ -337,16 +240,9 @@ addEventHandler("tyGiveItem", getRootElement(), giveTyItems)
 
 
 function tyClose_S()
-
-	local pedX, pedY, pedZ = getElementPosition( tyrese )
-	local chatSphere = createColSphere( pedX, pedY, pedZ, 5 )
-	exports.pool:allocateElement(chatSphere) -- Create the colSphere for chat output to local players
-	local targetPlayers = getElementsWithinColShape( chatSphere, "player" )
 	local name = string.gsub(getPlayerName(source), "_", " ")
-	for i, player in ipairs( targetPlayers ) do
-		outputChatBox(name .. " says: I'm set.", player, 255, 255, 255)
-		outputChatBox("Ty says: Peace, homie.", player, 255, 255, 255)
-	end
+	exports.global:sendLocalText( tyrese, name .. " says: I'm set.", 255, 255, 255, 5)
+	exports.global:sendLocalText( tyrese, "Ty says: Peace, homie.", 255, 255, 255, 5)
 	
 	setElementPosition(source, 2242.52, -1170.7, 1028.79)
 	setElementDimension(source, 1160)
