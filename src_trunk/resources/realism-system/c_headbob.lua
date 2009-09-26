@@ -72,6 +72,8 @@ function togGta1()
 		setCameraTarget(getLocalPlayer())
 		cam = false
 	else
+		setPedRotation(getLocalPlayer(), 360)
+		setPedCameraRotation(getLocalPlayer(), 360)
 		addEventHandler("onClientPreRender", getRootElement(), gta1cam)
 		cam = true
 	end
