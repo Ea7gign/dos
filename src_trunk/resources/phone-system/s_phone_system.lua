@@ -510,7 +510,7 @@ function sendSMS(thePlayer, commandName, number, ...)
 						
 						
 						exports.global:sendLocalMeAction(thePlayer, "sends a text message.")
-						exports.global:sendLocalMeAction(thePlayer, "receives a text message.")
+						exports.global:sendLocalMeAction(target, "receives a text message.")
 						-- Send the message to the person on the other end of the line
 						outputChatBox("[" .. languagename .. "] ((" .. username .. ")) #" .. phoneNumber .. " [SMS]: " .. message2, target, 120, 255, 80)
 						outputChatBox("[" .. languagename .. "] You [SMS to #" .. targetNumber .. "]: " .. message, thePlayer, 120, 255, 80)
