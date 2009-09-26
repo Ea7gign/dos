@@ -338,44 +338,46 @@ function enterElevator(player, pickup)
 		-- teleport the player during the black fade
 		setTimer(function()
 			if vehicle then
-				local offset = getElementData(vehicle, "groundoffset") or 2
-				setElementPosition(vehicle, x, y, z - 1 + offset)
-				setElementInterior(vehicle, interior)
-				setElementDimension(vehicle, dimension)
-				setVehicleTurnVelocity(vehicle, 0, 0, 0)
-				local rx, ry, rz = getVehicleRotation(vehicle)
-				setVehicleRotation(vehicle, 0, 0, rz)
-				setTimer(setVehicleTurnVelocity, 50, 2, vehicle, 0, 0, 0)
-				
-				setElementHealth(vehicle, getElementData(vehicle, "health"))
-				removeElementData(vehicle, "health")
-				
-				setVehicleFrozen(vehicle, true)
-				setTimer(setVehicleFrozen, 333, 1, vehicle, false)
-				
-				for i = 0, getVehicleMaxPassengers( vehicle ) do
-					local player = getVehicleOccupant( vehicle, i )
-					if player then
-						setElementInterior(player, interior)
-						setCameraInterior(player, interior)
-						setElementDimension(player, dimension)
-						setCameraTarget(player)
-						
-						triggerEvent("onPlayerInteriorChange", player, pickup, other)
-						
-						-- fade camera in
-						setTimer(fadeCamera, 1000, 1 , player , true, 2)
-						
-						if interior == 3 or interior == 4 then
-							triggerClientEvent(player, "usedElevator", player)
-							setPedFrozen(player, true)
-							setPedGravity(player, 0)
+				if isElement(vehicle) then
+					local offset = getElementData(vehicle, "groundoffset") or 2
+					setElementPosition(vehicle, x, y, z - 1 + offset)
+					setElementInterior(vehicle, interior)
+					setElementDimension(vehicle, dimension)
+					setVehicleTurnVelocity(vehicle, 0, 0, 0)
+					local rx, ry, rz = getVehicleRotation(vehicle)
+					setVehicleRotation(vehicle, 0, 0, rz)
+					setTimer(setVehicleTurnVelocity, 50, 2, vehicle, 0, 0, 0)
+					
+					setElementHealth(vehicle, getElementData(vehicle, "health"))
+					removeElementData(vehicle, "health")
+					
+					setVehicleFrozen(vehicle, true)
+					setTimer(setVehicleFrozen, 333, 1, vehicle, false)
+					
+					for i = 0, getVehicleMaxPassengers( vehicle ) do
+						local player = getVehicleOccupant( vehicle, i )
+						if player then
+							setElementInterior(player, interior)
+							setCameraInterior(player, interior)
+							setElementDimension(player, dimension)
+							setCameraTarget(player)
+							
+							triggerEvent("onPlayerInteriorChange", player, pickup, other)
+							
+							-- fade camera in
+							setTimer(fadeCamera, 1000, 1 , player , true, 2)
+							
+							if interior == 3 or interior == 4 then
+								triggerClientEvent(player, "usedElevator", player)
+								setPedFrozen(player, true)
+								setPedGravity(player, 0)
+							end
+							
+							resetPlayerData(player)
 						end
-						
-						resetPlayerData(player)
 					end
 				end
-			else
+			elseif isElement(player) then
 				setElementPosition(player, x, y, z)
 				setElementInterior(player, interior)
 				setCameraInterior(player, interior)

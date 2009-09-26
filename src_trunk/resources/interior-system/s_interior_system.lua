@@ -801,19 +801,21 @@ function setPlayerInsideInterior(thePickup, thePlayer)
 						
 		-- teleport the player during the black fade
 		setTimer(function(thePlayer, thePickup, other)
-			setElementPosition(thePlayer, x, y, z)
-			setElementInterior(thePlayer, interior)
-			setElementDimension(thePlayer, dimension)
-			setCameraInterior(thePlayer, interior)
-			if rot then
-				setPedRotation(thePlayer, rot)
+			if isElement(thePlayer) then
+				setElementPosition(thePlayer, x, y, z)
+				setElementInterior(thePlayer, interior)
+				setElementDimension(thePlayer, dimension)
+				setCameraInterior(thePlayer, interior)
+				if rot then
+					setPedRotation(thePlayer, rot)
+				end
+				
+				triggerEvent("onPlayerInteriorChange", thePlayer, thePickup, other)
+				
+				-- fade camera in
+				setTimer(fadeCamera, 1000, 1 , thePlayer , true, 2)
+				setTimer(setPedFrozen, 2000, 1, thePlayer, false )
 			end
-			
-			triggerEvent("onPlayerInteriorChange", thePlayer, thePickup, other)
-			
-			-- fade camera in
-			setTimer(fadeCamera, 1000, 1 , thePlayer , true, 2)
-			setTimer(setPedFrozen, 2000, 1, thePlayer, false )
 		end, 1000, 1, thePlayer, thePickup, other)
 		
 		local name = getElementData(thePickup, "name")
