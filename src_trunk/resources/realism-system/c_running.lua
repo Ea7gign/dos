@@ -3,7 +3,7 @@ local down = 0
 
 addEventHandler( "onClientPreRender", getRootElement(), 
 	function( slice )
-		if getControlState( "sprint" ) or down > 0 then
+		if ( not isPedInVehicle( getLocalPlayer( ) ) and getControlState( "sprint" ) ) or down > 0 then
 			run = run + slice
 			if run >= 40000 then
 				if isPedOnGround( getLocalPlayer( ) ) then
