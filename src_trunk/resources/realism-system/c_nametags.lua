@@ -221,7 +221,7 @@ function renderNametags()
 									local offset = 65 / distance
 									local id = getElementData(player, "playerid")
 									
-									if (oldsy) and (oldsx) and (id) then
+									if (oldsy) and (id) then
 										if (id<100 and id>9) then -- 2 digits
 											dxDrawRectangle(sx-offset-15, oldsy, 30 / distance, 20 / distance, tocolor(0, 0, 0, 100), false)
 											dxDrawText(tostring(id), sx-offset-22.5, oldsy, (sx-offset)+26 / distance, sy+20 / distance, tocolor(255, 255, 255, 220), scale, font, "center", "middle", false, false, false)
