@@ -207,7 +207,7 @@ function renderNametags()
 									sy = sy - 20
 								end
 									
-								if (sx) and (sy) and (oldsy) and (oldsx) then
+								if (sx) and (sy) then
 									if (distance < 1) then distance = 1 end
 									if (distance > 2) then distance = 2 end
 									local offset = 75 / distance
@@ -221,15 +221,17 @@ function renderNametags()
 									local offset = 65 / distance
 									local id = getElementData(player, "playerid")
 									
-									if (id<100 and id>9) then -- 2 digits
-										dxDrawRectangle(sx-offset-15, oldsy, 30 / distance, 20 / distance, tocolor(0, 0, 0, 100), false)
-										dxDrawText(tostring(id), sx-offset-22.5, oldsy, (sx-offset)+26 / distance, sy+20 / distance, tocolor(255, 255, 255, 220), scale, font, "center", "middle", false, false, false)
-									elseif (id<=9) then -- 1 digit
-										dxDrawRectangle(sx-offset-5, oldsy, 20 / distance, 20 / distance, tocolor(0, 0, 0, 100), false)
-										dxDrawText(tostring(id), sx-offset-12.5, oldsy, (sx-offset)+26 / distance, sy+20 / distance, tocolor(255, 255, 255, 220), scale, font, "center", "middle", false, false, false)
-									elseif (id>=100) then -- 3 digits
-										dxDrawRectangle(sx-offset-25, oldsy, 40 / distance, 20 / distance, tocolor(0, 0, 0, 100), false)
-										dxDrawText(tostring(id), sx-offset-32.5, oldsy, (sx-offset)+26 / distance, sy+20 / distance, tocolor(255, 255, 255, 220), scale, font, "center", "middle", false, false, false)
+									if (oldsy) and (oldsx) and (id) then
+										if (id<100 and id>9) then -- 2 digits
+											dxDrawRectangle(sx-offset-15, oldsy, 30 / distance, 20 / distance, tocolor(0, 0, 0, 100), false)
+											dxDrawText(tostring(id), sx-offset-22.5, oldsy, (sx-offset)+26 / distance, sy+20 / distance, tocolor(255, 255, 255, 220), scale, font, "center", "middle", false, false, false)
+										elseif (id<=9) then -- 1 digit
+											dxDrawRectangle(sx-offset-5, oldsy, 20 / distance, 20 / distance, tocolor(0, 0, 0, 100), false)
+											dxDrawText(tostring(id), sx-offset-12.5, oldsy, (sx-offset)+26 / distance, sy+20 / distance, tocolor(255, 255, 255, 220), scale, font, "center", "middle", false, false, false)
+										elseif (id>=100) then -- 3 digits
+											dxDrawRectangle(sx-offset-25, oldsy, 40 / distance, 20 / distance, tocolor(0, 0, 0, 100), false)
+											dxDrawText(tostring(id), sx-offset-32.5, oldsy, (sx-offset)+26 / distance, sy+20 / distance, tocolor(255, 255, 255, 220), scale, font, "center", "middle", false, false, false)
+										end
 									end
 								
 								
