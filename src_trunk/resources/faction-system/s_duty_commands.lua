@@ -66,7 +66,7 @@ function lvesHeal(thePlayer, commandName, targetPartialNick, price)
 						local tx, ty, tz = getElementPosition(targetPlayer)
 						
 						if (getDistanceBetweenPoints3D(x, y, z, tx, ty, tz)>5) then -- Are they standing next to each other?
-							outputChatBox("You are too far away to heal '"..getPlayerName(targetPlayerName).."'.", thePlayer, 255, 0, 0)
+							outputChatBox("You are too far away to heal '".. targetPlayerName .."'.", thePlayer, 255, 0, 0)
 						else
 							local money = exports.global:getMoney(targetPlayer)
 							local bankmoney = getElementData(targetPlayer, "bankmoney")
