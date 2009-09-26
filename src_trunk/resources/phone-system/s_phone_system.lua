@@ -525,7 +525,7 @@ function sendSMS(thePlayer, commandName, number, ...)
 					outputChatBox( "((Automated Message)) The recipient of the message could not be found.", thePlayer, 120, 255, 80)
 				end
 			else
-				outputChatBox("You cannot afford a SMS.", 255, 0, 0)
+				outputChatBox("You cannot afford a SMS.", thePlayer, 255, 0, 0)
 			end
 		else
 			outputChatBox("Believe it or not, it's hard to use a cellphone you do not have.", thePlayer, 255, 0, 0)
