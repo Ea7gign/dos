@@ -87,6 +87,8 @@ function callSomeone(thePlayer, commandName, phoneNumber, ...)
 								find,_,foundPhoneItemValue = exports.global:hasItem(foundElement, 2)
 								if not find then -- Check the target has a phone, if not, they weren't found
 									found, foundElement = false
+								else
+									break
 								end
 							end
 						end
@@ -465,3 +467,65 @@ function saveCurrentRingtone(itemValue)
 end
 addEvent("saveRingtone", true)
 addEventHandler("saveRingtone", getRootElement(), saveCurrentRingtone)
+
+function sendSMS(thePlayer, commandName, number, ...)
+	local logged = getElementData(thePlayer, "loggedin")
+	
+	if (logged==1) then
+		if (exports.global:hasItem(thePlayer, 2)) then -- 71 = Cell phone item
+			number = tonumber( number )
+			if not (...) or not number then
+				outputChatBox("SYNTAX: /" .. commandName .. " [number] [message]", thePlayer, 255, 194, 14)
+			elseif exports.global:hasMoney(thePlayer, 1) or exports.global:isPlayerSilverDonator(thePlayer) then
+				local target = nil
+				
+				for key, value in ipairs(exports.pool:getPoolElementsByType("player")) do
+					local logged = getElementData(value, "loggedin")
+					
+					if (logged==1) then
+						if number == tonumber(getElementData(value, "cellnumber")) then
+							if exports.global:hasItem(value, 2) then -- Check the target has a phone, if not, they weren't found
+								target = value
+								break
+							end
+						end
+					end
+				end
+				
+				if target then
+					if target == thePlayer then
+						outputChatBox( "You can't send yourself a message.", thePlayer, 255, 0, 0 )
+					elseif getElementData(target, "phoneoff") == 1 then
+						outputChatBox( "((Automated Message)) The phone with that number is currently off.", thePlayer, 120, 255, 80 )
+					else
+						local message = table.concat({...}, " ")
+						local username = getPlayerName(thePlayer):gsub("_", " ")
+						local phoneNumber = getElementData(thePlayer, "cellnumber")
+							
+						local languageslot = getElementData(thePlayer, "languages.current")
+						local language = getElementData(thePlayer, "languages.lang" .. languageslot)
+						local languagename = call(getResourceFromName("language-system"), "getLanguageName", language)
+						local message2 = call(getResourceFromName("language-system"), "applyLanguage", thePlayer, target, message, language)
+						
+						
+						exports.global:sendLocalMeAction(thePlayer, "sends a text message.")
+						-- Send the message to the person on the other end of the line
+						outputChatBox("[" .. languagename .. "] ((" .. username .. ")) #" .. phoneNumber .. " [SMS]: " .. message2, target, 120, 255, 80)
+						outputChatBox("[" .. languagename .. "] You [SMS]: " .. message, thePlayer, 120, 255, 80)
+						
+						if not exports.global:isPlayerSilverDonator(thePlayer) then
+							exports.global:takeMoney(thePlayer, 1)
+						end
+					end
+				else
+					outputChatBox( "((Automated Message)) The recipient of the message could not be found.", thePlayer, 120, 255, 80)
+				end
+			else
+				outputChatBox("You cannot afford a SMS.", 255, 0, 0)
+			end
+		else
+			outputChatBox("Believe it or not, it's hard to use a cellphone you do not have.", thePlayer, 255, 0, 0)
+		end
+	end
+end
+addCommandHandler("sms", sendSMS)
