@@ -294,7 +294,7 @@ addEventHandler("onClientVehicleStartEnter", getRootElement(), startEnterBus)
 function onPlayerQuit()
 	if getElementData(source, "job") == 3 then
 		vehicle = getPedOccupiedVehicle(source)
-		if bus[getElementModel(vehicle)] and getVehicleOccupant(vehicle) == source then
+		if vehicle and bus[getElementModel(vehicle)] and getVehicleOccupant(vehicle) == source then
 			setVehicleLocked(vehicle, false)
 		end
 	end
