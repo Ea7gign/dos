@@ -501,6 +501,7 @@ function sendSMS(thePlayer, commandName, number, ...)
 						local message = table.concat({...}, " ")
 						local username = getPlayerName(thePlayer):gsub("_", " ")
 						local phoneNumber = getElementData(thePlayer, "cellnumber")
+						local targetNumber = getElementData(target, "cellnumber")
 							
 						local languageslot = getElementData(thePlayer, "languages.current")
 						local language = getElementData(thePlayer, "languages.lang" .. languageslot)
@@ -509,9 +510,10 @@ function sendSMS(thePlayer, commandName, number, ...)
 						
 						
 						exports.global:sendLocalMeAction(thePlayer, "sends a text message.")
+						exports.global:sendLocalMeAction(thePlayer, "receives a text message.")
 						-- Send the message to the person on the other end of the line
 						outputChatBox("[" .. languagename .. "] ((" .. username .. ")) #" .. phoneNumber .. " [SMS]: " .. message2, target, 120, 255, 80)
-						outputChatBox("[" .. languagename .. "] You [SMS]: " .. message, thePlayer, 120, 255, 80)
+						outputChatBox("[" .. languagename .. "] You [SMS to #" .. targetNumber .. "]: " .. message, thePlayer, 120, 255, 80)
 						
 						if not exports.global:isPlayerSilverDonator(thePlayer) then
 							exports.global:takeMoney(thePlayer, 1)
