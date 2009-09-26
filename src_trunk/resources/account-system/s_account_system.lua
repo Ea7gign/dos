@@ -1016,7 +1016,7 @@ function deleteCharacterByName(charname)
 		-- un-rent all interiors
 		local old = getElementData( source, "dbid" )
 		setElementData( source, "dbid", charid )
-		local result = mysql_query( handler, "SELECT id FROM interiors WHERE WHERE owner = " .. charid .. " AND type != 2" )
+		local result = mysql_query( handler, "SELECT id FROM interiors WHERE owner = " .. charid .. " AND type != 2" )
 		if result then
 			for result, row in mysql_rows( result ) do
 				local id = tonumber(row[1])
