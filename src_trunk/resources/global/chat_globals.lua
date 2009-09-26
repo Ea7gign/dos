@@ -19,6 +19,7 @@ function sendMessageToAdmins(message)
 end
 
 function findPlayerByPartialNick(partialNick)
+	local matchPlayer = nil
 	local matchNick = nil
 	local matchNickAccuracy=0
 	local partialNick = string.lower(partialNick)
@@ -33,7 +34,7 @@ function findPlayerByPartialNick(partialNick)
 				local id = getElementData(value, "playerid")
 				
 				if id and id == tonumber(partialNick) then
-					matchNick = getPlayerName(value)
+					matchPlayer = value
 					break
 				end
 			end
@@ -49,19 +50,20 @@ function findPlayerByPartialNick(partialNick)
 						-- better match
 						matchNickAccuracy = posEnd-posStart
 						matchNick = playerName
+						matchPlayer = arrayPlayer
 					elseif posEnd - posStart == matchNickAccuracy then
 						-- found someone who matches up the same way, so pretend we didnt find any
 						matchNick = nil
+						matchPlayer = nil
 					end
 				end
 			end
 		end
 	end
 	
-	if matchNick == nil then
+	if not matchPlayer or not isElement(matchPlayer) then
 		return false
 	else
-		local matchPlayer = getPlayerFromName(matchNick)
 		local dbid = getElementData(matchPlayer, "dbid")
 		return matchPlayer, dbid
 	end
