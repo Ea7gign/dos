@@ -30,7 +30,7 @@ function createHunterMarkers()
 	local carPart = parts[rand][1]
 	
 	-- selecting a random car model (and car part just for fun).
-	outputChatBox("SMS From: Hunter - Hey, man. I need ".. carPart .." from a ".. vehicleName ..". Can you help me out?")
+	outputChatBox("((Hunter)) Unknown Number [SMS]: Hey, man. I need ".. carPart .." from a ".. vehicleName ..". Can you help me out?", 120, 255, 80)
 	outputChatBox("#FF9933((Steal a ".. vehicleName .." and deliver the car to Hunter's #FF66CCgarage#FF9933.))", 255, 104, 91, true )
 	
 	--blip = createBlip(1108.7441, 1903.98535, 9.52469, 0, 4, 255, 127, 255) -- No blip. The player should know where the garage is from when they met Hunter to get the job.
