@@ -90,7 +90,7 @@ function makeCar(thePlayer, id, cost, col1, col2, x, y, z, rz, px, py, pz, prz)
 		local veh = call( getResourceFromName( "vehicle-system" ), "createShopVehicle", insertid, id, x, y, z, 0, 0, rz, plate )
 		exports.pool:allocateElement(veh)
 		
-		setElementData(veh, "fuel", 100)
+		setElementData(veh, "fuel", 100, false)
 		setElementData(veh, "Impounded", 0)
 		
 		setVehicleRespawnPosition(veh, x, y, z, 0, 0, rz)
@@ -107,7 +107,7 @@ function makeCar(thePlayer, id, cost, col1, col2, x, y, z, rz, px, py, pz, prz)
 		call( getResourceFromName( "item-system" ), "deleteAll", 3, insertid )
 		exports.global:giveItem( thePlayer, 3, insertid )
 		
-		setElementData(veh, "fuel", 100)
+		setElementData(veh, "fuel", 100, false)
 		setElementData(veh, "engine", 0, false)
 		setElementData(veh, "oldx", x, false)
 		setElementData(veh, "oldy", y, false)

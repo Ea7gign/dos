@@ -90,7 +90,7 @@ function createTempVehicle(thePlayer, commandName, ...)
 				end
 
 				exports.pool:allocateElement(veh)
-				setElementData(veh, "fuel", 100)
+				setElementData(veh, "fuel", 100, false)
 				
 				setVehicleColor(veh, col1, col2, col1, col2)
 				
@@ -105,7 +105,7 @@ function createTempVehicle(thePlayer, commandName, ...)
 				local dbid = (-totalTempVehicles)
 				
 				setElementData(veh, "dbid", dbid)
-				setElementData(veh, "fuel", 100)
+				setElementData(veh, "fuel", 100, false)
 				setElementData(veh, "Impounded", 0)
 				setElementData(veh, "engine", 0, false)
 				setElementData(veh, "oldx", x, false)
@@ -758,7 +758,7 @@ function fuelPlayerVehicle(thePlayer, commandName, target)
 					local targetPlayerName = getPlayerName(targetPlayer)
 					local veh = getPedOccupiedVehicle(targetPlayer)
 					if (veh) then
-						setElementData(veh, "fuel", 100)
+						setElementData(veh, "fuel", 100, false)
 						triggerClientEvent(targetPlayer, "syncFuel", veh)
 						outputChatBox("You refueled " .. targetPlayerName .. "'s vehicle.", thePlayer)
 						outputChatBox("Your vehicle was refueled by admin " .. username .. ".", targetPlayer)
@@ -776,7 +776,7 @@ function fuelAllVehicles(thePlayer, commandName)
 	if (exports.global:isPlayerAdmin(thePlayer)) then
 		local username = getPlayerName(thePlayer)
 		for key, value in ipairs(exports.pool:getPoolElementsByType("vehicle")) do
-			setElementData(value, "fuel", 100)
+			setElementData(value, "fuel", 100, false)
 		end
 		outputChatBox("All vehicles refuelled by Admin " .. username .. ".")
 	end
