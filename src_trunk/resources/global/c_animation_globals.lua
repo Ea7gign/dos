@@ -11,7 +11,6 @@ function applyAnimation(thePlayer, block, name, animtime, loop, updatePosition, 
 		
 		toggleAllControls(false, true, false)
 		setElementData(thePlayer, "forcedanimation", forced)
-		setElementData(thePlayer, "animation", true)
 		local setanim = setPedAnimation(thePlayer, block, name, animtime, loop, updatePosition, false)
 		if animtime > 50 then
 			setElementData(thePlayer, "animationt", setTimer(removeAnimation, animtime, 1, thePlayer), false)
@@ -26,7 +25,6 @@ function removeAnimation(thePlayer)
 	if isElement(thePlayer) and getElementType(thePlayer)=="player" and getElementData(thePlayer, "freeze") ~= 1 and not getElementData(thePlayer, "injuriedanimation") then
 		local setanim = setPedAnimation(thePlayer)
 		setElementData(thePlayer, "forcedanimation", false)
-		setElementData(thePlayer, "animation", false)
 		toggleAllControls(true, true, false)
 		setTimer(setPedAnimation, 50, 2, thePlayer)
 		setTimer(triggerServerEvent, 100, 1, "onPlayerStopAnimation", thePlayer, true )
