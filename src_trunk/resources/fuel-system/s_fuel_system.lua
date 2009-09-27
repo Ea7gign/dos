@@ -59,7 +59,8 @@ function fuelDepleting()
 									distance = 5  -- fuel leaking away when not moving
 								end
 								newFuel = fuel - (distance/200)
-								setElementData(veh, "fuel", newFuel)
+								setElementData(veh, "fuel", newFuel, false)
+								triggerClientEvent(v, "syncFuel", newFuel)
 								setElementData(veh, "oldx", x, false)
 								setElementData(veh, "oldy", y, false)
 								setElementData(veh, "oldz", z, false)
@@ -366,7 +367,8 @@ function fuelTheVehicle(thePlayer, theVehicle, theShape, theLitres, free)
 			
 				local oldFuel = getElementData(theVehicle, "fuel")
 				local newFuel = oldFuel+theLitres
-				setElementData(theVehicle, "fuel", newFuel)
+				setElementData(theVehicle, "fuel", newFuel, false)
+				triggerClientEvent(thePlayer, "syncFuel", newFuel)
 				--triggerClientEvent(thePlayer, "setClientFuel", thePlayer, newFuel)
 				
 				outputChatBox("Gas Station Receipt:", thePlayer)

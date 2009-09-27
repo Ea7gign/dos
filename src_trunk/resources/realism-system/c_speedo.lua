@@ -2,6 +2,7 @@ fuellessVehicle = { [594]=true, [537]=true, [538]=true, [569]=true, [590]=true, 
 
 enginelessVehicle = { [510]=true, [509]=true, [481]=true }
 local active = true
+local fuel = 0
 
 function drawSpeedo()
 	if active and not isPlayerMapVisible() then
@@ -23,11 +24,16 @@ function drawSpeedo()
 	end
 end
 
+function syncFuel()
+	fuel = source
+end
+addEvent("syncFuel", true)
+addEventHandler("syncFuel", getRootElement(), syncFuel)
+
 function drawFuel()
 	if active and not isPlayerMapVisible() then
 		local vehicle = getPedOccupiedVehicle(getLocalPlayer())
 		if (vehicle) then
-			local fuel = getElementData(vehicle, "fuel")	
 			
 			local width, height = guiGetScreenSize()
 			local x = width
@@ -83,8 +89,8 @@ function showSpeedo()
 	if source then
 		if getVehicleOccupant( source ) == getLocalPlayer() then
 			onVehicleEnter(getLocalPlayer(), 0)
-		elseif getVehicleOccupant( source, 1 ) == getLocalPlayer() then
-			onVehicleEnter(getLocalPlayer(), 1)
+		--elseif getVehicleOccupant( source, 1 ) == getLocalPlayer() then
+			--onVehicleEnter(getLocalPlayer(), 1)
 		end
 	end
 end
