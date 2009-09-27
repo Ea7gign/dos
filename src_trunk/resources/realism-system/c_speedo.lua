@@ -24,8 +24,8 @@ function drawSpeedo()
 	end
 end
 
-function syncFuel()
-	fuel = source
+function syncFuel(ifuel)
+	fuel = ifuel
 end
 addEvent("syncFuel", true)
 addEventHandler("syncFuel", getRootElement(), syncFuel)

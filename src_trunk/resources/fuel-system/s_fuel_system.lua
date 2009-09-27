@@ -60,7 +60,7 @@ function fuelDepleting()
 								end
 								newFuel = fuel - (distance/200)
 								setElementData(veh, "fuel", newFuel, false)
-								triggerClientEvent(v, "syncFuel", newFuel)
+								triggerClientEvent(v, "syncFuel", veh, newFuel)
 								setElementData(veh, "oldx", x, false)
 								setElementData(veh, "oldy", y, false)
 								setElementData(veh, "oldz", z, false)
