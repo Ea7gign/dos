@@ -31,6 +31,34 @@ fuellessVehicle = { [594]=true, [537]=true, [538]=true, [569]=true, [590]=true, 
 FUEL_PRICE = 0.33
 MAX_FUEL = 100
 
+oldFuel = { }
+syncedPlayers = { }
+function syncFuelOnEnter(player)
+	local fuel = getElementData(source, "fuel")
+	
+	if (syncedPlayers[player] == nil) or (oldFuel[source] ~= fuel) then -- sync it if we haven't already got it's data, or it's changed
+		
+		if (syncedPlayers[player] == nil) then
+			table.insert(syncedPlayers, player)
+		end
+		triggerClientEvent(player, "syncFuel", source, fuel)
+	end
+end
+addEventHandler("onVehicleEnter", getRootElement(), syncFuelOnEnter)
+
+function playerQuit()
+	syncedPlayers[source] = nil
+end
+addEventHandler("onPlayerQuit", getRootElement(), playerQuit)
+
+function onDestroy()
+	if (getElementType(source)=="vehicle") then
+		oldFuel[source] = nil
+	end
+end
+addEventHandler("onElementDestroy", getRootElement(), onDestroy)
+	
+
 function fuelDepleting()
 	local players = exports.pool:getPoolElementsByType("player")
 	for k, v in ipairs(players) do
@@ -61,6 +89,7 @@ function fuelDepleting()
 								newFuel = fuel - (distance/200)
 								setElementData(veh, "fuel", newFuel, false)
 								triggerClientEvent(v, "syncFuel", veh, newFuel)
+								oldFuel[veh] = newFuel
 								setElementData(veh, "oldx", x, false)
 								setElementData(veh, "oldy", y, false)
 								setElementData(veh, "oldz", z, false)
@@ -368,7 +397,8 @@ function fuelTheVehicle(thePlayer, theVehicle, theShape, theLitres, free)
 				local oldFuel = getElementData(theVehicle, "fuel")
 				local newFuel = oldFuel+theLitres
 				setElementData(theVehicle, "fuel", newFuel, false)
-				triggerClientEvent(thePlayer, "syncFuel", newFuel)
+				triggerClientEvent(thePlayer, "syncFuel", theVehicle, newFuel)
+				oldFuel[theVehicle] = newFuel
 				--triggerClientEvent(thePlayer, "setClientFuel", thePlayer, newFuel)
 				
 				outputChatBox("Gas Station Receipt:", thePlayer)

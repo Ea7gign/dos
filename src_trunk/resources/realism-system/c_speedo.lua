@@ -25,6 +25,7 @@ function drawSpeedo()
 end
 
 function syncFuel(ifuel)
+	outputDebugString("SYNCING FUEL")
 	fuel = ifuel
 end
 addEvent("syncFuel", true)
