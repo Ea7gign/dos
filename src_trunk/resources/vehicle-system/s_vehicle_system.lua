@@ -30,9 +30,28 @@ enginelessVehicle = { [510]=true, [509]=true, [481]=true }
 lightlessVehicle = { [592]=true, [577]=true, [511]=true, [548]=true, [512]=true, [593]=true, [425]=true, [520]=true, [417]=true, [487]=true, [553]=true, [488]=true, [497]=true, [563]=true, [476]=true, [447]=true, [519]=true, [460]=true, [469]=true, [513]=true, [472]=true, [473]=true, [493]=true, [595]=true, [484]=true, [430]=true, [453]=true, [452]=true, [446]=true, [454]=true }
 locklessVehicle = { [581]=true, [509]=true, [481]=true, [462]=true, [521]=true, [463]=true, [510]=true, [522]=true, [461]=true, [448]=true, [468]=true, [586]=true }
 armoredCars = { [427]=true, [528]=true, [432]=true, [601]=true, [428]=true, [597]=true } -- Enforcer, FBI Truck, Rhino, SWAT Tank, Securicar, SFPD Car
-
+-
 -- Events
 addEvent("onVehicleSpawn", false)
+
+-- cached owner name queries
+local charCache = {} -- messes with name changes
+function getCharacterName( id )
+	if not charCache[ id ] then
+		local query = mysql_query(handler, "SELECT charactername FROM characters WHERE id='" .. id .. "' LIMIT 1")
+		if query then
+			local name = mysql_result(query, 1, 1)
+			mysql_free_result(query)
+			
+			charCache[ id ] = name
+		end
+	end
+	return charCache[ id ]
+end
+
+function clearCharacterName( id )
+	charCache[ id ] = nil
+end
 
 -- /makeveh
 function createPermVehicle(thePlayer, commandName, ...)
@@ -740,6 +759,7 @@ function toggleLock(source, key, keystate)
 	if (veh) and (inVehicle==1) then
 		triggerEvent("lockUnlockInsideVehicle", source, veh)
 	else
+		local x, y, z = getElementPosition(source)
 		local nearbyVehicles = exports.global:getNearbyElements(source, "vehicle", 30)
 		
 		if #nearbyVehicles < 1 then return end
@@ -825,17 +845,15 @@ function setRealInVehicle(thePlayer)
 		if owner < 0 and faction == -1 then
 			outputChatBox("(( This " .. carName .. " is a civilian vehicle. ))", thePlayer, 255, 195, 14)
 		elseif (faction==-1) and (owner>0) then
-			local query = mysql_query(handler, "SELECT charactername FROM characters WHERE id='" .. owner .. "' LIMIT 1")
+			local ownerName = getCharacterName(owner)
 			
-			if (mysql_num_rows(query)>0) then
-				local ownerName = mysql_result(query, 1, 1):gsub("_", " ")
-				outputChatBox("(( This " .. carName .. " belongs to " .. ownerName .. ". ))", thePlayer, 255, 195, 14)
+			if ownerName then
+				outputChatBox("(( This " .. carName .. " belongs to " .. ownerName:gsub("_", " ") .. ". ))", thePlayer, 255, 195, 14)
 				if (getElementData(source, "Impounded") > 0) then
 					local output = getRealTime().yearday-getElementData(source, "Impounded")
 					outputChatBox("(( This " .. carName .. " has been Impounded for: " .. output .. (output == 1 and " Day." or " Days.") .. " ))", thePlayer, 255, 195, 14)
 				end
 			end
-			mysql_free_result(query)
 		end
 	end
 end

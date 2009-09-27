@@ -774,6 +774,7 @@ function asetPlayerName(thePlayer, commandName, targetPlayer, ...)
 						local name = setPlayerName(targetPlayer, tostring(newName))
 						
 						if (name) then
+							exports['vehicle-system']:clearCharacterName( dbid )
 							local query = mysql_query(handler, "UPDATE characters SET charactername='" .. mysql_escape_string(handler, newName) .. "' WHERE id = " .. dbid)
 							local hiddenAdmin = getElementData(thePlayer, "hiddenadmin")
 							
@@ -789,8 +790,8 @@ function asetPlayerName(thePlayer, commandName, targetPlayer, ...)
 						end
 						setElementData(targetPlayer, "legitnamechange", 0)
 					end
+					mysql_free_result(result)
 				end
-				mysql_free_result(result)
 			end
 		end
 	end

@@ -6,4 +6,5 @@
 	<script src="c_vehicle_rightclick.lua" type="client"/>
 
 	<export function="createShopVehicle" type="server"/>
+	<export function="clearCharacterName" type="server"/>
 </meta>
