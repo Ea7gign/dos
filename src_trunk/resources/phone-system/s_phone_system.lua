@@ -53,6 +53,16 @@ function callSomeone(thePlayer, commandName, phoneNumber, ...)
 						exports.global:applyAnimation(thePlayer, "ped", "phone_in", 3000, false)
 						toggleAllControls(thePlayer, true, true, true)
 						setTimer(startPhoneAnim, 3050, 1, thePlayer)
+					elseif phoneNumber == "999" then
+						exports.global:sendLocalMeAction(thePlayer, "takes out a cell phone.")
+						outputChatBox("BT&R Operator says: Best's Towing and Recovery. Please state your location.", thePlayer)
+						setElementData(thePlayer, "callprogress", 1, false)
+						setElementData(thePlayer, "phonestate", 1)
+						setElementData(thePlayer, "calling", 999)
+						
+						exports.global:applyAnimation(thePlayer, "ped", "phone_in", 3000, false)
+						toggleAllControls(thePlayer, true, true, true)
+						setTimer(startPhoneAnim, 3050, 1, thePlayer)
 					elseif phoneNumber == "8294" then
 						exports.global:sendLocalMeAction(thePlayer, "takes out a cell phone.")
 						outputChatBox("Taxi Operator says: LS Cabs here. Please state your location.", thePlayer)
@@ -300,7 +310,7 @@ function talkPhone(thePlayer, commandName, ...)
 						outputChatBox("You [Cellphone]: " ..message, thePlayer)
 						-- Send it to nearby players of the speaker
 						exports.global:sendLocalText(thePlayer, username .. " [Cellphone]: " .. message, nil, nil, nil, 10, {[thePlayer] = true})
-					
+						
 						if (tonumber(target)==911) then -- EMERGENCY SERVICES
 							if (callprogress==1) then -- Requesting the location
 								setElementData(thePlayer, "call.location", message)
@@ -309,7 +319,7 @@ function talkPhone(thePlayer, commandName, ...)
 								return
 							elseif (callprogress==2) then -- Requesting the situation
 								outputChatBox("911 Operator says: Thanks for your call, we've dispatched a unit to your location.", thePlayer)
-																
+								
 								local location = getElementData(thePlayer, "call.location")
 								local theTeam = getTeamFromName("Los Santos Police Department")
 								local theTeamES = getTeamFromName("Los Santos Emergency Services")
@@ -339,12 +349,42 @@ function talkPhone(thePlayer, commandName, ...)
 								toggleAllControls(thePlayer, true, true, true)
 								return
 							end
+						elseif (tonumber(target)==999) then -- EMERGENCY SERVICES
+							if (callprogress==1) then -- Requesting the location
+								setElementData(thePlayer, "call.location", message)
+								setElementData(thePlayer, "callprogress", 2)
+								outputChatBox("BT&R Operator says: Can you describe the situation please?", thePlayer)
+								return
+							elseif (callprogress==2) then -- Requesting the situation
+								outputChatBox("BT&R Operator says: Thanks for your call, we've dispatched a unit to your location.", thePlayer)
+								
+								local location = getElementData(thePlayer, "call.location")
+								local theTeam = getTeamFromName("Best's Towing and Recovery")
+								local teamMembers = getPlayersInTeam(theTeam)
+								
+								for key, value in ipairs(teamMembers) do
+									outputChatBox("[RADIO] This is dispatch, We've got an incident, Over.", value, 0, 183, 239)
+									outputChatBox("[RADIO] Situation: '" .. message .. "', Over. ((" .. getPlayerName(thePlayer) .. "))", value, 0, 183, 239)
+									outputChatBox("[RADIO] Location: '" .. tostring(location) .. "', Over. ((" .. getPlayerName(thePlayer) .. "))", value, 0, 183, 239)
+								end
+								
+								removeElementData(thePlayer, "calling")
+								removeElementData(thePlayer, "caller")
+								removeElementData(thePlayer, "callprogress")
+								removeElementData(thePlayer, "call.location")
+								setElementData(thePlayer, "phonestate", 0, false)
+								exports.global:sendLocalMeAction(thePlayer, "hangs up their cellphone.")
+								
+								exports.global:applyAnimation(thePlayer, "ped", "phone_out", 1000, false, true, true)
+								toggleAllControls(thePlayer, true, true, true)
+								return
+							end
 						elseif (tonumber(target)==8294) then -- TAXI
 							if (callprogress==1) then
 								outputChatBox("Taxi Operator says: Thanks for your call, a taxi will be with you shortly.", thePlayer)
 								
 								local playerNumber = getElementData(thePlayer, "cellnumber")
-				
+								
 								for key, value in ipairs(exports.pool:getPoolElementsByType("player")) do
 									local job = getElementData(value, "job")
 									
@@ -352,7 +392,7 @@ function talkPhone(thePlayer, commandName, ...)
 										outputChatBox("[New Fare] " .. getPlayerName(thePlayer) .." Ph:" .. playerNumber .. " Location: " .. message .."." , value, 0, 183, 239)
 									end
 								end
-							
+								
 								removeElementData(thePlayer, "calling")
 								removeElementData(thePlayer, "caller")
 								removeElementData(thePlayer, "callprogress")
