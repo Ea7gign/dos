@@ -20,11 +20,13 @@ function showdata()
 	local largest = 0
 	local largestname = "none"
 	for key, value in pairs(data) do
-		if (value>largest) and (value~="scoreboard:reload") then
-			largest = value
-			largestname = key
+		if (value>=5) then
+			if (value>largest) and (value~="scoreboard:reload") then
+				largest = value
+				largestname = key
+			end
+			outputChatBox(tostring(key) .. ": ".. value)
 		end
-		outputChatBox(tostring(key) .. ": ".. value)
 	end
 	
 	outputChatBox("Largest was: ".. largestname .. ": " .. largest)
