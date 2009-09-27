@@ -86,7 +86,6 @@ function dropOffCar()
 				
 				if (dbid>0) then
 					respawnVehicle (vehicle)
-					setElementData(vehicle, "locked", 0, false)
 					setVehicleLocked(vehicle, false)
 				else
 					destroyElement(vehicle)

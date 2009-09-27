@@ -10,7 +10,6 @@ function respawnTruck(vehicle)
 	setElementData(source, "realinvehicle", 0, false)
 	removePedFromVehicle(source, vehicle)
 	respawnVehicle(vehicle)
-	setElementData(vehicle, "locked", 0, false)
 	setVehicleLocked(vehicle, false)
 	setElementVelocity(vehicle,0,0,0)
 end

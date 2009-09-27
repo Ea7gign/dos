@@ -1219,8 +1219,7 @@ function quitPlayer ( quitReason )
 				local theVehicle = getPedOccupiedVehicle(source)
 				local dbid = tonumber(getElementData(theVehicle, "dbid"))
 				if (exports.global:hasItem(source, 3, dbid)) then -- has the player a key for this vehicle?
-					local locked = getElementData(theVehicle, "locked")
-					if (locked == false) then -- check if the vehicle aint locked already
+					if not isVehicleLocked(theVehicle) then -- check if the vehicle aint locked already
 						local passenger1 = getVehicleOccupant( theVehicle , 1 )
 						local passenger2 = getVehicleOccupant( theVehicle , 2 )
 						local passenger3 = getVehicleOccupant( theVehicle , 3 )

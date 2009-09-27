@@ -78,7 +78,6 @@ function UnlockVehicle(element, matchingdimension)
 					if (source == towSphere2) then
 						--PD make sure its not marked as impounded so it cannot be recovered and unlock/undp it
 						setVehicleLocked(temp, false)
-						setElementData(temp, "locked", false)
 						setElementData(temp, "Impounded", 0)
 						setElementData(temp, "enginebroke", 0, false)
 						setVehicleDamageProof(temp, false)
@@ -88,7 +87,6 @@ function UnlockVehicle(element, matchingdimension)
 						--if (getElementData(temp, "faction") ~= 30) then
 							--unlock it and impound it
 							setVehicleLocked(temp, false)
-							setElementData(temp, "locked", false)
 							setElementData(temp, "Impounded", getRealTime().yearday)
 							setElementData(temp, "enginebroke", 1, false)
 							setVehicleEngineState(temp, false)
@@ -113,7 +111,6 @@ function payRelease(vehID)
 		setElementData(vehID, "Impounded", 0)
 		setElementPosition(vehID, 1104.6435546875, -932.0029296875, 43.187454223633)
 		setVehicleLocked(vehID, true)
-		setElementData(vehID, "locked", true)
 		setElementData(vehID, "enginebroke", 0, false)
 		setVehicleDamageProof(vehID, false)
 		setVehicleEngineState(vehID, false)
