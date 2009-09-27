@@ -44,7 +44,8 @@ end
 
 function syncFuelOnEnter(player)
 	local fuel = getElementData(source, "fuel")
-	
+	outputDebugString(tostring(oldFuel[source]))
+	outputDebugString(tostring(syncedPlayers[player]))
 	if (syncedPlayers[player] == nil) or (tonumber(oldFuel[source]) ~= tonumber(fuel)) then -- sync it if we haven't already got it's data, or it's changed
 		
 		if (syncedPlayers[player] == nil) then
@@ -403,8 +404,8 @@ function fuelTheVehicle(thePlayer, theVehicle, theShape, theLitres, free)
 				
 				exports.global:takeMoney(thePlayer, fuelCost, true)
 			
-				local oldFuel = getElementData(theVehicle, "fuel")
-				local newFuel = oldFuel+theLitres
+				local loldFuel = getElementData(theVehicle, "fuel")
+				local newFuel = loldFuel+theLitres
 				setElementData(theVehicle, "fuel", newFuel, false)
 				triggerClientEvent(thePlayer, "syncFuel", theVehicle, newFuel)
 				oldFuel[theVehicle] = newFuel
