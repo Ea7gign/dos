@@ -44,12 +44,11 @@ end
 
 function syncFuelOnEnter(player)
 	local fuel = getElementData(source, "fuel")
-	outputDebugString(tostring(oldFuel[source]))
-	outputDebugString(tostring(syncedPlayers[player]))
+
 	if (syncedPlayers[player] == nil) or (tonumber(oldFuel[source]) ~= tonumber(fuel)) then -- sync it if we haven't already got it's data, or it's changed
 		
 		if (syncedPlayers[player] == nil) then
-			table.insert(syncedPlayers, player)
+			syncedPlayers[player] = true
 		end
 		triggerClientEvent(player, "syncFuel", source, fuel)
 	end
