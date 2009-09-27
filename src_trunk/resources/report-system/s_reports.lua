@@ -1,3 +1,31 @@
+-- ////////////////////////////////////
+-- //			MYSQL				 //
+-- ////////////////////////////////////		
+sqlUsername = exports.mysql:getMySQLUsername()
+sqlPassword = exports.mysql:getMySQLPassword()
+sqlDB = exports.mysql:getMySQLDBName()
+sqlHost = exports.mysql:getMySQLHost()
+sqlPort = exports.mysql:getMySQLPort()
+
+handler = mysql_connect(sqlHost, sqlUsername, sqlPassword, sqlDB, sqlPort)
+
+function checkMySQL()
+	if not (mysql_ping(handler)) then
+		handler = mysql_connect(sqlHost, sqlUsername, sqlPassword, sqlDB, sqlPort)
+	end
+end
+setTimer(checkMySQL, 300000, 0)
+
+function closeMySQL()
+	if (handler~=nil) then
+		mysql_close(handler)
+	end
+end
+addEventHandler("onResourceStop", getResourceRootElement(getThisResource()), closeMySQL)
+-- ////////////////////////////////////
+-- //			MYSQL END			 //
+-- ////////////////////////////////////
+
 reports = { }
 
 function resourceStart(res)
@@ -450,6 +478,7 @@ function acceptReport(thePlayer, commandName, id)
 					
 					local adminreports = getElementData(thePlayer, "adminreports")
 					setElementData(thePlayer, "adminreports", adminreports+1, false)
+					mysql_free_result( mysql_query( handler, "UPDATE accounts SET adminreports=adminreports+1 WHERE id = " .. getElementData( thePlayer, "gameaccountid" ) ) )
 					setElementData(reportingPlayer, "reportadmin", thePlayer, false)
 					
 					local timestring = hours .. ":" .. minutes

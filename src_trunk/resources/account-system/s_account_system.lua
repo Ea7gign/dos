@@ -1388,6 +1388,7 @@ function serverToggleBlur(enabled)
 		setElementData(source, "blur", 0)
 		setPlayerBlurLevel(source, 0)
 	end
+	mysql_free_result( mysql_query( handler, "UPDATE accounts SET blur=" .. getElementData( source, "blur" ).. " WHERE id = " .. getElementData( source, "gameaccountid" ) ) )
 end
 addEvent("updateBlurLevel", true)
 addEventHandler("updateBlurLevel", getRootElement(), serverToggleBlur)
@@ -1404,6 +1405,7 @@ function cmdToggleBlur(thePlayer, commandName)
 		setElementData(thePlayer, "blur", 0)
 		setPlayerBlurLevel(thePlayer, 0)
 	end
+	mysql_free_result( mysql_query( handler, "UPDATE accounts SET blur=" .. ( 1 - blur ) .. " WHERE id = " .. getElementData( thePlayer, "gameaccountid" ) ) )
 end
 addCommandHandler("toggleblur", cmdToggleBlur)
 

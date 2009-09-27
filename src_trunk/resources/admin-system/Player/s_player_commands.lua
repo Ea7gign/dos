@@ -257,6 +257,7 @@ function mutePlayer(thePlayer, commandName, targetPlayer)
 						outputChatBox(targetPlayerName .. " is now unmuted from OOC.", thePlayer, 0, 255, 0)
 						outputChatBox("You were unmuted by '" .. getPlayerName(thePlayer) .. "'.", targetPlayer, 0, 255, 0)
 					end
+					mysql_free_result( mysql_query( handler, "UPDATE accounts SET muted=" .. getElementData(targetPlayer, "muted") .. " WHERE id = " .. getElementData(targetPlayer, "gameaccountid") ) )
 				end
 			end
 		end
@@ -2099,6 +2100,8 @@ function warnPlayer(thePlayer, commandName, targetPlayer)
 				local targetPlayerName = getPlayerName(targetPlayer)
 				local warns = getElementData(targetPlayer, "warns")
 				warns = warns + 1
+				local accountID = getElementData(targetPlayer, "gameaccountid")
+				mysql_free_result( mysql_query( handler, "UPDATE accounts SET warns=" .. warns .. " WHERE id = " .. accountID ) )
 				outputChatBox("You have given " .. targetPlayerName .. " a warning. (" .. warns .. "/3).", thePlayer, 255, 0, 0)
 				outputChatBox("You have been given a warning by " .. getPlayerName(thePlayer) .. ".", targetPlayer, 255, 0, 0)
 				
@@ -2113,7 +2116,6 @@ function warnPlayer(thePlayer, commandName, targetPlayer)
 					banPlayer(targetPlayer, true, false, false, thePlayer, "Received 3 admin warnings.", 0)
 					outputChatBox("AdmWarn: " .. targetPlayerName .. " was banned for several admin warnings.", getRootElement(), 255, 0, 51)
 					
-					local accountID = getElementData(targetPlayer, "gameaccountid")
 					local query = mysql_query(handler, "UPDATE accounts SET banned='1', banned_reason='3 Admin Warnings', banned_by='Warn System' WHERE id='" .. accountID .. "'")
 					mysql_free_result(query)
 				end

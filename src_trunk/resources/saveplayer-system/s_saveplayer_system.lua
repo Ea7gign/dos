@@ -101,7 +101,7 @@ function savePlayer(reason, player)
 			triggerEvent("onVehicleExit", vehicle, source, seat)
 		end
 		
-		local x, y, z, rot, health, armour, interior, dimension, blindfold, username, cuffed, skin, muted, duty, globalooc, fightstyle, blur, casualskin, adminreports, warns, hoursplayed, timeinserver
+		local x, y, z, rot, health, armour, interior, dimension, blindfold, username, cuffed, skin, duty, fightstyle, casualskin, hoursplayed, timeinserver
 		
 		username = getPlayerName(source)
 		
@@ -126,7 +126,6 @@ function savePlayer(reason, player)
 		end
 		
 		
-		muted = getElementData(source, "muted")
 		blindfold = getElementData(source, "blindfold")
 		if not (blindfold) then blindfold = 0 end
 		
@@ -139,25 +138,13 @@ function savePlayer(reason, player)
 		fightstyle = getPedFightingStyle(source)
 		local dutyskin = getElementData(source, "dutyskin")
 		
-		radiochannel = getElementData(source, "radiochannel")
 		duty = getElementData(source, "duty")
-		globalooc = getElementData(source, "globalooc")
-		blur = getElementData(source, "blur")
-		
-		adminreports = getElementData(source, "adminreports")
 		
 		casualskin = getElementData(source, "casualskin")
-		
-		warns = getElementData(source, "warns")
-		
-		chatbubbles = getElementData(source, "chatbubbles")
 		
 		timeinserver = getElementData(source, "timeinserver")
 		
 		local bankmoney = getElementData(source, "bankmoney") + ( getElementData(source, "businessprofit") or 0 )
-		
-		local gameAccountUsername = getElementData(source, "gameaccountusername")
-		local safegameAccountUsername = mysql_escape_string(handler, gameAccountUsername)
 		
 		hoursplayed = getElementData(source, "hoursplayed")
 		
@@ -194,13 +181,6 @@ function savePlayer(reason, player)
 			mysql_free_result(update)
 		else
 			outputDebugString( "Saveplayer Update: " .. mysql_error( handler ) )
-		end
-		
-		local update2 = mysql_query(handler, "UPDATE accounts SET muted='" .. muted .. "', globalooc='" .. globalooc .. "', blur='" .. blur .. "', adminreports='" .. adminreports .. "', warns='" .. warns .. "', chatbubbles='" .. chatbubbles .. "' WHERE username='" .. tostring(safegameAccountUsername) .. "'")
-		if (update2) then
-			mysql_free_result(update2)
-		else
-			outputDebugString( "Saveplayer Update 2: " .. mysql_error( handler ) )
 		end
 		
 		--outputDebugString("Saved player '" .. getPlayerName(source) .. "' [" .. reason .. "].")

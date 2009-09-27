@@ -419,6 +419,7 @@ function playerToggleOOC(thePlayer, commandName)
 			outputChatBox("You have now enabled Global OOC Chat.", thePlayer, 255, 194, 14)
 			setElementData(thePlayer, "globalooc", 1, false)
 		end
+		mysql_free_result( mysql_query( handler, "UPDATE accounts SET globalooc=" .. getElementData(thePlayer, "globalooc") .. " WHERE id = " .. getElementData(thePlayer, "gameaccountid") ) )
 	end
 end
 addCommandHandler("toggleooc", playerToggleOOC, false, false)
@@ -900,6 +901,7 @@ function playerChangeChatbubbleMode(thePlayer, commandName, mode)
 				outputChatBox("All chatbubbles are now visible.", thePlayer, 255, 194, 14)
 			end
 			setElementData(thePlayer, "chatbubbles", mode, false)
+			mysql_free_result( mysql_query( handler, "UPDATE accounts SET chatbubbles=" .. mode .. " WHERE id = " .. getElementData( thePlayer, "gameaccountid" ) ) )
 		end
 	end
 end
