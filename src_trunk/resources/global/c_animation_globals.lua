@@ -10,7 +10,13 @@ function applyAnimation(thePlayer, block, name, animtime, loop, updatePosition, 
 		end
 		
 		toggleAllControls(false, true, false)
-		setElementData(thePlayer, "forcedanimation", forced)
+		
+		if (forced) then
+			setElementData(thePlayer, "forcedanimation", 1)
+		else
+			setElementData(thePlayer, "forcedanimation", nil)
+		end
+		
 		local setanim = setPedAnimation(thePlayer, block, name, animtime, loop, updatePosition, false)
 		if animtime > 50 then
 			setElementData(thePlayer, "animationt", setTimer(removeAnimation, animtime, 1, thePlayer), false)

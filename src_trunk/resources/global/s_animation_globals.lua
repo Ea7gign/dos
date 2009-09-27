@@ -10,7 +10,13 @@ function applyAnimation(thePlayer, block, name, animtime, loop, updatePosition, 
 		end
 		
 		toggleAllControls(thePlayer, false, true, false)
-		setElementData(thePlayer, "forcedanimation", forced)
+		
+		if (forced) then
+			setElementData(thePlayer, "forcedanimation", 1)
+		else
+			removeElementData(thePlayer, "forcedanimation")
+		end
+		
 		local setanim = setPedAnimation(thePlayer, block, name, animtime, loop, updatePosition, false)
 		if animtime > 100 then
 			setTimer(setPedAnimation, 50, 2, thePlayer, block, name, animtime, loop, updatePosition, false)
@@ -27,7 +33,7 @@ end
 function onSpawn()
 	setPedAnimation(source)
 	toggleAllControls(source, true, true, false)
-	setElementData(source, "forcedanimation", false)
+	removeElementData(source, "forcedanimation")
 end
 addEventHandler("onPlayerSpawn", getRootElement(), onSpawn)
 
