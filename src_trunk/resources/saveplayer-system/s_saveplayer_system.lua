@@ -82,7 +82,7 @@ function syncTIS()
 	for key, value in ipairs(getElementsByType("player")) do
 		local tis = getElementData(value, "timeinserver")
 		if (tis) then
-			setElementData(value, "timeinserver", tonumber(tis)+10, false)
+			setElementData(value, "timeinserver", tonumber(tis)+1, false)
 		end
 	end
 end
