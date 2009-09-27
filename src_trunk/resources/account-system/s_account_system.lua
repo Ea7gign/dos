@@ -617,6 +617,18 @@ function spawnCharacter(charname)
 			fadeCamera(source, true, 2)
 		end
 		
+		-- impounded cars
+		if exports.global:hasItem(source, 2) then -- phone
+			local impounded = mysql_query(handler, "SELECT COUNT(*) FROM vehicles WHERE owner = " .. id .. " and Impounded > 0")
+			if impounded then
+				local amount = tonumber(mysql_result(impounded, 1, 1)) or 0
+				if amount > 0 then
+					outputChatBox("((Best's Towing & Recovery)) #999 [SMS]: " .. amount .. " of your vehicles are impounded. Head over to the Impound to release them.", source, 120, 255, 80)
+				end
+				mysql_free_result(impounded)
+			end
+		end
+		
 		triggerEvent("onCharacterLogin", source, charname, factionID)
 		mysql_free_result(result)
 	else
