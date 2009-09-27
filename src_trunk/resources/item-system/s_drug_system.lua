@@ -18,36 +18,27 @@ function mixDrugs(drug1, drug2, drug1name, drug2name)
 	local drugID
 	
 	if (drug1 == 31 and drug2 == 31) then -- Cocaine
-		drugName = "Cocaine"
 		drugID = 34
 	elseif (drug1==30 and drug2==31) or (drug1==31 and drug2==30) then -- Drug 2
-		drugName = "Drug 2"
 		drugID = 35
 	elseif (drug1==32 and drug2==31) or (drug1==31 and drug2==32) then -- Drug 3
-		drugName = "Drug 3"
 		drugID = 36
 	elseif (drug1==33 and drug2==31) or (drug1==31 and drug2==33) then -- Drug 4
-		drugName = "Drug 4"
 		drugID = 37
 	elseif (drug1==30 and drug2==30) then -- Marijuana
-		drugName = "Marijuana"
 		drugID = 38
 	elseif (drug1==30 and drug2==32) or (drug1==32 and drug2==30) then -- Drug 6
-		drugName = "Drug 6"
 		drugID = 39
 	elseif (drug1==30 and drug2==33) or (drug1==33 and drug2==30) then -- Drug 7
-		drugName = "Drug 7"
 		drugID = 40
 	elseif (drug1==32 and drug2==32) then -- LSD
-		drugName = "LSD"
 		drugID = 41
 	elseif (drug1==32 and drug2==33) or (drug1==33 and drug2==32) then -- Drug 9
-		drugName = "Drug 9"
 		drugID = 42
 	elseif (drug1==33 and drug2==33) then -- Angel Dust
-		drugName = "Angel Dust"
 		drugID = 43
 	end
+	drugName = getItemName(drugID)
 	
 	if (drugName == nil or drugID == nil) then
 		outputChatBox("Error #1000 - Report on http://bugs.valhallagaming.net", source, 255, 0, 0)
@@ -69,54 +60,3 @@ function mixDrugs(drug1, drug2, drug1name, drug2name)
 end
 addEvent("mixDrugs", true)
 addEventHandler("mixDrugs", getRootElement(), mixDrugs)
-
-function raidForChemicals(thePlayer)
-	local logged = getElementData(thePlayer, "loggedin")
-	
-	if (logged==1) then
-		local raided = getElementData(thePlayer, "raided")
-		
-		if not (raided) or (raided==0) then
-			local x, y, z = getElementPosition(thePlayer)
-			local colShape = createColSphere(x, y, z, 5)
-			
-			local vehicles = getElementsWithinColShape(colShape, "vehicle")
-			local found = false
-			for key, value in ipairs(vehicles) do
-				
-				if (getElementModel(value)==416) then
-					local locked = isVehicleLocked(value)
-					found = true
-
-					if (locked) then
-						outputChatBox("You try to enter the ambulance, but find it is locked.", thePlayer, 255, 0, 0)
-						exports.global:sendLocalMeAction(thePlayer, "attempts to enter the back of the ambulance.")
-					else
-						setElementData(thePlayer, "raided", 1)
-						setTimer(setElementData, 300000, 1, thePlayer, "raided", 0)
-						local rand1 = math.random(30, 33)
-						local rand2 = math.random(30, 33)
-						local given1 = exports.global:giveItem(thePlayer, rand1, 1)
-						local given2 = exports.global:giveItem(thePlayer, rand2, 1)
-						
-						if (given1) or (given2) then
-							outputChatBox("You broke into the back of the ambulance and stole some chemicals.", thePlayer, 0, 255, 0)
-							exports.global:sendLocalMeAction(thePlayer, "enters the back of the ambulance and steals some chemicals.")
-						elseif not (given1) and not (given2) then
-							outputChatBox("You do not have enough space to take those items.", thePlayer, 255, 0, 0)
-							exports.global:sendLocalMeAction(thePlayer, "enters the back of the ambulance and attempts to steal some chemicals but drops them.")
-						end
-					end
-					break
-				end
-			end
-			
-			if not (found) then
-				outputChatBox("You are too far away.", thePlayer, 255, 0, 0)
-			end
-		else
-			outputChatBox("Please wait before raiding again.", thePlayer, 255, 0, 0)
-		end
-	end
-end
---addCommandHandler("raid", raidForChemicals, false, false)

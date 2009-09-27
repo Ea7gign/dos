@@ -234,7 +234,7 @@ function useItem(itemSlot, additional)
 			
 			local obj = createObject(343, unpack(additional))
 			exports.pool:allocateElement(obj)
-			setTimer(explodeFlash, math.random(500, 600), 1, obj, unpack(additional))
+			setTimer(explodeFlash, math.random(500, 600), 1, obj)
 			exports.global:sendLocalMeAction(source, "throws a flashbang.")
 		elseif (itemID==28) then -- GLOWSTICK
 			takeItemFromSlot(source, itemSlot)
@@ -343,10 +343,7 @@ function useItem(itemSlot, additional)
 				setElementData(source, "mask", 0, false)
 			end
 		elseif (itemID==57) then -- FUEL CAN
-			local x, y, z = getElementPosition(source)
-			local checkSphere = createColSphere(x, y, z, 5)
-			local nearbyVehicles = getElementsWithinColShape(checkSphere, "vehicle")
-			destroyElement(checkSphere)
+			local nearbyVehicles = exports.global:getNearbyElements(source, "vehicle")
 			
 			if #nearbyVehicles < 1 then return end
 			
@@ -439,12 +436,9 @@ addEvent("useItem", true)
 addEventHandler("useItem", getRootElement(), useItem)
 
 function explodeFlash(obj, x, y, z)
-	local colsphere = createColSphere(x, y, z, 7)
-	exports.pool:allocateElement(colsphere)
-	local players = getElementsWithinColShape(colsphere, "player")
+	local players = exports.global:getNearbyElements(obj, "player")
 	
 	destroyElement(obj)
-	destroyElement(colsphere)
 	for key, value in ipairs(players) do
 		local gasmask = getElementData(value, "gasmask")
 		

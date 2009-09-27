@@ -3,14 +3,11 @@ function tazerFired(x, y, z, target)
 	local distance = getDistanceBetweenPoints3D(x, y, z, px, py, pz)
 
 	if (distance<50) then
-		local colshape = createColSphere(px, py, pz, 20)
-		exports.pool:allocateElement(colshape)
-		for key, value in ipairs(getElementsWithinColShape(colshape)) do
+		for key, value in ipairs(exports.global:getNearbyElements(target, "player")) do
 			if (value~=source) then
 				triggerClientEvent(value, "showTazerEffect", value, x, y, z) -- show the sparks
 			end
 		end
-		destroyElement(colshape)
 		
 		if (isElement(target) and getElementType(target)=="player") then
 			setElementData(target, "tazed", 1, false)

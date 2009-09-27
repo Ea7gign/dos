@@ -1329,12 +1329,9 @@ function newsHotline(thePlayer, commandName, ...)
 			
 			for key, value in ipairs(teamMembers) do
 				if(exports.global:hasItem(value,2))then
-					local x, y, z = getElementPosition(value)
-					local phoneSphere = createColSphere(x, y, z, 10)
-					for _,nearbyPlayer in ipairs(getElementsWithinColShape(phoneSphere)) do
+					for _,nearbyPlayer in ipairs(exports.global:getNearbyElements(value, "player")) do
 						triggerClientEvent(nearbyPlayer, "startRinging", value, 2)
 					end
-					destroyElement(phoneSphere)
 					exports.global:sendLocalMeAction(value,"receives a text message.")
 					outputChatBox("SMS From: News Desk - '".. message.."' Ph:".. playerNumber .." (("..getPlayerName(thePlayer) .."))", value)
 				end

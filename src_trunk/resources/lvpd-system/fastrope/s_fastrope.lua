@@ -22,11 +22,9 @@ function startRappel(x, y, z, gz)
 	setTimer(stopRappel, 2000, 1, invisible, source, slot)
 	exports.global:applyAnimation(source, "PARACHUTE", "PARA_float", true, 1.0, false, false)
 	
-	local colshape = createColCircle(x, y, 100) -- 100 distance
-	for key, value in ipairs(getElementsWithinColShape(colshape, "player")) do
+	for key, value in ipairs(exports.global:getNearbyElements(invisible, "player", 100)) do
 		triggerClientEvent(value, "createRope", value, x, y, z, gz)
 	end
-	destroyElement(colshape)
 end
 addEvent("startRappel", true)
 addEventHandler("startRappel", getRootElement(), startRappel)

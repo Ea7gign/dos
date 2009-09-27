@@ -5,6 +5,7 @@
 	<export function="getOOCState" type="server"/>
 	<export function="setOOCState" type="server"/>
 	<export function="sendMessageToAdmins" type="server"/>
+	<export function="getNearbyElements" type="server"/>
 	<export function="sendLocalText" type="server"/>
 	<export function="sendLocalMeAction" type="server"/>
 	<export function="sendLocalDoAction" type="server"/>

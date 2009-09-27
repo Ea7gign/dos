@@ -289,12 +289,7 @@ end
 addCommandHandler("takelicense", takeLicense, false, false)
 
 function tellNearbyPlayersVehicleStrobesOn()
-	local x, y, z = getElementType(source)
-	local checkSphere = createColSphere(x, y, z, 300)
-	local nearbyPlayers = getElementsWithinColShape(checkSphere, "player")
-	destroyElement(checkSphere)
-	
-	for _, nearbyPlayer in ipairs(nearbyPlayers) do
+	for _, nearbyPlayer in ipairs(exports.global:getNearbyElements(source, "player", 300)) do
 		triggerClientEvent(nearbyPlayer, "forceElementStreamIn", source)
 	end
 end

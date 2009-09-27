@@ -226,15 +226,10 @@ addCommandHandler("getcar", getCar, false, false)
 
 function getNearbyVehicles(thePlayer, commandName)
 	if (exports.global:isPlayerAdmin(thePlayer)) then
-		local posX, posY, posZ = getElementPosition( thePlayer )
-        local objSphere = createColSphere( posX, posY, posZ, 20 )
-		exports.pool:allocateElement(objSphere)
-        local nearbyVehicles = getElementsWithinColShape( objSphere, "vehicle" )
-        destroyElement( objSphere )
 		outputChatBox("Nearby Vehicles:", thePlayer, 255, 126, 0)
 		local count = 0
 		
-        for index, nearbyVehicle in ipairs( nearbyVehicles ) do
+        for index, nearbyVehicle in ipairs( exports.global:getNearbyElements(thePlayer, "vehicle") ) do
 			local thisvehid = getElementData(nearbyVehicle, "dbid")
 			local vehicleID = getElementModel(nearbyVehicle)
 			local vehicleName = getVehicleNameFromModel(vehicleID)
