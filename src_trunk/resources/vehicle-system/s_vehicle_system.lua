@@ -740,28 +740,26 @@ function toggleLock(source, key, keystate)
 	if (veh) and (inVehicle==1) then
 		triggerEvent("lockUnlockInsideVehicle", source, veh)
 	else
-		if not triggerEvent("lockUnlockHouse", source) then
-			local x, y, z = getElementPosition(source)
-			local checkSphere = createColSphere(x, y, z, 30)
-			local nearbyVehicles = getElementsWithinColShape(checkSphere, "vehicle")
-			destroyElement(checkSphere)
-			
-			if #nearbyVehicles < 1 then return end
-			
-			local found = nil
-			local shortest = 31
-			for i, veh in ipairs(nearbyVehicles) do
-				local dbid = tonumber(getElementData(veh, "dbid"))
-				local distanceToVehicle = getDistanceBetweenPoints3D(x, y, z, getElementPosition(veh))
-				if shortest > distanceToVehicle and ( getElementData(source, "adminduty") == 1 or exports.global:hasItem(source, 3, dbid) or (getElementData(source, "faction") > 0 and getElementData(source, "faction") == getElementData(veh, "faction")) ) then
-					shortest = distanceToVehicle
-					found = veh
-				end
+		local x, y, z = getElementPosition(source)
+		local checkSphere = createColSphere(x, y, z, 30)
+		local nearbyVehicles = getElementsWithinColShape(checkSphere, "vehicle")
+		destroyElement(checkSphere)
+		
+		if #nearbyVehicles < 1 then return end
+		
+		local found = nil
+		local shortest = 31
+		for i, veh in ipairs(nearbyVehicles) do
+			local dbid = tonumber(getElementData(veh, "dbid"))
+			local distanceToVehicle = getDistanceBetweenPoints3D(x, y, z, getElementPosition(veh))
+			if shortest > distanceToVehicle and ( getElementData(source, "adminduty") == 1 or exports.global:hasItem(source, 3, dbid) or (getElementData(source, "faction") > 0 and getElementData(source, "faction") == getElementData(veh, "faction")) ) then
+				shortest = distanceToVehicle
+				found = veh
 			end
-			
-			if found then
-				triggerEvent("lockUnlockOutsideVehicle", source, found)
-			end
+		end
+		
+		if found then
+			triggerEvent("lockUnlockOutsideVehicle", source, found)
 		end
 	end
 end
@@ -1036,6 +1034,9 @@ end
 addEvent("lockUnlockInsideVehicle", true)
 addEventHandler("lockUnlockInsideVehicle", getRootElement(), lockUnlockInside)
 
+
+local storeTimers = { }
+
 function lockUnlockOutside(vehicle)
 	local locked = getElementData(vehicle, "locked")
 	local dbid = getElementData(vehicle, "dbid")
@@ -1044,20 +1045,33 @@ function lockUnlockOutside(vehicle)
 	
 	if (isVehicleLocked(vehicle)) then
 		setVehicleLocked(vehicle, false)
-		
-		local query = mysql_query(handler, "UPDATE vehicles SET locked='0' WHERE id='" .. dbid .. "' LIMIT 1")
-		mysql_free_result(query)
 		exports.global:sendLocalMeAction(source, "presses on the key to unlock the vehicle. ((" .. getVehicleName(vehicle) .. "))")
 	else
 		setVehicleLocked(vehicle, true)
-		
-		local query = mysql_query(handler, "UPDATE vehicles SET locked='1' WHERE id='" .. dbid .. "' LIMIT 1")
-		mysql_free_result(query)
 		exports.global:sendLocalMeAction(source, "presses on the key to lock the vehicle. ((" .. getVehicleName(vehicle) .. "))")
+	end
+
+	if (storeTimers[vehicle] == nil) or not (isTimer(storeTimers[vehicle])) then
+		storeTimers[vehicle] = setTimer(storeVehicleLockState, 180000, 1, vehicle, dbid)
 	end
 end
 addEvent("lockUnlockOutsideVehicle", true)
 addEventHandler("lockUnlockOutsideVehicle", getRootElement(), lockUnlockOutside)
+
+function storeVehicleLockState(vehicle, dbid)
+	if (isElement(vehicle)) then
+		local locked = isVehicleLocked(vehicle)
+		local state = 0
+		
+		if (locked) then state = 1
+		elseif (not locked) then state = 0 end
+		
+		local query = mysql_query(handler, "UPDATE vehicles SET locked='" .. state .. "' WHERE id='" .. dbid .. "' LIMIT 1")
+		mysql_free_result(query)
+		
+		storeTimers[vehicle] = nil
+	end
+end
 
 function fillFuelTank(veh, fuel)
 	local currFuel = getElementData(veh, "fuel")
