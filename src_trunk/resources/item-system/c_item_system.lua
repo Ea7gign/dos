@@ -545,9 +545,15 @@ function useItem(button)
 				return
 			elseif (itemID==57) then -- FUEL CAN
 				hideInventory()
+			elseif (itemID==58) then
+				setElementData(getLocalPlayer(), "alcohollevel", ( getElementData(getLocalPlayer(), "alcohollevel") or 0 ) + 0.1, false)
 			elseif (itemID==61) then -- Emergency Light Becon
 				outputChatBox("Put it in your car inventory and press 'P' to toggle it.", 255, 194, 14)
 				return
+			elseif (itemID==62) then
+				setElementData(getLocalPlayer(), "alcohollevel", ( getElementData(getLocalPlayer(), "alcohollevel") or 0 ) + 0.3, false)
+			elseif (itemID==63) then
+				setElementData(getLocalPlayer(), "alcohollevel", ( getElementData(getLocalPlayer(), "alcohollevel") or 0 ) + 0.2, false)
 			elseif (itemID==67) then -- GPS
 				outputChatBox("Put it in your car inventory and Press 'F5'.", 255, 194, 14)
 				return

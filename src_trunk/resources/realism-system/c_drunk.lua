@@ -16,9 +16,9 @@ function drunkenDataChange(name)
 	if name == "alcohollevel" then
 		if getElementData(source, name) then
 			if getElementData(source, name) < 0 then
-				setElementData(source, name, 0)
+				setElementData(source, name, 0, false)
 			elseif getElementData(source, name) == 0 then
-				setElementData(source, name, false)
+				setElementData(source, name, false, false)
 				
 				-- restore all keys
 				if not alcohollevel then
@@ -41,7 +41,7 @@ function drunkenDataChange(name)
 						bindKey( v, 'both', delayedKeyPress )
 					end
 					
-					drunktimer = setTimer(function() local level = getElementData(getLocalPlayer(), "alcohollevel") setElementData(getLocalPlayer(), "alcohollevel", level - 0.002) end, 2000, 0)
+					drunktimer = setTimer(function() local level = getElementData(getLocalPlayer(), "alcohollevel") setElementData(getLocalPlayer(), "alcohollevel", level - 0.005, false) end, 5000, 0)
 				else
 					-- random effect
 					local rand = math.random(1, 10)
@@ -60,12 +60,13 @@ function drunkenDataChange(name)
 				end
 			end
 			alcohollevel = getElementData(source, name)
+			triggerServerEvent("setDrunkness", source, alcohollevel)
 		end
 	end
 end
 addEventHandler( "onClientElementDataChange", getLocalPlayer(), drunkenDataChange )
 
-addEventHandler( "onClientPlayerWasted", getLocalPlayer(), function() setElementData(source, "alcohollevel", 0) end )
+addEventHandler( "onClientPlayerWasted", getLocalPlayer(), function() setElementData(source, "alcohollevel", 0, false) end )
 addEventHandler( "onClientResourceStart", getResourceRootElement(),
 	function()
 		source = getLocalPlayer()
@@ -79,9 +80,9 @@ addEventHandler( "onClientResourceStop", getResourceRootElement(),
 		source = getLocalPlayer()
 		local level = getElementData(source, "alcohollevel")
 		if level and level ~= 0 then
-			setElementData(source, "alcohollevel", 0)
+			setElementData(source, "alcohollevel", 0, false)
 			removeEventHandler( "onClientElementDataChange", getLocalPlayer(), drunkenDataChange )
-			setElementData(source, "alcohollevel", level)
+			setElementData(source, "alcohollevel", level, false)
 		end
 	end
 )
