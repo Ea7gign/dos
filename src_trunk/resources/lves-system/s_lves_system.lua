@@ -27,8 +27,15 @@ addEventHandler("onResourceStop", getResourceRootElement(getThisResource()), clo
 -- ////////////////////////////////////
 
 function playerDeath()
-	outputChatBox("Respawn in 10 seconds.", source)
-	setTimer(respawnPlayer, 10000, 1, source)
+	if getElementData(source, "adminjailed") then
+		spawnPlayer(source, 263.821807, 77.848365, 1001.0390625, 270, getElementModel(source), 6, getElementData(source, "playerid")+65400, getPlayerTeam(source))
+		setCameraInterior(source, 6)
+		setCameraTarget(source)
+		fadeCamera(source, true)
+	else
+		outputChatBox("Respawn in 10 seconds.", source)
+		setTimer(respawnPlayer, 10000, 1, source)
+	end
 end
 addEventHandler("onPlayerWasted", getRootElement(), playerDeath)
 

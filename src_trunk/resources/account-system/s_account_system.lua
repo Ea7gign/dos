@@ -358,12 +358,12 @@ function spawnCharacter(charname)
 		removeElementData(source, "pd.jailstation")
 		
 		-- ADMIN JAIL
-		local jailed = tonumber(getElementData(source, "adminjailed"))
+		local jailed = getElementData(source, "adminjailed")
 		local jailed_time = getElementData(source, "adminjail_time")
 		local jailed_by = getElementData(source, "adminjail_by")
 		local jailed_reason = getElementData(source, "adminjail_reason")
 		
-		if (jailed==1) then
+		if jailed then
 			outputChatBox("You still have " .. jailed_time .. " minute(s) to serve of your admin jail sentance.", source, 255, 0, 0)
 			outputChatBox(" ", source)
 			outputChatBox("You were jailed by: " .. jailed_by .. ".", source, 255, 0, 0)
