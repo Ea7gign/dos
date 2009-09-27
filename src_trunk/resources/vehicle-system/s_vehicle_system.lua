@@ -740,10 +740,7 @@ function toggleLock(source, key, keystate)
 	if (veh) and (inVehicle==1) then
 		triggerEvent("lockUnlockInsideVehicle", source, veh)
 	else
-		local x, y, z = getElementPosition(source)
-		local checkSphere = createColSphere(x, y, z, 30)
-		local nearbyVehicles = getElementsWithinColShape(checkSphere, "vehicle")
-		destroyElement(checkSphere)
+		local nearbyVehicles = exports.global:getNearbyElements(source, "vehicle", 30)
 		
 		if #nearbyVehicles < 1 then return end
 		

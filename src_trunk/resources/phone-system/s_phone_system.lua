@@ -117,12 +117,9 @@ function callSomeone(thePlayer, commandName, phoneNumber, ...)
 								
 								--player around target and target start ringing
 								if foundPhoneItemValue ~= 0 then -- not vibrate mode
-									local x, y, z = getElementPosition(foundElement)
-									local phoneSphere = createColSphere(x, y, z, 10)
-									for _,nearbyPlayer in ipairs(getElementsWithinColShape(phoneSphere)) do
+									for _,nearbyPlayer in ipairs(exports.global:getNearbyElements(foundElement, "player"), 10) do
 										triggerClientEvent(nearbyPlayer, "startRinging", foundElement, 1, foundPhoneItemValue)
 									end
-									destroyElement(phoneSphere)
 								end
 								
 								-- target player
@@ -181,12 +178,9 @@ function answerPhone(thePlayer, commandName)
 					setElementData(calling, "phonestate", 1, false) -- Your in an actual call
 					exports.global:sendLocalMeAction(thePlayer, "answers their cellphone.")
 					
-					local x, y, z = getElementPosition(target)
-					local phoneSphere = createColSphere(x, y, z, 10)
-					for _,nearbyPlayer in ipairs(getElementsWithinColShape(phoneSphere)) do
+					for _,nearbyPlayer in ipairs(exports.global:getNearbyElements(target, "player", 10)) do
 						triggerClientEvent(nearbyPlayer, "stopRinging", thePlayer)
 					end
-					destroyElement(phoneSphere)
 					
 					exports.global:applyAnimation(calling, "ped", "phone_in", 3000, false)
 					toggleAllControls(calling, true, true, true)

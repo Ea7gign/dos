@@ -3,7 +3,7 @@ function tazerFired(x, y, z, target)
 	local distance = getDistanceBetweenPoints3D(x, y, z, px, py, pz)
 
 	if (distance<50) then
-		for key, value in ipairs(exports.global:getNearbyElements(target, "player")) do
+		for key, value in ipairs(exports.global:getNearbyElements(target, "player", 50)) do
 			if (value~=source) then
 				triggerClientEvent(value, "showTazerEffect", value, x, y, z) -- show the sparks
 			end
