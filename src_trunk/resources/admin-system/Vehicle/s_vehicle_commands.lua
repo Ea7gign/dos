@@ -759,6 +759,7 @@ function fuelPlayerVehicle(thePlayer, commandName, target)
 					local veh = getPedOccupiedVehicle(targetPlayer)
 					if (veh) then
 						setElementData(veh, "fuel", 100)
+						triggerClientEvent(targetPlayer, "syncFuel", veh)
 						outputChatBox("You refueled " .. targetPlayerName .. "'s vehicle.", thePlayer)
 						outputChatBox("Your vehicle was refueled by admin " .. username .. ".", targetPlayer)
 					else

@@ -50,7 +50,11 @@ function syncFuelOnEnter(player)
 		if (syncedPlayers[player] == nil) then
 			syncedPlayers[player] = true
 		end
-		triggerClientEvent(player, "syncFuel", source, fuel)
+		if (fuel~=100) then
+			triggerClientEvent(player, "syncFuel", source, fuel)
+		else
+			triggerClientEvent(player, "syncFuel", source)
+		end
 	end
 end
 addEventHandler("onVehicleEnter", getRootElement(), syncFuelOnEnter)
