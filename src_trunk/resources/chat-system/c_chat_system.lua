@@ -20,7 +20,7 @@ function showdata()
 	local largest = 0
 	local largestname = "none"
 	for key, value in pairs(data) do
-		if (value>largest) then
+		if (value>largest) and (value~="scoreboard:reload") then
 			largest = value
 			largestname = key
 		end
