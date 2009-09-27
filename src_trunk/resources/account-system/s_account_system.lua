@@ -638,7 +638,7 @@ function timerUnjailPlayer(jailedPlayer)
 		local timeLeft = getElementData(jailedPlayer, "jailtime")
 		local accountID = getElementData(jailedPlayer, "gameaccountid")
 		
-		if (timeServed) then
+		if (timeServed) and (timeLeft) then
 			setElementData(jailedPlayer, "jailserved", timeServed+1)
 			local timeLeft = timeLeft - 1
 			setElementData(jailedPlayer, "jailtime", timeLeft)
@@ -1426,7 +1426,7 @@ addEventHandler("cguiSavePassword", getRootElement(), cguiSetNewPassword)
 function timerPDUnjailPlayer(jailedPlayer)
 	if(isElement(jailedPlayer)) then
 		local timeServed = getElementData(jailedPlayer, "pd.jailserved", false)
-		local timeLeft = getElementData(jailedPlayer, "pd.jailtime", false)
+		local timeLeft = getElementData(jailedPlayer, "pd.jailtime", false) or 0
 		local username = getPlayerName(jailedPlayer)
 		setElementData(jailedPlayer, "pd.jailserved", timeServed+1, false)
 		local timeLeft = timeLeft - 1
