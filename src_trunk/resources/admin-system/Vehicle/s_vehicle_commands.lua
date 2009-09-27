@@ -7,7 +7,7 @@ addEvent("onVehicleDelete", false)
 
 -- /unflip
 function unflipCar(thePlayer, commandName)
-	if (exports.global:isPlayerAdmin(thePlayer)) then
+	if (exports.global:isPlayerAdmin(thePlayer) or getTeamName(getPlayerTeam(thePlayer)) == "Best's Towing and Recovery") then
 		if not (isPedInVehicle(thePlayer)) then
 			outputChatBox("You are not in  vehicle.", thePlayer, 255, 0, 0)
 		else
