@@ -31,6 +31,9 @@ fuellessVehicle = { [594]=true, [537]=true, [538]=true, [569]=true, [590]=true, 
 FUEL_PRICE = 0.33
 MAX_FUEL = 100
 
+oldFuel = { }
+syncedPlayers = { }
+
 -- cache the fuel
 for key, value in ipairs(getElementsByType("vehicle")) do
 	if (isElement(value)) then
@@ -39,8 +42,6 @@ for key, value in ipairs(getElementsByType("vehicle")) do
 	end
 end
 
-oldFuel = { }
-syncedPlayers = { }
 function syncFuelOnEnter(player)
 	local fuel = getElementData(source, "fuel")
 	
