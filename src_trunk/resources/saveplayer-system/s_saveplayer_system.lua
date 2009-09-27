@@ -84,7 +84,7 @@ function syncTIS()
 		setElementData(value, "timeinserver", tis+10, false(
 	end
 end
-setTimer(syncTIS, 600000, 0)
+setTimer(syncTIS, 60000, 0)
 
 function savePlayer(reason, player)
 	local logged = getElementData(source, "loggedin")
