@@ -2,7 +2,7 @@ toggleControl( 'action', false ) -- yay, that key has no purpose either way
 
 local scoreboardRows = {}
 local scoreboardGrid
-local updateInterval = 1000 --ms
+local updateInterval = 10000 --ms
 local indent = ' '
 
 local playerCount
