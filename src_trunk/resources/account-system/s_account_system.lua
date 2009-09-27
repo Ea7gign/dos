@@ -86,7 +86,7 @@ function onJoin()
 	setElementData(source, "globalooc", 1, false)
 	setElementData(source, "muted", 0)
 	setElementData(source, "loginattempts", 0, false)
-	setElementData(source, "timeinserver", 0)
+	setElementData(source, "timeinserver", 0, false)
 	
 	setElementDimension(source, 0)
 	setElementInterior(source, 0)
@@ -245,7 +245,7 @@ function spawnCharacter(charname)
 		setElementData(source, "languages.lang3skill", lang3skill, false)
 		-- END OF LANGUAGES
 		
-		setElementData(source, "timeinserver", timeinserver)
+		setElementData(source, "timeinserver", timeinserver, false)
 		
 		setElementData(source, "dbid", tonumber(id))
 		if (items~=tostring(mysql_null())) and (itemvalues~=tostring(mysql_null())) then

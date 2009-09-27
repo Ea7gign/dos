@@ -78,6 +78,14 @@ function saveAllPlayers()
 	end
 end
 
+function syncTIS()
+	for key, value in ipairs(getElementsByType("player")) do
+		local tis = getElementData(value, "timeinserver")
+		setElementData(value, "timeinserver", tis+10, false(
+	end
+end
+setTimer(syncTIS, 600000, 0)
+
 function savePlayer(reason, player)
 	local logged = getElementData(source, "loggedin")
 

@@ -3699,6 +3699,7 @@ end
 addCommandHandler("tognametags", toggleNametags)
 addCommandHandler("togglenametags", toggleNametags)
 
+--[[
 function updateTimeInServer()
 	local logged = getElementData(getLocalPlayer(), "loggedin")
 	
@@ -3709,6 +3710,7 @@ function updateTimeInServer()
 	end
 end
 setTimer(updateTimeInServer, 60000, 0)
+]]--
 
 
 --/////////////////////////////////////////////////////////////////

@@ -961,7 +961,7 @@ function payAllWages()
 				govAmount = govAmount - unemployedPay
 			end
 			
-			setElementData(value, "timeinserver", timeinserver-60)
+			setElementData(value, "timeinserver", timeinserver-60, false)
 			
 			triggerClientEvent(value, "cPayDay", value)
 			local hoursplayed = getElementData(value, "hoursplayed") or 0
