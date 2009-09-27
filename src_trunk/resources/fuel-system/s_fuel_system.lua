@@ -50,6 +50,9 @@ function syncFuelOnEnter(player)
 		if (syncedPlayers[player] == nil) then
 			syncedPlayers[player] = true
 		end
+		
+		oldFuel[source] = fuel
+		
 		if (fuel~=100) then
 			triggerClientEvent(player, "syncFuel", source, fuel)
 		else
