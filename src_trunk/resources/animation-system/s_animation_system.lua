@@ -16,12 +16,9 @@ addEventHandler("onPlayerJoin", getRootElement(), bindKeysOnJoin)
 
 function stopAnimation(thePlayer)
 	local forcedanimation = getElementData(thePlayer, "forcedanimation")
-	local animation = getElementData(thePlayer, "animation")
 	
-	if (animation) then
-		if not (forcedanimation) then
-			exports.global:removeAnimation(thePlayer)
-		end
+	if not (forcedanimation) then
+		exports.global:removeAnimation(thePlayer)
 	end
 end
 addCommandHandler("stopanim", stopAnimation, false, false)

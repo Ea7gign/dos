@@ -5,7 +5,7 @@ function applyAnimation(thePlayer, block, name, animtime, loop, updatePosition, 
 	if forced==nil then forced=true end
 	
 	if isElement(thePlayer) and getElementType(thePlayer)=="player" and not getPedOccupiedVehicle(thePlayer) and getElementData(thePlayer, "freeze") ~= 1 then
-		if getElementData(thePlayer, "injuriedanimation") or ( not forced and getElementData(thePlayer, "animation") ) then
+		if getElementData(thePlayer, "injuriedanimation") or ( not forced and getPedAnimation(thePlayer) ) then
 			return false
 		end
 		
