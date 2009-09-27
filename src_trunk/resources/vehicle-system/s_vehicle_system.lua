@@ -733,6 +733,8 @@ function toggleEngine(source, key, keystate)
 				if broke == 1 then
 					exports.global:sendLocalMeAction(source, "attempts to start the engine but fails.")
 					outputChatBox("The engine is broken.", source)
+				elseif getElementData(veh, "bomb") then
+					blowVehicle(veh)
 				elseif fuel >= 1 or exports.global:isPlayerSilverDonator(source) then
 					toggleControl(source, 'brake_reverse', true)
 					
