@@ -31,12 +31,20 @@ fuellessVehicle = { [594]=true, [537]=true, [538]=true, [569]=true, [590]=true, 
 FUEL_PRICE = 0.33
 MAX_FUEL = 100
 
+-- cache the fuel
+for key, value in ipairs(getElementsByType("vehicle")) do
+	if (isElement(value)) then
+		local fuel = getElementData(value, "fuel")
+		oldFuel[value] = fuel
+	end
+end
+
 oldFuel = { }
 syncedPlayers = { }
 function syncFuelOnEnter(player)
 	local fuel = getElementData(source, "fuel")
 	
-	if (syncedPlayers[player] == nil) or (oldFuel[source] ~= fuel) then -- sync it if we haven't already got it's data, or it's changed
+	if (syncedPlayers[player] == nil) or (tonumber(oldFuel[source]) ~= tonumber(fuel)) then -- sync it if we haven't already got it's data, or it's changed
 		
 		if (syncedPlayers[player] == nil) then
 			table.insert(syncedPlayers, player)
