@@ -1,3 +1,6 @@
+governmentVehicle = { [416]=true, [427]=true, [490]=true, [528]=true, [407]=true, [544]=true, [523]=true, [596]=true, [597]=true, [598]=true, [599]=true, [601]=true, [428]=true }
+orangeVehicle = { [525]=true }
+
 policevehicles = { }
 policevehicleids = { }
 
@@ -8,7 +11,7 @@ function bindKeys(res)
 	for key, value in ipairs(getElementsByType("vehicle")) do
 		if (isElementStreamedIn(value)) then
 			local modelid = getElementModel(value)
-			if (governmentVehicle[modelid]) or exports.global:hasItem(value, 61) then
+			if (governmentVehicle[modelid]) or exports.global:hasItem(value, 61) or orangeVehicle[modelid] then
 				policevehicles[value] = true
 			end
 		end
@@ -21,7 +24,9 @@ function toggleFlashers()
 	
 	if (veh) then
 		local modelid = getElementModel(veh)
-		if (governmentVehicle[modelid]) or exports.global:hasItem(veh, 61) then -- Emergency Light Becon
+		local blueRed = governmentVehicle[modelid] or exports.global:hasItem(veh, 61)
+		local orange = orangeVehicle[modelid]
+		if blueRed or orange then -- Emergency Light Becon
 			if not policevehicles[veh] then
 				policevehicles[veh] = true
 			end
@@ -31,7 +36,11 @@ function toggleFlashers()
 			if (lights==2) then
 				if not (state) then
 					setElementData(veh, "flashers", true, true)
-					setVehicleHeadLightColor(veh, 0, 0, 255)
+					if blueRed then
+						setVehicleHeadLightColor(veh, 0, 0, 255)
+					else
+						setVehicleHeadLightColor(veh, 255, 90, 0)
+					end
 					setVehicleLightState(veh, 0, 1)
 					setVehicleLightState(veh, 1, 0)
 				else
@@ -45,13 +54,10 @@ function toggleFlashers()
 	end
 end
 
-governmentVehicle = { [416]=true, [427]=true, [490]=true, [528]=true, [407]=true, [544]=true, [523]=true, [596]=true, [597]=true, [598]=true, [599]=true, [601]=true, [428]=true }
-
-
 function streamIn()
 	if (getElementType(source)=="vehicle") then
 		local modelid = getElementModel(source)
-		if (governmentVehicle[modelid]) or exports.global:hasItem(source, 61) then
+		if (governmentVehicle[modelid]) or exports.global:hasItem(source, 61) or orangeVehicle[modelid] then
 			policevehicles[source] = true
 		end
 	end
@@ -78,10 +84,13 @@ function doFlashes()
 			local state1 = getVehicleLightState(veh, 0)
 			local state2 = getVehicleLightState(veh, 1)
 			
-			if (state1==0) then
-				setVehicleHeadLightColor(veh, 0, 0, 255)
-			else
-				setVehicleHeadLightColor(veh, 255, 0, 0)
+			local modelid = getElementModel(veh)
+			if governmentVehicle[modelid] or exports.global:hasItem(veh, 61) then
+				if (state1==0) then
+					setVehicleHeadLightColor(veh, 0, 0, 255)
+				else
+					setVehicleHeadLightColor(veh, 255, 0, 0)
+				end
 			end
 			
 			setVehicleLightState(veh, 0, state2)
