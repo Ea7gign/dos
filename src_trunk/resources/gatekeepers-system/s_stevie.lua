@@ -78,30 +78,14 @@ function stevieIntro (thePlayer) -- When player enters the colSphere create GUI 
 		
 	-- Give the player the "Find Stevie" achievement.
 	if(getElementData(stevie, "activeConvo")==1)then
-		
-		local pedX, pedY, pedZ = getElementPosition( source )
-		local chatSphere = createColSphere( pedX, pedY, pedZ, 5 )
-		exports.pool:allocateElement(chatSphere) -- Create the colSphere for chat output to local players
-		local targetPlayers = getElementsWithinColShape( chatSphere, "player" )
-		local name = string.gsub(getPlayerName(source), "_", " ")
-		for i, player in ipairs( targetPlayers ) do
-			outputChatBox("* Stevie ignores the person trying to talk to him and contiues to eat.", player,  255, 51, 102)
-		end
-		
+		exports.global:sendLocalText(source, "* Stevie ignores the person trying to talk to him and contiues to eat.",  255, 51, 102, 5)
 	else
 		
-		setElementData (stevie, "activeConvo", 1) -- set the NPCs conversation state to active so no one else can begin to talk to him.
+		setElementData (stevie, "activeConvo", 1, false) -- set the NPCs conversation state to active so no one else can begin to talk to him.
 		outputDebugString("Stevie is talking.")
 		
-		local pedX, pedY, pedZ = getElementPosition( stevie )
-		local chatSphere = createColSphere( pedX, pedY, pedZ, 5 )
-		exports.pool:allocateElement(chatSphere) -- Create the colSphere for chat output to local players
-		local targetPlayers = getElementsWithinColShape( chatSphere, "player" )
-		for i, player in ipairs( targetPlayers ) do
-			outputChatBox("Steven Pulman says: Do you want something, pal?", player, 255, 255, 255) -- Stevies next question
-		end
+		exports.global:sendLocalText(source, "Steven Pulman says: Do you want something, pal?", 255, 255, 255, 5) -- Stevies next question
 		
-		destroyElement(chatSphere)
 		talkingToStevie = source
 		addEventHandler("onPlayerQuit", source, resetStevieConvoStateDelayed)
 		addEventHandler("onPlayerWasted", source, resetStevieConvoStateDelayed)
@@ -119,15 +103,8 @@ function quickClose_S()
 	removeElementData (stevie, "activeConvo") -- set the NPCs conversation state to not active so others can begin to talk to him.
 	outputDebugString("Stevie is no longer talking.")
 	
-	local pedX, pedY, pedZ = getElementPosition( source )
-	local chatSphere = createColSphere( pedX, pedY, pedZ, 5 )
-	exports.pool:allocateElement(chatSphere) -- Create the colSphere for chat output to local players
-	local targetPlayers = getElementsWithinColShape( chatSphere, "player" )
 	local name = string.gsub(getPlayerName(source), "_", " ")
-	for i, player in ipairs( targetPlayers ) do
-		outputChatBox(name .." says: No. Sorry to bother you.", player, 255, 255, 255) -- Stevies next question
-	end
-	destroyElement(chatSphere)
+	exports.global:sendLocalText(source, name .." says: No. Sorry to bother you.", 255, 255, 255, 5) -- Stevies next question
 end
 addEvent( "quickCloseServerEvent", true )
 addEventHandler( "quickCloseServerEvent", getRootElement(), quickClose_S )
@@ -135,16 +112,9 @@ addEventHandler( "quickCloseServerEvent", getRootElement(), quickClose_S )
 -- Statement 2
 function statement2_S()
 	-- Output the text from the last option to all player in radius
-	local pedX, pedY, pedZ = getElementPosition( source )
-	local chatSphere = createColSphere( pedX, pedY, pedZ, 5)
-	exports.pool:allocateElement(chatSphere) -- Create the colSphere for chat output to local players
-	local targetPlayers = getElementsWithinColShape( chatSphere, "player" )
 	local name = string.gsub(getPlayerName(source), "_", " ")
-	for i, player in ipairs( targetPlayers ) do
-		outputChatBox(name .. " says: Can I take a seat?", player, 255, 255, 255) -- Players response to last question
-		outputChatBox("Steven Pullman says: Sure, sit down. Have you tried the food here? It's f****** unbelievable.", player, 255, 255, 255) -- Stevies next question
-	end
-	destroyElement (chatSphere)
+	exports.global:sendLocalText(source, name .. " says: Can I take a seat?", 255, 255, 255, 5) -- Players response to last question
+	exports.global:sendLocalText(source, "Steven Pullman says: Sure, sit down. Have you tried the food here? It's f****** unbelievable.", 255, 255, 255, 5) -- Stevies next question
 	
 	-- Set players position and anim so they are sitting opposite Stevie. Freeze them so they can't move until they end the conversation
 	setElementPosition (source, 675.81127929688, -457.45016479492, -24.406700134277)
@@ -164,16 +134,9 @@ function statement3_S()
 	resetStevieConvoStateDelayed()
 	
 	-- Output the text from the last option to all player in radius
-	local pedX, pedY, pedZ = getElementPosition( source )
-	local chatSphere = createColSphere( pedX, pedY, pedZ, 5 )
-	exports.pool:allocateElement(chatSphere) -- Create the colSphere for chat output to local players
-	local targetPlayers = getElementsWithinColShape( chatSphere, "player" )
 	local name = string.gsub(getPlayerName(source), "_", " ")
-	for i, player in ipairs( targetPlayers ) do
-		outputChatBox(name .. " says: I'm a vegetarian. The thought of those poor animals suffering for you to stuff your face makes me sick.", player, 255, 255, 255)
-		outputChatBox("Steven Pullman says: Hey f*** you, pal. You don't like it, go save a whale or some shit.", player, 255, 255, 255)
-	end
-	destroyElement (chatSphere)
+	exports.global:sendLocalText(source, name .. " says: I'm a vegetarian. The thought of those poor animals suffering for you to stuff your face makes me sick.", 255, 255, 255, 5)
+	exports.global:sendLocalText(source, "Steven Pullman says: Hey f*** you, pal. You don't like it, go save a whale or some shit.", 255, 255, 255, 5)
 end	
 addEvent( "statement3ServerEvent", true )
 addEventHandler( "statement3ServerEvent", getRootElement(), statement3_S )
@@ -182,18 +145,11 @@ addEventHandler( "statement3ServerEvent", getRootElement(), statement3_S )
 function statement4_S()
 	
 	-- Output the text from the last option to all player in radius
-	local pedX, pedY, pedZ = getElementPosition( source )
-	local chatSphere = createColSphere( pedX, pedY, pedZ, 5 )
-	exports.pool:allocateElement(chatSphere) -- Create the colSphere for chat output to local players
-	local targetPlayers = getElementsWithinColShape( chatSphere, "player" )
 	local name = string.gsub(getPlayerName(source), "_", " ")
-	for i, player in ipairs( targetPlayers ) do
-		outputChatBox(name .. " says: Yeah I heard it's good. I was just about to order something.", player, 255, 255, 255)
-		outputChatBox("Steven Pullman says: Get the Angus rib-eye. You won't regret it. Where's my manners...", player, 255, 255, 255)
-		outputChatBox("* Steven Pullman wipes his hands on a napkin and offers "..name.." a hand shake.", player, 255, 51, 102)
-		outputChatBox("Steven Pullman says: The name's Stevie.", player, 255, 255, 255)
-	end
-	destroyElement (chatSphere)
+	exports.global:sendLocalText(source, name .. " says: Yeah I heard it's good. I was just about to order something.", 255, 255, 255, 5)
+	exports.global:sendLocalText(source, "Steven Pullman says: Get the Angus rib-eye. You won't regret it. Where's my manners...", 255, 255, 255, 5)
+	exports.global:sendLocalText(source, "* Steven Pullman wipes his hands on a napkin and offers "..name.." a hand shake.", 255, 51, 102, 5)
+	exports.global:sendLocalText(source, "Steven Pullman says: The name's Stevie.", 255, 255, 255, 5)
 end
 addEvent( "statement4ServerEvent", true )
 addEventHandler( "statement4ServerEvent", getRootElement(), statement4_S )
@@ -208,33 +164,17 @@ function statement5_S()
 	
 	exports.global:sendLocalMeAction( source,"leaves Stevie's hand lingering in the air.")
 	-- Output the text from the last option to all player in radius
-	local pedX, pedY, pedZ = getElementPosition( source )
-	local chatSphere = createColSphere( pedX, pedY, pedZ, 5 )
-	exports.pool:allocateElement(chatSphere) -- Create the colSphere for chat output to local players
-	local targetPlayers = getElementsWithinColShape( chatSphere, "player" )
-	for i, player in ipairs( targetPlayers ) do
-		outputChatBox("Steven Pullman says: I was just being polite but if you want to be an ass about it how about you leave me to eat in peace.", player, 255, 255, 255)
-	end
-	destroyElement (chatSphere)
+	exports.global:sendLocalText(source, "Steven Pullman says: I was just being polite but if you want to be an ass about it how about you leave me to eat in peace.", 255, 255, 255, 5)
 end	
 addEvent( "statement5ServerEvent", true )
 addEventHandler( "statement5ServerEvent", getRootElement(), statement5_S )
 
 -- Statement 6
 function statement6_S()
-	
 	-- Output the text from the last option to all player in radius
-	local pedX, pedY, pedZ = getElementPosition( source )
-	local chatSphere = createColSphere( pedX, pedY, pedZ, 5 )
-	exports.pool:allocateElement(chatSphere) -- Create the colSphere for chat output to local players
-	local targetPlayers = getElementsWithinColShape( chatSphere, "player" )
-	local name = string.gsub(getPlayerName(source), "_", " ")
-	for i, player in ipairs( targetPlayers ) do
-		outputChatBox("* "..name.." shakes Stevie's hand.", player, 255, 51, 102)
-		outputChatBox("Steven Pullman says: Me and the boys from the freight depot come down here every week.", player, 255, 255, 255)
-		outputChatBox("Steven Pullman says: Football and steaks make a damn good combination don't you think?", player, 255, 255, 255)
-	end
-	destroyElement (chatSphere)
+	exports.global:sendLocalMeAction(source, "shakes Stevie's hand.")
+	exports.global:sendLocalText(source, "Steven Pullman says: Me and the boys from the freight depot come down here every week.", 255, 255, 255, 5)
+	exports.global:sendLocalText(source, "Steven Pullman says: Football and steaks make a damn good combination don't you think?", 255, 255, 255, 5)
 end
 addEvent( "statement6ServerEvent", true )
 addEventHandler( "statement6ServerEvent", getRootElement(), statement6_S )
@@ -248,62 +188,36 @@ function statement7_S()
 	resetStevieConvoStateDelayed() -- set the NPCs conversation state to not active so others can begin to talk to him.
 	
 	-- Output the text from the last option to all player in radius
-	local pedX, pedY, pedZ = getElementPosition( source )
-	local chatSphere = createColSphere( pedX, pedY, pedZ, 5 )
-	exports.pool:allocateElement(chatSphere) -- Create the colSphere for chat output to local players
-	local targetPlayers = getElementsWithinColShape( chatSphere, "player" )
 	local name = string.gsub(getPlayerName(source), "_", " ")
-	for i, player in ipairs( targetPlayers ) do
-		outputChatBox(name.." says: Are you kidding me? I've been a Beavers fan my whole life!", player, 255, 255, 255)
-		outputChatBox("Steven Pullman says: What?! The Beavers?", player, 255, 255, 255)
-		outputChatBox("Steven Pullman says: You're lucky I don't punch your lights out right here and now you piece-a beaver scum.", player, 255, 255, 255)
-		outputChatBox("Steven Pullman says: Look... now you made me lose my appetite.", player, 255, 255, 255)
-	end
-	destroyElement (chatSphere)
+	exports.global:sendLocalText(source, name.." says: Are you kidding me? I've been a Beavers fan my whole life!", 255, 255, 255, 5)
+	exports.global:sendLocalText(source, "Steven Pullman says: What?! The Beavers?", 255, 255, 255, 5)
+	exports.global:sendLocalText(source, "Steven Pullman says: You're lucky I don't punch your lights out right here and now you piece-a beaver scum.", 255, 255, 255, 5)
+	exports.global:sendLocalText(source, "Steven Pullman says: Look... now you made me lose my appetite.", 255, 255, 255, 5)
 end
 addEvent( "statement7ServerEvent", true )
 addEventHandler( "statement7ServerEvent", getRootElement(), statement7_S )
 
 -- Statement 8
 function statement8_S()
-	
 	-- Output the text from the last option to all player in radius
-	local pedX, pedY, pedZ = getElementPosition( source )
-	local chatSphere = createColSphere( pedX, pedY, pedZ, 5 )
-	exports.pool:allocateElement(chatSphere) -- Create the colSphere for chat output to local players
-	local targetPlayers = getElementsWithinColShape( chatSphere, "player" )
 	local name = string.gsub(getPlayerName(source), "_", " ")
-	for i, player in ipairs( targetPlayers ) do
-		outputChatBox( name.." says: I never really liked football.", player, 255, 255, 255)
-		outputChatBox("Steven Pullman says: Yeah, maybe it isn't to everyone's taste. So what do you do?", player, 255, 255, 255)
-	end
-	destroyElement (chatSphere)
+	exports.global:sendLocalText(source, name.." says: I never really liked football.", 255, 255, 255, 5)
+	exports.global:sendLocalText(source, "Steven Pullman says: Yeah, maybe it isn't to everyone's taste. So what do you do?", 255, 255, 255, 5)
 end
 addEvent( "statement8ServerEvent", true )
 addEventHandler( "statement8ServerEvent", getRootElement(), statement8_S )
 
 -- Statement 9
 function statement9_S()
-	
 	exports.global:removeAnimation(source)
 	toggleAllControls(source, true, true, true)
 	
 	-- Output the text from the last option to all player in radius
-	local pedX, pedY, pedZ = getElementPosition( source )
-	local chatSphere = createColSphere( pedX, pedY, pedZ, 5 )
-	exports.pool:allocateElement(chatSphere) -- Create the colSphere for chat output to local players
-	local targetPlayers = getElementsWithinColShape( chatSphere, "player" )
 	local name = string.gsub(getPlayerName(source), "_", " ")
-	for i, player in ipairs( targetPlayers ) do
-		outputChatBox( name.." says: Over worked and underappreciated. You know how it is.", player, 255, 255, 255)
-		outputChatBox("Steven Pullman says: Tell me about it! They got me bustin' my ass at the freight yard for change.", player, 255, 255, 255)
-		outputChatBox("Steven Pullman says: See it's people like you and me that need to help each other out.", player, 255, 255, 255)
-		outputChatBox("Steven Pullman says: Tell you what, here's my card. You ever need anything I can help you out with, just give me a call.", player, 255, 255, 255)
-	end
-	destroyElement (chatSphere)
-	
-	-- Give the player the "A friend of Stevie" achievement.
-	
+	exports.global:sendLocalText(source, name.." says: Over worked and underappreciated. You know how it is.", 255, 255, 255, 5)
+	exports.global:sendLocalText(source, "Steven Pullman says: Tell me about it! They got me bustin' my ass at the freight yard for change.", 255, 255, 255, 5)
+	exports.global:sendLocalText(source, "Steven Pullman says: See it's people like you and me that need to help each other out.", 255, 255, 255, 5)
+	exports.global:sendLocalText(source, "Steven Pullman says: Tell you what, here's my card. You ever need anything I can help you out with, just give me a call.", 255, 255, 255, 5)
 end
 addEvent( "statement9ServerEvent", true )
 addEventHandler( "statement9ServerEvent", getRootElement(), statement9_S )
@@ -336,22 +250,15 @@ function CloseButtonClick_S()
 	resetStevieConvoStateDelayed() -- set the NPCs conversation state to not active so others can begin to talk to him.
 	
 	-- Output the text from the last option to all player in radius
-	local pedX, pedY, pedZ = getElementPosition( source )
-	local chatSphere = createColSphere( pedX, pedY, pedZ, 10 )
-	exports.pool:allocateElement(chatSphere) -- Create the colSphere for chat output to local players
-	local targetPlayers = getElementsWithinColShape( chatSphere, "player" )
 	local name = string.gsub(getPlayerName(source), "_", " ")
-	for i, player in ipairs( targetPlayers ) do
-		outputChatBox(name .. " says: Is that the time? I have to go.", player, 255, 255, 255, false)
-		outputChatBox("Steven Pullman says: You take it easy. Maybe I'll run into you again some time.", player, 255, 255, 255, false)
-	end
-	destroyElement (chatSphere)
+	exports.global:sendLocalText(source, name .. " says: Is that the time? I have to go.", 255, 255, 255, 5)
+	exports.global:sendLocalText(source, "Steven Pullman says: You take it easy. Maybe I'll run into you again some time.", 255, 255, 255, 5)
 end
 addEvent( "CloseButtonClickServerEvent", true )
 addEventHandler( "CloseButtonClickServerEvent", getRootElement(), CloseButtonClick_S )
 
 function resetStevieConvoState()
-	setElementData(stevie,"activeConvo", 0)
+	setElementData(stevie,"activeConvo", 0, false)
 end
 
 
