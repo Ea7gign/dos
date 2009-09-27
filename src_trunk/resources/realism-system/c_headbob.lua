@@ -66,14 +66,15 @@ end
 
 
 local cam = false
+local player = getLocalPlayer()
 function togGta1()
 	if (cam) then
 		removeEventHandler("onClientPreRender", getRootElement(), gta1cam)
-		setCameraTarget(getLocalPlayer())
+		setCameraTarget(player)
 		cam = false
 	else
-		setPedRotation(getLocalPlayer(), 360)
-		setPedCameraRotation(getLocalPlayer(), 360)
+		setPedRotation(player, 360)
+		setPedCameraRotation(player, 360)
 		addEventHandler("onClientPreRender", getRootElement(), gta1cam)
 		cam = true
 	end
@@ -81,7 +82,18 @@ end
 addCommandHandler("gta1", togGta1)
 
 function gta1cam()
-	local player = getLocalPlayer()
 	local x, y, z = getElementPosition(player)
-	setCameraMatrix(x, y, z+20, x, y, z)
+	local height = 20
+	local vehicle = getPedOccupiedVehicle(player)
+	
+	if vehicle then
+		local sx, sy = getElementVelocity(vehicle)
+		height = math.max( height, height + 25 * ( math.sqrt(sx*sx + sy*sy) ) - 2.5 )
+	end
+	
+	local hit, hx, hy, hz = processLineOfSight( x, y, z, x, y, z + height, true, true, false, true, false, true, false, false, vehicle )
+	if hit then
+		height = hz - z
+	end
+	setCameraMatrix(x, y, z+height, x, y, z)
 end
