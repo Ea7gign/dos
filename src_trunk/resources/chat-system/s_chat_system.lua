@@ -696,6 +696,7 @@ end
 addCommandHandler("f", factionOOC, false, false)
 
 function setRadioChannel(thePlayer, commandName, channel)
+	channel = tonumber( channel )
 	if not (channel) then
 		outputChatBox("SYNTAX: /" .. commandName .. " [Channel Number]", thePlayer, 255, 194, 14)
 	else
@@ -703,9 +704,10 @@ function setRadioChannel(thePlayer, commandName, channel)
 			if getElementData(thePlayer, "radiochannel") > 0 then
 				local channel = tonumber(channel)
 				if channel > 0 then
-					setElementData(thePlayer, "radiochannel", tonumber(channel), false)
+					setElementData(thePlayer, "radiochannel", channel, false)
 					outputChatBox("You retuned your radio to channel #" .. channel .. ".", thePlayer)
 					exports.global:sendLocalMeAction(thePlayer, "retunes their radio.")
+					mysql_free_result( mysql_query( handler, "UPDATE characters SET radiochannel=" .. channel .. " WHERE id = " .. getElementData(thePlayer, "dbid") ) )
 				else
 					outputChatBox("You can't tune your radio to that frequency!", thePlayer, 255, 0, 0)
 				end
@@ -951,6 +953,7 @@ function togglePM(thePlayer, commandName)
 			setElementData(thePlayer, "pmblocked", 1, false)
 			outputChatBox("PM's are now disabled.", thePlayer, 255, 0, 0)
 		end
+		mysql_free_result( mysql_query( handler, "UPDATE accounts SET pmblocked=" .. getElementData(thePlayer, "pmblocked") .. " WHERE id = " .. getElementData(thePlayer, "gameaccountid") ) )
 	end
 end
 addCommandHandler("togpm", togglePM)

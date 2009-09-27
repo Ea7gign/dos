@@ -811,6 +811,7 @@ function hideAdmin(thePlayer, commandName)
 			outputChatBox("You are no longer a hidden admin.", thePlayer, 255, 194, 14)
 		end
 		exports.global:updateNametagColor(thePlayer)
+		mysql_free_result( mysql_query( handler, "UPDATE accounts SET hiddenadmin=" .. getElementData(thePlayer, "hiddenadmin") .. " WHERE id = " .. getElementData(thePlayer, "gameaccountid") ) )
 	end
 end
 addCommandHandler("hideadmin", hideAdmin, false, false)
@@ -1373,6 +1374,7 @@ function makePlayerAdmin(thePlayer, commandName, who, rank)
 				else
 					setElementData(targetPlayer, "adminduty", 0)
 				end
+				mysql_free_result( mysql_query( handler, "UPDATE accounts SET adminduty=" .. getElementData(targetPlayer, "adminduty") .. " WHERE id = " .. getElementData(targetPlayer, "gameaccountid") ) )
 				exports.global:updateNametagColor(targetPlayer)
 				
 				if (hiddenAdmin==0) then
@@ -1992,6 +1994,7 @@ function adminDuty(thePlayer, commandName)
 			outputChatBox("You went off admin duty.", thePlayer, 255, 0, 0)
 			exports.global:sendMessageToAdmins("AdmDuty: " .. username .. " went off duty.")
 		end
+		mysql_free_result( mysql_query( handler, "UPDATE accounts SET adminduty=" .. getElementData(thePlayer, "adminduty") .. " WHERE id = " .. getElementData(thePlayer, "gameaccountid") ) )
 		exports.global:updateNametagColor(thePlayer)
 	end
 end

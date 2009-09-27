@@ -117,6 +117,7 @@ function setTag(commandName, newTag)
 			else
 				setElementData(getLocalPlayer(), "tag", newTag, true)
 				outputChatBox("Tag changed to #" .. newTag .. ".", 0, 255, 0)
+				triggerServerEvent("updateTag", getLocalPlayer(), newTag)
 			end
 		else
 			outputChatBox("Invalid value, please enter a value between 1 and 8.", 255, 0, 0)

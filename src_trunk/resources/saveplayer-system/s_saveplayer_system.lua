@@ -101,7 +101,7 @@ function savePlayer(reason, player)
 			triggerEvent("onVehicleExit", vehicle, source, seat)
 		end
 		
-		local x, y, z, rot, tag, health, armour, interior, dimension, blindfold, pmblocked, username, cuffed, skin, muted, hiddenAdmin, radiochannel, duty, adminduty, globalooc, fightstyle, blur, casualskin, adminreports, warns, hoursplayed, timeinserver, job
+		local x, y, z, rot, health, armour, interior, dimension, blindfold, username, cuffed, skin, muted, duty, globalooc, fightstyle, blur, casualskin, adminreports, warns, hoursplayed, timeinserver
 		
 		username = getPlayerName(source)
 		
@@ -127,8 +127,6 @@ function savePlayer(reason, player)
 		
 		
 		muted = getElementData(source, "muted")
-		hiddenAdmin = getElementData(source, "hiddenadmin")
-		pmblocked = getElementData(source, "pmblocked")
 		blindfold = getElementData(source, "blindfold")
 		if not (blindfold) then blindfold = 0 end
 		
@@ -143,7 +141,6 @@ function savePlayer(reason, player)
 		
 		radiochannel = getElementData(source, "radiochannel")
 		duty = getElementData(source, "duty")
-		adminduty = getElementData(source, "adminduty")
 		globalooc = getElementData(source, "globalooc")
 		blur = getElementData(source, "blur")
 		
@@ -161,10 +158,6 @@ function savePlayer(reason, player)
 		
 		local gameAccountUsername = getElementData(source, "gameaccountusername")
 		local safegameAccountUsername = mysql_escape_string(handler, gameAccountUsername)
-		
-		job = getElementData(source, "job")
-		
-		tag = getElementData(source, "tag")
 		
 		hoursplayed = getElementData(source, "hoursplayed")
 		
@@ -196,18 +189,14 @@ function savePlayer(reason, player)
 		-- LAST AREA
 		local zone = exports.global:getElementZoneName(source)
 		
-		if not (job) then
-			job = 0
-		end
-		
-		local update = mysql_query(handler, "UPDATE characters SET casualskin='" .. casualskin .. "', x='" .. x .. "', y='" .. y .. "', z='" .. z .. "', rotation='" .. rot .. "', health='" .. health .. "', armor='" .. armor .. "', skin='" .. skin .. "', dimension_id='" .. dimension .. "', interior_id='" .. interior .. "', money='" .. money .. "', cuffed='" .. cuffed .. "', radiochannel='" .. radiochannel .. "', duty='" .. duty .. "', fightstyle='" .. fightstyle .. "', lastlogin=NOW(), lastarea='" .. mysql_escape_string(handler, zone) .. "', bankmoney='" .. bankmoney .. "', tag='" .. tag .. "', hoursplayed='" .. hoursplayed .. "', timeinserver='" .. timeinserver .. "', restrainedobj='" .. restrainedobj .. "', restrainedby='" .. restrainedby .. "', dutyskin='" .. dutyskin .. "', job='" .. job .. "', blindfold='" .. blindfold .. "', lang1='" .. lang1 .. "', lang1skill='" .. lang1skill .. "', lang2='" .. lang2 .. "', lang2skill='" .. lang2skill .. "', lang3='" .. lang3 .. "', lang3skill='" .. lang3skill .. "', currLang='" .. currentLanguage .. "' WHERE charactername='" .. username .. "'")
+		local update = mysql_query(handler, "UPDATE characters SET casualskin='" .. casualskin .. "', x='" .. x .. "', y='" .. y .. "', z='" .. z .. "', rotation='" .. rot .. "', health='" .. health .. "', armor='" .. armor .. "', skin='" .. skin .. "', dimension_id='" .. dimension .. "', interior_id='" .. interior .. "', money='" .. money .. "', cuffed='" .. cuffed .. "', duty='" .. duty .. "', fightstyle='" .. fightstyle .. "', lastlogin=NOW(), lastarea='" .. mysql_escape_string(handler, zone) .. "', bankmoney='" .. bankmoney .. "', hoursplayed='" .. hoursplayed .. "', timeinserver='" .. timeinserver .. "', restrainedobj='" .. restrainedobj .. "', restrainedby='" .. restrainedby .. "', dutyskin='" .. dutyskin .. "', blindfold='" .. blindfold .. "', lang1='" .. lang1 .. "', lang1skill='" .. lang1skill .. "', lang2='" .. lang2 .. "', lang2skill='" .. lang2skill .. "', lang3='" .. lang3 .. "', lang3skill='" .. lang3skill .. "', currLang='" .. currentLanguage .. "' WHERE charactername='" .. username .. "'")
 		if (update) then
 			mysql_free_result(update)
 		else
 			outputDebugString( "Saveplayer Update: " .. mysql_error( handler ) )
 		end
 		
-		local update2 = mysql_query(handler, "UPDATE accounts SET muted='" .. muted .. "', hiddenadmin='" .. hiddenAdmin .. "', adminduty='" .. adminduty .. "', globalooc='" .. globalooc .. "', blur='" .. blur .. "', adminreports='" .. adminreports .. "', pmblocked='" .. pmblocked .. "', warns='" .. warns .. "', chatbubbles='" .. chatbubbles .. "' WHERE username='" .. tostring(safegameAccountUsername) .. "'")
+		local update2 = mysql_query(handler, "UPDATE accounts SET muted='" .. muted .. "', globalooc='" .. globalooc .. "', blur='" .. blur .. "', adminreports='" .. adminreports .. "', warns='" .. warns .. "', chatbubbles='" .. chatbubbles .. "' WHERE username='" .. tostring(safegameAccountUsername) .. "'")
 		if (update2) then
 			mysql_free_result(update2)
 		else
@@ -221,3 +210,4 @@ addEventHandler("onPlayerQuit", getRootElement(), savePlayer)
 addEvent("savePlayer", false)
 addEventHandler("savePlayer", getRootElement(), savePlayer)
 setTimer(saveAllPlayers, 3600000, 0)
+addCommandHandler("saveall", function(p) if exports.global:isPlayerScripter(p) then saveAllPlayers() end end)

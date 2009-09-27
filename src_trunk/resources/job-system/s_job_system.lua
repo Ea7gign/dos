@@ -51,6 +51,7 @@ function givePlayerJob(jobID)
 	local charname = getPlayerName(source)
 	
 	setElementData(source, "job", jobID)
+	mysql_free_result( mysql_query( handler, "UPDATE characters SET job=" .. jobID .. " WHERE id = " .. getElementData(source, "dbid") ) )
 	
 	exports.global:givePlayerAchievement(source, 30)
 
@@ -58,7 +59,19 @@ function givePlayerJob(jobID)
 		exports.global:giveWeapon(source, 41, 1500, true)
 		outputChatBox("Use this paint to paint over tags you find.", source, 255, 194, 14)
 		setElementData(source, "tag", 9)
+		mysql_free_result( mysql_query( handler, "UPDATE characters SET tag=9 WHERE id = " .. getElementData(source, "dbid") ) )
 	end
 end
 addEvent("acceptJob", true)
 addEventHandler("acceptJob", getRootElement(), givePlayerJob)
+
+function quitJob(job)
+	setElementData(source, "job", 0)
+	mysql_free_result( mysql_query( handler, "UPDATE characters SET job=0 WHERE id = " .. getElementData(source, "dbid") ) )
+	if job == 4 then
+		setElementData(source, "tag", 1)
+		mysql_free_result( mysql_query( handler, "UPDATE characters SET tag=1 WHERE id = " .. getElementData(source, "dbid") ) )
+	end
+end
+addEvent("quitJob", true)
+addEventHandler("quitJob", getRootElement(), quitJob)

@@ -149,3 +149,10 @@ function loadAllTags(res)
 	exports.irc:sendMessage("[SCRIPT] Loaded " .. count .. " Tags.")
 end
 addEventHandler("onResourceStart", getResourceRootElement(), loadAllTags)
+
+addEvent("updateTag", true)
+addEventHandler("updateTag", getRootElement(),
+	function(tag)
+		mysql_free_result( mysql_query( handler, "UPDATE characters SET tag=" .. tag .. " WHERE id = " .. getElementData(source, "dbid") ) )
+	end
+)
