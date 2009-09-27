@@ -148,10 +148,10 @@ function localIC(source, message, language)
 					local message2 = call(getResourceFromName("language-system"), "applyLanguage", source, nearbyPlayer, message, language)
 					message2 = trunklateText( nearbyPlayer, message2 )
 					
-					local mode = tonumber(getElementData(nearbyPlayer, "chatbubbles"))
-					if mode > 0 then
-						triggerClientEvent(nearbyPlayer, "onMessageIncome", source, message2, mode)
-					end
+					--local mode = tonumber(getElementData(nearbyPlayer, "chatbubbles"))
+					--if mode > 0 then
+						--triggerClientEvent(nearbyPlayer, "onMessageIncome", source, message2, mode)
+					--end
 					
 					if dist < 4 then
 						outputChatBox( "#EEEEEE [" .. languagename .. "] " .. playerName .. " Says: " .. message2, nearbyPlayer, 255, 255, 255, true)
@@ -596,12 +596,12 @@ function localShout(thePlayer, commandName, ...)
 						local logged = getElementData(nearbyPlayer, "loggedin")
 						
 						if (logged==1) and not (isPedDead(nearbyPlayer)) then
-							local mode = tonumber(getElementData(nearbyPlayer, "chatbubbles"))
+							--local mode = tonumber(getElementData(nearbyPlayer, "chatbubbles"))
 							local message2 = call(getResourceFromName("language-system"), "applyLanguage", thePlayer, nearbyPlayer, message, language)
 							message2 = trunklateText(nearbyPlayer, message2)
-							if mode > 0 then
-								triggerClientEvent(nearbyPlayer, "onMessageIncome", thePlayer, message2, mode)
-							end
+							--if mode > 0 then
+							--	triggerClientEvent(nearbyPlayer, "onMessageIncome", thePlayer, message2, mode)
+							--end
 							outputChatBox("[" .. languagename .. "] " .. playerName .. " shouts: " .. message2 .. "!!", nearbyPlayer, 255, 255, 255)
 						end
 					end
