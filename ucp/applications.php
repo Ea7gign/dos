@@ -115,6 +115,12 @@ a:active {
     </style>
 <meta name="keywords" content="valhalla, gaming, mta, ucp">
 		<meta name="description" content="Valhalla Gaming MTA UCP">
+<?php if (isset($_GET["show"]) && $_GET["show"] == 1) {
+?>
+		<meta http-equiv="refresh" content="120;URL=applications.php?show=1" />
+<?php
+
+}?>
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8"></head>
 	
 	<body text="#FFFFFF" link="#FFFFFF" vlink="#FFFFFF" alink="#FFFFFF" style="background-image: url('img/bg.png')">
