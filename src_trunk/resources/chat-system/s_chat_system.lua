@@ -794,13 +794,14 @@ function scripterChat(thePlayer, commandName, ...)
 				local logged = getElementData(arrayPlayer, "loggedin")
 				
 				if(exports.global:isPlayerScripter(arrayPlayer)) and (logged==1) then
-					outputChatBox("[SCRIPTERCHAT] " .. username .. ": " .. message, arrayPlayer, 51, 255, 102)
+					outputChatBox("~" .. username .. "~ " .. message, arrayPlayer, 255, 255, 128)
 				end
 			end
 		end
 	end
 end
 addCommandHandler("ss", scripterChat, false, false)
+addCommandHandler("sc", scripterChat, false, false)
 
 -- Admin announcement
 function adminAnnouncement(thePlayer, commandName, ...)
