@@ -1117,7 +1117,7 @@ function fillFuelTank(veh, fuel)
 		
 		local gender = getElementData(theChosenOne, "gender")
 		local genderm = "his"
-		if (gender == 1)
+		if (gender == 1) then
 			genderm = "her"
 		end
 		exports.global:sendLocalMeAction(source, "fills up " .. genderm .. " vehicle from a small petrol canister.")
