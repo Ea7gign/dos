@@ -11,9 +11,11 @@ local localPlayer = getLocalPlayer()
 -- Ped at submission desk just for the aesthetics.
 local victoria = createPed(141, 359.7, 173.57419128418, 1008.3893432617)
 setPedRotation(victoria, 270)
-setElementDimension(victoria, 1289)
+setElementDimension(victoria, 9902)
 setElementInterior(victoria, 3)
 setPedAnimation ( victoria, "INT_OFFICE", "OFF_Sit_Idle_Loop", -1, true, false, false )
+setElementData( victoria, "talk", 1 )
+setElementData( victoria, "name", "Victoria Greene" )
 
 function snapPicture(weapon, ammo, ammoInClip, hitX, hitY, hitZ, hitElement )
 	local logged = getElementData(localPlayer, "loggedin")
@@ -44,37 +46,37 @@ function snapPicture(weapon, ammo, ammoInClip, hitX, hitY, hitZ, hitElement )
 							-------------------
 							local skin = getElementModel(thePlayer)
 							if(beautifulPeople[skin]) then
-								pictureValue=pictureValue+50
+								pictureValue=pictureValue+25
 							end
 							if(getPedWeapon(thePlayer)~=0)and(getPedTotalAmmo(thePlayer)~=0) then
-								pictureValue=pictureValue+25
+								pictureValue=pictureValue+12
 								if (cop[skin])then
-									pictureValue=pictureValue+5
+									pictureValue=pictureValue+3
 								end
 							end
 							if(swat[skin])then
-								pictureValue=pictureValue+50
+								pictureValue=pictureValue+25
 							end
 							if(getPedControlState(thePlayer, "fire"))then
-								pictureValue=pictureValue+50
+								pictureValue=pictureValue+25
 							end
 							if(isPedChoking(thePlayer))then
-								pictureValue=pictureValue+50
+								pictureValue=pictureValue+25
 							end
 							if(isPedDoingGangDriveby(thePlayer))then
-								pictureValue=pictureValue+100
+								pictureValue=pictureValue+50
 							end
 							if(isPedHeadless(thePlayer))then
-								pictureValue=pictureValue+200
+								pictureValue=pictureValue+100
 							end
 							if(isPedOnFire(thePlayer))then
-								pictureValue=pictureValue+250
+								pictureValue=pictureValue+125
 							end
 							if(isPlayerDead(thePlayer))then
-								pictureValue=pictureValue+150
+								pictureValue=pictureValue+75
 							end
 							if (#onScreenPlayers>3)then
-								pictureValue=pictureValue+10
+								pictureValue=pictureValue+5
 							end
 							--------------------
 							-- Vehicle checks --
@@ -82,13 +84,13 @@ function snapPicture(weapon, ammo, ammoInClip, hitX, hitY, hitZ, hitElement )
 							local vehicle = getPedOccupiedVehicle(thePlayer)
 							if(vehicle)then
 								if(flashCar[vehicle])then
-									pictureValue=pictureValue+200
-								end
-								if(emergencyVehicle[vehicle])and(getVehicleSirensOn(vehicle)) then
 									pictureValue=pictureValue+100
 								end
+								if(emergencyVehicle[vehicle])and(getVehicleSirensOn(vehicle)) then
+									pictureValue=pictureValue+50
+								end
 								if not (isVehicleOnGround(vehicle))then
-									pictureValue=pictureValue+200
+									pictureValue=pictureValue+100
 								end
 							end
 						end
@@ -113,33 +115,19 @@ function showValue()
 end
 addCommandHandler("totalvalue", showValue, false, false)
 
--- /sellpics to sell your collection of pictures to the news company.
-function sellPhotos()
-	local theTeam = getPlayerTeam(localPlayer)
-	local factionType = getElementData(theTeam, "type")
-			
-	if (factionType==6) then
-		if not(photoSubmitDeskMarker)then
-			photoSubmitDeskMarker = createMarker( 362, 173, 1007, "cylinder", 1, 0, 100, 255, 170 )
-			photoSubmitDeskColSphere = createColSphere( 362, 173, 1007, 2 )
-			setElementInterior(photoSubmitDeskMarker,3)
-			setElementInterior(photoSubmitDeskColSphere,3)			
-			setElementDimension(photoSubmitDeskMarker, 1289)
-			setElementDimension(photoSubmitDeskColSphere, 1289)
-			
-			outputChatBox("#FF9933You can sell your photographs at the #3399FFSan Andreas Network Tower #FF9933((/sellpics at the front desk)).", 255, 255, 255, true)
-		else
-			if (isElementWithinColShape(localPlayer, photoSubmitDeskColSphere))then
-				if(collectionValue==0)then
-					outputChatBox("None of the pictures you have are worth anything.", 255, 0, 0, true)
-				else
-					triggerServerEvent("submitCollection", localPlayer, collectionValue)
-					collectionValue = 0
-				end
+addEvent("cSellPhotos", true)
+addEventHandler("cSellPhotos", localPlayer, 
+	function()
+		local theTeam = getPlayerTeam(localPlayer)
+		if getElementData(theTeam, "type") == 6 then
+			if collectionValue == 0 then
+				outputChatBox("None of the pictures you have are worth anything.", 255, 0, 0, true)
 			else
-				outputChatBox("#FF9933You can sell your photographs at the #3399FFSan Andreas Network Tower #FF9933((/sellpics at the front desk)).", 255, 255, 255, true)
+				triggerServerEvent("submitCollection", localPlayer, collectionValue)
+				collectionValue = 0
 			end
+		else
+			triggerServerEvent("sellPhotosInfo", localPlayer)
 		end
 	end
-end
-addCommandHandler("sellpics", sellPhotos, false, false)
+)
