@@ -2,11 +2,14 @@
 	if (!isset($_COOKIE["username"]) || !isset($_COOKIE["password"]) || !isset($_COOKIE["uid"]))
 	{
 		header('Location: index.php');
-		exit;
+		die();
 	}
 		
 	if (!$_GET["show"] || $_GET["show"] < 1 || !$_GET["show"] > 3)
+	{
 		header('Location: main.php');
+		die();
+	}
 
 ?><?php include("config.php"); ?><?php 
 	$conn = mysql_pconnect($mysql_host, $mysql_user, $mysql_pass);
@@ -21,12 +24,21 @@
 		setcookie("username", "", time()-3600);
 		setcookie("password", "", time()-3600);		
 		header('Location: index.php');
+		die();
 	}
 	$username = mysql_result($result, 0, 0);
 	$admin = mysql_result($result, 0, 1);
 	
 	if ($admin < 1)
+	{
 		header('Location: main.php');
+		die();
+	}
+	
+	
+// Anti cache code
+header("Cache-Control: no-cache, must-revalidate"); // HTTP/1.1
+header("Expires: Sat, 26 Jul 1997 05:00:00 GMT"); // Date in the past
 ?>
 
 <html>
@@ -115,7 +127,7 @@ a:active {
     </style>
 <meta name="keywords" content="valhalla, gaming, mta, ucp">
 		<meta name="description" content="Valhalla Gaming MTA UCP">
-<?php if (isset($_GET["show"]) && $_GET["show"] == 1) {
+<?php if ($_GET["show"] == 1) {
 ?>
 		<meta http-equiv="refresh" content="120;URL=applications.php?show=1" />
 <?php
