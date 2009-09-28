@@ -771,6 +771,31 @@ end
 
 addCommandHandler("a", adminChat, false, false)
 
+
+-- Scripter Chat
+function scripterChat(thePlayer, commandName, ...)
+	local logged = getElementData(thePlayer, "loggedin")
+	
+	if(logged==1) and (exports.global:isPlayerScripter(thePlayer))  then
+		if not (...) then
+			outputChatBox("SYNTAX: /s [Message]", thePlayer, 255, 194, 14)
+		else
+			local message = table.concat({...}, " ")
+			local players = exports.pool:getPoolElementsByType("player")
+			local username = getPlayerName(thePlayer)
+			
+			for k, arrayPlayer in ipairs(players) do
+				local logged = getElementData(arrayPlayer, "loggedin")
+				
+				if(exports.global:isPlayerScripter(arrayPlayer)) and (logged==1) then
+					outputChatBox("[SCRIPTERCHAT] " .. username .. ": " .. message, arrayPlayer, 51, 255, 102)
+				end
+			end
+		end
+	end
+end
+addCommandHandler("ss", scripterChat, false, false)
+
 -- Admin announcement
 function adminAnnouncement(thePlayer, commandName, ...)
 	local logged = getElementData(thePlayer, "loggedin")
