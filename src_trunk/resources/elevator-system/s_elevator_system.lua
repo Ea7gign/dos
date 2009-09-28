@@ -131,8 +131,8 @@ function hitInteriorPickup( thePlayer )
 	local idimension = getElementDimension(source)
 	
 	if pdimension == idimension then -- same dimension?
-		local dbid, thePickup = call( getResourceFromName( "interior-system" ), "findProperty", player, getElementDimension( getElementData( source, "other" ) ) )
-		if thePickup then
+		local dbid, thePickup, theExit = call( getResourceFromName( "interior-system" ), "findProperty", player, getElementDimension( getElementData( source, "other" ) ) )
+		if thePickup and getElementDimension( thePickup ) ~= getElementDimension( theExit ) then
 			local name = getElementData( thePickup, "name" )
 			
 			if name then
@@ -270,7 +270,7 @@ function enterElevator(player, pickup)
 		
 		-- check for entrance fee
 		local dbid, thePickup = call( getResourceFromName( "interior-system" ), "findProperty", player, dimension )
-		if thePickup then
+		if dimension ~= ldimension and thePickup then
 			if getElementData( player, "adminduty" ) ~= 1 and not exports.global:hasItem( player, 5, getElementData( thePickup, "dbid" ) ) then
 				local fee = getElementData( thePickup, "fee" )
 				if fee and fee > 0 then
