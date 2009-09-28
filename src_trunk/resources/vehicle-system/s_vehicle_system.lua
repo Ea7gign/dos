@@ -507,6 +507,9 @@ function loadAllVehicles(res)
 
 			-- Impounded
 			setElementData(veh, "Impounded", tonumber(Impounded))
+			if tonumber(Impounded) > 0 then
+				setVehicleDamageProof(veh, true)
+			end
 
 			-- Interiors
 			setElementDimension(veh, currdimension)
