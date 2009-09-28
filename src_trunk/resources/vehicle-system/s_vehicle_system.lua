@@ -935,19 +935,23 @@ addEventHandler("onVehicleEnter", getRootElement(), removeFromFactionVehicle)
 
 -- engines dont break down
 function doBreakdown()
-	local health = getElementHealth(source)
-	local broke = getElementData(source, "enginebroke")
+	if getElementData(source, "bomb") then
+		blowVehicle(source)
+	else
+		local health = getElementHealth(source)
+		local broke = getElementData(source, "enginebroke")
 
-	if (health<=350) and (broke==0 or broke==false) then
-		setElementHealth(source, 300)
-		setVehicleDamageProof(source, true)
-		setVehicleEngineState(source, false)
-		setElementData(source, "enginebroke", 1, false)
-		setElementData(source, "engine", 0, false)
-		
-		local player = getVehicleOccupant(source)
-		if player then
-			toggleControl(player, 'brake_reverse', false)
+		if (health<=350) and (broke==0 or broke==false) then
+			setElementHealth(source, 300)
+			setVehicleDamageProof(source, true)
+			setVehicleEngineState(source, false)
+			setElementData(source, "enginebroke", 1, false)
+			setElementData(source, "engine", 0, false)
+			
+			local player = getVehicleOccupant(source)
+			if player then
+				toggleControl(player, 'brake_reverse', false)
+			end
 		end
 	end
 end
