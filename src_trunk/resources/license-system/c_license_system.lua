@@ -1,12 +1,19 @@
 wLicense, licenseList, bAcceptLicense, bCancel = nil
-local ped = createPed(71, 356.29598999023, 161.48677062988, 1008.3762207031)
-setPedRotation(ped, 271.4609375)
-setElementDimension(ped, 125)
-setElementInterior(ped, 3)
+local Johnson = createPed(71, 356.29598999023, 162.48677062988, 1008.3762207031)
+setPedRotation(Johnson, 271.4609375)
+setElementDimension(Johnson, 125)
+setElementInterior(Johnson, 3)
+setElementData( Johnson, "talk", 1 )
+setElementData( Johnson, "name", "Officer Johnson" )
 
 local localPlayer = getLocalPlayer()
 
 function showLicenseWindow()
+	triggerServerEvent("onLicenseServer", getLocalPlayer())
+	
+	local vehiclelicense = getElementData(getLocalPlayer(), "license.car")
+	local weaponlicense = getElementData(getLocalPlayer(), "license.gun")
+
 	local width, height = 300, 400
 	local scrWidth, scrHeight = guiGetScreenSize()
 	local x = scrWidth/2 - (width/2)
@@ -15,19 +22,15 @@ function showLicenseWindow()
 	wLicense= guiCreateWindow(x, y, width, height, "Los Santos Licensing Department", false)
 	
 	licenseList = guiCreateGridList(0.05, 0.05, 0.9, 0.8, true, wLicense)
-    local column = guiGridListAddColumn(licenseList, "License", 0.7)
+	local column = guiGridListAddColumn(licenseList, "License", 0.7)
 	local column2 = guiGridListAddColumn(licenseList, "Cost", 0.2)
-
-	local vehiclelicense = getElementData(getLocalPlayer(), "license.car")
 	
 	if (vehiclelicense~=1) then
 		local row = guiGridListAddRow(licenseList)
 		guiGridListSetItemText(licenseList, row, column, "Car License", false, false)
 		guiGridListSetItemText(licenseList, row, column2, "450", true, false)
 	end
-	
-	local weaponlicense = getElementData(getLocalPlayer(), "license.gun")
-	
+			
 	if (weaponlicense==0) then
 		local row2 = guiGridListAddRow(licenseList)
 		guiGridListSetItemText(licenseList, row2, column, "Weapon License", false, false)

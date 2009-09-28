@@ -26,17 +26,24 @@ addEventHandler("onResourceStop", getResourceRootElement(getThisResource()), clo
 -- //			MYSQL END			 //
 -- ////////////////////////////////////
 
-licenseColSphere = createColSphere(358.25839233398, 161.80035400391, 1008.3828125, 3)
-exports.pool:allocateElement(licenseColSphere)
-setElementInterior(licenseColSphere, 3)
-setElementDimension(licenseColSphere, 125)
+--licenseColSphere = createColSphere(358.25839233398, 161.80035400391, 1008.3828125, 3)
+--exports.pool:allocateElement(licenseColSphere)
+--setElementInterior(licenseColSphere, 3)
+--setElementDimension(licenseColSphere, 125)
 
-function hitLicenseColShape(thePlayer, matchingDimension)
-	if (matchingDimension) then
-		triggerClientEvent(thePlayer, "onLicense", thePlayer)
-	end
+--function hitLicenseColShape(thePlayer, matchingDimension)
+--	if (matchingDimension) then
+--		triggerClientEvent(thePlayer, "onLicense", thePlayer)
+--	end
+--end
+--addEventHandler("onColShapeHit", licenseColSphere, hitLicenseColShape)
+
+function onLicenseServer()
+	exports.global:sendLocalText(source, "Officer Johnson says: Hello, do you want to apply for a license?", nil, nil, nil, 10)
 end
-addEventHandler("onColShapeHit", licenseColSphere, hitLicenseColShape)
+
+addEvent("onLicenseServer", true)
+addEventHandler("onLicenseServer", getRootElement(), onLicenseServer)
 
 function giveLicense(license, cost)
 	if (license==1) then -- car drivers license
