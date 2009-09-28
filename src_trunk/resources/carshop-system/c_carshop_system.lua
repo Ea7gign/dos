@@ -1,3 +1,40 @@
+local rc = 10
+local bike = 15
+local low = 25
+local offroad = 35
+local sport = 100
+local van = 50
+local bus = 75
+local truck = 200
+local boat = 300 -- except dinghy
+local heli = 500
+local plane = 750
+local race = 75
+local vehicleTaxes = {
+	offroad, low, sport, truck, low, low, 1000, truck, truck, 200, -- dumper, stretch
+	low, sport, low, van, van, sport, truck, heli, van, low,
+	low, low, low, van, low, 1000, low, truck, van, sport, -- hunter
+	boat, bus, 1000, truck, offroad, van, low, bus, low, low, -- rhino
+	van, rc, low, truck, 500, low, boat, heli, bike, 0, -- monster, tram
+	van, sport, boat, boat, boat, truck, van, 10, low, van, -- caddie
+	plane, bike, bike, bike, rc, rc, low, low, bike, heli,
+	van, bike, boat, 20, low, low, plane, sport, low, low, -- dinghy
+	sport, bike, van, van, boat, 10, 75, heli, heli, offroad, -- baggage, dozer
+	offroad, low, low, boat, low, offroad, low, heli, van, van,
+	low, rc, low, low, low, offroad, sport, low, van, bike,
+	bike, plane, plane, plane, truck, truck, low, low, low, plane,
+	plane * 10, bike, bike, bike, truck, van, low, low, truck, low, -- hydra
+	10, 20, offroad, low, low, low, low, 0, 0, offroad, -- forklift, tractor, 2x train
+	low, sport, low, van, truck, low, low, low, rc, low,
+	low, low, van, plane, van, low, 500, 500, race, race, -- 2x monster
+	race, low, race, heli, rc, low, low, low, offroad, 0, -- train trailer
+	0, 10, 10, offroad, 15, low, low, 3*plane, truck, low,-- train trailer, kart, mower, sweeper, at400
+	low, bike, van, low, van, low, bike, race, van, low,
+	0, van, 2*plane, plane, rc, boat, low, low, low, offroad, -- train trailer, andromeda
+	low, truck, race, sport, low, low, low, low, low, van,
+	low, low
+}
+
 car, wCars, bClose, bBuy, gCars, lCost, lColors, sCol1, sCol2 = nil
 activeShop, shopID = nil
 
@@ -76,8 +113,9 @@ function showCarshopUI(id)
 		guiGridListSetItemData(gCars, row, col, tostring(key), false, false)
 	end
 	
-	lCost = guiCreateLabel(0.3, 0.85, 0.2, 0.1, "Cost: ---", true, wCars)
+	lCost = guiCreateLabel(0.15, 0.85, 0.4, 0.1, "Cost: --- - Tax: ---", true, wCars)
 	guiSetFont(lCost, "default-bold-small")
+	guiLabelSetHorizontalAlign(lCost, "right")
 	guiGridListSetSelectedItem(gCars, 0, 1)
 	
 	updateCar()
@@ -110,7 +148,7 @@ function updateCar()
 		local key = tonumber(guiGridListGetItemData(gCars, row, col))
 		local value = activeShop[key]
 		setElementModel(car, value[1])
-		guiSetText(lCost, "Cost: " .. tostring(value[2]) .. "$")
+		guiSetText(lCost, "Cost: " .. tostring(value[2]) .. "$" .. " - Tax: " .. ( vehicleTaxes[value[1]-399] or 25 ) .. "$")
 		
 		local money = exports.global:getMoney(getLocalPlayer())
 		if value[2] > money then

@@ -33,7 +33,7 @@ function loadAllFactions(res)
 	-- work out how many minutes it is until the next hour
 	local mins = getRealTime().minute
 	local minutes = 60 - mins
-	setTimer(payAllWages, 60000*minutes, 1)
+	setTimer(payAllWages, 60000*minutes, 1, true)
 	
 	local result = mysql_query(handler, "SELECT id, name, bankbalance, type FROM factions")
 	local counter = 0
@@ -781,6 +781,45 @@ end
 addCommandHandler("setfactionmoney", setFactionMoney, false, false)
 
 -- /////////////// WAGES
+local taxVehicles = {}
+local vehicleCount = {}
+
+local rc = 10
+local bike = 15
+local low = 25
+local offroad = 35
+local sport = 100
+local van = 50
+local bus = 75
+local truck = 200
+local boat = 300 -- except dinghy
+local heli = 500
+local plane = 750
+local race = 75
+local vehicleTaxes = {
+	offroad, low, sport, truck, low, low, 1000, truck, truck, 200, -- dumper, stretch
+	low, sport, low, van, van, sport, truck, heli, van, low,
+	low, low, low, van, low, 1000, low, truck, van, sport, -- hunter
+	boat, bus, 1000, truck, offroad, van, low, bus, low, low, -- rhino
+	van, rc, low, truck, 500, low, boat, heli, bike, 0, -- monster, tram
+	van, sport, boat, boat, boat, truck, van, 10, low, van, -- caddie
+	plane, bike, bike, bike, rc, rc, low, low, bike, heli,
+	van, bike, boat, 20, low, low, plane, sport, low, low, -- dinghy
+	sport, bike, van, van, boat, 10, 75, heli, heli, offroad, -- baggage, dozer
+	offroad, low, low, boat, low, offroad, low, heli, van, van,
+	low, rc, low, low, low, offroad, sport, low, van, bike,
+	bike, plane, plane, plane, truck, truck, low, low, low, plane,
+	plane * 10, bike, bike, bike, truck, van, low, low, truck, low, -- hydra
+	10, 20, offroad, low, low, low, low, 0, 0, offroad, -- forklift, tractor, 2x train
+	low, sport, low, van, truck, low, low, low, rc, low,
+	low, low, van, plane, van, low, 500, 500, race, race, -- 2x monster
+	race, low, race, heli, rc, low, low, low, offroad, 0, -- train trailer
+	0, 10, 10, offroad, 15, low, low, 3*plane, truck, low,-- train trailer, kart, mower, sweeper, at400
+	low, bike, van, low, van, low, bike, race, van, low,
+	0, van, 2*plane, plane, rc, boat, low, low, low, offroad, -- train trailer, andromeda
+	low, truck, race, sport, low, low, low, low, low, van,
+	low, low
+}
 function payWage(player, pay, faction, tax)
 	local bankmoney = getElementData(player, "bankmoney")
 	local interestrate = 0.004
@@ -882,6 +921,12 @@ function payWage(player, pay, faction, tax)
 		pay = pay - tax
 	end
 	
+	local vtax = taxVehicles[ getElementData(player, "dbid") ] or 0
+	if vtax > 0 then
+		outputChatBox("    Vehicle Tax: " .. vtax .. "$", player, 255, 194, 14)
+		setElementData(player, "bankmoney", math.max(0, getElementData(player, "bankmoney") - vtax))
+	end
+	
 	outputChatBox("    Bank Interest (" .. interestrate*100 .. "%): " .. interest .. "$", player, 255, 194, 14)
 	if (donator>0) then
 		outputChatBox("    Donator Money: " .. donatormoney .. "$", player, 255, 194, 14)
@@ -895,16 +940,34 @@ function payWage(player, pay, faction, tax)
 	end
 
 	outputChatBox("----------------------------------------------------------", player, 255, 194, 14)
-	outputChatBox("  Gross Income: " .. pay+profit+interest+donatormoney-rent .. "$ (Wire-Transferred to bank)", player, 255, 194, 14)
+	outputChatBox("  Gross Income: " .. pay+profit+interest+donatormoney-rent-vtax .. "$ (Wire-Transferred to bank)", player, 255, 194, 14)
 	
 	-- Insert in Transactions
 	mysql_free_result( mysql_query( handler, "INSERT INTO wiretransfers (`from`, `to`, `amount`, `reason`, `type`) VALUES (0, " .. getElementData(player, "dbid") .. ", " .. profit+interest+donatormoney-rent .. ", '', 7)" ) )
 end
 
-function payAllWages()
-	local mins = getRealTime().minute
-	local minutes = 60 - mins
-	setTimer(payAllWages, 60000*minutes, 1)
+function payAllWages(timer)
+	if timer then
+		local mins = getRealTime().minute
+		local minutes = 60 - mins
+		setTimer(payAllWages, 60000*minutes, 1, true)
+	end
+	
+	-- collect all vehicle info
+	taxVehicles = {}
+	vehicleCount = {}
+	for _, veh in pairs(getElementsByType("vehicle")) do
+		if isElement(veh) then
+			local owner, faction = getElementData(veh, "owner"), getElementData(veh, "faction")
+			if faction < 0 and owner > 0 then -- non-faction vehicles
+				taxVehicles[owner] = ( taxVehicles[owner] or 0 ) + ( vehicleTaxes[getElementModel(veh)-399] or 25 )
+				vehicleCount[owner] = ( vehicleCount[owner] or 0 ) + 1
+				if vehicleCount[owner] > 3 then -- $50 for having too much vehicles, per vehicle more than 3
+					taxVehicles[owner] = taxVehicles[owner] + 50
+				end
+			end
+		end
+	end
 	
 	local players = exports.pool:getPoolElementsByType("player")
 	
@@ -985,7 +1048,7 @@ function adminDoPayday(thePlayer)
 	
 	if (logged==1) then
 		if (exports.global:isPlayerLeadAdmin(thePlayer)) then
-			payAllWages()
+			payAllWages(false)
 		end
 	end
 end
