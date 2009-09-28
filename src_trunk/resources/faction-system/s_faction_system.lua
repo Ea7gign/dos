@@ -1069,23 +1069,3 @@ function timeSaved(thePlayer)
 	end
 end
 addCommandHandler("timesaved", timeSaved)
-
-
-function addToFactionMoney(factionID, amount)
-	factionID = tonumber(factionID)
-	if factionID then
-		theTeam = nil
-		for key, value in ipairs(exports.pool:getPoolElementsByType("team")) do
-			local id = getElementData(value, "id")
-		
-			if id == factionID then
-				theTeam = value
-			end
-		end
-		
-		if (theTeam) then
-			return exports.global:giveMoney(theTeam, amount)
-		end
-	end
-	return false
-end
