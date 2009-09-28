@@ -147,8 +147,9 @@ function shapeHit(element, matchingDimension)
 		if (thePlayer) then
 			local faction = getPlayerTeam(thePlayer)
 			local ftype = getElementData(faction, "type")
+			local fid = getElementData(faction, "id")
 			local free = false
-			if (ftype==2 or ftype==3 or ftype==4) then
+			if (ftype==2 or ftype==3 or ftype==4 or fid==30) then
 				free = true
 			end
 			

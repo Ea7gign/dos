@@ -271,8 +271,9 @@ function fillVehicle(thePlayer, commandName)
 			else
 				local faction = getPlayerTeam(thePlayer)
 				local ftype = getElementData(faction, "type")
+				local fid = getElementData(faction, "id")
 				
-				if (ftype~=2) and (ftype~=3) and (ftype~=4) then
+				if (ftype~=2) and (ftype~=3) and (ftype~=4) and (fid~=30) then
 					local money = exports.global:getMoney(thePlayer)
 					
 					local tax = exports.global:getTaxAmount()
