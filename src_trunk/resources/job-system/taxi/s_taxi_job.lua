@@ -17,6 +17,6 @@ addEventHandler( "onVehicleStartExit", getRootElement( ),
 addEvent( "toggleTaxiLights", true )
 addEventHandler( "toggleTaxiLights", getRootElement( ), 
 	function( vehicle )
-		setVehicleTaxiLightOn( source, not isVehicleTaxiLightOn( source ) )
+		setVehicleTaxiLightOn( vehicle, not isVehicleTaxiLightOn( vehicle ) )
 	end
 )
