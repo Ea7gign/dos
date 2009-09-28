@@ -1143,3 +1143,19 @@ function setInteriorID( thePlayer, commandName, interiorID )
 	end
 end
 addCommandHandler( "setinteriorid", setInteriorID )
+
+function getInteriorID( thePlayer, commandName )
+	local c = 0
+	local interior = getElementInterior( thePlayer )
+	local x, y, z = getElementPosition( thePlayer )
+	for k, v in pairs( interiors ) do
+		if interior == v[1] and getDistanceBetweenPoints3D( x, y, z, v[2], v[3], v[4] ) < 10 then
+			outputChatBox( "Interior ID: " .. k, thePlayer )
+			c = c + 1
+		end
+	end
+	if c == 0 then
+		outputChatBox( "Interior ID not found.", thePlayer )
+	end
+end
+addCommandHandler( "getinteriorid", getInteriorID )
