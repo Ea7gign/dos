@@ -1,11 +1,16 @@
 wEmployment, jobList, bAcceptJob, bCancel = nil
 
-local ped = createPed(141, 359.7131652832, 173.87419128418, 1008.3893432617)
-setPedRotation(ped, 260.3631)
-setElementDimension(ped, 125)
-setElementInterior(ped, 3)
+local jessie = createPed( 141, 359.6131652832, 173.57419128418, 1008.3893432617 )
+--local jessie = createPed( 141, 359.11392822266, 173.68501281738, 1008.3893432617 )
+setPedRotation( jessie, 260.3631 )
+setElementDimension( jessie, 125 )
+setElementInterior( jessie , 3 )
+setElementData( jessie, "talk", 1 )
+setElementData( jessie, "name", "Jessie Smith" )
+setPedAnimation ( jessie, "INT_OFFICE", "OFF_Sit_Idle_Loop", -1, true, false, false )
 
 function showEmploymentWindow()
+	triggerServerEvent("onEmploymentServer", getLocalPlayer())
 	local width, height = 300, 400
 	local scrWidth, scrHeight = guiGetScreenSize()
 	local x = scrWidth/2 - (width/2)

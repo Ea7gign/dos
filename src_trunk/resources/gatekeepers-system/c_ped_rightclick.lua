@@ -46,6 +46,8 @@ function clickPed(button, state, absX, absY, wx, wy, wz, element)
 							triggerServerEvent( "startRookConvo", getLocalPlayer())
 						elseif (ped=="Victoria Greene") then
 							triggerEvent("cSellPhotos", getLocalPlayer())
+						elseif (ped=="Jessie Smith") then
+							triggerEvent("onEmployment", getLocalPlayer())
 						else
 							outputChatBox("Error: Unknown ped.", 255, 0, 0)
 						end

@@ -28,25 +28,34 @@ addEventHandler("onResourceStop", getResourceRootElement(getThisResource()), clo
 
 chDimension = 125
 chInterior = 3
-employmentCollision = createColSphere(360.8212890625, 173.62351989746, 1009.109375, 5)
-setElementDimension(employmentCollision, chDimension)
-exports.pool:allocateElement(employmentCollision)
+--employmentCollision = createColSphere(360.8212890625, 173.62351989746, 1009.109375, 5)
+--setElementDimension(employmentCollision, chDimension)
+--exports.pool:allocateElement(employmentCollision)
 
 -- /employment at cityhall
-function employment(thePlayer, matchingDimension)
-	if matchingDimension then
-		local logged = getElementData(thePlayer, "loggedin")
-		
-		if (logged==1) then
-			if (isElementWithinColShape(thePlayer, employmentCollision)) then
-				triggerClientEvent(thePlayer, "onEmployment", thePlayer)
-			end
-		end
-	end
-end
-addEventHandler("onColShapeHit", employmentCollision, employment)
+--function employment(thePlayer, matchingDimension)
+--	if matchingDimension then
+--		local logged = getElementData(thePlayer, "loggedin")
+--		
+--		if (logged==1) then
+--			if (isElementWithinColShape(thePlayer, employmentCollision)) then
+--				triggerClientEvent(thePlayer, "onEmployment", thePlayer)
+--			end
+--		end
+--	end
+--end
+--addEventHandler("onColShapeHit", employmentCollision, employment)
 
 -- CALL BACKS FROM CLIENT
+
+function onEmploymentServer()
+	exports.global:sendLocalText(source, "Jessie Smith says: Hello, are you looking for a new job?", nil, nil, nil, 10)
+	exports.global:sendLocalText(source, " *Jessie Smith hands over a list with jobs to " .. getPlayerName(source):gsub("_", " ") .. ".", 255, 51, 102)
+end
+
+addEvent("onEmploymentServer", true)
+addEventHandler("onEmploymentServer", getRootElement(), onEmploymentServer)
+
 function givePlayerJob(jobID)
 	local charname = getPlayerName(source)
 	
