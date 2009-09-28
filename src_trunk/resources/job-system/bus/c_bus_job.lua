@@ -56,11 +56,12 @@ function startBusJob()
 		else
 			local vehicle = getPedOccupiedVehicle(getLocalPlayer())
 			if vehicle and getVehicleController(vehicle) == getLocalPlayer() and bus[getElementModel(vehicle)] then
-				line = math.random( 1, #g_bus_routes )
+				--line = math.random( 1, #g_bus_routes )
+				line = 1
 				route = g_bus_routes[line]
 				curCpType = 0
 				
-				local x, y, z = 1732, -1855, 13 -- Depot start point
+				local x, y, z = 1811, -1890, 13 -- Depot start point
 				busBlip = createBlip(x, y, z, 0, 3, 255, 200, 0, 255)
 				busMarker = createMarker(x, y, z, "checkpoint", 4, 255, 200, 0, 150) -- start marker.
 				busStopColShape = createColSphere(0, 0, 0, 5)
@@ -114,12 +115,14 @@ function updateBusCheckpointCheck(thePlayer)
 		if vehicle and bus[getElementModel(vehicle)] then
 			if curCpType == 3 then
 				busStopTimer = setTimer(updateBusCheckpointAfterStop, 5000, 1, true)
-				outputChatBox("#FF9933Wait at the bus stop for a moment.", 255, 0, 0, true )
+				outputChatBox("#FF9933Wait at the bus stop for a moment till the marker disappears.", 255, 0, 0, true )
+				triggerServerEvent("busAdNextStop", getLocalPlayer(), line, route.points[m_number][5])
 			elseif curCpType == 2 then
 				endOfTheLine()
 			elseif curCpType == 1 then
 				busStopTimer = setTimer(updateBusCheckpointAfterStop, 5000, 1, false)
-				outputChatBox("#FF9933Wait at the bus stop for a moment.", 255, 0, 0, true )
+				outputChatBox("#FF9933Wait at the bus stop for a moment till the marker disappears.", 255, 0, 0, true )
+				triggerServerEvent("busAdNextStop", getLocalPlayer(), line, route.points[m_number][5])
 			else
 				updateBusCheckpoint()
 			end
@@ -156,7 +159,7 @@ function updateBusCheckpoint()
 			setBlipColor(busBlip, 255, 200, 0, 255)
 		end
 		
-		nx, ny, nz = 1732, -1855, 13 -- Depot start point
+		nx, ny, nz = 1811, -1890, 13 -- Depot start point
 		setElementPosition(busNextMarker, nx, ny, nz)
 		setElementPosition(busNextBlip, nx, ny, nz)
 		setMarkerColor(busNextMarker, 255, 0, 0, 150)
@@ -233,7 +236,7 @@ function endOfTheLine()
 			busStopColShape = nil
 		end
 		
-		local x, y, z = 1732, -1855, 13 -- Depot start point
+		local x, y, z = 1811, -1890, 13 -- Depot start point
 		setElementPosition(busMarker, x, y, z)
 		setElementPosition(busBlip, x, y, z)
 		setMarkerColor(busMarker, 255, 0, 0, 150)

@@ -55,10 +55,10 @@ function payBusDriver(line, stop)
 		table.insert( drivers[line][1], source )
 	else
 		exports.global:giveMoney(source, 18)
-		exports.global:sendLocalText(source, " -- This stop: [".. g_bus_routes[line].stops[stop] .. "] --", 255, 51, 102)
-		if(stop<#g_bus_routes[line].stops)then
-			exports.global:sendLocalText(source, " -- Next stop: [".. g_bus_routes[line].stops[stop+1] .. "] --", 255, 51, 102)
-		end
+		--exports.global:sendLocalText(source, " -- This stop: [".. g_bus_routes[line].stops[stop] .. "] --", 255, 51, 102)
+		--if(stop<#g_bus_routes[line].stops)then
+		--	exports.global:sendLocalText(source, " -- Next stop: [".. g_bus_routes[line].stops[stop+1] .. "] --", 255, 51, 102)
+		--end
 		
 		-- "remove" driver from current blip
 		if drivers[line][stop+1] then
@@ -70,6 +70,15 @@ function payBusDriver(line, stop)
 end
 addEvent("payBusDriver",true)
 addEventHandler("payBusDriver", getRootElement(), payBusDriver)
+
+function busAdNextStop(line, stop)
+	exports.global:sendLocalText(source, " -- This stop: [".. g_bus_routes[line].stops[stop] .. "] --", 255, 51, 102)
+	if(stop<#g_bus_routes[line].stops)then
+		exports.global:sendLocalText(source, " -- Next stop: [".. g_bus_routes[line].stops[stop+1] .. "] --", 255, 51, 102)
+	end
+end
+addEvent("busAdNextStop",true)
+addEventHandler("busAdNextStop", getRootElement(), busAdNextStop)
 
 function takeBusFare(thePlayer)
 	exports.global:takeMoney(source, 5)
