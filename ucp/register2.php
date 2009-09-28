@@ -18,6 +18,15 @@
 			return $rhash;
 		}
 			
+			
+		if (strlen($_POST["username"]) =< 6)
+		{
+			setcookie("uid", "", time()-3600);
+			setcookie("username", "", time()-3600);
+			setcookie("password", "", time()-3600);
+			header('Location: register.php?errno=3');
+			exit;
+		}
 	
 		$username = $_POST["username"];
 		$password = $_POST["password"];
@@ -30,6 +39,7 @@
 			setcookie("password", "", time()-3600);
 			header('Location: index.php?errno=2');
 		}
+		
 		
 		$salt = "vgrpkeyscotland";
 		$hashpassword = strtoupper(md5($salt . $password));

@@ -267,6 +267,8 @@ a:active {
 				echo "<br><strong><span class='style5'>An account with this username already exists!</span></strong><br><br>";
 			elseif ($errno==2)
 				echo "<br><strong><span class='style5'>An unknown error occured, please report this on the forums!</span></strong><br><br>";
+			elseif ($errno==3)
+				echo "<br><strong><span class='style5'>Your password needs to be atleast 6 characters long!</span></strong><br><br>";
 			?>
 
 <input type="submit" name="register" id="register" value="Register"></td>
