@@ -39,7 +39,12 @@ addEventHandler("onResourceStop", getResourceRootElement(getThisResource()), clo
 --addEventHandler("onColShapeHit", licenseColSphere, hitLicenseColShape)
 
 function onLicenseServer()
-	exports.global:sendLocalText(source, "Officer Johnson says: Hello, do you want to apply for a license?", nil, nil, nil, 10)
+	local gender = getElementData(source, "gender")
+	if (gender == 0) then
+		exports.global:sendLocalText(source, "Officer Johnson says: Hello Sir, do you want to apply for a license?", nil, nil, nil, 10)
+	else
+		exports.global:sendLocalText(source, "Officer Johnson says: Hello Ma'am, do you want to apply for a license?", nil, nil, nil, 10)
+	end
 end
 
 addEvent("onLicenseServer", true)

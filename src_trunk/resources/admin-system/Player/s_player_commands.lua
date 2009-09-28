@@ -1504,7 +1504,14 @@ function timerUnjailPlayer(jailedPlayer)
 				toggleControl(jailedPlayer,'fire',true)
 				toggleControl(jailedPlayer,'aim_weapon',true)
 				outputChatBox("Your time has been served, Behave next time!", jailedPlayer, 0, 255, 0)
-				exports.global:sendMessageToAdmins("AdmJail: " .. getPlayerName(jailedPlayer) .. " has served his jail time.")
+				
+				local gender = getElementData(jailedPlayer, "gender")
+				local genderm = "his"
+				if (gender == 1) then
+					genderm = "her"
+				end
+				
+				exports.global:sendMessageToAdmins("AdmJail: " .. getPlayerName(jailedPlayer) .. " has served " .. genderm .. " jail time.")
 				exports.irc:sendMessage("[ADMIN] " .. getPlayerName(jailedPlayer) .. " was unjailed by script (Time Served)")
 			else
 				local query = mysql_query(handler, "UPDATE accounts SET adminjail_time='" .. timeLeft .. "' WHERE id='" .. accountID .. "'")

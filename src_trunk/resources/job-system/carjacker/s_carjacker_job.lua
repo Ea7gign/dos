@@ -22,7 +22,13 @@ function selectPlayer()
 				count = 0
 			end
 		elseif getElementData( theChosenOne, "phoneoff" ) == 1 then
-			outputDebugString("Player " .. getPlayerName(theChosenOne) .. " has his phone off")
+			local gender = getElementData(theChosenOne, "gender")
+			local genderm = "his"
+			if (gender == 1) then
+				genderm = "her"
+			end
+		
+			outputDebugString("Player " .. getPlayerName(theChosenOne) .. " has " .. genderm .. " phone off")
 		else
 			local query = mysql_query(handler, "SELECT hunter FROM characters WHERE charactername='" .. mysql_escape_string(handler, getPlayerName(theChosenOne)) .."'")
 			local huntersFriend = tonumber(mysql_result(query, 1, 1))

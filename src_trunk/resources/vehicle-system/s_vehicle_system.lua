@@ -1114,7 +1114,13 @@ function fillFuelTank(veh, fuel)
 		end
 		
 		outputChatBox("You added " .. math.ceil(fuelAdded) .. " litres of petrol to your car from your fuel can.", source, 0, 255, 0 )
-		exports.global:sendLocalMeAction(source, "fills up his vehicle from a small petrol canister.")
+		
+		local gender = getElementData(theChosenOne, "gender")
+		local genderm = "his"
+		if (gender == 1)
+			genderm = "her"
+		end
+		exports.global:sendLocalMeAction(source, "fills up " .. genderm .. " vehicle from a small petrol canister.")
 		
 		exports.global:takeItem(source, 57, fuel)
 		exports.global:giveItem(source, 57, math.ceil(fuel-fuelAdded))

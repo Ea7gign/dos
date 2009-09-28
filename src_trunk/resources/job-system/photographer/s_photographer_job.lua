@@ -1,6 +1,13 @@
 function getPaid(collectionValue)
 	exports.global:giveMoney(getPlayerTeam(source), tonumber(collectionValue))
-	exports.global:sendLocalMeAction(source,"hands his collection of photographs to the woman behind the desk.")
+	
+	local gender = getElementData(theChosenOne, "gender")
+	local genderm = "his"
+	if (gender == 1) then
+		genderm = "her"
+	end
+	
+	exports.global:sendLocalMeAction(source,"hands " .. genderm .. " collection of photographs to the woman behind the desk.")
 	exports.global:sendLocalText(source, "Victoria Greene says: Thank you. These should make the morning edition. Keep up the good work.", nil, nil, nil, 10)
 	outputChatBox("#FF9933SAN News made $".. collectionValue .." from the photographs.", source, 255, 104, 91, true)
 	exports.global:sendMessageToAdmins("SANNews: " .. tostring(getPlayerName(source)) .. " sold photos for $" .. collectionValue .. ".")

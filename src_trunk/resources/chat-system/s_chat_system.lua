@@ -724,6 +724,12 @@ addCommandHandler("tuneradio", setRadioChannel, false, false)
 
 function toggleRadio(thePlayer, commandName)
 	if (exports.global:hasItem(thePlayer, 6)) then
+		local gender = getElementData(thePlayer, "gender")
+		local genderm = "his"
+		if (gender == 1) then
+			genderm = "her"
+		end
+		
 		local channel = getElementData(thePlayer, "radiochannel")
 		if not channel or channel == 0 then
 			channel = 1
@@ -732,10 +738,10 @@ function toggleRadio(thePlayer, commandName)
 		end
 		if channel > 0 then
 			outputChatBox("You turned your radio on.", thePlayer, 255, 194, 14)
-			exports.global:sendLocalMeAction(thePlayer, "turns his radio on.")
+			exports.global:sendLocalMeAction(thePlayer, "turns " .. genderm .. " radio on.")
 		else
 			outputChatBox("You turned your radio off.", thePlayer, 255, 194, 14)
-			exports.global:sendLocalMeAction(thePlayer, "turns his radio off.")
+			exports.global:sendLocalMeAction(thePlayer, "turns " .. genderm .. " radio off.")
 		end
 		setElementData(thePlayer, "radiochannel", channel, false)
 	else
@@ -1023,7 +1029,13 @@ function payPlayer(thePlayer, commandName, targetPlayerNick, amount)
 						
 						exports.global:giveMoney(targetPlayer, amount)
 						
-						exports.global:sendLocalMeAction(thePlayer, "takes some dollar notes from his wallet and gives them to " .. getPlayerName(targetPlayer) .. ".")
+						local gender = getElementData(thePlayer, "gender")
+						local genderm = "his"
+						if (gender == 1) then
+							genderm = "her"
+						end
+						
+						exports.global:sendLocalMeAction(thePlayer, "takes some dollar notes from " .. genderm .. "wallet and gives them to " .. getPlayerName(targetPlayer) .. ".")
 						outputChatBox("You gave $" .. amount .. " to " .. getPlayerName(targetPlayer) .. ".", thePlayer)
 						outputChatBox(getPlayerName(thePlayer) .. " gave you $" .. amount .. ".", targetPlayer)
 						exports.irc:sendMessage("[MONEY TRANSFER] From '" .. getPlayerName(thePlayer) .. "' to " .. getPlayerName(targetPlayer) .. "' Amount: $" .. amount .. ".")
