@@ -902,7 +902,9 @@ function payWage(player, pay, faction, tax)
 end
 
 function payAllWages()
-	setTimer(payAllWages, 3600000, 1)
+	local mins = getRealTime().minute
+	local minutes = 60 - mins
+	setTimer(payAllWages, 60000*minutes, 1)
 	
 	local players = exports.pool:getPoolElementsByType("player")
 	
