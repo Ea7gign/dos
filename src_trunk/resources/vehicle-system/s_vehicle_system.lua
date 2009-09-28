@@ -763,7 +763,7 @@ function toggleLock(source, key, keystate)
 	
 	if (veh) and (inVehicle==1) then
 		triggerEvent("lockUnlockInsideVehicle", source, veh)
-	else
+	elseif not veh and not triggerEvent("lockUnlockHouse", source) then
 		local x, y, z = getElementPosition(source)
 		local nearbyVehicles = exports.global:getNearbyElements(source, "vehicle", 30)
 		

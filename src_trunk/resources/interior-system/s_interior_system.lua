@@ -945,7 +945,7 @@ end
 addCommandHandler("movesafe", moveSafe)
 
 local function hasKey( source, key )
-	return exports.global:hasItem(source, 4, key) or exports.global:hasItem(source, 5,key)
+	return exports.global:isPlayerScripter(source) or exports.global:hasItem(source, 4, key) or exports.global:hasItem(source, 5,key)
 end
 addEvent( "lockUnlockHouse",false )
 addEventHandler( "lockUnlockHouse", getRootElement(),
