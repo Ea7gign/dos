@@ -33,7 +33,7 @@
 	}
 	
 	$userid = $_GET["id"];
-	$result = mysql_query("SELECT username, appgamingexperience, appcountry, applanguage, apphow, appwhy, appexpectations, appdefinitions, appfirstcharacter, appclarifications, appreason FROM accounts WHERE id='" . $userid . "' limit 1", $conn);
+	$result = mysql_query("SELECT username, appgamingexperience, appcountry, applanguage, apphow, appwhy, appexpectations, appdefinitions, appfirstcharacter, appclarifications, appreason, ip FROM accounts WHERE id='" . $userid . "' limit 1", $conn);
 	
 	$targetusername = mysql_result($result, 0, 0);
 	$gamingexperience = mysql_result($result, 0, 1);
@@ -46,6 +46,7 @@
 	$firstcharacter = mysql_result($result, 0, 8);
 	$clarifications = mysql_result($result, 0, 9);
 	$adminreason = mysql_result($result, 0, 9);
+	$ip = mysql_result($result, 0, 10);
 	if (strlen($adminreason) == 0)
 	{
 		$adminreason = "Write the reason why the person is denied here. This does not have any effect if you are accepting the application.";
@@ -272,6 +273,11 @@ a:active {
 		      <tr>
 		        <td>Account Username:</td>
 		        <td><input name="targetusername" type="text" id="targetusername" value="<?php echo $targetusername ?>" readonly="readonly"></td>
+		        </tr>
+		      <tr>
+			  <tr>
+		        <td>IP:</td>
+		        <td><input name="ip" type="text" id="ip" value="<?php echo $ip ?>" readonly="readonly"></td>
 		        </tr>
 		      <tr>
 		        <td>&nbsp;</td>
