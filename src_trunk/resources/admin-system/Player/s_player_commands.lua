@@ -2267,44 +2267,78 @@ end
 addCommandHandler("togmytag", toggleMyNametag)
 
 -- RESET CHARACTER
-function resetCharacter(thePlayer, commandName, character)
-    if exports.global:isPlayerLeadAdmin(thePlayer) then
-        if not (character) then
-            outputChatBox("SYNTAX: /" .. commandName .. " [exact character name]", thePlayer, 255, 0, 0)
-        else
-            local targetPlayer = getPlayerFromName(character)
-            local query = mysql_query(handler, "SELECT id FROM characters WHERE charactername='" .. character .. "'")
-            local targetid = tonumber(mysql_result(query, 1, 1))
-            local logged = getElementData(targetPlayer, "loggedin")
-            mysql_free_result(query)
-            if logged == 1 then
-                kickPlayer(targetPlayer)
-            end
-            if (targetid == nil) then
-                outputChatBox(character .. " is not a valid character name.", thePlayer, 255, 0, 0)
-            else
-                query = mysql_query(handler, "UPDATE characters SET money='0', weapons=NULL, ammo=NULL, items=NULL, itemvalues=NULL, car_license='0', gun_license='0', bankmoney='0' WHERE id='" .. targetid .. "'")
-                mysql_free_result(query)
-				query = mysql_query(handler, "DELETE FROM items WHERE type=1 AND owner=" .. targetid)
-                mysql_free_result(query)
-                query = mysql_query(handler, "DELETE FROM vehicles WHERE owner='" .. targetid .. "'")
-                mysql_free_result(query)
-                query = mysql_query(handler, "UPDATE interiors SET owner='-1',locked='1' WHERE owner='" .. targetid .. "'")
-                mysql_free_result(query)
-                restartResource(getResourceFromName(tostring("item-system")))
-                restartResource(getResourceFromName(tostring("interior-system")))
-                outputChatBox("You stripped " .. character .. " off their possession.", thePlayer, 0, 255, 0)
-                if (hiddenAdmin==0) then
-                    local adminTitle = exports.global:getPlayerAdminTitle(thePlayer)
-                    exports.global:sendMessageToAdmins("AdmCmd: " .. tostring(adminTitle) .. " " .. getPlayerName(thePlayer) .. " has reset " .. character .. ".")
-                end
-            end
-        end
-    else
-        outputChatBox("You do not have the required permissions.", thePlayer, 255, 0, 0)
-    end
+function resetCharacter(thePlayer, commandName, ...)
+	if exports.global:isPlayerLeadAdmin(thePlayer) then
+		if not (...) then
+			outputChatBox("SYNTAX: /" .. commandName .. " [exact character name]", thePlayer, 255, 0, 0)
+		else
+			local character = table.concat({...}, "_")
+			if getPlayerFromName(character) then
+				kickPlayer(getPlayerFromName(character), "Character Reset")
+			end
+				
+			local result = mysql_query(handler, "SELECT id, account FROM characters WHERE charactername='" .. character .. "'")
+			local charid = tonumber(mysql_result(result, 1, 1))
+			local account = tonumber(mysql_result(result, 1, 2))
+			mysql_free_result(result)
+			
+			if charid and account ~= 1500 then
+				-- delete all in-game vehicles
+				for key, value in pairs( getElementsByType( "vehicle" ) ) do
+					if isElement( value ) then
+						if getElementData( value, "owner" ) == charid then
+							call( getResourceFromName( "item-system" ), "deleteAll", 3, getElementData( value, "dbid" ) )
+							destroyElement( value )
+						end
+					end
+				end
+				mysql_free_result( mysql_query(handler, "DELETE FROM vehicles WHERE owner = " .. charid ) )
+				
+				-- un-rent all interiors
+				local old = getElementData( thePlayer, "dbid" )
+				setElementData( thePlayer, "dbid", charid )
+				local result = mysql_query( handler, "SELECT id FROM interiors WHERE owner = " .. charid .. " AND type != 2" )
+				if result then
+					for result, row in mysql_rows( result ) do
+						local id = tonumber(row[1])
+						call( getResourceFromName( "interior-system" ), "publicSellProperty", thePlayer, id, false, false )
+					end
+				end
+				setElementData( thePlayer, "dbid", old )
+				
+				-- get rid of all items, give him default items back
+				mysql_free_result( mysql_query(handler, "DELETE FROM items WHERE type = 1 AND owner = " .. charid ) )
+				
+				-- get the skin
+				local skin = 264
+				local skinr = mysql_query(handler, "SELECT skin FROM characters WHERE id = " .. charid )
+				if skinr then
+					skin = tonumber(mysql_result(skinr, 1, 1)) or 264
+					mysql_free_result(skinr)
+				end
+				
+				mysql_free_result( mysql_query(handler, "INSERT INTO items (type, owner, itemID, itemValue) VALUES (1, " .. charid .. ", 16, " .. skin .. ")" ) )
+				mysql_free_result( mysql_query(handler, "INSERT INTO items (type, owner, itemID, itemValue) VALUES (1, " .. charid .. ", 17, 1)" ) )
+				mysql_free_result( mysql_query(handler, "INSERT INTO items (type, owner, itemID, itemValue) VALUES (1, " .. charid .. ", 18, 1)" ) )
+				
+				-- delete wiretransfers
+				mysql_free_result( mysql_query(handler, "DELETE FROM wiretransfers WHERE `from` = " .. charid .. " OR `to` = " .. charid ) )
+				
+				-- set spawn at unity, strip off money etc
+				mysql_free_result( mysql_query(handler, "UPDATE characters SET x=1742.1884765625, y=-1861.3564453125, z=13.577615737915, rotation=0, faction_id=-1, faction_rank=0, faction_leader=0, weapons='', ammo='', car_license=0, gun_license=0, hoursplayed=0, timeinserver=0, transport=1, lastarea='El Corona', lang1=1, lang1skill=100, lang2=0, lang2skill=0, lang3=0, lang3skill=0, currLang=1, money=250, bankmoney=500, interior_id=0, dimension_id=0, health=100, armor=0, radiochannel=100, fightstyle=0, pdjail=0, pdjail_time=0, restrainedobj=0, restrainedby=0, hunter=0, stevie=0, tyrese=0, rook=0, fish=0, truckingruns=0, truckingwage=0, blindfold=0, phoneoff=0 WHERE id = " .. charid ) )
+				
+				outputChatBox("You stripped " .. character .. " off their possession.", thePlayer, 0, 255, 0)
+				if (getElementData(thePlayer, "hiddenadmin")==0) then
+					local adminTitle = exports.global:getPlayerAdminTitle(thePlayer)
+					exports.global:sendMessageToAdmins("AdmCmd: " .. tostring(adminTitle) .. " " .. getPlayerName(thePlayer) .. " has reset " .. character .. ".")
+				end
+			else
+				outputChatBox("Couldn't find " .. character, thePlayer, 255, 0, 0)
+			end
+		end
+	end
 end
---addCommandHandler("resetcharacter", resetCharacter)
+addCommandHandler("resetcharacter", resetCharacter)
 
 -- FIND ALT CHARS
 local function showAlts(thePlayer, id)
