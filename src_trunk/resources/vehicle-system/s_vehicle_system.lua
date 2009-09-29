@@ -1279,3 +1279,16 @@ function quitPlayer ( quitReason )
 	end
 end
 addEventHandler("onPlayerQuit",getRootElement(), quitPlayer)
+
+function detachVehicle(thePlayer)
+	if isPedInVehicle(thePlayer) and getPedOccupiedVehicleSeat(thePlayer) == 0 then
+		local veh = getPedOccupiedVehicle(thePlayer)
+		if getVehicleTowedByVehicle(veh) then
+			detachTrailerFromVehicle(veh)
+			outputChatBox("The trailer was detached.", thePlayer, 0, 255, 0)
+		else
+			outputChatBox("There is no trailer...", thePlayer, 255, 0, 0)
+		end
+	end
+end
+addCommandHandler("detach", detachVehicle)
