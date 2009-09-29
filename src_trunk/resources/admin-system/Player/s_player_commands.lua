@@ -2225,28 +2225,6 @@ function toggleInvisibility(thePlayer)
 end
 addCommandHandler("disappear", toggleInvisibility)
 
--- INVULNERABILITY
-
-function invulnerability()
-	local thePlayer = getRootElement()
-	local enabled = getElementData(thePlayer, "invulnerable")
-	if (enabled == true) then
-		cancelEvent()
-	end
-end
-addEventHandler("onPlayerDamage", getRootElement(), invulnerability)
-	
-function toggleInvulnerability(thePlayer)
-	local enabled = getElementData(thePlayer, "invulnerable")
-	if (enabled == true) then
-		setElementData(thePlayer, "invulnerable", false)
-		outputChatBox("You are now vulnerable.", thePlayer, 255, 0, 0)
-	else
-		setElementData(thePlayer, "invulnerable", true)
-		outputChatBox("You are now invulnerable.", thePlayer, 0, 255, 0)
-	end
-end
-addCommandHandler("togvulnerable", toggleInvulnerability)
 					
 -- TOGGLE NAMETAG
 
