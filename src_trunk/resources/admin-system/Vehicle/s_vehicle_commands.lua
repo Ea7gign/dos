@@ -151,7 +151,7 @@ addCommandHandler("thiscar", getCarID, false, false)
 function gotoCar(thePlayer, commandName, id)
 	if (exports.global:isPlayerAdmin(thePlayer)) then
 		if not (id) then
-			ooutputChatBox("SYNTAX: /" .. commandName .. " [id]", thePlayer, 255, 194, 14)
+			outputChatBox("SYNTAX: /" .. commandName .. " [id]", thePlayer, 255, 194, 14)
 		else
 			local vehicles = exports.pool:getPoolElementsByType("vehicle")
 			local counter = 0
@@ -187,7 +187,7 @@ addCommandHandler("gotocar", gotoCar, false, false)
 function armCar(thePlayer, commandName, id)
 	if (exports.global:isPlayerAdmin(thePlayer)) then
 		if not (id) then
-			ooutputChatBox("SYNTAX: /" .. commandName .. " [id]", thePlayer, 255, 194, 14)
+			outputChatBox("SYNTAX: /" .. commandName .. " [id]", thePlayer, 255, 194, 14)
 		else
 			local vehicles = exports.pool:getPoolElementsByType("vehicle")
 			local counter = 0
@@ -207,13 +207,13 @@ function armCar(thePlayer, commandName, id)
 		end
 	end
 end
-addCommandHandler("armcar", gotoCar, false, false)
+addCommandHandler("armcar", armCar, false, false)
 
 -- /armcar
 function disarmCar(thePlayer, commandName, id)
 	if (exports.global:isPlayerAdmin(thePlayer)) then
 		if not (id) then
-			ooutputChatBox("SYNTAX: /" .. commandName .. " [id]", thePlayer, 255, 194, 14)
+			outputChatBox("SYNTAX: /" .. commandName .. " [id]", thePlayer, 255, 194, 14)
 		else
 			local vehicles = exports.pool:getPoolElementsByType("vehicle")
 			local counter = 0
@@ -233,7 +233,7 @@ function disarmCar(thePlayer, commandName, id)
 		end
 	end
 end
-addCommandHandler("disarmcar", gotoCar, false, false)
+addCommandHandler("disarmcar", disarmCar, false, false)
 
 -- /getcar
 function getCar(thePlayer, commandName, id)
