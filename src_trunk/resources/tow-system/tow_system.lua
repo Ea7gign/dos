@@ -84,14 +84,14 @@ function UnlockVehicle(element, matchingdimension)
 						setVehicleEngineState(temp, false)
 						outputChatBox("Please remember to vehpos your vehicle in our car park.", getVehicleOccupant(element), 255, 194, 14)
 					else
-						--if (getElementData(temp, "faction") ~= 30) then
+						if (getElementData(temp, "faction") ~= 30) then
 							--unlock it and impound it
 							setVehicleLocked(temp, false)
 							setElementData(temp, "Impounded", getRealTime().yearday)
 							setElementData(temp, "enginebroke", 1, false)
 							setVehicleEngineState(temp, false)
 							outputChatBox("Please remember to vehpos your vehicle in our car park.", getVehicleOccupant(element), 255, 194, 14)
-						--end
+						end
 					end
 				else
 					outputChatBox("This Faction's vehicle cannot be impounded.", getVehicleOccupant(element), 255, 194, 14)
@@ -113,7 +113,7 @@ function payRelease(vehID)
 		setVehicleDamageProof(vehID, false)
 		setVehicleEngineState(vehID, false)
 		updateVehPos(vehID)
-		outputChatBox("Your vehicle has been released. Please remember to vehpos your vehicle so it does not respawn in our carpark.", source, 255, 194, 14)
+		outputChatBox("Your vehicle has been released. (( Please remember to /park your vehicle so it does not respawn in our carpark. ))", source, 255, 194, 14)
 	else
 		outputChatBox("Insufficient Funds.", source, 255, 0, 0)
 		--Should be impossible to get to here, but you never know.

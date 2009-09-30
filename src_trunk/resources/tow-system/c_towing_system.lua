@@ -1,10 +1,17 @@
+-- the office guy
 local ped = createPed(123, 224.0537109375, 112.4599609375, 1010.2117919922)
-local ped2 = createPed(123, 1025.2021484375, -901.103515625, 41.983009338379)
 setElementInterior(ped, 10)
 setElementDimension(ped, 9001)
-setPedRotation(ped2, 180)
 addEventHandler("onClientPedDamage", ped, cancelEvent)
+
+-- the gate guy
+local ped2 = createPed(123, 1025.2021484375, -901.103515625, 41.983009338379)
+setPedRotation(ped2, 180)
 addEventHandler("onClientPedDamage", ped2, cancelEvent)
+--setElementData( ped2, "talk", 1 )
+setElementData( ped2, "name", "Ray Batanian" )
+
+
 local vehElements = {}
 car, wImpound, bClose, bRelease, gCars, lCost, IDcolumn = nil
 
