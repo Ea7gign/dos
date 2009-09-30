@@ -198,6 +198,7 @@ function armCar(thePlayer, commandName, id)
 				if (dbid==tonumber(id)) then
 					setElementData(theVehicle, "bomb", "yes", false) 
 					outputChatBox("Vehicle " .. id .. " is armed with a bomb.", thePlayer, 255, 194, 14)
+					counter = 1
 				end
 			end
 			
@@ -224,6 +225,7 @@ function disarmCar(thePlayer, commandName, id)
 				if (dbid==tonumber(id)) then
 					removeElementData(theVehicle, "bomb") 
 					outputChatBox("Bomb removed from vehicle " .. id .. ".", thePlayer, 255, 194, 14)
+					counter = 1
 				end
 			end
 			
