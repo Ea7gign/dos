@@ -184,17 +184,8 @@ function useItem(itemSlot, additional)
 				outputChatBox("These clothes do not fit you.", source, 255, 0, 0)
 			end
 		elseif (itemID==17) then -- watch
-			local realtime = getRealTime()
-			hour = realtime.hour
-			mins = realtime.minute
-			--hour = hour + 8
-			if (hour==24) then
-				hour = 0
-			elseif (hour>24) then
-				hour = hour - 24
-			end
 			exports.global:sendLocalMeAction(source, "looks at their watch.")
-			outputChatBox("The time is " .. string.format("%02d:%02d", hour, mins) .. ".", source, 255, 194, 14)
+			outputChatBox("The time is " .. string.format("%02d:%02d", getTime()) .. ".", source, 255, 194, 14)
 			exports.global:applyAnimation(source, "COP_AMBIENT", "Coplook_watch", 4000, false, true, true)
 		elseif (itemID==20) then -- STANDARD FIGHTING
 			setPedFightingStyle(source, 4)
