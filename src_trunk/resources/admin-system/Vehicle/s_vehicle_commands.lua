@@ -183,6 +183,58 @@ function gotoCar(thePlayer, commandName, id)
 end
 addCommandHandler("gotocar", gotoCar, false, false)
 
+-- /armcar
+function armCar(thePlayer, commandName, id)
+	if (exports.global:isPlayerAdmin(thePlayer)) then
+		if not (id) then
+			ooutputChatBox("SYNTAX: /" .. commandName .. " [id]", thePlayer, 255, 194, 14)
+		else
+			local vehicles = exports.pool:getPoolElementsByType("vehicle")
+			local counter = 0
+			
+			for k, theVehicle in ipairs(vehicles) do
+				local dbid = getElementData(theVehicle, "dbid")
+
+				if (dbid==tonumber(id)) then
+					setElementData(theVehicle, "bomb", "yes", false) 
+					outputChatBox("Vehicle " .. id .. " is armed with a bomb.", thePlayer, 255, 194, 14)
+				end
+			end
+			
+			if (counter==0) then
+				outputChatBox("Invalid Vehicle ID.", thePlayer, 255, 0, 0)
+			end
+		end
+	end
+end
+addCommandHandler("armcar", gotoCar, false, false)
+
+-- /armcar
+function disarmCar(thePlayer, commandName, id)
+	if (exports.global:isPlayerAdmin(thePlayer)) then
+		if not (id) then
+			ooutputChatBox("SYNTAX: /" .. commandName .. " [id]", thePlayer, 255, 194, 14)
+		else
+			local vehicles = exports.pool:getPoolElementsByType("vehicle")
+			local counter = 0
+			
+			for k, theVehicle in ipairs(vehicles) do
+				local dbid = getElementData(theVehicle, "dbid")
+
+				if (dbid==tonumber(id)) then
+					removeElementData(theVehicle, "bomb") 
+					outputChatBox("Bomb removed from vehicle " .. id .. ".", thePlayer, 255, 194, 14)
+				end
+			end
+			
+			if (counter==0) then
+				outputChatBox("Invalid Vehicle ID.", thePlayer, 255, 0, 0)
+			end
+		end
+	end
+end
+addCommandHandler("disarmcar", gotoCar, false, false)
+
 -- /getcar
 function getCar(thePlayer, commandName, id)
 	if (exports.global:isPlayerAdmin(thePlayer)) then
