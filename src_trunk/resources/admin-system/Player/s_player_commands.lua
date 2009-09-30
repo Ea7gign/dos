@@ -592,7 +592,9 @@ function givePlayerItem(thePlayer, commandName, targetPlayer, itemID, ...)
 				local itemValue = table.concat({...}, " ")
 				itemValue = tonumber(itemValue) or itemValue
 				
-				if (logged==0) then
+				if ( itemID == 74 or itemID == 75 ) and not exports.global:isPlayerScripter( thePlayer ) then
+					-- nuthin
+				elseif (logged==0) then
 					outputChatBox("Player is not logged in.", thePlayer, 255, 0, 0)
 				elseif (logged==1) then
 					local name = call( getResourceFromName( "item-system" ), "getItemName", itemID )

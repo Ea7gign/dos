@@ -38,10 +38,12 @@ local function forceUpdate( )
 	---------------
 	local items = getItems( element )
 	for slot, item in pairs( items ) do
-		local row = guiGridListAddRow(gElementItems)
-		
-		guiGridListSetItemText(gElementItems, row, VIColName, getItemName( item[1] ) .. " - " .. item[2], false, false)
-		guiGridListSetItemData(gElementItems, row, VIColName, tostring( slot ) )
+		if item[1] ~= 74 then
+			local row = guiGridListAddRow(gElementItems)
+			
+			guiGridListSetItemText(gElementItems, row, VIColName, getItemName( item[1] ) .. " - " .. item[2], false, false)
+			guiGridListSetItemData(gElementItems, row, VIColName, tostring( slot ) )
+		end
 	end
 end
 addEvent( "forceElementMoveUpdate", true )

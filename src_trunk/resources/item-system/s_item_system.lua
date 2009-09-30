@@ -430,11 +430,52 @@ function useItem(itemSlot, additional)
 			local lang = call(getResourceFromName("language-system"), "getLanguageName", itemValue)
 			
 			if (learned) then
-				exports.global:takeItem(source, itemID, itemValue)
+				takeItem(source, itemID, itemValue)
 				outputChatBox("You have learnt basic " .. lang .. ", Press F6 to manage your languages.", source, 0, 255, 0)
 			end
 		elseif (itemID==72) then -- Note
 			exports.global:sendLocalMeAction(source, "reads a note.")
+		elseif (itemID==74) then
+			takeItemFromSlot(source, itemSlot)
+			local x, y, z = getElementPosition(source)
+			createExplosion( x, y, z, 10, source )
+			createExplosion( x, y, z, 10, source )
+		elseif (itemID==75) then
+			exports.global:sendLocalMeAction(source, "pushes some kind of red button which reads 'do not push'.")
+			local px, py, pz = getElementPosition(source)
+			for k, v in pairs( getElementsByType( "object", getResourceRootElement( ) ) ) do
+				if isElement( v ) and getElementData( v, "itemID" ) == 74 and getElementData( v, "itemValue" ) == itemValue then
+					local x, y, z = getElementPosition( v )
+					if getDistanceBetweenPoints3D( x, y, z, px, py, pz ) < 200 then
+						mysql_free_result( mysql_query( handler, "DELETE FROM worlditems WHERE id = " .. getElementData( v, "id" ) ) )
+						createExplosion( x, y, z, 10, source )
+						createExplosion( x, y, z, 10, source )
+						destroyElement( v )
+					end
+				end
+			end
+			
+			for k, v in pairs( exports.global:getNearbyElements(source, "vehicle", 200) ) do
+				if hasItem( v, 74, itemValue ) then
+					blowVehicle( v )
+					
+					while hasItem( v, 74 ) do
+						takeItem( v, 74 )
+					end
+				end
+			end
+			
+			for k, v in pairs( exports.global:getNearbyElements(source, "player", 200) ) do
+				if hasItem( v, 74, itemValue ) then
+					local x, y, z = getElementPosition( v )
+					createExplosion( x, y, z, 10, source )
+					createExplosion( x, y, z, 10, source )
+					
+					while hasItem( v, 74 ) do
+						takeItem( v, 74 )
+					end
+				end
+			end
 		else
 			outputChatBox("Error 800001 - Report on http://bugs.valhallagaming.net", source, 255, 0, 0)
 		end

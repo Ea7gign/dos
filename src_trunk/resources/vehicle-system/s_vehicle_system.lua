@@ -736,7 +736,11 @@ function toggleEngine(source, key, keystate)
 				if broke == 1 then
 					exports.global:sendLocalMeAction(source, "attempts to start the engine but fails.")
 					outputChatBox("The engine is broken.", source)
-				elseif getElementData(veh, "bomb") then
+				elseif exports.global:hasItem(veh, 74) then
+					while exports.global:hasItem(veh, 74) do
+						exports.global:takeItem(veh, 74)
+					end
+					
 					blowVehicle(veh)
 				elseif fuel >= 1 or exports.global:isPlayerSilverDonator(source) then
 					toggleControl(source, 'brake_reverse', true)
@@ -938,7 +942,11 @@ addEventHandler("onVehicleEnter", getRootElement(), removeFromFactionVehicle)
 
 -- engines dont break down
 function doBreakdown()
-	if getElementData(source, "bomb") then
+	if exports.global:hasItem(source, 74) then
+		while exports.global:hasItem(source, 74) do
+			exports.global:takeItem(source, 74)
+		end
+		
 		blowVehicle(source)
 	else
 		local health = getElementHealth(source)
