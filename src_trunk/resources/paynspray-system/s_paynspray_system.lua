@@ -193,3 +193,14 @@ function sprayEffect(vehicle, thePlayer, shape, free)
 		outputChatBox("You forgot to wait for your repair!", thePlayer, 255, 0, 0)
 	end
 end
+
+function pnsOnEnter(player, seat)
+	if seat == 0 then
+		for k, v in ipairs(getElementsByType("colshape", getResourceRootElement())) do
+			if isElementWithinColShape(source, v) then
+				triggerEvent( "onColShapeHit", v, source, getElementDimension(v) == getElementDimension(source))
+			end
+		end
+	end
+end
+addEventHandler("onVehicleEnter", getRootElement(), pnsOnEnter)
