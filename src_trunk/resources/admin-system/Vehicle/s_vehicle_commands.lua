@@ -342,65 +342,67 @@ function respawnAllVehicles(thePlayer, commandName, timeToRespawn)
 		--end
 		
 		for k, theVehicle in ipairs(vehicles) do
-			local dbid = getElementData(theVehicle, "dbid")
-			if not (dbid) or (dbid<0) then -- TEMP vehicle
-				local driver = getVehicleOccupant(theVehicle)
-				local pass1 = getVehicleOccupant(theVehicle, 1)
-				local pass2 = getVehicleOccupant(theVehicle, 2)
-				local pass3 = getVehicleOccupant(theVehicle, 3)
+			if isElement( theVehicle ) then
+				local dbid = getElementData(theVehicle, "dbid")
+				if not (dbid) or (dbid<0) then -- TEMP vehicle
+					local driver = getVehicleOccupant(theVehicle)
+					local pass1 = getVehicleOccupant(theVehicle, 1)
+					local pass2 = getVehicleOccupant(theVehicle, 2)
+					local pass3 = getVehicleOccupant(theVehicle, 3)
 
-				if (pass1) or (pass2) or (pass3) or (driver) or (getVehicleTowingVehicle(theVehicle)) then
-					tempoccupied = tempoccupied + 1
+					if (pass1) or (pass2) or (pass3) or (driver) or (getVehicleTowingVehicle(theVehicle)) then
+						tempoccupied = tempoccupied + 1
+					else
+						destroyElement(theVehicle)
+						tempcounter = tempcounter + 1
+					end
 				else
-					destroyElement(theVehicle)
-					tempcounter = tempcounter + 1
-				end
-			else
-				local driver = getVehicleOccupant(theVehicle)
-				local pass1 = getVehicleOccupant(theVehicle, 1)
-				local pass2 = getVehicleOccupant(theVehicle, 2)
-				local pass3 = getVehicleOccupant(theVehicle, 3)
+					local driver = getVehicleOccupant(theVehicle)
+					local pass1 = getVehicleOccupant(theVehicle, 1)
+					local pass2 = getVehicleOccupant(theVehicle, 2)
+					local pass3 = getVehicleOccupant(theVehicle, 3)
 
-				if (pass1) or (pass2) or (pass3) or (driver) or (getVehicleTowingVehicle(theVehicle)) then
-					occupiedcounter = occupiedcounter + 1
-				else
-					if isVehicleBlown(theVehicle) or isElementInWater(theVehicle) then
-						fixVehicle(theVehicle)
-						if armoredCars[ getElementModel( theVehicle ) ] then
-							setVehicleDamageProof(theVehicle, true)
-						else
-							setVehicleDamageProof(theVehicle, false)
-						end
-						for i = 0, 5 do
-							setVehicleDoorState(theVehicle, 4) -- all kind of stuff missing
-						end
-						setElementHealth(theVehicle, 300) -- lowest possible health
-					end
-					
-					local x, y, z, rx, ry, rz = unpack(getElementData(theVehicle, "respawnposition"))
-					setElementPosition(theVehicle, x, y, z)
-					setVehicleRotation(theVehicle, rx, ry, rz)
-					setElementInterior(theVehicle, getElementData(theVehicle, "interior"))
-					setElementDimension(theVehicle, getElementData(theVehicle, "dimension"))
-					
-					-- unlock Civ vehicles
-					if getElementData(theVehicle, "owner") == -2 and getElementData(theVehicle,"Impounded") == 0 then
-						respawnVehicle(theVehicle)
-						setVehicleLocked(theVehicle, false)
-						
-						unlockedcivs = unlockedcivs + 1
-					end
-					counter = counter + 1
-					
-					-- fix faction vehicles
-					if getElementData(theVehicle, "faction") ~= -1 then
-						fixVehicle(theVehicle)
-						if (getElementData(theVehicle, "Impounded") == 0) then
-							setElementData(theVehicle, "enginebroke", 0, false)
+					if (pass1) or (pass2) or (pass3) or (driver) or (getVehicleTowingVehicle(theVehicle)) then
+						occupiedcounter = occupiedcounter + 1
+					else
+						if isVehicleBlown(theVehicle) or isElementInWater(theVehicle) then
+							fixVehicle(theVehicle)
 							if armoredCars[ getElementModel( theVehicle ) ] then
 								setVehicleDamageProof(theVehicle, true)
 							else
 								setVehicleDamageProof(theVehicle, false)
+							end
+							for i = 0, 5 do
+								setVehicleDoorState(theVehicle, 4) -- all kind of stuff missing
+							end
+							setElementHealth(theVehicle, 300) -- lowest possible health
+						end
+						
+						local x, y, z, rx, ry, rz = unpack(getElementData(theVehicle, "respawnposition"))
+						setElementPosition(theVehicle, x, y, z)
+						setVehicleRotation(theVehicle, rx, ry, rz)
+						setElementInterior(theVehicle, getElementData(theVehicle, "interior"))
+						setElementDimension(theVehicle, getElementData(theVehicle, "dimension"))
+						
+						-- unlock Civ vehicles
+						if getElementData(theVehicle, "owner") == -2 and getElementData(theVehicle,"Impounded") == 0 then
+							respawnVehicle(theVehicle)
+							setVehicleLocked(theVehicle, false)
+							
+							unlockedcivs = unlockedcivs + 1
+						end
+						counter = counter + 1
+						
+						-- fix faction vehicles
+						if getElementData(theVehicle, "faction") ~= -1 then
+							fixVehicle(theVehicle)
+							if (getElementData(theVehicle, "Impounded") == 0) then
+								setElementData(theVehicle, "enginebroke", 0, false)
+								if armoredCars[ getElementModel( theVehicle ) ] then
+									setVehicleDamageProof(theVehicle, true)
+								else
+									setVehicleDamageProof(theVehicle, false)
+								end
 							end
 						end
 					end
