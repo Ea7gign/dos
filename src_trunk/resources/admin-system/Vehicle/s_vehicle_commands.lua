@@ -373,7 +373,7 @@ function respawnAllVehicles(thePlayer, commandName, timeToRespawn)
 								setVehicleDamageProof(theVehicle, false)
 							end
 							for i = 0, 5 do
-								setVehicleDoorState(theVehicle, 4) -- all kind of stuff missing
+								setVehicleDoorState(theVehicle, i, 4) -- all kind of stuff missing
 							end
 							setElementHealth(theVehicle, 300) -- lowest possible health
 						end
