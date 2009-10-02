@@ -32,7 +32,7 @@ function saveVehicleOnExit(thePlayer, seat, vehicle)
 	end
 	
 	
-	local dbid = getElementData(source, "dbid")
+	local dbid = tonumber(getElementData(source, "dbid")) or -1
 	
 	if isElement(source) and getElementType(source) == "vehicle" and dbid >= 0 then -- Check it's a permanently spawned vehicle and not a job vehicle
 		local tick = getTickCount()
