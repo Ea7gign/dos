@@ -346,6 +346,7 @@ function useItem(itemSlot, additional)
 			
 			local found = nil
 			local shortest = 6
+			local x, y, z = getElementPosition(source)
 			for i, veh in ipairs(nearbyVehicles) do
 				local distanceToVehicle = getDistanceBetweenPoints3D(x, y, z, getElementPosition(veh))
 				if shortest > distanceToVehicle then
