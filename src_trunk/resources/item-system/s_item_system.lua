@@ -655,6 +655,10 @@ function dropItem(itemID, x, y, z, ammo, keepammo)
 		elseif tonumber(getElementData(source, "job")) == 4 and itemID == 41 then
 			outputChatBox("You can't drop this spray can.", source, 255, 0, 0)
 		else
+			if ammo <= 0 then
+				return
+			end
+			
 			outputChatBox("You dropped a " .. ( getWeaponNameFromID( itemID ) or "Body Armor" ) .. ".", source, 255, 194, 14)
 			
 			-- Animation
