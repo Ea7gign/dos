@@ -3,7 +3,13 @@ lWithdrawB, tWithdrawB, bWithdrawB, lDepositB, tDepositB, bDepositB, lBalanceB, 
 gfactionBalance = nil
 cooldown = nil
 
+lastUsedATM = nil
+
 local localPlayer = getLocalPlayer()
+
+local bankPed = createPed(150, 2358.710205, 2361.2133789, 2022.919189)
+setPedRotation(bankPed, 90.4609375)
+setElementInterior(bankPed, 3)
 
 function updateTabStuff()
 	if guiGetSelectedTab(tabPanel) == tabPersonalTransactions then
@@ -21,13 +27,13 @@ function clickATM(button, state, absX, absY, wx, wy, wz, element)
 		local ax, ay, az = getElementPosition( element )
 		
 		if getDistanceBetweenPoints3D( px, py, pz, ax, ay, az ) < 1.3 then
-			triggerServerEvent( "requestATMInterface", localPlayer )
+			triggerServerEvent( "requestATMInterface", localPlayer, element )
 		end
 	end
 end
 addEventHandler( "onClientClick", getRootElement(), clickATM )
 
-function showBankUI(isInFaction, isFactionLeader, factionBalance)
+function showBankUI(isInFaction, isFactionLeader, factionBalance, depositable)
 	if not (wBank) then
 		local width, height = 600, 400
 		local scrWidth, scrHeight = guiGetScreenSize()
@@ -72,15 +78,20 @@ function showBankUI(isInFaction, isFactionLeader, factionBalance)
 			bWithdrawB = guiCreateButton(0.44, 0.13, 0.2, 0.075, "Withdraw", true, tabBusiness)
 			addEventHandler("onClientGUIClick", bWithdrawB, withdrawMoneyBusiness, false)
 			
-			-- DEPOSIT BUSINESS
-			lDepositB = guiCreateLabel(0.1, 0.25, 0.2, 0.05, "Deposit:", true, tabBusiness)
-			guiSetFont(lDepositB, "default-bold-small")
-			
-			tDepositB = guiCreateEdit(0.22, 0.23, 0.2, 0.075, "0", true, tabBusiness)
-			guiSetFont(tDepositB, "default-bold-small")
-			
-			bDepositB = guiCreateButton(0.44, 0.23, 0.2, 0.075, "Deposit", true, tabBusiness)
-			addEventHandler("onClientGUIClick", bDepositB, depositMoneyBusiness, false)
+			if (depositable) then
+				-- DEPOSIT BUSINESS
+				lDepositB = guiCreateLabel(0.1, 0.25, 0.2, 0.05, "Deposit:", true, tabBusiness)
+				guiSetFont(lDepositB, "default-bold-small")
+				
+				tDepositB = guiCreateEdit(0.22, 0.23, 0.2, 0.075, "0", true, tabBusiness)
+				guiSetFont(tDepositB, "default-bold-small")
+				
+				bDepositB = guiCreateButton(0.44, 0.23, 0.2, 0.075, "Deposit", true, tabBusiness)
+				addEventHandler("onClientGUIClick", bDepositB, depositMoneyBusiness, false)
+			else
+				lDepositB = guiCreateLabel(0.1, 0.25, 0.5, 0.05, "This ATM does not support the deposit function.", true, tabBusiness)
+				guiSetFont(lDepositB, "default-bold-small")
+			end
 			
 			if hoursplayed > 12 then
 				-- TRANSFER BUSINESS
@@ -128,15 +139,20 @@ function showBankUI(isInFaction, isFactionLeader, factionBalance)
 		bWithdrawP = guiCreateButton(0.44, 0.13, 0.2, 0.075, "Withdraw", true, tabPersonal)
 		addEventHandler("onClientGUIClick", bWithdrawP, withdrawMoneyPersonal, false)
 		
-		-- DEPOSIT PERSONAL
-		lDepositP = guiCreateLabel(0.1, 0.25, 0.2, 0.05, "Deposit:", true, tabPersonal)
-		guiSetFont(lDepositP, "default-bold-small")
-		
-		tDepositP = guiCreateEdit(0.22, 0.23, 0.2, 0.075, "0", true, tabPersonal)
-		guiSetFont(tDepositP, "default-bold-small")
-		
-		bDepositP = guiCreateButton(0.44, 0.23, 0.2, 0.075, "Deposit", true, tabPersonal)
-		addEventHandler("onClientGUIClick", bDepositP, depositMoneyPersonal, false)
+		if (depositable) then
+			-- DEPOSIT PERSONAL
+			lDepositP = guiCreateLabel(0.1, 0.25, 0.2, 0.05, "Deposit:", true, tabPersonal)
+			guiSetFont(lDepositP, "default-bold-small")
+			
+			tDepositP = guiCreateEdit(0.22, 0.23, 0.2, 0.075, "0", true, tabPersonal)
+			guiSetFont(tDepositP, "default-bold-small")
+			
+			bDepositP = guiCreateButton(0.44, 0.23, 0.2, 0.075, "Deposit", true, tabPersonal)
+			addEventHandler("onClientGUIClick", bDepositP, depositMoneyPersonal, false)
+		else
+			lDepositP = guiCreateLabel(0.1, 0.25, 0.5, 0.05, "This ATM does not support the deposit function.", true, tabPersonal)
+			guiSetFont(lDepositP, "default-bold-small")
+		end
 		
 		if hoursplayed > 12 then
 			-- TRANSFER PERSONAL

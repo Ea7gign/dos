@@ -1,4 +1,10 @@
 ---
+ATMs
+---
+ALTER TABLE `atms` ADD COLUMN `deposit` TINYINT UNSIGNED DEFAULT 0;
+
+
+---
 Car Elevators
 ---
 ALTER TABLE `elevators` ADD COLUMN `car` TINYINT UNSIGNED DEFAULT 0;

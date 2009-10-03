@@ -17,6 +17,7 @@ function createATM(thePlayer, commandName)
 			exports.pool:allocateElement(object)
 			setElementDimension(object, dimension)
 			setElementInterior(object, interior)
+			setElementData(object, "depositable", 0, false)
 			
 			local px = x + math.sin(math.rad(-rotation)) * 0.8
 			local py = y + math.cos(math.rad(-rotation)) * 0.8
@@ -37,7 +38,7 @@ end
 addCommandHandler("addatm", createATM, false, false)
 
 function loadAllATMs()
-	local result = mysql_query(handler, "SELECT id, x, y, z, rotation, dimension, interior FROM atms")
+	local result = mysql_query(handler, "SELECT id, x, y, z, rotation, dimension, interior, deposit FROM atms")
 	local counter = 0
 	
 	if (result) then
@@ -50,11 +51,13 @@ function loadAllATMs()
 			local rotation = tonumber(row[5])
 			local dimension = tonumber(row[6])
 			local interior = tonumber(row[7])
+			local deposit = tonumber(row[8])
 			
 			local object = createObject(2942, x, y, z, 0, 0, rotation-180)
 			exports.pool:allocateElement(object)
 			setElementDimension(object, dimension)
 			setElementInterior(object, interior)
+			setElementData(object, "depositable", deposit, false)
 			
 			local px = x + math.sin(math.rad(-rotation)) * 0.8
 			local py = y + math.cos(math.rad(-rotation)) * 0.8
@@ -127,7 +130,7 @@ function getNearbyATMs(thePlayer, commandName)
 end
 addCommandHandler("nearbyatms", getNearbyATMs, false, false)
 
-function showATMInterface()
+function showATMInterface(atm)
 	local result = mysql_query(handler, "SELECT faction_id, faction_leader FROM characters WHERE charactername='" .. getPlayerName(source) .. "' LIMIT 1")
 	
 	if (result) then
@@ -147,7 +150,14 @@ function showATMInterface()
 		
 		local faction = getPlayerTeam(source)
 		local money = exports.global:getMoney(faction)
-		triggerClientEvent(source, "showBankUI", source, isInFaction, isFactionLeader, money)
+		
+		local depositable = getElementData(atm, "depositable")
+		local deposit = false
+		if (depositable == 1) then
+			deposit = true
+		end 
+		
+		triggerClientEvent(source, "showBankUI", source, isInFaction, isFactionLeader, money, deposit)
 	end
 end
 addEvent( "requestATMInterface", true )

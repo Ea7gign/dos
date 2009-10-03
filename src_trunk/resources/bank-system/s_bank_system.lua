@@ -37,6 +37,7 @@ exports.pool:allocateElement(bankPickup)
 local shape = getElementColShape(bankPickup)
 setElementInterior(shape, 3)
 setElementInterior(bankPickup, 3)
+setElementData(bankPickup, "depositable", true)
 
 function pickupUse(thePlayer)
 	cancelEvent()
