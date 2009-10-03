@@ -470,17 +470,21 @@ function pmPlayer(thePlayer, commandName, who, ...)
 								break
 							end
 						end
+					end
+					
+					-- Send the message
+					local playerid = getElementData(thePlayer, "playerid")
+					local targetid = getElementData(targetPlayer, "playerid")
+					outputChatBox("PM From (" .. playerid .. ") " .. playerName .. ": " .. message, targetPlayer, 255, 255, 0)
+					outputChatBox("PM Sent to (" .. targetid .. ") " .. targetPlayerName .. ": " .. message, thePlayer, 255, 255, 0)
 						
-						-- Send the message
-						local playerid = getElementData(thePlayer, "playerid")
-						local targetid = getElementData(targetPlayer, "playerid")
-						outputChatBox("PM From (" .. playerid .. ") " .. playerName .. ": " .. message, targetPlayer, 255, 255, 0)
-						outputChatBox("PM Sent to (" .. targetid .. ") " .. targetPlayerName .. ": " .. message, thePlayer, 255, 255, 0)
-						
+					if not exports.global:isPlayerScripter(thePlayer) and not exports.global:isPlayerScripter(targetPlayer) then
 						exports.logs:logMessage("[PM From " ..playerName .. " TO " .. targetPlayerName .. "]" .. message, 8)
 						
 						-- big ears
 						local received = {}
+						received[thePlayer] = true
+						received[targetPlayer] = true
 						for key, value in pairs( getElementsByType( "player" ) ) do
 							if isElement( value ) and not received[value] then
 								local listening = getElementData( value, "bigears" )
