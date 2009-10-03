@@ -77,5 +77,6 @@ function createModel(player, weapon)
 	
 	local object = createObject(objectID, x, y, z)
 	attachElements(object, player, ox, oy, oz, 0, 60, 0)
+	setElementCollisionsEnabled(object, false)
 	return object
 end
