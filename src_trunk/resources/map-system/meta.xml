@@ -22,4 +22,5 @@
 	<script src="Prison Int Rec.lua" type="client"/>
 	<script src="Pershing_Square.lua" type="client"/>
 	<script src="PD Impound.lua" type="client"/>
+	<script src="swimming_pool.lua" type="client"/>
 </meta>
