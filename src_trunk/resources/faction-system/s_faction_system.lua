@@ -958,7 +958,7 @@ function payAllWages(timer)
 	vehicleCount = {}
 	for _, veh in pairs(getElementsByType("vehicle")) do
 		if isElement(veh) then
-			local owner, faction = getElementData(veh, "owner"), getElementData(veh, "faction")
+			local owner, faction = tonumber(getElementData(veh, "owner")) or 0, tonumber(getElementData(veh, "faction")) or 0
 			if faction < 0 and owner > 0 then -- non-faction vehicles
 				taxVehicles[owner] = ( taxVehicles[owner] or 0 ) + ( vehicleTaxes[getElementModel(veh)-399] or 25 )
 				vehicleCount[owner] = ( vehicleCount[owner] or 0 ) + 1
