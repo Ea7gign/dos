@@ -22,7 +22,8 @@ function SpikesOnGround(theElement, matchingDimension)
 				if(luck ~= 2) then
 					setVehicleWheelStates ( theElement, -1, -1, -1, 1 )
 				end
-				setVehicleTurnVelocity ( theElement, 0, 0, 0.22 )
+				local tx, ty, tz = getVehicleTurnVelocity( theElement )
+				setVehicleTurnVelocity ( theElement, tx, ty, tz > 0 and 0.22 or -0.22 )
 			end
 		end
 	end
