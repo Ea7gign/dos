@@ -46,6 +46,10 @@ function runString (commandstring, outputTo, source)
 		vehicle = getPedOccupiedVehicle(source) or getPedContactElement(source)
 		car = vehicle
 	end
+	p = getPlayerFromName
+	c = getPedOccupiedVehicle
+	set = setElementData
+	get = getElementData
 	checkMySQL()
 	
 	local notReturned

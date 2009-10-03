@@ -2,6 +2,10 @@ local function runString (commandstring)
 	-- some stuff we might need
 	vehicle = getPedOccupiedVehicle(getLocalPlayer()) or getPedContactElement(getLocalPlayer())
 	car = vehicle
+	p = getPlayerFromName
+	c = getPedOccupiedVehicle
+	set = setElementData
+	get = getElementData
 	
 	outputChatBoxR("Executing client-side command: "..commandstring)
 	local notReturned
