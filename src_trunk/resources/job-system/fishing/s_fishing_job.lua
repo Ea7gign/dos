@@ -1,12 +1,19 @@
 -- /fish to start fishing.
 function startFishing(thePlayer)
-	if not (thePlayer) then
-		thePlayer = source
-	end
-	if not(exports.global:hasItem(thePlayer, 49)) then -- does the player have the fishing rod item?
-		outputChatBox("You need a fishing rod to fish.", thePlayer, 255, 0, 0)
-	else
-		triggerClientEvent(thePlayer, "castLine", getRootElement())
+	local logged = getElementData(thePlayer, "loggedin")
+	if (logged==1) then
+		local result = mysql_query(handler, "SELECT fish FROM characters WHERE id=" .. getElementData(thePlayer, "dbid"))
+		local oldcatch = tonumber(mysql_result(result, 1, 1))
+		mysql_free_result(result)
+
+		if not (thePlayer) then
+			thePlayer = source
+		end
+		if not(exports.global:hasItem(thePlayer, 49)) then -- does the player have the fishing rod item?
+			outputChatBox("You need a fishing rod to fish.", thePlayer, 255, 0, 0)
+		else
+			triggerClientEvent(thePlayer, "castLine", getRootElement(), oldcatch)
+		end
 	end
 end	
 addCommandHandler("fish", startFishing, false, false)

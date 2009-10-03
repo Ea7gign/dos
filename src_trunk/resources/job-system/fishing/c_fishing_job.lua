@@ -7,7 +7,7 @@ local hotSpot2 = nil
 local totalCatch = 0
 local fishingBlip, fishingMarker, fishingCol = nil
 
-function castLine()
+function castLine(oldcatch)
 
 	local element = getPedContactElement(getLocalPlayer()) or getElementAttachedTo(getLocalPlayer())
 	if not (isElement(element)) then
@@ -26,6 +26,7 @@ function castLine()
 					if (catchTimer) then -- Are they already fishing?
 						outputChatBox("You have already cast your line. Wait for a fish to bite.", 255, 0, 0)
 					else
+						totalCatch = oldcatch
 						if (totalCatch >= 2000) then
 							outputChatBox("#FF9933The boat can't hold any more fish. #FF66CCSell#FF9933 the fish you have caught before continuing.", 255, 104, 91, true)
 						else
