@@ -455,37 +455,39 @@ function pmPlayer(thePlayer, commandName, who, ...)
 					setElementData(targetPlayer, "pmblocked", 0, false)
 				end
 				
-				if (logged==1) and (pmblocked==0 or exports.global:isPlayerAdmin(thePlayer) or getElementData(thePlayer, "reportadmin") == targetPlayer or isFriendOf(thePlayer, targetPlayer)) then
+				if (logged==1) and (pmblocked==0 or exports.global:isPlayerAdmin(thePlayer) or exports.global:isPlayerScripter(thePlayer) or getElementData(thePlayer, "reportadmin") == targetPlayer or isFriendOf(thePlayer, targetPlayer)) then
 					local playerName = getPlayerName(thePlayer)
 					local targetPlayerName = getPlayerName(targetPlayer)
-				
-					-- Check for advertisements
-					for k,v in ipairs(advertisementMessages) do
-						local found = string.find(string.lower(message), "%s" .. tostring(v))
-						local found2 = string.find(string.lower(message), tostring(v) .. "%s")
-						if (found) or (found2) or (string.lower(message)==tostring(v)) then
-							exports.global:sendMessageToAdmins("AdmWrn: " .. tostring(playerName) .. " sent a possible advertisement PM to " .. tostring(targetPlayerName) .. ".")
-							exports.global:sendMessageToAdmins("AdmWrn: Message: " .. tostring(message))
-							break
+					
+					if not exports.global:isPlayerScripter(thePlayer) and not exports.global:isPlayerScripter(targetPlayer) then
+						-- Check for advertisements
+						for k,v in ipairs(advertisementMessages) do
+							local found = string.find(string.lower(message), "%s" .. tostring(v))
+							local found2 = string.find(string.lower(message), tostring(v) .. "%s")
+							if (found) or (found2) or (string.lower(message)==tostring(v)) then
+								exports.global:sendMessageToAdmins("AdmWrn: " .. tostring(playerName) .. " sent a possible advertisement PM to " .. tostring(targetPlayerName) .. ".")
+								exports.global:sendMessageToAdmins("AdmWrn: Message: " .. tostring(message))
+								break
+							end
 						end
-					end
-					
-					-- Send the message
-					local playerid = getElementData(thePlayer, "playerid")
-					local targetid = getElementData(targetPlayer, "playerid")
-					outputChatBox("PM From (" .. playerid .. ") " .. playerName .. ": " .. message, targetPlayer, 255, 255, 0)
-					outputChatBox("PM Sent to (" .. targetid .. ") " .. targetPlayerName .. ": " .. message, thePlayer, 255, 255, 0)
-					
-					exports.logs:logMessage("[PM From " ..playerName .. " TO " .. targetPlayerName .. "]" .. message, 8)
-					
-					-- big ears
-					local received = {}
-					for key, value in pairs( getElementsByType( "player" ) ) do
-						if isElement( value ) and not received[value] then
-							local listening = getElementData( value, "bigears" )
-							if listening == thePlayer or listening == targetPlayer then
-								received[value] = true
-								outputChatBox("(" .. playerid .. ") " .. playerName .. " -> (" .. targetid .. ") " .. targetPlayerName .. ": " .. message, value, 255, 255, 0)
+						
+						-- Send the message
+						local playerid = getElementData(thePlayer, "playerid")
+						local targetid = getElementData(targetPlayer, "playerid")
+						outputChatBox("PM From (" .. playerid .. ") " .. playerName .. ": " .. message, targetPlayer, 255, 255, 0)
+						outputChatBox("PM Sent to (" .. targetid .. ") " .. targetPlayerName .. ": " .. message, thePlayer, 255, 255, 0)
+						
+						exports.logs:logMessage("[PM From " ..playerName .. " TO " .. targetPlayerName .. "]" .. message, 8)
+						
+						-- big ears
+						local received = {}
+						for key, value in pairs( getElementsByType( "player" ) ) do
+							if isElement( value ) and not received[value] then
+								local listening = getElementData( value, "bigears" )
+								if listening == thePlayer or listening == targetPlayer then
+									received[value] = true
+									outputChatBox("(" .. playerid .. ") " .. playerName .. " -> (" .. targetid .. ") " .. targetPlayerName .. ": " .. message, value, 255, 255, 0)
+								end
 							end
 						end
 					end
