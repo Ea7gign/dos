@@ -57,81 +57,89 @@ function arrestPlayer(thePlayer, commandName, targetPlayerNick, fine, jailtime, 
 						if (jailTimer) then
 							outputChatBox("This player is already serving a jail sentance.", thePlayer, 255, 0, 0)
 						else
+							local finebank = false
+							local targetPlayerhasmoney = exports.global:getMoney(targetPlayer, true)
 							local amount = tonumber(fine)
 							if not exports.global:takeMoney(targetPlayer, amount) then
-								outputChatBox("The player cannot afford such a fine.", thePlayer, 255, 0, 0)
-							else
-								local theTimer = setTimer(timerPDUnjailPlayer, 60000, jailtime, targetPlayer)
-								setElementData(targetPlayer, "pd.jailserved", 0, false)
-								setElementData(targetPlayer, "pd.jailtime", jailtime, false)
-								setElementData(targetPlayer, "pd.jailtimer", theTimer, false)
-								
-								toggleControl(targetPlayer,'next_weapon',false)
-								toggleControl(targetPlayer,'previous_weapon',false)
-								toggleControl(targetPlayer,'fire',false)
-								toggleControl(targetPlayer,'aim_weapon',false)
-								
-								-- auto-uncuff
-								local restrainedObj = getElementData(targetPlayer, "restrainedObj")
-								if restrainedObj then
-									toggleControl(targetPlayer, "sprint", true)
-									toggleControl(targetPlayer, "jump", true)
-									toggleControl(targetPlayer, "accelerate", true)
-									toggleControl(targetPlayer, "brake_reverse", true)
-									setElementData(targetPlayer, "restrain", 0)
-									removeElementData(targetPlayer, "restrainedBy")
-									removeElementData(targetPlayer, "restrainedObj")
-									if restrainedObj == 45 then -- If handcuffs.. take the key
-										local dbid = getElementData(targetPlayer, "dbid")
-										exports.global:takeItem(thePlayer, 47, dbid)
-									end
-									exports.global:giveItem(thePlayer, restrainedObj, 1)
+								finebank = true
+								exports.global:takeMoney(targetPlayer, targetPlayerhasmoney)
+								local fineleft = amount - targetPlayerhasmoney
+								local bankmoney = getElementData(targetPlayer, "bankmoney")
+								setElementData(targetPlayer, "bankmoney", bankmoney-fineleft)
+							end
+						
+							local theTimer = setTimer(timerPDUnjailPlayer, 60000, jailtime, targetPlayer)
+							setElementData(targetPlayer, "pd.jailserved", 0, false)
+							setElementData(targetPlayer, "pd.jailtime", jailtime, false)
+							setElementData(targetPlayer, "pd.jailtimer", theTimer, false)
+							
+							toggleControl(targetPlayer,'next_weapon',false)
+							toggleControl(targetPlayer,'previous_weapon',false)
+							toggleControl(targetPlayer,'fire',false)
+							toggleControl(targetPlayer,'aim_weapon',false)
+							
+							-- auto-uncuff
+							local restrainedObj = getElementData(targetPlayer, "restrainedObj")
+							if restrainedObj then
+								toggleControl(targetPlayer, "sprint", true)
+								toggleControl(targetPlayer, "jump", true)
+								toggleControl(targetPlayer, "accelerate", true)
+								toggleControl(targetPlayer, "brake_reverse", true)
+								setElementData(targetPlayer, "restrain", 0)
+								removeElementData(targetPlayer, "restrainedBy")
+								removeElementData(targetPlayer, "restrainedObj")
+								if restrainedObj == 45 then -- If handcuffs.. take the key
+									local dbid = getElementData(targetPlayer, "dbid")
+									exports.global:takeItem(thePlayer, 47, dbid)
 								end
-	
-								setPedWeaponSlot(targetPlayer,0)
-								
-								local station = 1
-								
-								setElementData(targetPlayer, "pd.jailstation", station)
-								
-								local query = mysql_query(handler, "UPDATE characters SET pdjail='1', pdjail_time='" .. jailtime .. "', pdjail_station='" .. station .. "' WHERE charactername='" .. targetPlayerNick .. "'")
-								mysql_free_result(query)
-								outputChatBox("You jailed " .. targetPlayerNick .. " for " .. jailtime .. " Minutes.", thePlayer, 255, 0, 0)
-								
-								local cell = 1
-								
-								setElementPosition(targetPlayer, cells[cell][1], cells[cell][2], cells[cell][3])
-								setPedRotation(targetPlayer, cells[cell][4])
-								
-								-- Trigger the event
-								triggerEvent("onPlayerArrest", thePlayer, targetPlayer, fine, jailtime, reason)
-								
-								-- Show the message to the faction
-								local theTeam = getTeamFromName("Los Santos Police Department")
-								local teamPlayers = getPlayersInTeam(theTeam)
-								
-								local result = mysql_query(handler, "SELECT faction_id, faction_rank FROM characters WHERE charactername='" .. username .. "' LIMIT 1")
-								
-								local factionID = tonumber(mysql_result(result, 1, 1))
-								local factionRank = tonumber(mysql_result(result, 1, 2))
-								
-								mysql_free_result(result)
-								
-								local titleresult = mysql_query(handler, "SELECT rank_" .. factionRank .. " FROM factions WHERE id='" .. factionID .. "' LIMIT 1")
-								local factionRankTitle = tostring(mysql_result(titleresult, 1, 1))
-								mysql_free_result(titleresult)
-								
-								outputChatBox("You were arrested by " .. username .. " for " .. jailtime .. " minute(s).", targetPlayer, 0, 102, 255)
-								outputChatBox("Crimes Committed: " .. reason .. ".", targetPlayer, 0, 102, 255)
-								
-								for key, value in ipairs(teamPlayers) do
-									if (isSouthDivision) then
-										outputChatBox(factionRankTitle .. " " .. username .. " arrested " .. targetPlayerNick .. " for " .. jailtime .. " minute(s). (South Division)", value, 0, 102, 255)
-										outputChatBox("Crimes Committed: " .. reason .. ".", value, 0, 102, 255)
-									else
-										outputChatBox(factionRankTitle .. " " .. username .. " arrested " .. targetPlayerNick .. " for " .. jailtime .. " minute(s).", value, 0, 102, 255)
-										outputChatBox("Crimes Committed: " .. reason .. ".", value, 0, 102, 255)
-									end
+								exports.global:giveItem(thePlayer, restrainedObj, 1)
+							end
+							setPedWeaponSlot(targetPlayer,0)
+							
+							local station = 1
+							
+							setElementData(targetPlayer, "pd.jailstation", station)
+							
+							local query = mysql_query(handler, "UPDATE characters SET pdjail='1', pdjail_time='" .. jailtime .. "', pdjail_station='" .. station .. "' WHERE charactername='" .. targetPlayerNick .. "'")
+							mysql_free_result(query)
+							outputChatBox("You jailed " .. targetPlayerNick .. " for " .. jailtime .. " Minutes.", thePlayer, 255, 0, 0)
+							
+							local cell = 1
+							
+							setElementPosition(targetPlayer, cells[cell][1], cells[cell][2], cells[cell][3])
+							setPedRotation(targetPlayer, cells[cell][4])
+							
+							-- Trigger the event
+							triggerEvent("onPlayerArrest", thePlayer, targetPlayer, fine, jailtime, reason)
+							
+							-- Show the message to the faction
+							local theTeam = getTeamFromName("Los Santos Police Department")
+							local teamPlayers = getPlayersInTeam(theTeam)
+							
+							local result = mysql_query(handler, "SELECT faction_id, faction_rank FROM characters WHERE charactername='" .. username .. "' LIMIT 1")
+							
+							local factionID = tonumber(mysql_result(result, 1, 1))
+							local factionRank = tonumber(mysql_result(result, 1, 2))
+							
+							mysql_free_result(result)
+							
+							local titleresult = mysql_query(handler, "SELECT rank_" .. factionRank .. " FROM factions WHERE id='" .. factionID .. "' LIMIT 1")
+							local factionRankTitle = tostring(mysql_result(titleresult, 1, 1))
+							mysql_free_result(titleresult)
+							
+							outputChatBox("You were arrested by " .. username .. " for " .. jailtime .. " minute(s).", targetPlayer, 0, 102, 255)
+							outputChatBox("Crimes Committed: " .. reason .. ".", targetPlayer, 0, 102, 255)
+							if (finebank == true) then
+								outputChatBox("The rest of the fine has been taken from your banking account.", targetPlayer, 0, 102, 255)
+							end
+							
+							for key, value in ipairs(teamPlayers) do
+								if (isSouthDivision) then
+									outputChatBox(factionRankTitle .. " " .. username .. " arrested " .. targetPlayerNick .. " for " .. jailtime .. " minute(s). (South Division)", value, 0, 102, 255)
+									outputChatBox("Crimes Committed: " .. reason .. ".", value, 0, 102, 255)
+								else
+									outputChatBox(factionRankTitle .. " " .. username .. " arrested " .. targetPlayerNick .. " for " .. jailtime .. " minute(s).", value, 0, 102, 255)
+									outputChatBox("Crimes Committed: " .. reason .. ".", value, 0, 102, 255)
 								end
 							end
 						end

@@ -206,26 +206,22 @@ function ticketPlayer(thePlayer, commandName, targetPlayerNick, amount, ...)
 						local money = exports.global:getMoney(targetPlayer)
 						local bankmoney = getElementData(targetPlayer, "bankmoney")
 						
-						if money + bankmoney < amount then
-							outputChatBox("This player cannot afford such a ticket.", thePlayer, 255, 0, 0)
-						else
-							local takeFromCash = math.min( money, amount )
-							local takeFromBank = amount - takeFromCash
-							exports.global:takeMoney(targetPlayer, takeFromCash)
+						local takeFromCash = math.min( money, amount )
+						local takeFromBank = amount - takeFromCash
+						exports.global:takeMoney(targetPlayer, takeFromCash)
 							
 							
-							-- Distribute money between the PD and Government
-							local tax = exports.global:getTaxAmount()
+						-- Distribute money between the PD and Government
+						local tax = exports.global:getTaxAmount()
 								
-							exports.global:giveMoney( getTeamFromName("Los Santos Police Department"), math.ceil((1-tax)*amount) )
-							exports.global:giveMoney( getTeamFromName("Government of Los Santos"), math.ceil(tax*amount) )
-							
-							outputChatBox("You ticketed " .. getPlayerName(targetPlayer) .. " for " .. amount .. "$. Reason: " .. reason .. ".", thePlayer)
-							outputChatBox("You were ticketed for " .. amount .. "$ by " .. getPlayerName(thePlayer) .. ". Reason: " .. reason .. ".", targetPlayer)
-							if takeFromBank > 0 then
-								outputChatBox("Since you don't have enough money with you, $" .. takeFromBank .. " have been taken from your bank account.", targetPlayer)
-								setElementData(targetPlayer, "bankmoney", bankmoney - takeFromBank)
-							end
+						exports.global:giveMoney( getTeamFromName("Los Santos Police Department"), math.ceil((1-tax)*amount) )
+						exports.global:giveMoney( getTeamFromName("Government of Los Santos"), math.ceil(tax*amount) )
+						
+						outputChatBox("You ticketed " .. getPlayerName(targetPlayer) .. " for " .. amount .. "$. Reason: " .. reason .. ".", thePlayer)
+						outputChatBox("You were ticketed for " .. amount .. "$ by " .. getPlayerName(thePlayer) .. ". Reason: " .. reason .. ".", targetPlayer)
+						if takeFromBank > 0 then
+							outputChatBox("Since you don't have enough money with you, $" .. takeFromBank .. " have been taken from your bank account.", targetPlayer)
+							setElementData(targetPlayer, "bankmoney", bankmoney - takeFromBank)
 						end
 					else
 						outputChatBox("You are too far away from " .. getPlayerName(targetPlayer) .. ".", thePlayer, 255, 0, 0)
