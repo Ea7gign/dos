@@ -899,6 +899,11 @@ function showAdmins(thePlayer, commandName)
 					local username = string.gsub(getPlayerName(arrayPlayer), "_", " ")
 					local adminTitle = exports.global:getPlayerAdminTitle(arrayPlayer)
 					local duty = getElementData(arrayPlayer, "adminduty")
+					
+					if exports.global:isPlayerAdmin(thePlayer) or exports.global:isPlayerScripter(thePlayer) then
+						username = username .. " (" .. tostring(getElementData(arrayPlayer, "gameaccountusername")) .. ")"
+					end
+					
 					if(duty==1)then
 						outputChatBox("    " .. tostring(adminTitle) .. " " .. username.." - On Duty", thePlayer, 255, 194, 14)
 					else
