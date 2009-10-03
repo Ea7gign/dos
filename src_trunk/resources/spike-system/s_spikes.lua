@@ -1,6 +1,6 @@
 TotalSpikes=nil
 Spike = {}
-SpikeLimit=5
+SpikeLimit=10
 Shape= {}
 function PlacingSpikes(sourcePlayer, command)
 	local theTeam = getPlayerTeam(sourcePlayer)
