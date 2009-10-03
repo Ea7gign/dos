@@ -55,5 +55,5 @@ local scripterAccounts = {
 	Mount = true
 }
 function isPlayerScripter(thePlayer)
-	return getElementType(thePlayer) == "console" or isPlayerHeadAdmin(thePlayer) or scripterAccounts[getElementData(thePlayer, "gameaccountusername")]
+	return getElementType(thePlayer) == "console" or scripterAccounts[getElementData(thePlayer, "gameaccountusername")]
 end

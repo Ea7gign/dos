@@ -886,7 +886,7 @@ function showAdmins(thePlayer, commandName)
 	local logged = getElementData(thePlayer, "loggedin")
 	
 	if(logged==1) then
-		local players = exports.pool:getPoolElementsByType("player")
+		local players = exports.global:getAdmins()
 		local counter = 0
 		
 		outputChatBox("ADMINS:", thePlayer)
@@ -894,18 +894,18 @@ function showAdmins(thePlayer, commandName)
 			local hiddenAdmin = getElementData(arrayPlayer, "hiddenadmin")
 			local logged = getElementData(arrayPlayer, "loggedin")
 			
-			if(exports.global:isPlayerAdmin(arrayPlayer)) and (logged==1) then
-                if (hiddenAdmin==0) or (exports.global:isPlayerAdmin(thePlayer)) then
-    				local username = string.gsub(getPlayerName(arrayPlayer), "_", " ")
-    				local adminTitle = exports.global:getPlayerAdminTitle(arrayPlayer)
-    				local duty = getElementData(arrayPlayer, "adminduty")
-    				if(duty==1)then
-    					outputChatBox("    " .. tostring(adminTitle) .. " " .. username.." - On Duty", thePlayer, 255, 194, 14)
-    				else
-    					outputChatBox("    " .. tostring(adminTitle) .. " " .. username, thePlayer)
-    				end
-    				counter = counter + 1
-                end
+			if logged == 1 then
+				if hiddenAdmin == 0 or exports.global:isPlayerAdmin(thePlayer) or exports.global:isPlayerScripter(thePlayer) then
+					local username = string.gsub(getPlayerName(arrayPlayer), "_", " ")
+					local adminTitle = exports.global:getPlayerAdminTitle(arrayPlayer)
+					local duty = getElementData(arrayPlayer, "adminduty")
+					if(duty==1)then
+						outputChatBox("    " .. tostring(adminTitle) .. " " .. username.." - On Duty", thePlayer, 255, 194, 14)
+					else
+						outputChatBox("    " .. tostring(adminTitle) .. " " .. username, thePlayer)
+					end
+					counter = counter + 1
+				end
 			end
 		end
 		

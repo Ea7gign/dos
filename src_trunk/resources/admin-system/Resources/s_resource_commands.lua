@@ -1,5 +1,5 @@
 function restartSingleResource(thePlayer, commandName, resourceName)
-	if (exports.global:isPlayerScripter(thePlayer)) then
+	if (exports.global:isPlayerScripter(thePlayer) or exports.global:isPlayerHeadAdmin(thePlayer)) then
 		if not (resourceName) then
 			outputChatBox("SYNTAX: /restartres [Resource Name]", thePlayer, 255, 194, 14)
 		else
@@ -30,7 +30,7 @@ end
 addCommandHandler("restartres", restartSingleResource)
  
 function stopSingleResource(thePlayer, commandName, resourceName)
-	if (exports.global:isPlayerScripter(thePlayer)) then
+	if (exports.global:isPlayerScripter(thePlayer) or exports.global:isPlayerHeadAdmin(thePlayer)) then
 		if not (resourceName) then
 			outputChatBox("SYNTAX: /stopres [Resource Name]", thePlayer, 255, 194, 14)
 		else
@@ -51,7 +51,7 @@ end
 addCommandHandler("stopres", stopSingleResource)
  
 function startSingleResource(thePlayer, commandName, resourceName)
-	if (exports.global:isPlayerScripter(thePlayer)) then
+	if (exports.global:isPlayerScripter(thePlayer) or exports.global:isPlayerHeadAdmin(thePlayer)) then
 		if not (resourceName) then
 			outputChatBox("SYNTAX: /startres [Resource Name]", thePlayer, 255, 194, 14)
 		else
