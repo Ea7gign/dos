@@ -1,25 +1,35 @@
 -- made by dragon and flobu
-
+local textcolor = tocolor(255,255,255,255)
 local textsToDraw = {}
 
 local showtime = 10000
 local characteraddition = 50
 
-function income(message,messagetype)
-	if source ~= getLocalPlayer() or messagetype == 2 then
-		addText(source,message,messagetype)
+function income(text, r, g, b)
+	if r == 133 and g == 44 and b == 89 then
+		local newtext = text:gsub("#%x+ %[%w+%] (%w+) (%w+) %w+: ","%1_%2|")
+		if newtext then
+			local pos = newtext:find("|")
+			if pos then
+				local name = newtext:sub( 0, pos - 1 )
+				local newtext = newtext:sub( pos + 1 )
+				
+				local player = getPlayerFromName( name )
+				addText(player, newtext)
+			end
+		end
 	end
 end
 
-function addText(source,message,messagetype)
+function addText(source,message)
 	local notfirst = false
 	for i,v in ipairs(textsToDraw) do
 		if v[1] == source then
-			v[4] = v[4] + 1
+			v[3] = v[3] + 1
 			notfirst = true
 		end
 	end
-	local infotable = {source,message,messagetype,0}
+	local infotable = {source,message,0}
 	table.insert(textsToDraw,infotable)
 	if not notfirst then
 		setTimer(removeText,showtime + (#message * characteraddition),1,infotable)
@@ -30,7 +40,7 @@ function removeText(infotable)
 	for i,v in ipairs(textsToDraw) do
 		if v[1] == infotable[1] and v[2] == infotable[2] then
 			for i2,v2 in ipairs(textsToDraw) do
-				if v2[1] == v[1] and v[4] - v2[4] == 1 then
+				if v2[1] == v[1] and v[3] - v2[3] == 1 then
 					setTimer(removeText,showtime + (#v[2] * characteraddition),1,v2)
 				end
 			end
@@ -61,18 +71,13 @@ function handleDisplay()
 		if posx and distance <= 45 and ( isLineOfSightClear(cx,cy,cz,px,py,pz,true,true,false,true,false,true,true,getPedOccupiedVehicle(getLocalPlayer())) or isLineOfSightClear(cx,cy,cz,px,py,pz,true,true,false,true,false,true,true,getPedOccupiedVehicle(v[1])) ) then -- change this when multiple ignored elements can be specified
 			local width = dxGetTextWidth(v[2],1,"default")
 			
-			dxDrawRectangle(posx - (3 + (0.5 * width)),posy - (2 + (v[4] * 20)),width + 5,19,tocolor(0,0,0,255))
-			dxDrawRectangle(posx - (6 + (0.5 * width)),posy - (2 + (v[4] * 20)),width + 11,19,tocolor(0,0,0,40))
-			dxDrawRectangle(posx - (8 + (0.5 * width)),posy - (1 + (v[4] * 20)),width + 15,17,tocolor(0,0,0,255))
-			dxDrawRectangle(posx - (10 + (0.5 * width)),posy - (1 + (v[4] * 20)),width + 19,17,tocolor(0,0,0,40))
-			dxDrawRectangle(posx - (10 + (0.5 * width)),posy - (v[4] * 20) + 1,width + 19,13,tocolor(0,0,0,255))
-			dxDrawRectangle(posx - (12 + (0.5 * width)),posy - (v[4] * 20) + 1,width + 23,13,tocolor(0,0,0,40))
-			dxDrawRectangle(posx - (12 + (0.5 * width)),posy - (v[4] * 20) + 4,width + 23,7,tocolor(0,0,0,255))
-			
-			local r,g,b = 255,255,255
-			if v[3] == 2 then
-				r,g,b = getTeamColor(getPlayerTeam(v[1]))
-			end
+			dxDrawRectangle(posx - (3 + (0.5 * width)),posy - (2 + (v[3] * 20)),width + 5,19,tocolor(0,0,0,255))
+			dxDrawRectangle(posx - (6 + (0.5 * width)),posy - (2 + (v[3] * 20)),width + 11,19,tocolor(0,0,0,40))
+			dxDrawRectangle(posx - (8 + (0.5 * width)),posy - (1 + (v[3] * 20)),width + 15,17,tocolor(0,0,0,255))
+			dxDrawRectangle(posx - (10 + (0.5 * width)),posy - (1 + (v[3] * 20)),width + 19,17,tocolor(0,0,0,40))
+			dxDrawRectangle(posx - (10 + (0.5 * width)),posy - (v[3] * 20) + 1,width + 19,13,tocolor(0,0,0,255))
+			dxDrawRectangle(posx - (12 + (0.5 * width)),posy - (v[3] * 20) + 1,width + 23,13,tocolor(0,0,0,40))
+			dxDrawRectangle(posx - (12 + (0.5 * width)),posy - (v[3] * 20) + 4,width + 23,7,tocolor(0,0,0,255))
 			
 			-- dxDrawText("This is a message! font:default",400,100,400,100,tocolor(255,255,255,255),1,"default")
 			-- dxDrawText("This is a message! font:default-bold",400,130,400,130,tocolor(255,255,255,255),1,"default-bold")
@@ -84,12 +89,11 @@ function handleDisplay()
 			-- dxDrawText("This is a message! font:beckett",400,310,400,310,tocolor(255,255,255,255),1,"beckett")
 			-- dxDrawText("This is a message! font:sans",400,340,400,340,tocolor(255,255,255,255),1,"sans")
 			
-			dxDrawText(v[2],posx - (0.5 * width),posy - (v[4] * 20),posx - (0.5 * width),posy - (v[4] * 20),tocolor(r,g,b,255),1,"default","left","top",false,false,false)
+			dxDrawText(v[2],posx - (0.5 * width),posy - (v[3] * 20),posx - (0.5 * width),posy - (v[3] * 20),textcolor,1,"default","left","top",false,false,false)
 		end
 	end
 end
 
-addEvent("onMessageIncome",true)
-addEventHandler("onMessageIncome",getRootElement(),income)
 addEventHandler("onClientPlayerQuit",getRootElement(),getTextsToRemove)
 addEventHandler("onClientRender",getRootElement(),handleDisplay)
+addEventHandler("onClientChatMessage",getRootElement(),income)
