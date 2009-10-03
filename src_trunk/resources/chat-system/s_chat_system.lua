@@ -206,6 +206,7 @@ function chatMain(message, messageType)
 		if (exports.global:hasItem(source, 6)) then
 			local theChannel = getElementData(source, "radiochannel")
 			if theChannel > 0 then
+				triggerClientEvent (source, "playRadioSound", getRootElement())
 				local username = getPlayerName(source)
 				local languageslot = getElementData(source, "languages.current")
 				local language = getElementData(source, "languages.lang" .. languageslot)
@@ -235,8 +236,8 @@ function chatMain(message, messageType)
 					
 					if (logged==1) and (targetChannel) and (exports.global:hasItem(value, 6)) and (value~=source) then
 						if (targetChannel==theChannel) then
-							playSoundFrontEnd(value, 47)
-							
+							triggerClientEvent (value, "playRadioSound", getRootElement())
+
 							local message2 = call(getResourceFromName("language-system"), "applyLanguage", source, value, message, language)
 							outputChatBox("[" .. languagename .. "] [RADIO #" .. theChannel .. "] " .. factionRankTitle .. username .. " says: " .. trunklateText( value, message2 ), value, 0, 102, 255)
 							
@@ -250,8 +251,7 @@ function chatMain(message, messageType)
 									end
 								end
 							end
-							setTimer(playSoundFrontEnd, 700, 1, value, 48)
-							setTimer(playSoundFrontEnd, 800, 1, value, 48)
+							
 						end
 					end
 				end
