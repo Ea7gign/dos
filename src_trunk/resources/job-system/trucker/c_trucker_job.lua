@@ -96,7 +96,6 @@ function startTruckerJob()
 			blip = createBlip(x, y, z, 0, 2, 255, 200, 0)
 			marker = createMarker(x, y, z, "checkpoint", 4, 255, 200, 0, 150)
 			addEventHandler("onClientMarkerHit", marker, waitAtDelivery)
-			addEventHandler("onClientMarkerLeave", marker, checkWaitAtDelivery)
 							
 			jobstate = 2
 			oldroute = rand
@@ -115,19 +114,21 @@ function waitAtDelivery(thePlayer)
 		else
 			deliveryStopTimer = setTimer(nextDeliveryCheckpoint, 5000, 1)
 			outputChatBox("#FF9933Wait a moment while your truck is processed.", 255, 0, 0, true )
+			addEventHandler("onClientMarkerLeave", marker, checkWaitAtDelivery)
 		end
 	end
 end
 
 function checkWaitAtDelivery(thePlayer)
 	local vehicle = getPedOccupiedVehicle(getLocalPlayer())
-	if vehicle and thePlayer == getLocalPlayer() and getVehicleController(vehicle) == getLocalPlayer()  then
+	if vehicle and thePlayer == getLocalPlayer() and getVehicleController(vehicle) == getLocalPlayer() and truck[getElementModel(vehicle)] then
 		if getElementHealth(vehicle) >= 350 then
 			outputChatBox("You didn't wait at the dropoff point.", 255, 0, 0)
 			if deliveryStopTimer then
 				killTimer(deliveryStopTimer)
 				deliveryStopTimer = nil
 			end
+			removeEventHandler("onClientMarkerLeave", source, checkWaitAtDelivery)
 		end
 	end
 end
@@ -173,7 +174,6 @@ function nextDeliveryCheckpoint()
 			blip = createBlip(x, y, z, 0, 2, 255, 200, 0)
 			marker = createMarker(x, y, z, "checkpoint", 4, 255, 200, 0, 150)
 			addEventHandler("onClientMarkerHit", marker, waitAtDelivery)
-			addEventHandler("onClientMarkerLeave", marker, checkWaitAtDelivery)
 			
 			if jobstate == 2 then
 				-- no final checkpoint set yet
