@@ -32,7 +32,7 @@ function stopAnimation(thePlayer)
 	
 	if not (forcedanimation) then
 		exports.global:removeAnimation(thePlayer)
-		unbindAnimationStopKey()
+		triggerEvent("unbindAnimationStopKey", thePlayer)
 	end
 end
 addCommandHandler("stopanim", stopAnimation, false, false)
