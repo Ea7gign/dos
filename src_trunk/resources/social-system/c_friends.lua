@@ -79,7 +79,7 @@ function fadeOutTextBox()
 	guiSetAlpha(buttonUpdate, alpha-0.1)
 	guiSetAlpha(messages[1], alpha2+0.1)
 	
-	if (alpha-0.1<=0.0) then
+	if (alpha-0.2<=0.0) then
 		destroyElement(buttonUpdate)
 		destroyElement(textMessage)
 		guiSetInputEnabled(false)
