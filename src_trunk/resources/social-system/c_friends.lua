@@ -177,9 +177,9 @@ function showFriendsUI(friends, fmess, myachievements)
 				local text = "Last Seen "
 				if timepassed == 0 then
 					text = text .. "Just now"
-				if timepassed == -1 then
+				elseif timepassed == -1 then
 					text = text .. "1 Minute ago"
-				if timepassed < 0 then
+				elseif timepassed < 0 then
 					text = text .. -timepassed .. " Minutes ago"
 				elseif timepassed == 1 then
 					text = text .. "1 Hour ago"
