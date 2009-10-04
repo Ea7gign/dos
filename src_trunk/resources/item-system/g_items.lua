@@ -83,7 +83,8 @@ g_items = {
 	{ "Note", "The note reads: #v", 4, 1271 },
 	{ "Elevator Remote", "A small remote to change an elevator's mode.", 2, 1271 },
 	{ "Bomb", "What could possibly happen when you use this?", 4, 1271 },
-	{ "Bomb Remote", "Has a funny red button.", 4, 1271 }
+	{ "Bomb Remote", "Has a funny red button.", 4, 1271 },
+	{ "Riot Shield", "A heavy riot shield.", 4, 1631 }
 }
 
 function getItemName(id)

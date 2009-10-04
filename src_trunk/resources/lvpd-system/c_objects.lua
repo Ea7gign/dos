@@ -16,11 +16,8 @@ function streamIn(player)
 
 	if (getElementType(source)=="player") then
 		local skin = getPedSkin(source)
-		
-		outputDebugString("2")
 		if (copSkins[skin]) then
 			objects[source] = { }
-			outputDebugString("3")
 			local x, y, z = getPedBonePosition(source, 51)
 			local px, py, pz = getElementPosition(source)
 			local rot = getPedRotation(source)

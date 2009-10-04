@@ -14,6 +14,7 @@ function giveHealth(player, health)
 	setElementHealth( player, math.min( 100, getElementHealth( player ) + health ) )
 end
 
+local shields = { }
 -- callbacks
 function useItem(itemSlot, additional)
 	local items = getItems(source)
@@ -471,6 +472,21 @@ function useItem(itemSlot, additional)
 					end
 				end
 			end
+		elseif (itemID==76) then -- SHIELD
+			if (shields[source]) then -- Already using the shield
+				destroyElement(shields[source])
+				shields[source] = nil
+			else
+				local x, y, z = getElementPosition(source)
+				local rot = getPedRotation(source)
+				
+				x = x + math.sin(math.rad(rot)) * 1.5
+				y = y + math.cos(math.rad(rot)) * 1.5
+				
+				local object = createObject(1631, x, y, z)
+				attachElements(object, source, 0, 1, 0)
+				shields[source] = object
+			end
 		else
 			outputChatBox("Error 800001 - Report on http://bugs.valhallagaming.net", source, 255, 0, 0)
 		end
@@ -552,6 +568,9 @@ function destroyItem(itemID, isWeapon)
 				removeElementData(source,"ESbadge")
 				exports.global:sendLocalMeAction(source, "removes an Emergency Services ID.")
 				exports.global:updateNametagColor(source)
+			elseif tonumber(itemID)== 76 and not exports.global:hasItem(source, 76) then
+				destroyElement(shields[source])
+				shields[source] = nil
 			end
 		end
 	else
@@ -599,7 +618,11 @@ function dropItem(itemID, x, y, z, ammo, keepammo)
 			setElementInterior(obj, interior)
 			setElementDimension(obj, dimension)
 			
-			moveObject(obj, 200, x, y, z+0.3)
+			if (itemID==76) then
+				moveObject(obj, 200, x, y, z+0.3, 90, 0, 0)
+			else
+				moveObject(obj, 200, x, y, z+0.3)
+			end
 			
 			setElementData(obj, "id", id, false)
 			setElementData(obj, "itemID", itemID)
@@ -648,6 +671,9 @@ function dropItem(itemID, x, y, z, ammo, keepammo)
 				removeElementData(source,"ESbadge")
 				exports.global:sendLocalMeAction(source, "removes an Emergency Services ID.")
 				exports.global:updateNametagColor(source)
+			elseif tonumber(itemID)== 76 and not exports.global:hasItem(source, 76) then
+				destroyElement(shields[source])
+				shields[source] = nil
 			end
 			exports.global:sendLocalMeAction(source, "dropped a " .. getItemName( itemID ) .. ".")
 		else
