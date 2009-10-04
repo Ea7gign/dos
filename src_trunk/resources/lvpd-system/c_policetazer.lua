@@ -62,6 +62,16 @@ function playerExitsVehicle(player)
 end
 addEventHandler("onClientVehicleExit", getRootElement(), playerExitsVehicle)
 
+function destroyModel()
+	if (weapons[value] ~= nil) then
+		local object = weapons[value][1]
+		destroyElement(object)
+		weapons[value] = nil
+	end
+end
+addEventHandler("onClientPlayerWasted", getRootElement(), destroyModel)
+addEventHandler("onClientPlayerQuit", getRootElement(), destroyModel)
+
 function createModel(player, weapon)
 	local bx, by, bz = getPedBonePosition(player, 41)
 	crouched = isPedDucked(player)
