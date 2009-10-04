@@ -3,22 +3,36 @@ function bindKeys()
 	local players = exports.pool:getPoolElementsByType("player")
 	for k, arrayPlayer in ipairs(players) do
 		if not(isKeyBound(arrayPlayer, "space", "down", stopAnimation)) then
-			bindKey(arrayPlayer, "space", "down", stopAnimation)
+			--bindKey(arrayPlayer, "space", "down", stopAnimation)
 		end
 	end
 end
 
 function bindKeysOnJoin()
-	bindKey(source, "space", "down", stopAnimation)
+	--bindKey(source, "space", "down", stopAnimation)
 end
 addEventHandler("onResourceStart", getResourceRootElement(), bindKeys)
 addEventHandler("onPlayerJoin", getRootElement(), bindKeysOnJoin)
+
+function bindAnimationStopKey()
+	bindKey(source, "space", "down", stopAnimation)
+end
+addEvent("bindAnimationStopKey", false)
+addEventHandler("bindAnimationStopKey", getRootElement(), bindAnimationStopKey)
+
+
+function unbindAnimationStopKey()
+	unbindKey(source, "space", "down", stopAnimation)
+end
+addEvent("unbindAnimationStopKey", false)
+addEventHandler("unbindAnimationStopKey", getRootElement(), unbindAnimationStopKey)
 
 function stopAnimation(thePlayer)
 	local forcedanimation = getElementData(thePlayer, "forcedanimation")
 	
 	if not (forcedanimation) then
 		exports.global:removeAnimation(thePlayer)
+		unbindAnimationStopKey()
 	end
 end
 addCommandHandler("stopanim", stopAnimation, false, false)

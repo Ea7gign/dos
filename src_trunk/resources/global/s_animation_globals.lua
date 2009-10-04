@@ -9,6 +9,7 @@ function applyAnimation(thePlayer, block, name, animtime, loop, updatePosition, 
 			return false
 		end
 		
+		triggerEvent("bindAnimationStopKey", thePlayer)
 		toggleAllControls(thePlayer, false, true, false)
 		
 		if (forced) then
