@@ -22,6 +22,9 @@ function updateTabStuff()
 end
 
 function clickATM(button, state, absX, absY, wx, wy, wz, element)
+	if getElementData(getLocalPlayer(), "exclusiveGUI") then
+		return
+	end
 	if not cooldown and element and getElementType(element) =="object" and state=="up" and getElementParent(getElementParent(element)) == getResourceRootElement() then
 		local px, py, pz = getElementPosition( localPlayer )
 		local ax, ay, az = getElementPosition( element )
@@ -35,6 +38,8 @@ addEventHandler( "onClientClick", getRootElement(), clickATM )
 
 function showBankUI(isInFaction, isFactionLeader, factionBalance, depositable)
 	if not (wBank) then
+		setElementData(getLocalPlayer(), "exclusiveGUI", true, false)
+		
 		local width, height = 600, 400
 		local scrWidth, scrHeight = guiGetScreenSize()
 		local x = scrWidth/2 - (width/2)
@@ -195,6 +200,7 @@ function hideBankUI()
 	guiSetInputEnabled(false)
 	
 	cooldown = setTimer(function() cooldown = nil end, 1000, 1)
+	setElementData(getLocalPlayer(), "exclusiveGUI", false, false)
 end
 addEvent("hideBankUI", true)
 addEventHandler("hideBankUI", getRootElement(), showBankUI)

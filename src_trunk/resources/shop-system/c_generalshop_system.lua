@@ -43,6 +43,8 @@ end
 
 function showGeneralshopUI(shop_type, race, gender)
 	if (wGeneralshop==nil) then
+		setElementData(getLocalPlayer(), "exclusiveGUI", true, false)
+		
 		local screenwidth, screenheight = guiGetScreenSize ()
 		
 		local Width = 500
@@ -146,6 +148,7 @@ addEventHandler("showGeneralshopUI", getRootElement(), showGeneralshopUI)
 
 function hideGeneralshopUI()
 	if (source==bClose) then
+		setElementData(getLocalPlayer(), "exclusiveGUI", false, false)
 		guiSetInputEnabled(false)
 		showCursor(false)
 		guiSetVisible(wGeneralshop, false)

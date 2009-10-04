@@ -20,6 +20,9 @@ function requestInventory(button)
 end
 
 function clickVehicle(button, state, absX, absY, wx, wy, wz, element)
+	if getElementData(getLocalPlayer(), "exclusiveGUI") then
+		return
+	end
 	if (element) and (getElementType(element)=="vehicle") and (button=="right") and (state=="down") and not (wInventory) then
 		local x, y, z = getElementPosition(localPlayer)
 		

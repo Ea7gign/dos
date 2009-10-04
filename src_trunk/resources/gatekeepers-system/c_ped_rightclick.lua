@@ -10,6 +10,9 @@ end
 addEventHandler("onClientPedDamage", getRootElement(), pedDamage)
 
 function clickPed(button, state, absX, absY, wx, wy, wz, element)
+	if getElementData(getLocalPlayer(), "exclusiveGUI") then
+		return
+	end
 	if (element) and (getElementType(element)=="ped") and (button=="right") and (state=="down") and (sent==false) and (element~=getLocalPlayer()) then
 		local gatekeeper = getElementData(element, "talk")
 		if (gatekeeper) then

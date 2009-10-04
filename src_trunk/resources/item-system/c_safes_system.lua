@@ -13,6 +13,9 @@ local function requestInventory(button)
 end
 
 function clickSafe(button, state, absX, absY, wx, wy, wz, element)
+	if getElementData(getLocalPlayer(), "exclusiveGUI") then
+		return
+	end
 	if element and getElementType( element ) == "object" and button == "right" and state == "down" and getElementModel(element) == 2332 then
 		local x, y, z = getElementPosition(localPlayer)
 		
