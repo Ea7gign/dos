@@ -55,51 +55,53 @@ function useItem(itemSlot, additional)
 			local itemValue = tonumber(itemValue)
 			local found = nil
 			local elevatorres = getResourceRootElement(getResourceFromName("elevator-system"))
-			for key, value in ipairs(exports.pool:getPoolElementsByType("pickup")) do
-				local vx, vy, vz = getElementPosition(value)
-				local x, y, z = getElementPosition(source)
-				
-				if getDistanceBetweenPoints3D(x, y, z, vx, vy, vz) <= 5 then
-					local dbid = getElementData(value, "dbid")
-					if dbid == itemValue then -- house found
+			
+			local x, y, z = getElementPosition(source)
+			local colSphere = createColSphere(x, y, z, 5)
+			
+			for key, value in ipairs(getElementsWithinColShape(colSphere, "pickup")) do
+				local dbid = getElementData(value, "dbid")
+				if dbid == itemValue then -- house found
+					found = value
+					break
+				elseif getElementData( value, "other" ) and getElementParent( getElementParent( value ) ) == elevatorres then
+					-- it's an elevator
+					if getElementDimension( value ) == itemValue then
 						found = value
 						break
-					elseif getElementData( value, "other" ) and getElementParent( getElementParent( value ) ) == elevatorres then
-						-- it's an elevator
-						if getElementDimension( value ) == itemValue then
-							found = value
-							break
-						elseif getElementDimension( getElementData( value, "other" ) ) == itemValue then
-							found = value
-							break
-						end
+					elseif getElementDimension( getElementData( value, "other" ) ) == itemValue then
+						found = value
+						break
 					end
 				end
 			end
+			destroyElement(colSphere)
 			
 			if not found then
 				outputChatBox("You are too far from the door.", source, 255, 194, 14)
 			else
-				local result = mysql_query(handler, "SELECT 1-locked FROM interiors WHERE id = " .. itemValue)
-				local locked = 0
-				if result then
-					locked = tonumber(mysql_result(result, 1, 1))
-					mysql_free_result(result)
-				end
+				local locked = 1 - tonumber(getElementData(found, "locked"))
+				
 				
 				mysql_free_result( mysql_query(handler, "UPDATE interiors SET locked='" .. locked .. "' WHERE id='" .. itemValue .. "' LIMIT 1") )
+				
 				if locked == 0 then
 					exports.global:sendLocalMeAction(source, "puts the key in the door to unlock it.")
 				else
 					exports.global:sendLocalMeAction(source, "puts the key in the door to lock it.")
 				end
 				
-				for key, value in ipairs(exports.pool:getPoolElementsByType("pickup")) do
-					local dbid = getElementData(value, "dbid")
-					if dbid == itemValue then
-						setElementData(value, "locked", locked, false)
+				setElementData(found, "locked", locked, false)
+				for key, value in ipairs(getElementsByType("pickup")) do
+					if (value~=found) then
+						local dbid = getElementData(value, "dbid")
+						if dbid == itemValue then
+							setElementData(value, "locked", locked, false)
+							break
+						end
 					end
 				end
+				
 			end
 		elseif (itemID==73) then -- elevator remote
 			local itemValue = tonumber(itemValue)
