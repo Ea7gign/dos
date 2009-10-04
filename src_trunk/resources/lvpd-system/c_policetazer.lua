@@ -153,7 +153,6 @@ function showTazer()
 								setElementRotation(object2, rx, 365-r, rot+90)
 							end
 						elseif (aimweapons[value]==nil) then
-							outputDebugString("GOT")
 							local object = createObject(2918, sx-0.19, sy-0.1, sz)
 							local object2 = createObject(2918, sx-0.19, sy-0.1, sz)
 							local x, y, z = getElementPosition(value)
