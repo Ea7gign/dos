@@ -723,39 +723,42 @@ addEventHandler("onPlayerJoin", getRootElement(), bindKeysOnJoin)
 function toggleEngine(source, key, keystate)
 	local veh = getPedOccupiedVehicle(source)
 	local inVehicle = getElementData(source, "realinvehicle")
-	local seat = getPedOccupiedVehicleSeat(source)
-	
-	if veh and inVehicle == 1 and seat == 0 then
-		local model = getElementModel(veh)
-		if not (enginelessVehicle[model]) then
-			local engine = getElementData(veh, "engine")
-			
-			if engine == 0 then
-				local fuel = getElementData(veh, "fuel")
-				local broke = getElementData(veh, "enginebroke")
-				if broke == 1 then
-					exports.global:sendLocalMeAction(source, "attempts to start the engine but fails.")
-					outputChatBox("The engine is broken.", source)
-				elseif exports.global:hasItem(veh, 74) then
-					while exports.global:hasItem(veh, 74) do
-						exports.global:takeItem(veh, 74)
-					end
-					
-					blowVehicle(veh)
-				elseif fuel >= 1 or exports.global:isPlayerSilverDonator(source) then
-					toggleControl(source, 'brake_reverse', true)
-					
-					setVehicleEngineState(veh, true)
-					setElementData(veh, "engine", 1, false)
-				elseif fuel < 1 then
-					exports.global:sendLocalMeAction(source, "attempts to turn the engine on and fails.")
-					outputChatBox("This vehicle has no fuel.", source)
-				end
-			else
-				toggleControl(source, 'brake_reverse', false)
+
+	if veh and inVehicle == 1 then
+		local seat = getPedOccupiedVehicleSeat(source)
+		
+		if (seat == 0) then
+			local model = getElementModel(veh)
+			if not (enginelessVehicle[model]) then
+				local engine = getElementData(veh, "engine")
 				
-				setVehicleEngineState(veh, false)
-				setElementData(veh, "engine", 0, false)
+				if engine == 0 then
+					local fuel = getElementData(veh, "fuel")
+					local broke = getElementData(veh, "enginebroke")
+					if broke == 1 then
+						exports.global:sendLocalMeAction(source, "attempts to start the engine but fails.")
+						outputChatBox("The engine is broken.", source)
+					elseif exports.global:hasItem(veh, 74) then
+						while exports.global:hasItem(veh, 74) do
+							exports.global:takeItem(veh, 74)
+						end
+						
+						blowVehicle(veh)
+					elseif fuel >= 1 or exports.global:isPlayerSilverDonator(source) then
+						toggleControl(source, 'brake_reverse', true)
+						
+						setVehicleEngineState(veh, true)
+						setElementData(veh, "engine", 1, false)
+					elseif fuel < 1 then
+						exports.global:sendLocalMeAction(source, "attempts to turn the engine on and fails.")
+						outputChatBox("This vehicle has no fuel.", source)
+					end
+				else
+					toggleControl(source, 'brake_reverse', false)
+					
+					setVehicleEngineState(veh, false)
+					setElementData(veh, "engine", 0, false)
+				end
 			end
 		end
 	end
@@ -767,7 +770,7 @@ function toggleLock(source, key, keystate)
 	
 	if (veh) and (inVehicle==1) then
 		triggerEvent("lockUnlockInsideVehicle", source, veh)
-	elseif not veh and not triggerEvent("lockUnlockHouse", source) then
+	elseif not veh then
 		local x, y, z = getElementPosition(source)
 		local nearbyVehicles = exports.global:getNearbyElements(source, "vehicle", 30)
 		
@@ -1062,6 +1065,7 @@ function lockUnlockInside(vehicle)
 	else
 		outputChatBox("(( You can't lock civilian vehicles. ))", source, 255, 195, 14)
 	end
+	
 end
 addEvent("lockUnlockInsideVehicle", true)
 addEventHandler("lockUnlockInsideVehicle", getRootElement(), lockUnlockInside)
@@ -1133,7 +1137,8 @@ function fillFuelTank(veh, fuel)
 		exports.global:takeItem(source, 57, fuel)
 		exports.global:giveItem(source, 57, math.ceil(fuel-fuelAdded))
 		
-		setElementData(veh, "fuel", currFuel+fuelAdded)
+		setElementData(veh, "fuel", currFuel+fuelAdded, false)
+		triggerClientEvent(source, "syncFuel", veh, currFuel+fuelAdded)
 		--triggerClientEvent(source, "setClientFuel", source, currFuel+fuelAdded)
 	end
 end

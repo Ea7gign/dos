@@ -25,7 +25,6 @@ function drawSpeedo()
 end
 
 function syncFuel(ifuel)
-	outputDebugString("SYNCING FUEL")
 	if not (ifuel) then
 		fuel = 100
 	else
