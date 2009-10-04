@@ -183,7 +183,7 @@ function useItem(itemSlot, additional)
 				setElementData(source, "casualskin", skin, false)
 				exports.global:sendLocalMeAction(source, "changes their clothes.")
 				if (vehicle) then
-					setVehicleEngineState ( vehicle, veholdstate )
+					setTimer(setVehicleEngineState, 200, 1, vehicle, veholdstate)
 				end
 			else
 				outputChatBox("These clothes do not fit you.", source, 255, 0, 0)
