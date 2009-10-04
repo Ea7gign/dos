@@ -3,11 +3,13 @@ local jobstate = 0
 local route = 0
 local oldroute = -1
 local marker, endmarker
-local routescompleted = 0
 local deliveryStopTimer = nil
-local wage = 0
+local wage = { }
+local routescompleted = {}
+local loadwage = nil
+local loadroutescompleted = nil
 
-routes = {
+local routes = {
 	{ 1615.5283203125, -1614.431640625, 12.10223865509 },
 	{ 1476.5732421875, -1735.2548828125, 11.943592071533 },
 	{ 1360.8798828125, -1284.318359375, 11.949401855469 },
@@ -25,16 +27,11 @@ routes = {
 	{ 1751.4375, -2060.2880859375, 13.166693687439 }
 }
 
---[[for k, v in pairs(routes) do
-	createBlip(v[1], v[2], v[3], 51, 2, 255, 127, 255)
-	createMarker(v[1], v[2], v[3], "checkpoint", 4, 255, 200, 0, 150)
-end]]
-
 local truck = { [414] = true }
 
 function resetTruckerJob()
 	jobstate = 0
-	routescompleted = 0
+	routescompleted = { }
 	oldroute = -1
 	
 	if (isElement(marker)) then
@@ -67,7 +64,7 @@ function resetTruckerJob()
 		deliveryStopTimer = nil
 	end
 	
-	wage = 0
+	wage = { }
 end
 
 function displayTruckerJob(notext)
@@ -88,6 +85,7 @@ function startTruckerJob()
 			outputChatBox("#FF9933Drive to the #FFFF00blip#FF9933 to complete your first delivery.", 255, 194, 15, true)
 			outputChatBox("#FF9933Remember to #FFFF00follow the street rules#FF9933.", 255, 194, 15, true)
 			outputChatBox("#FF9933If your truck is #FFFF00damaged#FF9933, the customers may pay less or refuse to accept the goods.", 255, 194, 15, true)
+			outputChatBox("#FF9933Your wage is bound to this truck, #FFFF00don't loose it#FF9933!", 255, 194, 15, true)
 			destroyElement(blip)
 			
 			local rand = math.random(1, #routes)
@@ -141,6 +139,8 @@ function nextDeliveryCheckpoint()
 			destroyElement(marker)
 			destroyElement(blip)
 			
+			vehicleid = tonumber( getElementData(vehicle, "dbid") )
+			
 			local health = getElementHealth(vehicle)
 			if health >= 975 then
 				pay = 60 -- bonus: $60
@@ -154,14 +154,27 @@ function nextDeliveryCheckpoint()
 				pay = 0
 			end
 			
-			wage = wage + pay
+			if not (loadwage == nil) then
+				wage[vehicleid] = loadwage
+				loadwage = nil
+			end
 			
-			routescompleted = routescompleted + 1
-			outputChatBox("You completed your " .. routescompleted .. ". trucking run and earned $" .. pay .. ".", 0, 255, 0)
+			if not (loadroutescompleted == nil) then
+				routescompleted[vehicleid] = loadroutescompleted
+				loadroutescompleted = nil
+			end
+
+			local oldwage = wage[vehicleid] or 0
+			wage[vehicleid] = oldwage + pay
+			
+			local oldroutescompleted = routescompleted[vehicleid] or 0
+			routescompleted[vehicleid] = oldroutescompleted + 1
+			
+			outputChatBox("You completed your " .. routescompleted[vehicleid] .. ".  trucking run in this truck and earned $" .. pay .. ".", 0, 255, 0)
 			outputChatBox("#FF9933You can now either return to the #CC0000warehouse #FF9933and obtain your wage", 0, 0, 0, true)
 			outputChatBox("#FF9933or continue onto the next #FFFF00drop off point#FF9933 and increase your wage.", 0, 0, 0, true)
 			
-			triggerServerEvent("saveDeliveryProgress", getLocalPlayer(), routescompleted, wage)
+			triggerServerEvent("saveDeliveryProgress", getLocalPlayer(), routescompleted[vehicleid], wage[vehicleid])
 			
 			-- next drop off
 			local rand = -1
@@ -184,8 +197,7 @@ function nextDeliveryCheckpoint()
 			end
 			jobstate = 3
 			
-			-- increase global supplies by 3
-			triggerServerEvent("updateGlobalSupplies", getRootElement(), 3)
+			triggerServerEvent("updateGlobalSupplies", getRootElement(), 2)
 		else
 			outputChatBox("#FF9933You must be in a van to complete deliverys.", 255, 0, 0, true ) -- Wrong car type.
 		end
@@ -199,13 +211,20 @@ function endDelivery(thePlayer)
 		if not vehicle or getVehicleController(vehicle) ~= getLocalPlayer() or not (truck[id]) then
 			outputChatBox("#FF9933You must be in a van to complete deliverys.", 255, 0, 0, true ) -- Wrong car type.
 		else
-			outputChatBox("You earned $" .. wage .. " on your trucking runs.", 255, 194, 15)
-			triggerServerEvent("giveTruckingMoney", getLocalPlayer(), wage)
-			triggerServerEvent("saveDeliveryProgress", getLocalPlayer(), 0, 0)
-			
-			triggerServerEvent("respawnTruck", getLocalPlayer(), vehicle)
-			resetTruckerJob()
-			displayTruckerJob(true)
+			local health = getElementHealth(vehicle)
+			if health <= 600 then
+				outputChatBox("This truck is damaged, fix it first.", 255, 194, 15)
+			else
+				vehicleid = tonumber( getElementData(vehicle, "dbid") )
+				local oldwage = wage[vehicleid] or 0
+				outputChatBox("You earned $" .. oldwage .. " on your trucking runs.", 255, 194, 15)
+				triggerServerEvent("giveTruckingMoney", getLocalPlayer(), oldwage)
+				triggerServerEvent("saveDeliveryProgress", getLocalPlayer(), 0, 0)
+				
+				triggerServerEvent("respawnTruck", getLocalPlayer(), vehicle)
+				resetTruckerJob()
+				displayTruckerJob(true)
+			end
 		end
 	end
 end
@@ -214,7 +233,7 @@ addEvent("restoreTruckerJob", true)
 addEventHandler("restoreTruckerJob", getRootElement(), function() displayTruckerJob(true) end )
 
 addEvent("loadTruckerJob", true)
-addEventHandler("loadTruckerJob", getRootElement(), function(r, w) routescompleted = r wage = w end )
+addEventHandler("loadTruckerJob", getRootElement(), function(r, w) loadroutescompleted = r loadwage = w end )
 
 addEvent("startTruckJob", true)
 addEventHandler("startTruckJob", getRootElement(), startTruckerJob)
