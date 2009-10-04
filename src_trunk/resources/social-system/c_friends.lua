@@ -144,7 +144,7 @@ function showFriendsUI(friends, fmess, myachievements)
 	
 	-- OTHERS
 	for key, value in ipairs(friends) do
-		local id, username, message, country, achievements, timeoffline = unpack( value )
+		local id, username, message, country, achievements, timeoffline, timepassed = unpack( value )
 		
 		panels[key+1] = guiCreateTabPanel(cx, cy, 0.24, 0.15, true) -- 0.25, 0.15
 		guiSetAlpha(panels[key+1], 0.0)
@@ -174,11 +174,27 @@ function showFriendsUI(friends, fmess, myachievements)
 			chars[key+1] = guiCreateLabel(cx+0.02, cy+0.04, 0.9, 0.2, "Currently Playing as " .. string.gsub(name, "_", " ") , true)
 		else
 			if (timeoffline) then
-				if (timeoffline==0) then
-					chars[key+1] = guiCreateLabel(cx+0.02, cy+0.04, 0.9, 0.1, "Last Seen Today.", true)
+				local text = "Last Seen "
+				if timepassed == 0 then
+					text = text .. "Just now"
+				if timepassed == -1 then
+					text = text .. "1 Minute ago"
+				if timepassed < 0 then
+					text = text .. -timepassed .. " Minutes ago"
+				elseif timepassed == 1 then
+					text = text .. "1 Hour ago"
+				elseif timepassed < 24 then
+					text = text .. timepassed .. " Hours ago"
+				elseif timeoffline == 0 then
+					text = text .. "Today"
+				elseif timeoffline == 1 then
+					text = text .. "Yesterday"
 				else
-					chars[key+1] = guiCreateLabel(cx+0.02, cy+0.04, 0.9, 0.1, "Last Seen " .. timeoffline .. " days ago.", true)
+					text = text .. timeoffline .. " days ago"
 				end
+				
+				text = text .. "."
+				chars[key+1] = guiCreateLabel(cx+0.02, cy+0.04, 0.9, 0.1, text, true)
 			else
 				chars[key+1] = guiCreateLabel(cx+0.02, cy+0.04, 0.9, 0.1, "Last Seen Never.", true)
 			end

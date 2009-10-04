@@ -59,7 +59,7 @@ function toggleFriends(source)
 			mysql_free_result(achresult)
 			
 			-- load friends list
-			local result = mysql_query( handler, "SELECT f.friend, a.username, a.friendsmessage, DATEDIFF(NOW(), a.lastlogin), a.country, ( SELECT COUNT(*) FROM achievements b WHERE b.account = a.id ) FROM friends f LEFT JOIN accounts a ON f.friend = a.id WHERE f.id = " .. accid .. " ORDER BY DATEDIFF(NOW(), a.lastlogin) ASC" )
+			local result = mysql_query( handler, "SELECT f.friend, a.username, a.friendsmessage, DATEDIFF(NOW(), a.lastlogin), a.country, ( SELECT COUNT(*) FROM achievements b WHERE b.account = a.id ), HOUR(TIMEDIFF(NOW(), a.lastlogin)), MINUTE(TIMEDIFF(NOW(), a.lastlogin)) FROM friends f LEFT JOIN accounts a ON f.friend = a.id WHERE f.id = " .. accid .. " ORDER BY a.lastlogin DESC" )
 			if result then
 				local friends = { }
 				for result, row in mysql_rows(result) do
@@ -75,6 +75,7 @@ function toggleFriends(source)
 						local yearday = time.yearday
 
 						local timeoffline = tonumber( row[4] ) -- time offline
+						local hour, minute = tonumber( row[7] ), tonumber( row[8] )
 						
 						local player = nil
 						for key, value in ipairs(exports.pool:getPoolElementsByType("player")) do
@@ -89,7 +90,7 @@ function toggleFriends(source)
 						if player then
 							table.insert( friends, 1, { id, account, row[3], row[5], tonumber( row[6] ) } )
 						else
-							table.insert( friends, { id, account, row[3], row[5], tonumber( row[6] ), timeoffline } )
+							table.insert( friends, { id, account, row[3], row[5], tonumber( row[6] ), timeoffline, hour == 0 and -minute or hour } )
 						end
 					end
 				end
