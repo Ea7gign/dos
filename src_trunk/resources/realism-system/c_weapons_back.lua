@@ -24,6 +24,7 @@ function weaponSwitch(prevSlot, newSlot)
 		weapons[source] = nil
 	end
 end
+addEventHandler("onPlayerWeaponSwitch", getRootElement(), weaponSwitch)
 addEventHandler("onClientPlayerWeaponSwitch", getRootElement(), weaponSwitch)
 
 function playerEntersVehicle(player)
@@ -70,7 +71,7 @@ function createModel(player, weapon)
 		objectID = 355
 	end
 	
-	local currobject = getElementData(source, "weaponback.object")
+	local currobject = weapons[player][1]
 	if (isElement(currobject)) then
 		destroyElement(currobject)
 	end
