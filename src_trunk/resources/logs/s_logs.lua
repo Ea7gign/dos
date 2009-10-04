@@ -8,7 +8,8 @@ enumTypes = {
 [7] = "meactions",
 [8] = "pms",
 [9] = "vehicles",
-[10] = "san-photo"
+[10] = "san-photo",
+[11] = "kills"
 }
 
 

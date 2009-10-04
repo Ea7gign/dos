@@ -122,6 +122,7 @@ function eventTriggered ( source,killer,weapon,bodypart,suicide,usedVehicle )
 end
 
 function outputConsoleKillMessage ( text )
+	exports.logs:logMessage( text, 11 )
 	local hour, minute = getTime()
 	text = ("[%02d:%02d] %s"):format(hour, minute, text)
 	for k, v in pairs(exports.pool:getPoolElementsByType("player")) do
