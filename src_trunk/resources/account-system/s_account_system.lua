@@ -721,8 +721,8 @@ function loginPlayer(username, password, operatingsystem)
 		end
 		
 		-- 0331: Query to check for invalid accounts, can possibly remove this later
-		local resultUpdate = mysql_query(handler, "UPDATE characters SET money=0 WHERE money<0")
-		mysql_free_result(resultUpdate)
+		--local resultUpdate = mysql_query(handler, "UPDATE characters SET money=0 WHERE money<0")
+		--mysql_free_result(resultUpdate)
 		
 		if not (found) then
 			triggerClientEvent(source, "hideUI", source, false)
@@ -920,7 +920,7 @@ addEventHandler("retrieveDetails", getRootElement(), retrieveDetails)
 function sendAccounts(thePlayer, id, isChangeChar)
 	exports.global:takeAllWeapons(thePlayer)
 	local accounts = { }
-	
+
 	local result = mysql_query(handler, "SELECT id, charactername, cked, lastarea, age, gender, faction_id, faction_rank, skin, DATEDIFF(NOW(), lastlogin) FROM characters WHERE account='" .. id .. "'  ORDER BY cked ASC, lastlogin DESC")
 	
 	if (mysql_num_rows(result)>0) then
@@ -929,6 +929,7 @@ function sendAccounts(thePlayer, id, isChangeChar)
 		end
 		
 		local i = 1
+
 		for i=1, mysql_num_rows(result) do
 			accounts[i] = { }
 			accounts[i][1] = mysql_result(result, i, 1)
@@ -974,12 +975,12 @@ function sendAccounts(thePlayer, id, isChangeChar)
 			accounts[i][10] = mysql_result(result, i, 10)
 			i = i + 1
 		end
+		
 	end
 	
 	if (result) then
 		mysql_free_result(result)
 	end
-	
 	
 	local playerid = getElementData(thePlayer, "playerid")
 
