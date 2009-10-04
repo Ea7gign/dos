@@ -87,6 +87,7 @@ function createModel(player, weapon)
 	return object
 end
 
+--[[
 -- aiming code
 aimweapons = { }
 function showTazer()
@@ -191,3 +192,5 @@ function showTazer()
 	end
 end
 addEventHandler("onClientPreRender", getRootElement(), showTazer)
+
+]]--
