@@ -163,8 +163,7 @@ function showFriendsUI(friends, fmess, myachievements)
 		guiSetAlpha(names[key+1], 0.0)
 		
 		-- Online status
-		local image = "images/red.png"
-		if (isPlayerOnline(id)) then image = "images/grn.png" end
+		local image = found and "images/grn.png" or "images/red.png"
 		onlineimages[key+1] = guiCreateStaticImage(cx+0.0075, cy+0.027, 0.0075, 0.0075, image, true)
 		guiSetAlpha(onlineimages[key+1], 0.0)
 		
