@@ -4,8 +4,9 @@ function playerJoin()
 	local slot = nil
 	
 	for i = 1, 128 do
-		if (ids[i]==nil) and not (slot) then
+		if (ids[i]==nil) then
 			slot = i
+			break
 		end
 	end
 	
