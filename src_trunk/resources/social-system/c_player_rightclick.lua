@@ -59,19 +59,17 @@ function showPlayerMenu(targetPlayer, friend, sdescription, sage, sweight, sheig
 	end
 	
 	-- FRISK
---[[	if getElementData(getLocalPlayer(), "hoursplayed") >= 12 then
-		bFrisk = guiCreateButton(0.05, 0.25, 0.45, 0.1, "Frisk", true, wRightClick)
-		addEventHandler("onClientGUIClick", bFrisk, cfriskPlayer, false)
-	end]]
+	bFrisk = guiCreateButton(0.52, 0.25, 0.43, 0.1, "Frisk", true, wRightClick)
+	addEventHandler("onClientGUIClick", bFrisk, cfriskPlayer, false)
 	
 	-- RESTRAIN
 	local cuffed = getElementData(player, "restrain")
 	
 	if cuffed == 0 then
-		bRestrain = guiCreateButton(0.05, 0.25, 0.87, 0.1, "Restrain", true, wRightClick)
+		bRestrain = guiCreateButton(0.05, 0.25, 0.43, 0.1, "Restrain", true, wRightClick)
 		addEventHandler("onClientGUIClick", bRestrain, crestrainPlayer, false)
 	else
-		bRestrain = guiCreateButton(0.05, 0.25, 0.87, 0.1, "Unrestrain", true, wRightClick)
+		bRestrain = guiCreateButton(0.05, 0.25, 0.43, 0.1, "Unrestrain", true, wRightClick)
 		addEventHandler("onClientGUIClick", bRestrain, cunrestrainPlayer, false)
 	end
 	
@@ -233,122 +231,72 @@ end
 --------------------
 --    FRISKING    --
 --------------------
---[[
-wFriskItems, bFriskTakeItem, bFriskClose, gFriskItems, FriskColName = nil
+
+gx, gy, wFriskItems, bFriskTakeItem, bFriskClose, gFriskItems, FriskColName = nil
 function cfriskPlayer(button, state, x, y)
 	if (button=="left") then
 		destroyElement(wRightClick)
 		wRightClick = nil
 		
-		if not (wFriskItems) then
-			local restrained = getElementData(player, "restrain")
-			
-			if (restrained~=1) then
-				outputChatBox("This player is not restrained.", 255, 0, 0)
-				hidePlayerMenu()
-			elseif getElementHealth(getLocalPlayer()) < 50 then
-				outputChatBox("You need at least half health to frisk someone.", 255, 0, 0)
-				hidePlayerMenu()
-			else
-				addEventHandler("onClientPlayerQuit", player, hidePlayerMenu)
-				local playerName = string.gsub(getPlayerName(player), "_", " ")
-				triggerServerEvent("sendLocalMeAction", getLocalPlayer(), getLocalPlayer(), "frisks " .. playerName .. ".")
-				local width, height = 300, 200
-				local scrWidth, scrHeight = guiGetScreenSize()
-				
-				wFriskItems = guiCreateWindow(x, y, width, height, "Frisk: " .. playerName, false)
-				guiWindowSetSizable(wFriskItems, false)
-				
-				gFriskItems = guiCreateGridList(0.05, 0.1, 0.9, 0.7, true, wFriskItems)
-				FriskColName = guiGridListAddColumn(gFriskItems, "Name", 0.9)
-				
-				local items = getElementData(player, "items")
-				
-				local slots = 10
-				if (exports.global:hasItem(player, 48, -1)) then
-					slots = 20
-				end
-				
-				for i = 1, slots do
-					local itemID = tonumber(gettok(items, i, string.byte(',')))
-					if (itemID~=nil) then
-						local itemName = exports.global:cgetItemName(itemID)
-						local row = guiGridListAddRow(gFriskItems)
-						guiGridListSetItemText(gFriskItems, row, FriskColName, tostring(itemName), false, false)
-						guiGridListSetSortingEnabled(gFriskItems, false)
-					end
-				end
-				
-				-- WEAPONS
-				for i = 1, 12 do
-					if (getPedWeapon(player, i)>0) then
-						local ammo = getPedTotalAmmo(player, i)
-						
-						if (ammo>0) then
-							local itemName = getWeaponNameFromID(getPedWeapon(player, i))
-							local row = guiGridListAddRow(gFriskItems)
-							guiGridListSetItemText(gFriskItems, row, FriskColName, tostring(itemName), false, false)
-							guiGridListSetSortingEnabled(gFriskItems, false)
-						end
-					end
-				end
-				
-				bFriskTakeItem = guiCreateButton(0.05, 0.85, 0.45, 0.1, "Take Item", true, wFriskItems)
-				addEventHandler("onClientGUIClick", bFriskTakeItem, takePlayerItem, false)
-				
-				bFriskClose = guiCreateButton(0.5, 0.85, 0.45, 0.1, "Close", true, wFriskItems)
-				addEventHandler("onClientGUIClick", bFriskClose, hidePlayerMenu, false)
-			end
+		local restrained = getElementData(player, "restrain")
+		
+		if (restrained~=1) then
+			outputChatBox("This player is not restrained.", 255, 0, 0)
+			hidePlayerMenu()
+		elseif getElementHealth(getLocalPlayer()) < 50 then
+			outputChatBox("You need at least half health to frisk someone.", 255, 0, 0)
+			hidePlayerMenu()
 		else
-			guiBringToFront(wFriskItems, true)
+			gx = x
+			gy = y
+			triggerServerEvent("friskShowItems", getLocalPlayer(), player)
 		end
 	end
 end
 
-function takePlayerItem(button, state, x, y)
-	if (button=="left") then
-		local row, col = guiGridListGetSelectedItem(gFriskItems)
-		
-		if getElementHealth(getLocalPlayer()) < 50 then
-			outputChatBox("You need at least half health to frisk someone.", 255, 0, 0)
-			hidePlayerMenu()
-		elseif (row<0) then
-			outputChatBox("Please select an item first.", 255, 0, 0)
-		else
-			local items = getElementData(player, "items")
-			local itemvalues = getElementData(player, "itemvalues")
+function friskShowItems(items)
+	if wFriskItems then
+		destroyElement( wFriskItems )
+	end
+	
+	addEventHandler("onClientPlayerQuit", source, hidePlayerMenu)
+	local playerName = string.gsub(getPlayerName(source), "_", " ")
+	triggerServerEvent("sendLocalMeAction", getLocalPlayer(), getLocalPlayer(), "frisks " .. playerName .. ".")
+	local width, height = 300, 200
+	
+	wFriskItems = guiCreateWindow(gx, gy, width, height, "Frisk: " .. playerName, false)
+	guiSetText(wFriskItems, "Frisk: " .. playerName)
+	guiWindowSetSizable(wFriskItems, false)
+	
+	gFriskItems = guiCreateGridList(0.05, 0.1, 0.9, 0.7, true, wFriskItems)
+	FriskColName = guiGridListAddColumn(gFriskItems, "Name", 0.9)
+	
+	for k, v in ipairs(items) do
+		local itemName = exports.global:getItemName(v[1])
+		local row = guiGridListAddRow(gFriskItems)
+		guiGridListSetItemText(gFriskItems, row, FriskColName, tostring(itemName), false, false)
+		guiGridListSetSortingEnabled(gFriskItems, false)
+	end
+	
+	-- WEAPONS
+	for i = 0, 12 do
+		if (getPedWeapon(source, i)>0) then
+			local ammo = getPedTotalAmmo(source, i)
 			
-			local itemID = tonumber(gettok(items, row+1, string.byte(',')))
-			local itemValue = tonumber(gettok(itemvalues, row+1, string.byte(',')))
-			local itemName = exports.global:cgetItemName(itemID)
-			
-			if itemID == 3 or itemID == 4 or itemID == 5 or itemID == 48 then -- KEYS or BACKPACK
-				outputChatBox("You cannot take this item from the player.", 255, 0, 0)
-				return
-			end
-			
-			if (itemName) then -- ITEM
-				if not (exports.global:hasSpaceForItem(getLocalPlayer())) then
-					outputChatBox("You do not have space for this item.", 255, 0, 0)
-				else
-					guiGridListRemoveRow(gFriskItems, row)
-					triggerServerEvent("friskTakePlayerItem", getLocalPlayer(), player, itemID, itemValue, itemName)
-				end
-			else -- WEAPON
-				local weaponID = getWeaponIDFromName(guiGridListGetItemText(gFriskItems, row, col))
-				
-				if (getPedWeapon(getLocalPlayer(), getSlotFromWeapon(weaponID))==weaponID) then
-					outputChatBox("You already have one of this item, this item is Unique.", 255, 0, 0)
-				else
-					local weaponAmmo = getPedAmmoInClip(player, getSlotFromWeapon(weaponID)) * 5
-
-					guiGridListRemoveRow(gFriskItems, row)
-					triggerServerEvent("friskTakePlayerWeapon", getLocalPlayer(), player, weaponID, weaponAmmo)
-				end
+			if (ammo>0) then
+				local itemName = getWeaponNameFromID(getPedWeapon(source, i))
+				local row = guiGridListAddRow(gFriskItems)
+				guiGridListSetItemText(gFriskItems, row, FriskColName, tostring(itemName), false, false)
+				guiGridListSetSortingEnabled(gFriskItems, false)
 			end
 		end
 	end
-end]]
+	
+	bFriskClose = guiCreateButton(0.05, 0.85, 0.9, 0.1, "Close", true, wFriskItems)
+	addEventHandler("onClientGUIClick", bFriskClose, hidePlayerMenu, false)
+end
+addEvent("friskShowItems", true)
+addEventHandler("friskShowItems", getRootElement(), friskShowItems)
 --------------------
 --  END FRISKING  --
 --------------------

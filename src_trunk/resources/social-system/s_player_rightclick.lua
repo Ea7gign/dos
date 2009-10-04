@@ -53,23 +53,13 @@ addEvent("addFriend", true)
 addEventHandler("addFriend", getRootElement(), addFriend)
 
 -- FRISKING
---[[
-function friskTakePlayerItem(player, itemID, itemValue, itemName)
-	exports.global:sendLocalMeAction(source, "takes a " .. itemName .. " from " .. getPlayerName(player) .. ".")
-	exports.global:takeItem(player, itemID, itemValue)
-	exports.global:giveItem(source, itemID, itemValue)
+function friskShowItems(player)
+	triggerClientEvent(source, "friskShowItems", player, exports['item-system']:getItems(player))
 end
-addEvent("friskTakePlayerItem", true)
-addEventHandler("friskTakePlayerItem", getRootElement(), friskTakePlayerItem)
+addEvent("friskShowItems", true)
+addEventHandler("friskShowItems", getRootElement(), friskShowItems)
 
-function friskTakePlayerWeapon(player, weaponID, weaponAmmo)
-	exports.global:sendLocalMeAction(source, "takes a " .. getWeaponNameFromID(weaponID) .. " from " .. getPlayerName(player) .. ".")
-	exports.global:takeWeapon(player, weaponID)
-	exports.global:giveWeapon(source, weaponID, weaponAmmo)
-end
-addEvent("friskTakePlayerWeapon", true)
-addEventHandler("friskTakePlayerWeapon", getRootElement(), friskTakePlayerWeapon)]]
-
+-- CUFFS
 function toggleCuffs(cuffed, player)
 	if (cuffed) then
 		toggleControl(player, "fire", false)
