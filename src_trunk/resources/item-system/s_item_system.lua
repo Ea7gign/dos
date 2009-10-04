@@ -80,8 +80,12 @@ function useItem(itemSlot, additional)
 			if not found then
 				outputChatBox("You are too far from the door.", source, 255, 194, 14)
 			else
-				local locked = 1 - tonumber(getElementData(found, "locked"))
+				local locked = tonumber(getElementData(found, "locked"))
 				
+				
+				if not locked then locked = 1 end
+				
+				locked = 1 - locked
 				
 				mysql_free_result( mysql_query(handler, "UPDATE interiors SET locked='" .. locked .. "' WHERE id='" .. itemValue .. "' LIMIT 1") )
 				
