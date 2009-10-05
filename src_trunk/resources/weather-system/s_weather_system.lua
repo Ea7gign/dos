@@ -10,7 +10,7 @@ local delay2 = 1
 -- Function run on resource start to set the weather to a particular type
 function startWeather(resource)
 	-- tempoarily set the weather to cloudy
-	setWeather(13)
+	setWeather(10)
 
 	local choice = math.random(1, 5)
 		 
