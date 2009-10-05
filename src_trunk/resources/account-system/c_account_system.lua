@@ -1045,7 +1045,7 @@ function createMainUI(res, isChangeAccount)
 			addEventHandler("onClientGUIClick", bForgot, retrieveDetails, false)
 			
 			-- LOAD SAVED USER INFO 
-			local xmlRoot = xmlLoadFile("vgrplogin.xml")
+			local xmlRoot = xmlLoadFile( ip == "127.0.0.1" and "vgrploginlocal.xml" or "vgrplogin.xml" )
 			if (xmlRoot) then
 				local usernameNode = xmlFindChild(xmlRoot, "username", 0)
 				local passwordNode = xmlFindChild(xmlRoot, "password", 0)
@@ -1206,7 +1206,7 @@ function validateDetails()
 			local saveInfo = guiCheckBoxGetSelected(chkRemember)
 			local autoLogin = guiCheckBoxGetSelected(chkAutoLogin)
 			
-			local theFile = xmlCreateFile("vgrplogin.xml", "login")
+			local theFile = xmlCreateFile( ip == "127.0.0.1" and "vgrploginlocal.xml" or "vgrplogin.xml", "login")
 			if (theFile) then
 				if (saveInfo) then
 					local node = xmlCreateChild(theFile, "username")
