@@ -1047,7 +1047,7 @@ function payPlayer(thePlayer, commandName, targetPlayerNick, amount)
 							genderm = "her"
 						end
 						
-						exports.global:sendLocalMeAction(thePlayer, "takes some dollar notes from " .. genderm .. "wallet and gives them to " .. getPlayerName(targetPlayer) .. ".")
+						exports.global:sendLocalMeAction(thePlayer, "takes some dollar notes from " .. genderm .. " wallet and gives them to " .. getPlayerName(targetPlayer) .. ".")
 						outputChatBox("You gave $" .. amount .. " to " .. getPlayerName(targetPlayer) .. ".", thePlayer)
 						outputChatBox(getPlayerName(thePlayer) .. " gave you $" .. amount .. ".", targetPlayer)
 						exports.irc:sendMessage("[MONEY TRANSFER] From '" .. getPlayerName(thePlayer) .. "' to " .. getPlayerName(targetPlayer) .. "' Amount: $" .. amount .. ".")
@@ -1430,7 +1430,13 @@ function charityCash(thePlayer, commandName, amount)
 				outputChatBox("You have donated $".. donation .." to charity.", thePlayer, 0, 255, 0)
 				if(donation>=1000)then
 					local name = getPlayerName(thePlayer)
-					outputChatBox("The hungry orphans would like to thank " ..name.. " for his sizable $" ..donation.. " donation to charity.", getRootElement())
+					
+					local gender = getElementData(thePlayer, "gender")
+					local genderm = "his"
+					if (gender == 1) then
+						genderm = "her"
+					end
+					outputChatBox("The hungry orphans would like to thank " ..name.. " for " .. genderm .. " sizable $" ..donation.. " donation to charity.", getRootElement())
 					exports.global:givePlayerAchievement(thePlayer, 37) -- The Good Samaritan
 				end
 			end
