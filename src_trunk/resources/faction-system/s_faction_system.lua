@@ -28,6 +28,18 @@ addEventHandler("onResourceStop", getResourceRootElement(getThisResource()), clo
 
 -- EVENTS
 addEvent("onPlayerJoinFaction", false)
+addEventHandler("onPlayerJoinFaction", getRootElement(),
+	function(theTeam)
+		local id = getElementData(theTeam, "id")
+		if id == 1 then
+			exports.global:givePlayerAchievement(source, 2)
+		elseif id == 2 then
+			exports.global:givePlayerAchievement(source, 5)
+		elseif id == 3 then
+			exports.global:givePlayerAchievement(source, 6)
+		end
+	end
+)
 
 function loadAllFactions(res)
 	-- work out how many minutes it is until the next hour

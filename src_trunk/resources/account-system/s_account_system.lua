@@ -430,6 +430,14 @@ function spawnCharacter(charname)
 		local theTeam = getTeamFromName(tostring(factionName))
 		setPlayerTeam(source, theTeam)
 		setElementData(source, "factionrank", factionrank)
+		
+		if factionID == 1 then
+			exports.global:givePlayerAchievement(source, 2)
+		elseif factionID == 2 then
+			exports.global:givePlayerAchievement(source, 5)
+		elseif factionID == 3 then
+			exports.global:givePlayerAchievement(source, 6)
+		end
 		-- END FACTIONS
 		
 		-- number of friends etc

@@ -13,9 +13,6 @@ exports.pool:allocateElement(arrestColShape)
 setElementInterior(arrestColShape, 6)
 setElementDimension(arrestColShape, 1)
 
--- EVENTS
-addEvent("onPlayerArrest", false)
-
 -- /arrest
 function arrestPlayer(thePlayer, commandName, targetPlayerNick, fine, jailtime, ...)
 	local logged = getElementData(thePlayer, "loggedin")
@@ -110,7 +107,8 @@ function arrestPlayer(thePlayer, commandName, targetPlayerNick, fine, jailtime, 
 							setPedRotation(targetPlayer, cells[cell][4])
 							
 							-- Trigger the event
-							triggerEvent("onPlayerArrest", thePlayer, targetPlayer, fine, jailtime, reason)
+							exports.global:givePlayerAchievement(thePlayer, 7)
+							exports.global:givePlayerAchievement(targetPlayer, 8)
 							
 							-- Show the message to the faction
 							local theTeam = getTeamFromName("Los Santos Police Department")

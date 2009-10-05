@@ -9,7 +9,7 @@ local g_achievements = {
 	{ "Banged Up", "Be arrested.", 5 },
 	{ "My Pad","Purchase a house.", 20 },
 	{ "Your Very Own Sweatshop!", "Purchase a business.", 20 },
-	{ "Just Another Statistic", "Die in a vehicle crash.", 15 },
+	{ "Just Another Statistic", "Die in a vehicle crash.", 15 }, -- 0 people with this achievement, doesn't work either
 	{ "Boom, Headshot", "Headshot another player.", 15 },
 	{ "Photo Shoot", "Get caught on a speed camera", 25 },
 	{ "Trickmaster", "Perform a quick-reload.", 15 },
@@ -17,7 +17,7 @@ local g_achievements = {
 	{ "On the Blower", "Make a call.", 10 },
 	{ "My Ride", "Purchase your own vehicle.", 25 },
 	{ "The Beta Blues", "Took part in a Valhalla MTA Beta Test.", 100 },
-	{ "Road Traffic Accident","Die in a Car Crash.", 25 },
+	{ "Road Traffic Accident","Die in a Car Crash.", 25 }, -- 0 people with this achievement, doesn't work either, duplicate
 	{ "I know Kung-Fu", "Visit the gym and change your fighting style.", 25 },
 	{ "Does this make me look fat?", "Purchase clothes from a clothes store.", 15 },
 	{ "Shopaholic", "Buy 1 item from a shop.", 15 },
