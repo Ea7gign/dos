@@ -493,6 +493,10 @@ function useItem(itemSlot, additional)
 				attachElements(object, source, 0, 1, 0)
 				shields[source] = object
 			end
+		elseif (itemID==77) then -- Card Deck
+			local cards = { "Ace", 2, 3, 4, 5, 6, 7, 8, 9, 10, "Jack", "Queen", "King" }
+			local number = math.random( 1, #cards )
+			exports.global:sendLocalText(source, " *((Cards)) " .. getPlayerName(source):gsub("_", " ") .. " draws a card and gets a" .. ( number == 1 and "n" or "" ) .. " " .. cards[number] ..".", 255, 51, 102)
 		else
 			outputChatBox("Error 800001 - Report on http://bugs.valhallagaming.net", source, 255, 0, 0)
 		end
