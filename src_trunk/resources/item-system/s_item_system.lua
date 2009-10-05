@@ -589,6 +589,7 @@ function destroyItem(itemID, isWeapon)
 			itemName = "Body Armor"
 		else
 			exports.global:takeWeapon(source, tonumber(itemID))
+			triggerClientEvent(source, "saveGuns", source)
 			itemName = getWeaponNameFromID( itemID )
 		end
 	end
@@ -870,6 +871,7 @@ function pickupItem(object, leftammo)
 				destroyElement(object)
 			end
 			exports.global:giveWeapon(source, -itemID, itemValue, true)
+			triggerClientEvent(source, "saveGuns", source)
 		end
 		outputChatBox("You picked up a " .. getItemName( itemID ) .. ".", source, 255, 194, 14)
 		exports.global:sendLocalMeAction(source, "bends over and picks up a " .. getItemName( itemID ) .. ".")
@@ -979,7 +981,7 @@ function showInventoryRemote(thePlayer, commandName, targetPlayer)
 			local targetPlayer = exports.global:findPlayerByPartialNick(targetPlayer)
 			if targetPlayer then
 				triggerEvent("subscribeToInventoryChanges",thePlayer,targetPlayer)
-				triggerClientEvent(thePlayer,"showInventory",thePlayer,targetPlayer)
+				triggerClientEvent(thePlayer,"showInventory",thePlayer,targetPlayer, unpack(exports['saveplayer-system']:getWeapons(targetPlayer)))
 			else
 				outputChatBox("Player not found or multiple were found.", thePlayer, 255, 0, 0)
 			end

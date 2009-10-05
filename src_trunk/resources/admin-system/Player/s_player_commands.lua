@@ -304,7 +304,7 @@ function resKick(thePlayer, commandName, amount)
 	end
 end
 addCommandHandler("reskick", resKick, false, false)
-				
+
 -- /DISARM
 function disarmPlayer(thePlayer, commandName, targetPlayer)
 	if (exports.global:isPlayerAdmin(thePlayer)) then
@@ -323,6 +323,7 @@ function disarmPlayer(thePlayer, commandName, targetPlayer)
 					outputChatBox("Player is not logged in.", thePlayer, 255, 0, 0)
 				elseif (logged==1) then
 					exports.global:takeAllWeapons(targetPlayer)
+					triggerClientEvent(targetPlayer, "saveGuns", targetPlayer)
 					outputChatBox(targetPlayerName .. " is now disarmed.", thePlayer, 255, 194, 14)
 				end
 			end
@@ -561,6 +562,7 @@ function givePlayerGun(thePlayer, commandName, targetPlayer, ...)
 					if not (give) then
 						outputChatBox("Invalid Weapon ID.", thePlayer, 255, 0, 0)
 					else
+						triggerClientEvent(targetPlayer, "saveGuns", targetPlayer)
 						outputChatBox("Player " .. targetPlayerName .. " now has a " .. getWeaponNameFromID(weapon) .. " with " .. ammo .. " Ammo.", thePlayer, 0, 255, 0)
 						if (hiddenAdmin==0) then
 							local adminTitle = exports.global:getPlayerAdminTitle(thePlayer)

@@ -314,6 +314,7 @@ function givePlayerBoughtItem(itemID, itemValue, theCost, isWeapon, name, supply
 						if (itemID~=30) and (itemID~=31) and (itemID~=32) and (itemID~=33) then
 							outputChatBox("You bought a " .. name .. ".", source, 255, 194, 14)
 							outputChatBox("You have $"..exports.global:getMoney(source).." left in your wallet.", source, 255, 194, 14)
+							exports.global:givePlayerAchievement(source, 22)
 						else
 							outputChatBox("You stole some " .. name .. ".", source, 255, 194, 14)
 						end
@@ -365,6 +366,7 @@ function givePlayerBoughtItem(itemID, itemValue, theCost, isWeapon, name, supply
 							outputChatBox("You bought a " .. name .. ".", source, 255, 194, 14)
 							outputChatBox("You have $".. exports.global:getMoney(source).." left in your wallet.", source, 255, 194, 14)
 							exports.global:giveWeapon(source, tonumber(itemID), tonumber(itemValue), true)
+							triggerClientEvent(source, "saveGuns", source)
 						end
 					else
 						outputChatBox("You do not have a weapons license - You can buy this license at City Hall.", source, 255, 194, 14)
@@ -375,6 +377,7 @@ function givePlayerBoughtItem(itemID, itemValue, theCost, isWeapon, name, supply
 						outputChatBox("You have $"..exports.global:getMoney(source).." left in your wallet.", source, 255, 194, 14)
 						exports.global:giveWeapon(source, tonumber(itemID), tonumber(itemValue), true)
 						exports.global:givePlayerAchievement(source, 22)
+						triggerClientEvent(source, "saveGuns", source)
 					end
 				end
 			end

@@ -14,8 +14,8 @@ setElementInterior(fbiColShape, 10)
 
 function saveWeaponsOnDuty( thePlayer )
 	triggerClientEvent(thePlayer, "saveGunsDuty", thePlayer)
-	triggerClientEvent(thePlayer, "saveGuns", thePlayer)
 	exports.global:takeAllWeapons(thePlayer)
+	triggerClientEvent(thePlayer, "saveGuns", thePlayer)
 end
 
 function restoreWeapons( thePlayer )

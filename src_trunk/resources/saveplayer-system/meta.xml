@@ -3,4 +3,6 @@
 	
 	<script src="s_saveplayer_system.lua" type="server" />
 	<script src="c_saveplayer_system.lua" type="client" />
+	
+	<export function="getWeapons" type="server"/>
 </meta>

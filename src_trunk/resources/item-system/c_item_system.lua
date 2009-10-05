@@ -249,7 +249,7 @@ function toggleInventory()
 end
 bindKey("i", "down", toggleInventory)
 
-function showInventory(player)
+function showInventory(player, syncw, synca)
 	if not (wChemistrySet) then
 		showinvPlayer = player
 		if wItems then
@@ -318,15 +318,36 @@ function showInventory(player)
 		colWSlot = guiGridListAddColumn(gWeapons, "Slot", 0.1)
 		colWName = guiGridListAddColumn(gWeapons, "Name", 0.625)
 		colWValue = guiGridListAddColumn(gWeapons, "Ammo", 0.225)
-		for i = 0, 12 do
-			if getPedWeapon(player, i) and getWeaponNameFromID(getPedWeapon(player, i)) ~= "Melee" and getPedTotalAmmo(player, i) > 0 then
-				local row = guiGridListAddRow(gWeapons)
-				local weapon = getWeaponNameFromID(getPedWeapon(player, i))
-				local ammo = getPedTotalAmmo(player, i)
-				guiGridListSetItemText(gWeapons, row, colWSlot, tostring(i), false, true)
-				guiGridListSetItemText(gWeapons, row, colWName, tostring(weapon), false, false)
-				guiGridListSetItemText(gWeapons, row, colWValue, tostring(ammo), false, false)
+		
+		if syncw and synca and #syncw > 0 and #synca > 0 then
+			for i=0, 12 do
+				local tokenweapon = tonumber(gettok(syncw, i+1, 59))
+				local tokenammo = tonumber(gettok(synca, i+1, 59))
+				
+				if (not tokenweapon) or (not tokenammo) then
+					break
+				else
+					local row = guiGridListAddRow(gWeapons)
+					local weapon = getWeaponNameFromID(tokenweapon)
+					guiGridListSetItemText(gWeapons, row, colWSlot, tostring(getSlotFromWeapon(tokenweapon)), false, true)
+					guiGridListSetItemText(gWeapons, row, colWName, tostring(weapon), false, false)
+					guiGridListSetItemText(gWeapons, row, colWValue, tostring(tokenammo), false, false)
+				end
 			end
+		elseif player == getLocalPlayer() then
+			for i = 0, 12 do
+				if getPedWeapon(player, i) and getWeaponNameFromID(getPedWeapon(player, i)) ~= "Melee" and getPedTotalAmmo(player, i) > 0 then
+					local row = guiGridListAddRow(gWeapons)
+					local weapon = getWeaponNameFromID(getPedWeapon(player, i))
+					local ammo = getPedTotalAmmo(player, i)
+					guiGridListSetItemText(gWeapons, row, colWSlot, tostring(i), false, true)
+					guiGridListSetItemText(gWeapons, row, colWName, tostring(weapon), false, false)
+					guiGridListSetItemText(gWeapons, row, colWValue, tostring(ammo), false, false)
+				end
+			end
+		else
+			local row = guiGridListAddRow(gWeapons)
+			guiGridListSetItemText(gWeapons, row, colWName, "Error", false, false)
 		end
 		guiSetVisible(colWSlot, false)
 		
