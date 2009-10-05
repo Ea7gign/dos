@@ -35,6 +35,9 @@ function enableRoadblockGUI(enable)
 		bClose = guiCreateButton(0.5, 0.85, 0.45, 0.1, "Close", true, rbWindow)
 		addEventHandler("onClientGUIClick", bClose, cancelRoadblockGUI, false)
 	
+		outputChatBox("Select a roadblock in the GUI, place it on the spot you want.", 0, 255, 0)
+		outputChatBox("Press your left alt to save this object.", 0, 255, 0)
+	
 		showCursor(true)
 	else
 		cleanupRoadblockGUI()
@@ -77,17 +80,15 @@ function selectRoadblockGUI(button, state)
 end
 
 function spawnTempObject(objectid, objectrot)
+	-- create temporary object
 	tempObjectID = objectid
 	tempObjectRot = objectrot
 	tempObject = createObject( objectid, 0, 0, 0, 0, 0, 0)
 	setElementAlpha(tempObject, 150)
 	setElementInterior ( tempObject, getElementInterior ( thePlayer ) )
 	setElementDimension ( tempObject, getElementDimension ( thePlayer ) )
-	
-	
-	--bindKey ( "lctrl", "down", updateRoadblockObject)
+
 	bindKey ( "lalt", "down", convertTempToRealObject)
-	
 	updateRoadblockObject()
 end
 

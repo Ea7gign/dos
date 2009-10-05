@@ -1,7 +1,6 @@
 local roadblocksarr = { }
 local maxroadblocks = 50
 
--- client callback for spawning
 function roadblockCreateWorldObject(objectid, tempObjectPosX, tempObjectPosY, tempObjectPosZ, tempObjectPosRot)
 	if(isRoadblockEditAllowed(source)) then
 		local slot = 0
@@ -25,7 +24,6 @@ end
 addEvent( "roadblockCreateWorldObject", true )
 addEventHandler( "roadblockCreateWorldObject", getRootElement(), roadblockCreateWorldObject )
 
--- /nearbyrb
 function getNearbyRoadblocks(thePlayer, commandName)
 	if(isRoadblockEditAllowed(thePlayer)) then
 		local posX, posY, posZ = getElementPosition(thePlayer)
@@ -50,7 +48,6 @@ function getNearbyRoadblocks(thePlayer, commandName)
 end
 addCommandHandler("nearbyrb", getNearbyRoadblocks, false, false)
 
--- /delrb / /delroadblock
 function removeRoadblock(thePlayer, commandName, id)
 	if(isRoadblockEditAllowed(thePlayer)) then
 		if not (id) then
@@ -71,7 +68,6 @@ end
 addCommandHandler("delrb", removeRoadblock, false, false)
 addCommandHandler("delroadblock", removeRoadblock, false, false)
 
--- /delallrbs / /dellallroadblocks
 function removeAllRoadblocks(thePlayer, commandName)
 	if(isRoadblockEditAllowed(thePlayer)) then
 		for i = 1, maxroadblocks do
@@ -87,7 +83,6 @@ end
 addCommandHandler("delallrbs", removeAllRoadblocks, false, false)
 addCommandHandler("delallroadblocks", removeAllRoadblocks, false, false)
 
--- /rbs (roadblock start)
 function onRoadblockStart(thePlayer, commandName)
 	if(isRoadblockEditAllowed(thePlayer)) then
 		triggerClientEvent(thePlayer, "enableRoadblockGUI", getRootElement(), true)
