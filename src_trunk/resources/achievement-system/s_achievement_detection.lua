@@ -24,3 +24,11 @@ function giveAchievementOnMTAPickup(thePlayer)
 	givePlayerAchievement(thePlayer, 32)
 end
 addEventHandler("onPickupHit", mtaPickup, giveAchievementOnMTAPickup)
+
+-- /////////////// Client-side achievement requests ///////////////
+addEvent("givePlayerAchievement", true)
+addEventHandler("givePlayerAchievement", getRootElement(),
+	function( id )
+		givePlayerAchievement(source, id)
+	end
+)

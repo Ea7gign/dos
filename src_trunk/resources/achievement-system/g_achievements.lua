@@ -40,7 +40,8 @@ local g_achievements = {
 	{ "Party Time", "Join the 2.1 Relaunch Party.", 100 },
 	{ "Where the Past Lies", "Which bones are those in the grave?", 25 },
 	{ "Sea World Los Santos", "Survived the 1st Flood of Los Santos.", 100 },
-	{ "All Rights Reserved", "You broke the SA-MP License Agreement. Well Done.", 25 }
+	{ "All Rights Reserved", "You broke the SA-MP License Agreement. Well Done.", 25 },
+	{ "Just Another Statistic", "Die in a vehicle crash.", 15 }
 }
 
 function getAchievementInfo(id)

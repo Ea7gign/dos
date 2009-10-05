@@ -32,8 +32,12 @@ function updateDamage()
 			end
 		end
 	
-		c_lasthealth = getElementHealth(c_player)
-		setElementHealth(c_player , c_lasthealth - 40*(c_lastspeed))		
+		c_lasthealth = getElementHealth(c_player) - 40*(c_lastspeed)
+		if c_lasthealth <= 0 then
+			c_lasthealth = 0
+			triggerServerEvent("givePlayerAchievement", c_player, 43 )
+		end
+		setElementHealth(c_player , c_lasthealth)
 	end	
 	c_lastspeed = c_speed
 
