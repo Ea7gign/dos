@@ -81,6 +81,9 @@ function spawnTempObject(objectid, objectrot)
 	tempObjectRot = objectrot
 	tempObject = createObject( objectid, 0, 0, 0, 0, 0, 0)
 	setElementAlpha(tempObject, 150)
+	setElementInterior ( tempObject, getElementInterior ( thePlayer ) )
+	setElementDimension ( tempObject, getElementDimension ( thePlayer ) )
+	
 	
 	--bindKey ( "lctrl", "down", updateRoadblockObject)
 	bindKey ( "lalt", "down", convertTempToRealObject)
