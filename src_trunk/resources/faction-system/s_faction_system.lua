@@ -888,6 +888,7 @@ function payWage(player, pay, faction, tax)
 				
 				call( getResourceFromName( "interior-system" ), "publicSellProperty", player, id, false, true )
 			else
+				exports.global:givePlayerAchievement(player, 11)
 				setElementData(player, "bankmoney", bankmoney - rent)
 			end
 		end
@@ -937,6 +938,10 @@ function payWage(player, pay, faction, tax)
 	if vtax > 0 then
 		outputChatBox("    Vehicle Tax: " .. vtax .. "$", player, 255, 194, 14)
 		setElementData(player, "bankmoney", math.max(0, getElementData(player, "bankmoney") - vtax))
+		
+		if vtax > pay+profit+interest+donatormoney then
+			exports.global:givePlayerAchievement(player, 19)
+		end
 	end
 	
 	outputChatBox("    Bank Interest (" .. interestrate*100 .. "%): " .. interest .. "$", player, 255, 194, 14)
