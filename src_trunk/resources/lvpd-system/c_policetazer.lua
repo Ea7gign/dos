@@ -51,7 +51,7 @@ end
 addEventHandler("onClientVehicleEnter", getRootElement(), playerEntersVehicle)
 
 function playerExitsVehicle(player)
-	if (weapons[player]) and getPedTotalAmmo(player, 2) > 0 then
+	if (weapons[player]) and (tonumber(getPedTotalAmmo(player, 2)) or 0) > 0 then
 		local weapon = weapons[player][2]
 		
 		if (weapon) then
