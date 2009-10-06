@@ -619,7 +619,7 @@ function walkAnimation(thePlayer, cmd, arg)
 	
 	if (logged==1) then
 		if not walk[arg] then
-			walk = 2
+			arg = 2
 		end
 		
 		exports.global:applyAnimation( thePlayer, "PED", walk[arg], -1, true, true, false)
