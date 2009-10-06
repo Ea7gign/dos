@@ -92,7 +92,7 @@ function loadAllFactions(res)
 				local factionID = tonumber(mysql_result(result, 1, 1))
 
 				setElementData(thePlayer, "factionMenu", 0)
-				setElementData(thePlayer, "faction", factionID, false)
+				setElementData(thePlayer, "faction", factionID)
 				
 				mysql_free_result(result)
 				if (factionID) then
@@ -629,7 +629,7 @@ function adminSetPlayerFaction(thePlayer, commandName, partialNick, factionID)
 						mysql_free_result(query)
 						local theTeam = getTeamFromName(tostring(factionName))
 						setPlayerTeam(targetPlayer, theTeam)
-						setElementData(targetPlayer, "faction", tonumber(factionID), false)
+						setElementData(targetPlayer, "faction", tonumber(factionID))
 						setElementData(targetPlayer, "factionrank", 1)
 						setElementData(targetPlayer, "dutyskin", -1, false)
 						
@@ -645,7 +645,7 @@ function adminSetPlayerFaction(thePlayer, commandName, partialNick, factionID)
 				elseif (query) and (factionID==-1) then
 					local theTeam = getTeamFromName("Citizen")
 					setPlayerTeam(targetPlayer, theTeam)
-					setElementData(targetPlayer, "faction", -1, false)
+					setElementData(targetPlayer, "faction", -1)
 					
 					outputChatBox("Player " .. targetPlayerNick .. " was set to no faction.", thePlayer, 0, 255, 0)
 					outputChatBox("You were removed from your faction.", targetPlayer, 255, 0, 0)
