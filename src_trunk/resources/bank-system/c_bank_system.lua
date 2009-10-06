@@ -326,6 +326,8 @@ function getTransactionReason(type, reason, from)
 		end
 	elseif type == 7 then
 		return "Payday (Biz+Interest+Donator)"
+	elseif type == 8 then
+		return "Budget"
 	else
 		return "Transfer: " .. tostring(reason or "")
 	end

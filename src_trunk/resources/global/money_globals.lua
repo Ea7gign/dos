@@ -28,32 +28,50 @@ addEventHandler("onResourceStop", getResourceRootElement(getThisResource()), clo
 
 --TAX
 tax = 15 -- percent
-
-function randomizeTax()
-	tax = math.random(5, 30)
-end
-setTimer(randomizeTax, 3600000, 0)
-randomizeTax()
-
 function getTaxAmount()
-	return (tax/100)
+	return tax / 100
+end
+function setTaxAmount(new)
+	tax = math.max( 0, math.min( 30, math.ceil( new ) ) )
+	mysql_free_result( mysql_query( handler, "UPDATE settings SET value = " .. tax .. " WHERE name = 'tax'" ) )
 end
 
 --INCOME TAX
-tax = 10 -- percent
-
-
-function randomizeIncomeTax()
-	tax = math.random(1, 25)
-end
-setTimer(randomizeIncomeTax, 3600000, 0)
-randomizeIncomeTax()
-
+incometax = 10 -- percent
 function getIncomeTaxAmount()
-	return (tax/100)
+	return incometax / 100
+end
+function setIncomeTaxAmount(new)
+	incometax = math.max( 0, math.min( 25, math.ceil( new ) ) )
+	mysql_free_result( mysql_query( handler, "UPDATE settings SET value = " .. incometax .. " WHERE name = 'incometax'" ) )
 end
 
+-- load income and normal tax on startup
+addEventHandler( "onResourceStart", getResourceRootElement( ),
+	function( )
+		local result = mysql_query( handler, "SELECT value FROM settings WHERE name = 'tax'" )
+		if result then
+			if mysql_num_rows( result ) == 0 then
+				mysql_free_result( mysql_query( handler, "INSERT INTO settings (name, value) VALUES ('tax', " .. tax .. ")" ) )
+			else
+				tax = tonumber( mysql_result( result, 1, 1 ) ) or 15
+			end
+			mysql_free_result( result )
+		end
+		
+		local result = mysql_query( handler, "SELECT value FROM settings WHERE name = 'incometax'" )
+		if result then
+			if mysql_num_rows( result ) == 0 then
+				mysql_free_result( mysql_query( handler, "INSERT INTO settings (name, value) VALUES ('incometax', " .. incometax .. ")" ) )
+			else
+				incometax = tonumber( mysql_result( result, 1, 1 ) ) or 10
+			end
+			mysql_free_result( result )
+		end
+	end
+)
 
+-- ////////////////////////////////////
 
 function giveMoney(thePlayer, amount)
 	amount = tonumber( amount ) or 0

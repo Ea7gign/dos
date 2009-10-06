@@ -184,6 +184,7 @@ addEventHandler("transferMoneyToPersonal", getRootElement(), transferMoneyToPers
 	5: Deposit Business
 	6: Wage/State Benefits
 	7: everything in payday except Wage/State Benefits
+	8: faction budget
 ]]
 
 function findTeamByID(id)	

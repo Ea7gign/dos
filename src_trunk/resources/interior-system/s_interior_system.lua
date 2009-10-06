@@ -34,12 +34,15 @@ addEventHandler("onResourceStop", getResourceRootElement(getThisResource()), clo
 
 function createInterior(thePlayer, commandName, interiorId, inttype, cost, ...)
 	if (exports.global:isPlayerLeadAdmin(thePlayer)) then
+		local cost = tonumber(cost)
 		if not (interiorId) or not (inttype) or not (cost) or not (...) or ((tonumber(inttype)<0) or (tonumber(inttype)>3)) then
 			outputChatBox("SYNTAX: /" .. commandName .. " [Interior ID] [TYPE] [Cost] [Name]", thePlayer, 255, 194, 14)
 			outputChatBox("TYPE 0: House", thePlayer, 255, 194, 14)
 			outputChatBox("TYPE 1: Business", thePlayer, 255, 194, 14)
 			outputChatBox("TYPE 2: Government (Unbuyable)", thePlayer, 255, 194, 14)
 			outputChatBox("TYPE 3: Rentable", thePlayer, 255, 194, 14)
+		elseif not exports.global:takeMoney(getTeamFromName("Government of Los Santos"), cost) then
+			outputChatBox("The government can't afford this property.", thePlayer, 255, 0, 0)
 		else
 			name = table.concat({...}, " ")
 			
@@ -187,6 +190,7 @@ function publicSellProperty(thePlayer, dbid, showmessages, givemoney)
 				local money = math.ceil(getElementData(entrance, "cost") * 2/3)
 				if givemoney then
 					exports.global:giveMoney(thePlayer, money)
+					exports.global:takeMoney(getTeamFromName("Government of Los Santos"), money, true)
 				end
 				
 				if showmessages then
@@ -664,10 +668,12 @@ function buyInterior(player, pickup, cost, isHouse, isRentable)
 	if exports.global:takeMoney(player, cost) then
 		if (isHouse) then
 			outputChatBox("Congratulations! You have just bought this house for $" .. cost .. ".", player, 255, 194, 14)
+			exports.global:giveMoney( getTeamFromName("Government of Los Santos"), cost )
 		elseif (isRentable) then
 			outputChatBox("Congratulations! You are now renting this property for $" .. cost .. ".", player, 255, 194, 14)
 		else
 			outputChatBox("Congratulations! You have just bought this business for $" .. cost .. ".", player, 255, 194, 14)
+			exports.global:giveMoney( getTeamFromName("Government of Los Santos"), cost )
 		end
 		
 		local charid = getElementData(player, "dbid")

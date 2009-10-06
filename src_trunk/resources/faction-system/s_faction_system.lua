@@ -26,6 +26,18 @@ addEventHandler("onResourceStop", getResourceRootElement(getThisResource()), clo
 -- //			MYSQL END			 //
 -- ////////////////////////////////////
 
+local unemployedPay = 150
+local result = mysql_query( handler, "SELECT value FROM settings WHERE name = 'welfare'" )
+if result then
+	if mysql_num_rows( result ) == 0 then
+		mysql_free_result( mysql_query( handler, "INSERT INTO settings (name, value) VALUES ('welfare', " .. unemployedPay .. ")" ) )
+	else
+		unemployedPay = tonumber( mysql_result( result, 1, 1 ) ) or 150
+	end
+	mysql_free_result( result )
+end
+result = nil
+
 -- EVENTS
 addEvent("onPlayerJoinFaction", false)
 addEventHandler("onPlayerJoinFaction", getRootElement(),
@@ -792,7 +804,97 @@ function setFactionMoney(thePlayer, commandName, factionID, amount)
 end
 addCommandHandler("setfactionmoney", setFactionMoney, false, false)
 
+function setFactionBudget(thePlayer, commandName, factionID, amount)
+	if getPlayerTeam(thePlayer) == getTeamFromName("Government of Los Santos") and getElementData(thePlayer, "factionrank") >= 10 then
+		local amount = tonumber( amount )
+		if not factionID or not amount or amount < 0 then
+			outputChatBox("SYNTAX: /" .. commandName .. " [Faction ID] [Money]", thePlayer, 255, 194, 14)
+		else
+			factionID = tonumber(factionID)
+			if factionID then
+				theTeam = nil
+				amount = tonumber(amount)
+				for key, value in ipairs(exports.pool:getPoolElementsByType("team")) do
+					local id = getElementData(value, "id")
+					
+					if id == factionID then
+						theTeam = value
+					end
+				end
+				
+				if (theTeam) then
+					if getElementData(theTeam, "type") >= 2 and getElementData(theTeam, "type") <= 6 then
+						if exports.global:takeMoney(getPlayerTeam(thePlayer), amount) then
+							exports.global:giveMoney(theTeam, amount)
+							outputChatBox("You added $" .. amount .. " to the budget of '" .. getTeamName(theTeam) .. "' (Total: " .. exports.global:getMoney(theTeam) .. ").", thePlayer, 255, 194, 14)
+							mysql_free_result( mysql_query( handler, "INSERT INTO wiretransfers (`from`, `to`, `amount`, `reason`, `type`) VALUES (" .. -getElementData(getPlayerTeam(thePlayer), "id") .. ", " .. -getElementData(theTeam, "id") .. ", " .. amount .. ", '', 8)" ) )
+						else
+							outputChatBox("You can't afford this.", thePlayer, 255, 194, 14)
+						end
+					else
+						outputChatBox("You can't set a budget for that faction.", thePlayer, 255, 194, 14)
+					end
+				else
+					outputChatBox("Invalid faction ID.", thePlayer, 255, 194, 14)
+				end
+			else
+				outputChatBox("Invalid faction ID.", thePlayer, 255, 194, 14)
+			end
+		end
+	end
+end
+addCommandHandler("setbudget", setFactionBudget, false, false)
+
+function setTax(thePlayer, commandName, amount)
+	if getPlayerTeam(thePlayer) == getTeamFromName("Government of Los Santos") and getElementData(thePlayer, "factionrank") >= 10 then
+		local amount = tonumber( amount )
+		if not amount or amount < 0 or amount > 30 then
+			outputChatBox("SYNTAX: /" .. commandName .. " [0-30%]", thePlayer, 255, 194, 14)
+		else
+			exports.global:setTaxAmount(amount)
+			outputChatBox("New Tax is " .. amount .. "%", thePlayer, 0, 255, 0)
+		end
+	end
+end
+addCommandHandler("settax", setTax, false, false)
+
+function setIncomeTax(thePlayer, commandName, amount)
+	if getPlayerTeam(thePlayer) == getTeamFromName("Government of Los Santos") and getElementData(thePlayer, "factionrank") >= 10 then
+		local amount = tonumber( amount )
+		if not amount or amount < 0 or amount > 25 then
+			outputChatBox("SYNTAX: /" .. commandName .. " [0-25%]", thePlayer, 255, 194, 14)
+		else
+			exports.global:setIncomeTaxAmount(amount)
+			outputChatBox("New Income Tax is " .. amount .. "%", thePlayer, 0, 255, 0)
+		end
+	end
+end
+addCommandHandler("setincometax", setIncomeTax, false, false)
+
+function setWelfare(thePlayer, commandName, amount)
+	if getPlayerTeam(thePlayer) == getTeamFromName("Government of Los Santos") and getElementData(thePlayer, "factionrank") >= 10 then
+		local amount = tonumber( amount )
+		if not amount or amount <= 0 then
+			outputChatBox("SYNTAX: /" .. commandName .. " [Money]", thePlayer, 255, 194, 14)
+		else
+			unemployedPay = amount
+			outputChatBox("New Welfare is $" .. unemployedPay .. "/payday", thePlayer, 0, 255, 0)
+			mysql_free_result( mysql_query( handler, "UPDATE settings SET value = " .. unemployedPay .. " WHERE name = 'welfare'" ) )
+		end
+	end
+end
+addCommandHandler("setwelfare", setWelfare, false, false)
+
+function getTax(thePlayer)
+	outputChatBox( "Welfare: $" .. unemployedPay, thePlayer, 255, 194, 14 )
+	outputChatBox( "Tax: " .. ( exports.global:getTaxAmount(thePlayer) * 100 ) .. "%", thePlayer, 255, 194, 14 )
+	outputChatBox( "Income Tax: " .. ( exports.global:getIncomeTaxAmount(thePlayer) * 100 ) .. "%", thePlayer, 255, 194, 14 )
+end
+addCommandHandler("gettax", getTax, false, false)
+
 -- /////////////// WAGES
+local governmentIncome = 0
+
 local taxVehicles = {}
 local vehicleCount = {}
 
@@ -833,6 +935,7 @@ local vehicleTaxes = {
 	low, low
 }
 function payWage(player, pay, faction, tax)
+	local governmentIncome = 0
 	local bankmoney = getElementData(player, "bankmoney")
 	local interestrate = 0.004
 	
@@ -890,6 +993,7 @@ function payWage(player, pay, faction, tax)
 			else
 				exports.global:givePlayerAchievement(player, 11)
 				setElementData(player, "bankmoney", bankmoney - rent)
+				governmentIncome = governmentIncome + rent
 			end
 		end
 	end
@@ -900,7 +1004,7 @@ function payWage(player, pay, faction, tax)
 	if not faction then
 		if pay >= 0 then
 			outputChatBox("    State Benefits: " .. pay .. "$", player, 255, 194, 14)
-			
+			governmentIncome = governmentIncome - pay
 			mysql_free_result( mysql_query( handler, "INSERT INTO wiretransfers (`from`, `to`, `amount`, `reason`, `type`) VALUES (0, " .. getElementData(player, "dbid") .. ", " .. pay .. ", '', 6)" ) )
 		else
 			outputChatBox("    The government could not afford to pay you your state benefits.", player, 255, 0, 0)
@@ -932,6 +1036,7 @@ function payWage(player, pay, faction, tax)
 		local incomeTax = exports.global:getIncomeTaxAmount()
 		outputChatBox("    Income Tax of " .. (incomeTax*100) .. "%: " .. tax .. "$", player, 255, 194, 14)
 		pay = pay - tax
+		governmentIncome = governmentIncome + tax
 	end
 	
 	local vtax = taxVehicles[ getElementData(player, "dbid") ] or 0
@@ -942,6 +1047,8 @@ function payWage(player, pay, faction, tax)
 		if vtax > pay+profit+interest+donatormoney then
 			exports.global:givePlayerAchievement(player, 19)
 		end
+		
+		governmentIncome = governmentIncome + vtax
 	end
 	
 	outputChatBox("    Bank Interest (" .. interestrate*100 .. "%): " .. interest .. "$", player, 255, 194, 14)
@@ -961,6 +1068,7 @@ function payWage(player, pay, faction, tax)
 	
 	-- Insert in Transactions
 	mysql_free_result( mysql_query( handler, "INSERT INTO wiretransfers (`from`, `to`, `amount`, `reason`, `type`) VALUES (0, " .. getElementData(player, "dbid") .. ", " .. profit+interest+donatormoney-rent .. ", '', 7)" ) )
+	return governmentIncome
 end
 
 function payAllWages(timer)
@@ -988,9 +1096,7 @@ function payAllWages(timer)
 	
 	local players = exports.pool:getPoolElementsByType("player")
 	
-	local gresult = mysql_query(handler, "SELECT bankbalance FROM factions WHERE id='3'")
-	local govAmount = tonumber(mysql_result(gresult, 1, 1))
-	mysql_free_result(gresult)
+	local govAmount = exports.global:getMoney(getTeamFromName("Government of Los Santos"))
 	
 	for key, value in ipairs(players) do
 		local logged = getElementData(value, "loggedin")
@@ -1021,26 +1127,20 @@ function payAllWages(timer)
 						taxes = math.ceil( incomeTax * rankWage )
 					end
 					
-					govAmount = govAmount + taxes
-					
-					payWage( value, rankWage, true, taxes )
+					govAmount = govAmount + payWage( value, rankWage, true, taxes )
 				else
-					local unemployedPay = 150
 					if unemployedPay >= govAmount then
 						unemployedPay = -1
 					end
 					
-					payWage( value, unemployedPay, false, 0 )
-					govAmount = govAmount - unemployedPay
+					govAmount = govAmount + payWage( value, unemployedPay, false, 0 )
 				end
 			else
-				local unemployedPay = 150
 				if unemployedPay >= govAmount then
 					unemployedPay = -1
 				end
 				
-				payWage( value, unemployedPay, false, 0 )
-				govAmount = govAmount - unemployedPay
+				govAmount = govAmount + payWage( value, unemployedPay, false, 0 )
 			end
 			
 			setElementData(value, "timeinserver", timeinserver-60, false)
@@ -1054,8 +1154,7 @@ function payAllWages(timer)
 	end
 	
 	-- Store the government money
-	local update = mysql_query(handler, "UPDATE factions SET bankbalance='" .. govAmount .. "' WHERE id='3'")
-	mysql_free_result(update)
+	exports.global:setMoney(getTeamFromName("Government of Los Santos"), govAmount)
 	exports.irc:sendMessage("[SCRIPT] All wages & state benefits paid.")
 end
 
