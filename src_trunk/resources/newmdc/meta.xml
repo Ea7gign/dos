@@ -1,0 +1,18 @@
+<meta>
+	<script src="s_login.lua" type="server"/>
+	<script src="c_login.lua" type="client"/>
+	
+	<script src="s_motd.lua" type="server"/>
+	<script src="c_motd.lua" type="client"/>
+	
+	<script src="s_vehicle_details.lua" type="server"/>
+	<script src="c_vehicle_details.lua" type="client"/>
+	
+	<script src="s_vehicle_search.lua" type="server"/>
+	<script src="c_vehicle_search.lua" type="client"/>
+	
+	<script src="c_main.lua" type="client"/>
+	
+	<file src="lspdsmall.png"/>
+	<file src="pixel.png"/>
+</meta>

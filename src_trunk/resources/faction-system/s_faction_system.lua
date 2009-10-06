@@ -61,7 +61,7 @@ function loadAllFactions(res)
 			exports.pool:allocateElement(theTeam)
 			setElementData(theTeam, "type", factionType)
 			setElementData(theTeam, "money", money)
-			setElementData(theTeam, "id", id, false)
+			setElementData(theTeam, "id", id)
 			counter = counter + 1
 		end
 		mysql_free_result(result)
@@ -541,7 +541,7 @@ function createFaction(thePlayer, commandName, factionType, ...)
 					mysql_free_result(query)
 					outputChatBox("Faction " .. factionName .. " created with ID #" .. id .. ".", thePlayer, 0, 255, 0)
 					setElementData(theTeam, "type", tonumber(factionType))
-					setElementData(theTeam, "id", tonumber(id), false)
+					setElementData(theTeam, "id", tonumber(id))
 					setElementData(theTeam, "money", 0)
 				else
 					outputChatBox("Error creating faction.", thePlayer, 255, 0, 0)
