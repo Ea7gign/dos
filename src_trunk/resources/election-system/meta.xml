@@ -1,0 +1,9 @@
+<meta>
+	<script src="s_poll.lua" />
+	<script src="c_poll.lua" type="client" />
+	
+	<script src="s_results.lua" />
+	<script src="c_results.lua" type="client" />
+	
+	<script src="s_admin.lua" />
+</meta>
