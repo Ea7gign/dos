@@ -30,7 +30,7 @@ addEventHandler( "onClientElementDataChange", getRootElement( ),
 						end
 					end
 				end
-			else
+			elseif getElementData( getLocalPlayer( ), "faction" ) == 1 then
 				if newfaction == 1 then
 					if not blips[ source ] then
 						blips[ source ] = createBlipAttachedTo( source, 0, 2, 0, 0, 255 )
