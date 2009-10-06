@@ -15,7 +15,7 @@ addEventHandler( "onClientResourceStart", getResourceRootElement( ),
 addEventHandler( "onClientElementDataChange", getRootElement( ),
 	function( name )
 		if name == "faction" and getElementType( source ) == "player" then
-			local newfaction = getElementData( source, newfaction )
+			local newfaction = getElementData( source, "faction" )
 			
 			if source == getLocalPlayer( ) then
 				if newfaction ~= 1 then
