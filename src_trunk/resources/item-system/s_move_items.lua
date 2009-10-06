@@ -18,12 +18,12 @@ addEventHandler( "closeFreakinInventory", getRootElement(), closeInventory )
 --
 
 local function moveToElement( element, slot, ammo )
-	if not hasSpaceForItem( element ) then
-		outputChatBox( "The Inventory is full.", source, 255, 0, 0 )
-	else
-		if not ammo then
-			local item = getItems( source )[ slot ]
-			if item then
+	if not ammo then
+		local item = getItems( source )[ slot ]
+		if item then
+			if not hasSpaceForItem( element, item[1] ) then
+				outputChatBox( "The Inventory is full.", source, 255, 0, 0 )
+			else
 				if getElementType( element ) == "object" then -- safe
 					if ( item[1] == 4 or item[1] == 5 ) and getElementDimension( element ) == item[2] then -- keys to that safe as well
 						if countItems( source, item[1], item[2] ) < 2 then
@@ -32,25 +32,28 @@ local function moveToElement( element, slot, ammo )
 						end
 					end
 				end
-				
-				moveItem( source, element, slot )
-			end
-		else
-			local name = "Safe"
-			if getElementType( element ) == "vehicle" then
-				name = "Vehicle"
-			end
 			
-			if slot == 16 or slot == 18 or ( slot >= 35 and slot <= 40 ) then
-				outputChatBox("You can't put those weapons into a " .. name .. ".", source, 255, 0, 0)
-			elseif tonumber(getElementData(source, "duty")) > 0 then
-				outputChatBox("You can't put your weapons in a " .. name .. " while being on duty.", source, 255, 0, 0)
-			elseif tonumber(getElementData(source, "job")) == 4 and slot == 41 then
-				outputChatBox("You can't put this spray can into a " .. name .. ".", source, 255, 0, 0)
-			else
-				exports.global:takeWeapon( source, slot )
-				giveItem( element, -slot, ammo )
+				local success, reason = moveItem( source, element, slot )
+				if not success then
+					outputChatBox( "Moving failed: " .. tostring( reason ), source, 255, 0, 0 )
+				end
 			end
+		end
+	else
+		local name = "Safe"
+		if getElementType( element ) == "vehicle" then
+			name = "Vehicle"
+		end
+		
+		if slot == 16 or slot == 18 or ( slot >= 35 and slot <= 40 ) then
+			outputChatBox("You can't put those weapons into a " .. name .. ".", source, 255, 0, 0)
+		elseif tonumber(getElementData(source, "duty")) > 0 then
+			outputChatBox("You can't put your weapons in a " .. name .. " while being on duty.", source, 255, 0, 0)
+		elseif tonumber(getElementData(source, "job")) == 4 and slot == 41 then
+			outputChatBox("You can't put this spray can into a " .. name .. ".", source, 255, 0, 0)
+		else
+			exports.global:takeWeapon( source, slot )
+			giveItem( element, -slot, ammo )
 		end
 	end
 end

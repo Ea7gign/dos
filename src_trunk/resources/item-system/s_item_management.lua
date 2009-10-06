@@ -39,7 +39,7 @@ x takeItemFromSlot(obj, slot, nosqlupdate) -- ...
 x moveItem(from, to, slot) -- moves an item from any inventory to another (was on from's specified slot before, true if successful, internally only updates the owner in the DB and modifies the arrays
 
 x hasItem(obj, itemID, itemValue = nil ) -- returns true if the player has that item
-x hasSpaceForItem(obj) -- returns true if you can put more stuff in
+x hasSpaceForItem(obj, itemID) -- returns true if you can put more stuff in
 x countItems(obj, itemID, itemValue) -- counts how often a player has that item
 
 x getItems(obj) -- returns an array of all items in { slot = { itemID, itemValue } } table
@@ -206,7 +206,7 @@ end
 function giveItem( element, itemID, itemValue, itemIndex )
 	loadItems( element )
 	
-	if not hasSpaceForItem( element ) then
+	if not hasSpaceForItem( element, itemID ) then
 		return false, "Inventory is Full"
 	end
 	
@@ -248,13 +248,6 @@ function takeItemFromSlot(element, slot, nosqlupdate)
 		local value = saveditems[element][slot][2]
 		local index = saveditems[element][slot][3]
 		
-		-- special case backpack
-		if id == 48 then -- backpack
-			for i = 20, 11 do 
-				takeItemFromSlot(element, i)
-			end
-		end
-
 		local success = true
 		if not nosqlupdate then
 			local result = mysql_query( handler, "DELETE FROM items WHERE `index` = " .. index .. " LIMIT 1" )
@@ -282,7 +275,7 @@ function moveItem(from, to, slot)
 	loadItems( to )
 
 	if saveditems[from] and saveditems[from][slot] then
-		if hasSpaceForItem(to) then
+		if hasSpaceForItem(to, saveditems[from][slot][1]) then
 			local itemIndex = saveditems[from][slot][3]
 			if itemIndex then
 				local itemID = saveditems[from][slot][1]
@@ -328,9 +321,15 @@ function hasItem(element, itemID, itemValue)
 end
 
 -- checks if the element has space for adding a new item
-function hasSpaceForItem(element)
+function hasSpaceForItem(element, itemID)
 	loadItems( element )
-	return #getItems(element) < getInventorySlots(element)
+	
+	local keycount = countItems( element, 3 ) + countItems( element, 4 ) + countItems( element, 5 )
+	if itemID == 3 or itemID == 4 or itemID == 5 then
+		return keycount < 2 * getInventorySlots(element)
+	else
+		return #getItems(element) - keycount < getInventorySlots(element)
+	end
 end
 
 -- count all instances of that object
@@ -377,6 +376,8 @@ function getInventorySlots(element)
 		else
 			return 20
 		end
+	elseif getElementParent(getElementParent(element)) == getResourceRootElement() then -- World Item
+		return 10
 	else
 		return 20
 	end

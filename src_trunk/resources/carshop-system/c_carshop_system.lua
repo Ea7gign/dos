@@ -215,7 +215,7 @@ end
 
 function buyCar(button)
 	if (button=="left") then
-		if exports.global:hasSpaceForItem(getLocalPlayer()) then
+		if exports.global:hasSpaceForItem(getLocalPlayer(), 3) then
 			local row, col = guiGridListGetSelectedItem(gCars)
 			local key = tonumber(guiGridListGetItemData(gCars, row, col))
 			local value = activeShop[key]

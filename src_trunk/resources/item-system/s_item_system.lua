@@ -542,10 +542,13 @@ function destroyItem(itemID, isWeapon)
 			local itemID = item[1]
 			local itemValue = item[2]
 			
-			if itemID == 60 then
-				outputChatBox("Press 'Use Item' to place a safe.", source, 255, 0, 0)
-				return
+			if itemID == 48 and countItems( source, 48 ) == 1 then -- backpack
+				local keycount = countItems( source, 3 ) + countItems( source, 4 ) + countItems( source, 5 )
+				if keycount > getInventorySlots(source) or #getItems( source ) - keycount - 1 > getInventorySlots(source) / 2 then
+					return
+				end
 			end
+			
 			itemName = getItemName( itemID )
 			takeItemFromSlot(source, itemSlot)
 			
@@ -639,18 +642,28 @@ function dropItem(itemID, x, y, z, ammo, keepammo)
 			setElementData(obj, "itemID", itemID)
 			setElementData(obj, "itemValue", itemValue)
 			
+			takeItemFromSlot( source, itemSlot )
+			
 			-- Dropped his backpack
-			if itemID == 48 then
-				local count = #getItems(source)
-				while count > 10 do
-					local moved = moveItem( source, obj, 11 )
-					
-					if not moved then
-						count = count - 1
+			if itemID == 48 and countItems( source, 48 ) == 0 then
+				local keycount = countItems( source, 3 ) + countItems( source, 4 ) + countItems( source, 5 )
+				for i = #getItems( source ), 1, -1 do
+					if keycount <= 2 * getInventorySlots(source) then
+						break
+					elseif getItems( source )[ i ] == 3 or getItems( source )[ i ] == 4 or getItems( source )[ i ] == 5 then
+						moveItem( source, obj, i )
+						keycount = keycount - 1
+					end
+				end
+				
+				for i = #getItems( source ), 1, -1 do
+					if #getItems( source ) - keycount <= getInventorySlots(source) then
+						break
+					elseif getItems( source )[ i ] ~= 3 and getItems( source )[ i ] ~= 4 and getItems( source )[ i ] ~= 5 then
+						moveItem( source, obj, i )
 					end
 				end
 			end
-			takeItemFromSlot( source, itemSlot )
 			
 			-- Check if he drops his current clothes
 			if itemID == 16 and itemValue == getPedSkin(source) and not hasItem(source, 16, itemValue) then
@@ -844,15 +857,13 @@ function pickupItem(object, leftammo)
 		local itemValue = getElementData(object, "itemValue")
 		if itemID > 0 then
 			mysql_free_result( mysql_query(handler, "DELETE FROM worlditems WHERE id='" .. id .. "'") )
-			destroyElement(object)
 			
 			giveItem(source, itemID, itemValue)
 			
-			if itemID == 48 then -- BACKPACK, give the items inside it
-				while #getItems(object) > 0 do
-					moveItem(object, source, 1)
-				end
+			while #getItems(object) > 0 do
+				moveItem(object, source, 1)
 			end
+			destroyElement(object)
 		elseif itemID == -100 then
 			mysql_free_result( mysql_query(handler, "DELETE FROM worlditems WHERE id='" .. id .. "'") )
 			destroyElement(object)
@@ -1037,7 +1048,7 @@ addCommandHandler("issuebadge", givePlayerBadge, false, false)
 function writeNote(thePlayer, commandName, ...)
 	if not (...) then
 		outputChatBox("SYNTAX: /" .. commandName .. " [Text]", thePlayer, 255, 194, 14)
-	elseif not hasSpaceForItem( thePlayer ) then
+	elseif not hasSpaceForItem( thePlayer, 72 ) then
 		outputChatBox("You can't carry more notes around.", thePlayer, 255, 0, 0)
 	else
 		local found, slot, itemValue = hasItem( thePlayer, 71 )

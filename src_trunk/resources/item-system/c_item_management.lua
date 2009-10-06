@@ -31,12 +31,32 @@ function hasItem(element, itemID, itemValue)
 end
 
 -- checks if the element has space for adding a new item
-function hasSpaceForItem(element)
+function hasSpaceForItem(element, itemID)
 	if not saveditems[element] then
 		return false, "Unknown"
 	end
+	
+	local keycount = countItems( element, 3 ) + countItems( element, 4 ) + countItems( element, 5 )
+	if itemID == 3 or itemID == 4 or itemID == 5 then
+		return keycount < 2 * getInventorySlots(element)
+	else
+		return #getItems(element) - keycount < getInventorySlots(element)
+	end
+end
 
-	return #getItems(element) < getInventorySlots(element)
+-- count all instances of that object
+function countItems( element, itemID, itemValue )
+	if not saveditems[element] then
+		return 0
+	end
+	
+	local count = 0
+	for key, value in pairs(saveditems[element]) do
+		if value[1] == itemID and ( not itemValue or itemValue == value[2] ) then
+			count = count + 1
+		end
+	end
+	return count
 end
 
 -- returns a list of all items of that element
@@ -73,6 +93,8 @@ function getInventorySlots(element)
 		else
 			return 20
 		end
+	elseif getElementParent(getElementParent(element)) == getResourceRootElement() then -- World Item
+		return 10
 	else
 		return 20
 	end

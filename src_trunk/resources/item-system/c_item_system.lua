@@ -1,4 +1,4 @@
-wItems, gItems, colSlot, colName, colValue, items, lDescription, bDropItem, bUseItem, bShowItem, bDestroyItem, tabPanel, tabItems, tabWeapons = nil
+wItems, gItems, gKeys, colSlot, colName, colValue, items, lDescription, bDropItem, bUseItem, bShowItem, bDestroyItem, tabPanel, tabItems, tabWeapons = nil
 gWeapons, colWSlot, colWName, colWValue = nil
 toggleLabel, chkFood, chkKeys, chkDrugs, chkOther, chkBooks, chkClothes, chkElectronics, chkEmpty = nil
 
@@ -133,7 +133,7 @@ function pickupItem(button, state)
 		
 		if (restrain) and (restrain==1) then
 			outputChatBox("You are cuffed.", 255, 0, 0)
-		elseif not hasSpaceForItem(getLocalPlayer()) and getElementData(item, "itemID") > 0 then
+		elseif getElementData(item, "itemID") > 0 and not hasSpaceForItem(getLocalPlayer(), getElementData(item, "itemID")) then
 			outputChatBox("Your Inventory is full.", 255, 0, 0)
 		elseif isElement(item) then
 			showCursor(false)
@@ -188,14 +188,15 @@ function toggleCategory()
 	
 	-- let's add the items again
 	guiGridListClear(gItems)
+	guiGridListClear(gKeys)
 	
 	local items, slots = getItems( showinvPlayer ), getInventorySlots( showinvPlayer )
 	
-	for i = 1, slots do
+	for i = 1, 3 * slots do
 		if not items[i] then
-			if (showEmpty) then
+			if showEmpty and i <= slots then
 				local row = guiGridListAddRow(gItems)
-				guiGridListSetItemText(gItems, row, colSlot, tostring(i), false, true)
+				guiGridListSetItemText(gItems, row, colSlot, tostring(row+1), false, true)
 				guiGridListSetItemText(gItems, row, colName, "Empty", false, false)
 				guiGridListSetItemText(gItems, row, colValue, "None", false, false)
 			end
@@ -228,13 +229,21 @@ function toggleCategory()
 				end
 				
 				if (add) then
-					local row = guiGridListAddRow(gItems)
-					guiGridListSetItemText(gItems, row, colSlot, tostring(i), false, true)
-					guiGridListSetItemText(gItems, row, colName, getItemName(itemid), false, false)
-					guiGridListSetItemText(gItems, row, colValue, tostring(itemvalue), false, false)
+					local row = guiGridListAddRow(itemtype == 2 and gKeys or gItems)
+					guiGridListSetItemText(itemtype == 2 and gKeys or gItems, row, colSlot, tostring(row+1), false, true)
+					guiGridListSetItemData(itemtype == 2 and gKeys or gItems, row, colSlot, tostring(i))
+					guiGridListSetItemText(itemtype == 2 and gKeys or gItems, row, colName, getItemName(itemid), false, false)
+					guiGridListSetItemText(itemtype == 2 and gKeys or gItems, row, colValue, tostring(itemvalue), false, false)
 				end
 			end
 		end
+	end
+	
+	while showEmpty and guiGridListGetRowCount( gItems ) < slots do
+		local row = guiGridListAddRow(gItems)
+		guiGridListSetItemText(gItems, row, colSlot, tostring(row+1), false, true)
+		guiGridListSetItemText(gItems, row, colName, "Empty", false, false)
+		guiGridListSetItemText(gItems, row, colValue, "None", false, false)
 	end
 end
 
@@ -273,16 +282,24 @@ function showInventory(player, syncw, synca)
 		
 		tabPanel = guiCreateTabPanel(0.025, 0.05, 0.95, 0.7, true, wItems)
 		tabItems = guiCreateTab("Items", tabPanel)
+		tabKeys = guiCreateTab("Keys", tabPanel)
 		tabWeapons = guiCreateTab("Weapons", tabPanel)
 		
 		-- ITEMS
 		gItems = guiCreateGridList(0.025, 0.05, 0.95, 0.9, true, tabItems)
 		addEventHandler("onClientGUIClick", gItems, showDescription, false)
 		
-		
 		colSlot = guiGridListAddColumn(gItems, "Slot", 0.1)
 		colName = guiGridListAddColumn(gItems, "Name", 0.625)
 		colValue = guiGridListAddColumn(gItems, "Value", 0.225)
+		
+		-- keys
+		gKeys = guiCreateGridList(0.025, 0.05, 0.95, 0.9, true, tabKeys)
+		addEventHandler("onClientGUIClick", gKeys, showDescription, false)
+	
+		colSlot = guiGridListAddColumn(gKeys, "Slot", 0.1)
+		colName = guiGridListAddColumn(gKeys, "Name", 0.625)
+		colValue = guiGridListAddColumn(gKeys, "Value", 0.225)
 		
 		-- type checkboxes
 		toggleLabel = guiCreateLabel(0.025, 0.77, 0.95, 0.9, "Toggle Item Types:", true, wItems)
@@ -309,6 +326,7 @@ function showInventory(player, syncw, synca)
 		source = nil
 		toggleCategory()
 		addEventHandler("onClientGUIDoubleClick", gItems, useItem, false)
+		addEventHandler("onClientGUIDoubleClick", gKeys, useItem, false)
 
 		-- WEAPONS
 		gWeapons = guiCreateGridList(0.025, 0.05, 0.95, 0.9, true, tabWeapons)
@@ -415,8 +433,8 @@ addEventHandler("hideInventory", getRootElement(), hideInventory)
 
 function showDescription(button, state)
 	if (button=="left") then
-		if (guiGetSelectedTab(tabPanel)==tabItems) then -- ITEMS
-			local row, col = guiGridListGetSelectedItem(gItems)
+		if (guiGetSelectedTab(tabPanel)==tabItems or guiGetSelectedTab(tabPanel)==tabKeys) then -- ITEMS
+			local row, col = guiGridListGetSelectedItem(guiGetSelectedTab(tabPanel) == tabKeys and gKeys or gItems)
 			
 			if (row==-1) or (col==-1) then
 				guiSetText(lDescription, "Click an item to see it's description.")
@@ -425,7 +443,7 @@ function showDescription(button, state)
 				guiSetEnabled(bShowItem, false)
 				guiSetEnabled(bDestroyItem, false)
 			else
-				local slot = tonumber(guiGridListGetItemText(gItems, row, 1))
+				local slot = tonumber(guiGridListGetItemData(guiGetSelectedTab(tabPanel) == tabKeys and gKeys or gItems, row, 1))
 				local items = getItems(showinvPlayer)
 				if not items[slot] then
 					guiSetText(lDescription, "An empty slot.")
@@ -481,9 +499,9 @@ function useItem(button)
 	if (button=="left") then
 		local x, y, z = getElementPosition(getLocalPlayer())
 		local groundz = getGroundPosition(x, y, z)
-		if (guiGetSelectedTab(tabPanel)==tabItems) then -- ITEMS
-			local row, col = guiGridListGetSelectedItem(gItems)
-			local itemSlot = tonumber(guiGridListGetItemText(gItems, row, 1))
+		if (guiGetSelectedTab(tabPanel)==tabItems or guiGetSelectedTab(tabPanel)==tabKeys) then -- ITEMS
+			local row, col = guiGridListGetSelectedItem(guiGetSelectedTab(tabPanel) == tabKeys and gKeys or gItems)
+			local itemSlot = tonumber(guiGridListGetItemData(guiGetSelectedTab(tabPanel) == tabKeys and gKeys or gItems, row, 1))
 			local itemID = getItems( showinvPlayer )[itemSlot][1]
 			local itemName = getItemName( itemID )
 			local itemValue = getItems( showinvPlayer )[itemSlot][2]
@@ -607,21 +625,32 @@ end
 function destroyItem(button)
 	if getElementHealth(getLocalPlayer()) == 0 then return end
 	if (button=="left") then
-		if (guiGetSelectedTab(tabPanel)==tabItems) then -- ITEMS
-			local row, col = guiGridListGetSelectedItem(gItems)
-			local itemSlot = tonumber(guiGridListGetItemText(gItems, row, 1))
+		if (guiGetSelectedTab(tabPanel)==tabItems or guiGetSelectedTab(tabPanel)==tabKeys) then -- ITEMS
+			local row, col = guiGridListGetSelectedItem(guiGetSelectedTab(tabPanel) == tabKeys and gKeys or gItems)
+			local itemSlot = tonumber(guiGridListGetItemData(guiGetSelectedTab(tabPanel) == tabKeys and gKeys or gItems, row, 1))
 			if itemSlot and getItems(getLocalPlayer())[itemSlot] then
-				guiGridListRemoveRow(gItems, row)
-				
-				local row = guiGridListAddRow(gItems)
-				guiGridListSetItemText(gItems, row, colName, "Empty", false, false)
-				guiGridListSetItemText(gItems, row, colValue, "None", false, false)
-				
-				for i = 0, getInventorySlots( getLocalPlayer() ) - 1 do
-					guiGridListSetItemText(gItems, i, colSlot, tostring(i + 1), false, true)
+				local itemID = getItems(getLocalPlayer())[itemSlot][1]
+				if itemID == 48 and countItems( getLocalPlayer(), 48 ) == 1 then -- backpack
+					local keycount = countItems( getLocalPlayer(), 3 ) + countItems( getLocalPlayer(), 4 ) + countItems( getLocalPlayer(), 5 )
+					if keycount > getInventorySlots(getLocalPlayer()) or #getItems( getLocalPlayer() ) - keycount - 1 > getInventorySlots(getLocalPlayer()) / 2 then
+						outputChatBox("You have too much stuff in your inventory.", getLocalPlayer())
+						return
+					end
 				end
 				
-				guiGridListSetSelectedItem(gItems, 0, 0)
+				guiGridListRemoveRow(guiGetSelectedTab(tabPanel) == tabKeys and gKeys or gItems, row)
+				
+				if guiGetSelectedTab(tabPanel) == tabItems then
+					local row = guiGridListAddRow(gItems)
+					guiGridListSetItemText(gItems, row, colName, "Empty", false, false)
+					guiGridListSetItemText(gItems, row, colValue, "None", false, false)
+					
+					for i = 0, getInventorySlots( getLocalPlayer() ) - 1 do
+						guiGridListSetItemText(gItems, i, colSlot, tostring(i + 1), false, true)
+					end
+				end
+				
+				guiGridListSetSelectedItem(guiGetSelectedTab(tabPanel) == tabKeys and gKeys or gItems, 0, 0)
 				
 				triggerServerEvent("destroyItem", getLocalPlayer(), itemSlot)
 			end
@@ -651,9 +680,9 @@ function dropItem(button)
 		guiSetEnabled(bShowItem, false)
 		guiSetEnabled(bDestroyItem, false)
 		
-		if (guiGetSelectedTab(tabPanel)==tabItems) then -- ITEMS
-			local row, col = guiGridListGetSelectedItem(gItems)
-			local itemSlot = tonumber(guiGridListGetItemText(gItems, row, 1))
+		if (guiGetSelectedTab(tabPanel)==tabItems or guiGetSelectedTab(tabPanel)==tabKeys) then -- ITEMS
+			local row, col = guiGridListGetSelectedItem(guiGetSelectedTab(tabPanel) == tabKeys and gKeys or gItems)
+			local itemSlot = tonumber(guiGridListGetItemData(guiGetSelectedTab(tabPanel) == tabKeys and gKeys or gItems, row, 1))
 			local item = getItems(getLocalPlayer())[itemSlot]
 			if item then
 				local itemID = item[1]
@@ -662,17 +691,18 @@ function dropItem(button)
 					return
 				end
 				
-				guiGridListRemoveRow(gItems, row)
-				
-				local row = guiGridListAddRow(gItems)
-				guiGridListSetItemText(gItems, row, colName, "Empty", false, false)
-				guiGridListSetItemText(gItems, row, colValue, "None", false, false)
-				
-				for i = 0, getInventorySlots( getLocalPlayer() ) - 1 do
-					guiGridListSetItemText(gItems, i, colSlot, tostring(i + 1), false, true)
+				guiGridListRemoveRow(guiGetSelectedTab(tabPanel) == tabKeys and gKeys or gItems, row)
+				if guiGetSelectedTab(tabPanel) == tabItems then
+					local row = guiGridListAddRow(gItems)
+					guiGridListSetItemText(gItems, row, colName, "Empty", false, false)
+					guiGridListSetItemText(gItems, row, colValue, "None", false, false)
+					
+					for i = 0, getInventorySlots( getLocalPlayer() ) - 1 do
+						guiGridListSetItemText(gItems, i, colSlot, tostring(i + 1), false, true)
+					end
 				end
 
-				guiGridListSetSelectedItem(gItems, 0, 0)
+				guiGridListSetSelectedItem(guiGetSelectedTab(tabPanel) == tabKeys and gKeys or gItems, 0, 0)
 				
 				local x, y, z = getElementPosition(getLocalPlayer())
 				local rot = getPedRotation(getLocalPlayer())
@@ -719,9 +749,9 @@ end
 function showItem(button)
 	if getElementHealth(getLocalPlayer()) == 0 then return end
 	if (button=="left") then
-		if (guiGetSelectedTab(tabPanel)==tabItems) then -- ITEMS
-			local row, col = guiGridListGetSelectedItem(gItems)
-			local itemName = guiGridListGetItemText(gItems, row, 2)
+		if (guiGetSelectedTab(tabPanel)==tabItems or guiGetSelectedTab(tabPanel)==tabKeys) then -- ITEMS
+			local row, col = guiGridListGetSelectedItem(guiGetSelectedTab(tabPanel) == tabKeys and gKeys or gItems)
+			local itemName = guiGridListGetItemText(guiGetSelectedTab(tabPanel) == tabKeys and gKeys or gItems, row, 2)
 			triggerServerEvent("showItem", getLocalPlayer(), itemName)
 		elseif (guiGetSelectedTab(tabPanel)==tabWeapons) then -- WEAPONS
 			local row, col = guiGridListGetSelectedItem(gWeapons)

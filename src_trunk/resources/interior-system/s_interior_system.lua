@@ -245,7 +245,7 @@ function sellTo(thePlayer, commandName, targetPlayerName)
 				if getDistanceBetweenPoints3D(px, py, pz, tx, ty, tz) < 20 and getElementDimension(targetPlayer) == getElementDimension(thePlayer) then
 					if getElementData(entrance, "owner") == getElementData(thePlayer, "dbid") or exports.global:isPlayerAdmin(thePlayer) then
 						if getElementData(targetPlayer, "dbid") ~= getElementData(entrance, "owner") then
-							if exports.global:hasSpaceForItem(targetPlayer) then
+							if exports.global:hasSpaceForItem(targetPlayer, 4) then
 								local query = mysql_query(handler, "UPDATE interiors SET owner = '" .. getElementData(targetPlayer, "dbid") .. "' WHERE id='" .. dbid .. "'")
 								if query then
 									mysql_free_result(query)
@@ -660,7 +660,7 @@ function buyInterior(player, pickup, cost, isHouse, isRentable)
 			end
 			mysql_free_result(result)
 		end
-	elseif not exports.global:hasSpaceForItem(player) then
+	elseif not exports.global:hasSpaceForItem(player, 4) then
 		outputChatBox("You do not have the space for the keys.", player, 255, 0, 0)
 		return
 	end
