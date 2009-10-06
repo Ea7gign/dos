@@ -95,6 +95,7 @@ function notifyWeaponHacks(weapon, actualammo, expectedammo, strikes)
 	exports.global:sendMessageToAdmins(adminmsg)
 	outputServerLog(adminmsg)
 	exports.irc:sendMessage("[ANTICHEAT] " .. adminmsg)
+	exports.logs:logMessage(adminmsg, 12)
 	
 	--[[ TODO: Make sure it's working correctly before auto-banning people
 	if strikes >= 3 then

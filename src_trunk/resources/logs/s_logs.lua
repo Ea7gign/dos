@@ -1,15 +1,16 @@
 enumTypes = {
-[1] = "chat",
-[2] = "ads",
-[3] = "adminchat",
-[4] = "admincmds",
-[5] = "moneytransfers",
-[6] = "policechat",
-[7] = "meactions",
-[8] = "pms",
-[9] = "vehicles",
-[10] = "san-photo",
-[11] = "kills"
+	"chat",
+	"ads",
+	"adminchat",
+	"admincmds",
+	"moneytransfers",
+	"policechat",
+	"meactions",
+	"pms",
+	"vehicles",
+	"san-photo",
+	"kills",
+	"anticheat"
 }
 
 
