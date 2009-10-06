@@ -40,7 +40,7 @@ addCommandHandler("stopani", stopAnimation, false, false)
 
 function animationList(thePlayer)
 	outputChatBox("/piss /wank /slapass /fixcar /handsup /hailtaxi /scratch /fu /carchat /tired", thePlayer, 255, 194, 14)
-	outputChatBox("/strip 1-2 /lightup /drink /beg /mourn /cheer 1-3 /dance 1-3 /crack 1-2", thePlayer, 255, 194, 14)
+	outputChatBox("/strip 1-2 /lightup /drink /beg /mourn /cheer 1-3 /dance 1-3 /crack 1-2 /walk 1-37", thePlayer, 255, 194, 14)
 	outputChatBox("/gsign 1-5 /puke /rap 1-3 /sit 1-3 /smoke 1-3 /smokelean /laugh /startrace", thePlayer, 255, 194, 14)
 	outputChatBox("/daps 1-2 /shove /bitchslap /shocked /dive /what /fall /fallfront /cpr /copaway", thePlayer, 255, 194, 14)
 	outputChatBox("/copcome /copleft /copstop /wait /think /shake /idle /lay /cry /aim /drag", thePlayer, 255, 194, 14)
@@ -605,3 +605,24 @@ function fallAnimation(thePlayer)
 	end
 end
 addCommandHandler ( "fall", fallAnimation, false, false )
+
+-- /walk animation -------------------------------------------------------------------------
+local walk = {
+	"WALK_armed", "WALK_civi", "WALK_csaw", "Walk_DoorPartial", "WALK_drunk", "WALK_fat", "WALK_fatold", "WALK_gang1", "WALK_gang2", "WALK_old",
+	"WALK_player", "WALK_rocket", "WALK_shuffle", "Walk_Wuzi", "woman_run", "WOMAN_runbusy", "WOMAN_runfatold", "woman_runpanic", "WOMAN_runsexy", "WOMAN_walkbusy",
+	"WOMAN_walkfatold", "WOMAN_walknorm", "WOMAN_walkold", "WOMAN_walkpro", "WOMAN_walksexy", "WOMAN_walkshop", "run_1armed", "run_armed", "run_civi", "run_csaw",
+	"run_fat", "run_fatold", "run_gang1", "run_old", "run_player", "run_rocket", "Run_Wuzi"
+}
+function walkAnimation(thePlayer, cmd, arg)
+	local logged = getElementData(thePlayer, "loggedin")
+	arg = tonumber(arg)
+	
+	if (logged==1) then
+		if not walk[arg] then
+			walk = 2
+		end
+		
+		exports.global:applyAnimation( thePlayer, "PED", walk[arg], -1, true, true, false)
+	end
+end
+addCommandHandler("walk", walkAnimation, false, false)
