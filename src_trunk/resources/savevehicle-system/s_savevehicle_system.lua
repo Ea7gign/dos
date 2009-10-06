@@ -25,12 +25,15 @@ addEventHandler("onResourceStop", getResourceRootElement(getThisResource()), clo
 -- ////////////////////////////////////
 -- //			MYSQL END			 //
 -- ////////////////////////////////////
+function round(num, idp)
+  local mult = 10^(idp or 0)
+  return math.floor(num * mult + 0.5) / mult
+end
 
 function saveVehicleOnExit(thePlayer, seat, vehicle)
 	if (vehicle) then
 		source = vehicle
 	end
-	
 	
 	local dbid = tonumber(getElementData(source, "dbid")) or -1
 	
@@ -72,7 +75,7 @@ function saveVehicleOnExit(thePlayer, seat, vehicle)
 				
 			local wheel1, wheel2, wheel3, wheel4 = getVehicleWheelStates(source)
 				
-			local query = mysql_query(handler, "UPDATE vehicles SET model='" .. model .. "', currx='" .. x .. "', curry='" .. y .. "', currz='" .. z .. "', currrx='" .. rx .. "', currry='" .. ry .. "', currrz='" .. rz .. "', color1='" .. col1 .. "', color2='" .. col2 .. "', fuel='" .. fuel .. "', engine='" .. engine .. "', locked='" .. locked .. "', lights='" .. lights .. "', wheel1='" .. wheel1 .. "', wheel2='" .. wheel2 .. "', wheel3='" .. wheel3 .. "', wheel4='" .. wheel4 .. "' WHERE id='" .. dbid .. "'")
+			local query = mysql_query(handler, "UPDATE vehicles SET model='" .. model .. "', currx='" .. round(x, 6) .. "', curry='" .. round(y, 6) .. "', currz='" .. round(z, 6) .. "', currrx='" .. rx .. "', currry='" .. ry .. "', currrz='" .. rz .. "', color1='" .. col1 .. "', color2='" .. col2 .. "', fuel='" .. fuel .. "', engine='" .. engine .. "', locked='" .. locked .. "', lights='" .. lights .. "', wheel1='" .. wheel1 .. "', wheel2='" .. wheel2 .. "', wheel3='" .. wheel3 .. "', wheel4='" .. wheel4 .. "' WHERE id='" .. dbid .. "'")
 			mysql_free_result(query)
 			local panel0 = getVehiclePanelState(source, 0)
 			local panel1 = getVehiclePanelState(source, 1)

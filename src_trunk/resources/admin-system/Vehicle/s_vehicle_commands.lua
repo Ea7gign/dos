@@ -313,6 +313,11 @@ function respawnCmdVehicle(thePlayer, commandName, id)
 end
 addCommandHandler("respawnveh", respawnCmdVehicle, false, false)
 
+function round(num, idp)
+  local mult = 10^(idp or 0)
+  return math.floor(num * mult + 0.5) / mult
+end
+
 function respawnAllVehicles(thePlayer, commandName, timeToRespawn)
 	if (exports.global:isPlayerAdmin(thePlayer)) then
 		if commandName then
@@ -327,19 +332,14 @@ function respawnAllVehicles(thePlayer, commandName, timeToRespawn)
 			end
 			return
 		end
+		local tick = getTickCount()
 		local vehicles = exports.pool:getPoolElementsByType("vehicle")
 		local counter = 0
 		local tempcounter = 0
 		local tempoccupied = 0
 		local occupiedcounter = 0
 		local unlockedcivs = 0
-		
-		-- Remove all players from vehicles
-		--for key, value in ipairs(exports.pool:getPoolElementsByType("player")) do
-		--	if (isPedInVehicle(value)) then
-		--		removePedFromVehicle(value)
-		--	end
-		--end
+		local notmoved = 0
 		
 		for k, theVehicle in ipairs(vehicles) do
 			if isElement( theVehicle ) then
@@ -378,20 +378,24 @@ function respawnAllVehicles(thePlayer, commandName, timeToRespawn)
 							setElementHealth(theVehicle, 300) -- lowest possible health
 						end
 						
-						local x, y, z, rx, ry, rz = unpack(getElementData(theVehicle, "respawnposition"))
-						setElementPosition(theVehicle, x, y, z)
-						setVehicleRotation(theVehicle, rx, ry, rz)
-						setElementInterior(theVehicle, getElementData(theVehicle, "interior"))
-						setElementDimension(theVehicle, getElementData(theVehicle, "dimension"))
-						
-						-- unlock Civ vehicles
 						if getElementData(theVehicle, "owner") == -2 and getElementData(theVehicle,"Impounded") == 0 then
 							respawnVehicle(theVehicle)
 							setVehicleLocked(theVehicle, false)
-							
 							unlockedcivs = unlockedcivs + 1
+						else 
+							local checkx, checky, checkz = getElementPosition( theVehicle )
+							local x, y, z, rx, ry, rz = unpack(getElementData(theVehicle, "respawnposition"))
+							
+							if (round(checkx, 6) == x) and (round(checky, 6) == y) then
+								notmoved = notmoved + 1
+							else
+								setElementPosition(theVehicle, x, y, z)
+								setVehicleRotation(theVehicle, rx, ry, rz)
+								setElementInterior(theVehicle, getElementData(theVehicle, "interior"))
+								setElementDimension(theVehicle, getElementData(theVehicle, "dimension"))
+								counter = counter + 1
+							end
 						end
-						counter = counter + 1
 						
 						-- fix faction vehicles
 						if getElementData(theVehicle, "faction") ~= -1 then
@@ -409,10 +413,12 @@ function respawnAllVehicles(thePlayer, commandName, timeToRespawn)
 				end
 			end
 		end
+		local timeTaken = (getTickCount() - tick)/1000
 		outputChatBox(" =-=-=-=-=-=- All Vehicles Respawned =-=-=-=-=-=-=")
-		outputChatBox("Respawned " .. counter .. " vehicles. (" .. occupiedcounter .. " Occupied).", thePlayer)
+		outputChatBox("Respawned " .. counter .. "/" .. counter + notmoved .. " vehicles. (" .. occupiedcounter .. " Occupied) .", thePlayer)
 		outputChatBox("Deleted " .. tempcounter .. " temporary vehicles. (" .. tempoccupied .. " Occupied).", thePlayer)
 		outputChatBox("Unlocked and Respawned " .. unlockedcivs .. " civilian vehicles.", thePlayer)
+		outputChatBox("All that in " .. timeTaken .." seconds.", thePlayer)
 		exports.irc:sendMessage("[ADMIN] " .. getPlayerName(thePlayer) .. " respawned all vehicles.")
 	end
 end
