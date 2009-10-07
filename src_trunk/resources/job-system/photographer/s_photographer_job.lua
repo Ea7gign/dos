@@ -1,7 +1,7 @@
 function getPaid(collectionValue)
 	exports.global:giveMoney(getPlayerTeam(source), tonumber(collectionValue))
 	
-	local gender = getElementData(theChosenOne, "gender")
+	local gender = getElementData(source, "gender")
 	local genderm = "his"
 	if (gender == 1) then
 		genderm = "her"
