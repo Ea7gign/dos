@@ -674,9 +674,81 @@ function btRespawnVehicles(button, state)
 	end
 end
 
-function cPayDay()
+function cPayDay(faction, pay, profit, interest, donatormoney, tax, incomeTax, vtax, rent, grossincome)
 	local sound = playSound("mission_accomplished.mp3")
 	setSoundVolume(sound, 0.5)
+	
+	-- output payslip
+	outputChatBox("-------------------------- PAY SLIP --------------------------", 255, 194, 14)
+		
+	-- state earnings/money from faction
+	if not (faction) then
+		if (pay > 0) then
+			outputChatBox("    State Benefits: #00FF00" .. pay+tax .. "$", 255, 194, 14, true)
+		end		
+	else
+		if (pay > 0) then
+			outputChatBox("    Wage Paid: #00FF00" .. pay+tax .. "$", 255, 194, 14, true)		
+		end
+	end
+	
+	-- business profit
+	if (profit > 0) then
+		outputChatBox("    Business Profit: #00FF00" .. profit .. "$", 255, 194, 14, true)
+	end
+	
+	-- bank interest
+	if (interest > 0) then
+		outputChatBox("    Bank Interest: #00FF00" .. interest .. "$",255, 194, 14, true)
+	end
+	
+	-- donator money (nonRP)
+	if (donatormoney > 0) then
+		outputChatBox("    Donator Money: #00FF00" .. donatormoney .. "$", 255, 194, 14, true)
+	end
+	
+	-- Above all the + stuff
+	-- Now the - stuff below
+	
+	-- income tax
+	if (tax > 0) then
+		outputChatBox("    Income Tax of " .. (incomeTax*100) .. "%: #FF0000" .. tax .. "$", 255, 194, 14, true)
+	end
+	
+	if (vtax > 0) then
+		outputChatBox("    Vehicle Tax: #FF0000" .. vtax .. "$", 255, 194, 14, true)
+	end
+	
+	if (rent > 0) then
+		outputChatBox("    Appartment Rent: #FF0000" .. rent .. "$", 255, 194, 14, true)
+	end
+	
+	outputChatBox("------------------------------------------------------------------", 255, 194, 14)
+	
+	if (grossincome > 0) then
+		outputChatBox("  Gross Income: #00FF00" .. grossincome .. "$",255, 194, 14, true)
+		outputChatBox("  Remark(s): Transfered to your bank account.", 255, 194, 14)
+	else
+		outputChatBox("  Gross Income: #FF0000" .. grossincome .. "$", 255, 194, 14, true)
+		outputChatBox("  Remark(s): Taking from your bank account.", 255, 194, 14)
+	end
+	
+	
+	if (pay == 0) then
+		if not (faction) then
+			outputChatBox("    The government could not afford to pay you your state benefits.", 255, 0, 0)
+		else
+			outputChatBox("    Your employer could not afford to pay your wages.", 255, 0, 0)
+		end
+	end
+	
+	if (rent == -1) then
+		outputChatBox("    You were evicted from your appartment, as you can't pay the rent any longer.", 255, 0, 0)
+	end
+	
+	outputChatBox("------------------------------------------------------------------", 255, 194, 14)
+	-- end of output payslip
+	
 	triggerEvent("updateWaves", getLocalPlayer())
 end
 addEvent("cPayDay", true)

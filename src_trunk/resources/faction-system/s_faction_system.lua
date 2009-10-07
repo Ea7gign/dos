@@ -967,83 +967,56 @@ function payWage(player, pay, faction, tax)
 	
 	local interest = math.ceil(interestrate * bankmoney)
 	
+	local incomeTax = exports.global:getIncomeTaxAmount()
+	
 	-- business money
 	local profit = getElementData(player, "businessprofit")
 	setElementData(player, "businessprofit", 0, false)
-	setElementData(player, "bankmoney", bankmoney+pay+interest+profit+donatormoney)
+	bankmoney = bankmoney + pay + interest + profit + donatormoney
+
 	
 	-- rentable houses
 	local rent = 0
-	local result = mysql_query( handler, "SELECT SUM(cost) FROM `interiors` WHERE `owner` = " .. getElementData(player, "dbid") .. " AND `type` = 3" )
-	if result then
-		rent = tonumber(mysql_result(result, 1, 1)) or 0
-		mysql_free_result(result)
-		
-		if rent > 0 then
-			local bankmoney = getElementData(player, "bankmoney")
-			if rent > bankmoney then
-				-- sell houses
-				rent = -1
-				
-				local result = mysql_query( handler, "SELECT id FROM `interiors` WHERE `owner` = " .. getElementData(player, "dbid") .. " AND `type` = 3" )
-				id = tonumber(mysql_result(result, 1, 1))
-				mysql_free_result(result)
-				
-				call( getResourceFromName( "interior-system" ), "publicSellProperty", player, id, false, true )
-			else
-				exports.global:givePlayerAchievement(player, 11)
-				setElementData(player, "bankmoney", bankmoney - rent)
-				governmentIncome = governmentIncome + rent
-			end
+	local rented = nil -- store id in here
+	local dbid = tonumber(getElementData(player, "dbid"))
+	for key, value in ipairs(getElementsByType("pickup", getResourceRootElement(getResourceFromName("interior-system")))) do
+		local owner = tonumber(getElementData(value, "owner"))
+		if (owner) and (owner == dbid) and (getElementData(value, "name")) and (tonumber(getElementData(value, "inttype")) == 3) and (tonumber(getElementData(value, "cost")) > 0) then
+			rent = rent + tonumber(getElementData(value, "cost"))
+			rented = tonumber(getElementData(value, "dbid"))
 		end
 	end
-
 	
-	outputChatBox("~-~-~-~-~-~-~-~~-~-~-~-~ PAY SLIP ~-~-~-~-~-~-~-~~-~-~-~-~", player, 255, 194, 14)
-
 	if not faction then
 		if pay >= 0 then
-			outputChatBox("    State Benefits: " .. pay .. "$", player, 255, 194, 14)
 			governmentIncome = governmentIncome - pay
 			mysql_free_result( mysql_query( handler, "INSERT INTO wiretransfers (`from`, `to`, `amount`, `reason`, `type`) VALUES (0, " .. getElementData(player, "dbid") .. ", " .. pay .. ", '', 6)" ) )
 		else
-			outputChatBox("    The government could not afford to pay you your state benefits.", player, 255, 0, 0)
 			pay = 0
 		end
 	else
-		if pay >= 0 then
-			outputChatBox("    Wage Paid: " .. pay .. "$", player, 255, 194, 14)			
-
+		if pay >= 0 then	
 			local teamid = getElementData(player, "faction")
 			if teamid <= 0 then
 				teamid = 0
 			else
 				teamid = -teamid
 			end
-
 			mysql_free_result( mysql_query( handler, "INSERT INTO wiretransfers (`from`, `to`, `amount`, `reason`, `type`) VALUES (" .. teamid .. ", " .. getElementData(player, "dbid") .. ", " .. pay-tax .. ", '', 6)" ) )
 		else
-			outputChatBox("    Your employer could not afford to pay your wages.", player, 255, 0, 0)
 			pay = 0
 		end
 	end
 	
-	if profit > 0 then
-		outputChatBox("    Business Profit: " .. profit .. "$", player, 255, 194, 14)
-	end
-	
 	if tax > 0 then
-		local incomeTax = exports.global:getIncomeTaxAmount()
-		outputChatBox("    Income Tax of " .. (incomeTax*100) .. "%: " .. tax .. "$", player, 255, 194, 14)
 		pay = pay - tax
+		bankmoney = bankmoney - tax
 		governmentIncome = governmentIncome + tax
 	end
 	
 	local vtax = taxVehicles[ getElementData(player, "dbid") ] or 0
 	if vtax > 0 then
-		outputChatBox("    Vehicle Tax: " .. vtax .. "$", player, 255, 194, 14)
-		setElementData(player, "bankmoney", math.max(0, getElementData(player, "bankmoney") - vtax))
-		
+		bankmoney = math.max(0, bankmoney - vtax)
 		if vtax > pay+profit+interest+donatormoney then
 			exports.global:givePlayerAchievement(player, 19)
 		end
@@ -1051,20 +1024,24 @@ function payWage(player, pay, faction, tax)
 		governmentIncome = governmentIncome + vtax
 	end
 	
-	outputChatBox("    Bank Interest (" .. interestrate*100 .. "%): " .. interest .. "$", player, 255, 194, 14)
-	if (donator>0) then
-		outputChatBox("    Donator Money: " .. donatormoney .. "$", player, 255, 194, 14)
-	end
-	
-	if rent > 0 then
-		outputChatBox("    Appartment Rent: " .. rent .. "$", player, 255, 194, 14)
-	elseif rent == -1 then
-		outputChatBox("    You were evicted from your appartment, as you can't pay the rent any longer.", player, 255, 0, 0)
-		rent = 0
+	if (rent > 0) then
+		if (rent > bankmoney)   then
+			rent = -1
+			call( getResourceFromName( "interior-system" ), "publicSellProperty", player, rented, false, true )
+		else
+			exports.global:givePlayerAchievement(player, 11)
+			bankmoney = bankmoney - rent
+			governmentIncome = governmentIncome + rent
+		end
 	end
 
-	outputChatBox("----------------------------------------------------------", player, 255, 194, 14)
-	outputChatBox("  Gross Income: " .. pay+profit+interest+donatormoney-rent-vtax .. "$ (Wire-Transferred to bank)", player, 255, 194, 14)
+	-- save the bankmoney
+	setElementData(player, "bankmoney", bankmoney)
+	
+	local grossincome = pay+profit+interest+donatormoney-rent-vtax
+		
+	-- let the client tell them the (bad) news
+	triggerClientEvent(player, "cPayDay", player, faction, pay, profit, interest, donatormoney, tax, incomeTax, vtax, rent, grossincome)
 	
 	-- Insert in Transactions
 	mysql_free_result( mysql_query( handler, "INSERT INTO wiretransfers (`from`, `to`, `amount`, `reason`, `type`) VALUES (0, " .. getElementData(player, "dbid") .. ", " .. profit+interest+donatormoney-rent .. ", '', 7)" ) )
@@ -1144,8 +1121,7 @@ function payAllWages(timer)
 			end
 			
 			setElementData(value, "timeinserver", timeinserver-60, false)
-			
-			triggerClientEvent(value, "cPayDay", value)
+
 			local hoursplayed = getElementData(value, "hoursplayed") or 0
 			setElementData(value, "hoursplayed", hoursplayed+1, false)
 		elseif (logged==1) and (timeinserver) and (timeinserver<60) then
