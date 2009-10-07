@@ -184,12 +184,14 @@ function useItem(itemSlot, additional)
 			
 			local skin = tonumber(itemValue)
 			if fittingskins[gender] and fittingskins[gender][race] and fittingskins[gender][race][skin] then
-				local vehicle = getPedOccupiedVehicle ( source )
-				local veholdstate = getVehicleEngineState ( vehicle )		
+				local vehicle, veholdstate = getPedOccupiedVehicle ( source ), nil
+				if vehicle then
+					veholdstate = getVehicleEngineState ( vehicle )		
+				end
 				setPedSkin(source, skin)
 				setElementData(source, "casualskin", skin, false)
 				exports.global:sendLocalMeAction(source, "changes their clothes.")
-				if (vehicle) then
+				if vehicle then
 					setTimer(setVehicleEngineState, 200, 1, vehicle, veholdstate)
 				end
 			else
