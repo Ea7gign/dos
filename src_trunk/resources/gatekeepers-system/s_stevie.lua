@@ -316,6 +316,9 @@ function startPhoneCall(thePlayer)
 						else
 							if(doneDeals >= 5) then
 								triggerClientEvent ( thePlayer, "outOfDeals", getRootElement() ) -- Trigger Client side function to create GUI.
+							elseif stevieMarker then
+								outputChatBox("((Steven Pullman)) #081016 [Cellphone]: Just a bad time - call later.", thePlayer)
+								endCall()
 							else
 								triggerClientEvent ( thePlayer, "showPhoneConvo", getRootElement() ) -- Trigger Client side function to create GUI.
 								addEventHandler ( "onPlayerQuit", thePlayer, endCall )
@@ -377,6 +380,9 @@ function acceptDeal_S( dealNumber )
 	if not exports.global:takeMoney(source, cost) then -- can the player afford the deal?
 		outputChatBox("((Steven Pullman)) #081016 [Cellphone]: Call me when you've got some money.", source)
 		outputChatBox("You can't afford to pay Stevie for the deal.", source, 255, 0, 0)
+		endCall()
+	elseif stevieMarker then
+		outputChatBox("((Steven Pullman)) #081016 [Cellphone]: Just a bad time - call later.", source)
 		endCall()
 	else
 		-- just some check to make sure the table has that value, i.e. deals are accepted (shouldn't happen, just in case)
@@ -446,6 +452,9 @@ deals = {
 }
 
 function giveGoods(thePlayer)
+	if getElementType(thePlayer) ~= 'player' then
+		return
+	end
 	local veh = getPedOccupiedVehicle(thePlayer)
 	if not(veh)then
 		outputChatBox("You'll need a vehicle to carry all these items.", thePlayer, 255, 0, 0)
@@ -459,8 +468,8 @@ function giveGoods(thePlayer)
 		triggerClientEvent(thePlayer, "removeStevieBlip", thePlayer)
 		
 		-- give the player the items.
-		giveItemsTimer = setTimer(givePlayerStevieItems, 2000, 20, thePlayer, veh, deal)
-		stopItemsTimer = setTimer(stopPlayerStevieItems, 21 * 2000, 1, thePlayer)
+		giveItemsTimer = setTimer(givePlayerStevieItems, 2000, exports['item-system']:getInventorySlots(veh) - #exports['item-system']:getItems(veh), thePlayer, veh, deal)
+		stopItemsTimer = setTimer(stopPlayerStevieItems, ( exports['item-system']:getInventorySlots(veh) - #exports['item-system']:getItems(veh) + 1 ) * 2000, 1, thePlayer)
 		exports.global:sendLocalMeAction(thePlayer,"loads the car up with packages.")
 		outputChatBox("((Wait while the vehicle is loaded with the items.))", thePlayer)
 		local x,y,z = getElementPosition(veh)
