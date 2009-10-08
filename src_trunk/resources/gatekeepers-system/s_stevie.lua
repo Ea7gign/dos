@@ -26,7 +26,7 @@ addEventHandler("onResourceStop", getResourceRootElement(getThisResource()), clo
 -- //			MYSQL END			 //
 -- ////////////////////////////////////
 local phoneState = 0
-local doneDeals = 0
+local doneDeals = getElementData( getRootElement( ), "stevie.done" ) or 0
 
 function timeCheck(res) -- When the resource starts check what time it is. If the time is between 1900 and 2359 spawn stevie in the steak house.
 	hour, minutes = getTime()
@@ -57,6 +57,7 @@ function createStevie()
 	setElementData(stevie, "deals", 0) -- reset how many deals he has made today. Stevie will do 5 deals over the phone each day. He can't be called while he is in the game world (19:00-22:00).
 	setElementData(stevie,"talk",true) -- allows the player to right click on him.
 	doneDeals = 0
+	setElementData( getRootElement( ), "stevie.done", 0, false )
 	
 	hours,minues = getTime()
 	
@@ -71,7 +72,7 @@ end
 function removeStevie()
 	destroyElement(stevie)
 	outputDebugString("Stevie was removed.")
-	stevieSpawnTimer = setTimer ( createStevie, 68400000, 1 ) -- spawn stevie at 1900	
+	stevieSpawnTimer = setTimer ( createStevie, 68400000, 1 ) -- spawn stevie at 1900
 end
 
 function stevieIntro (thePlayer) -- When player enters the colSphere create GUI with intro output to all local players as local chat.
@@ -390,6 +391,7 @@ function acceptDeal_S( dealNumber )
 			return
 		end
 		doneDeals = doneDeals + 1
+		setElementData( getRootElement( ), "stevie.done", doneDeals, false )
 		
 		outputChatBox("You have sent Stevie $".. cost .." for the deal.", source, 0, 255, 0)
 		
@@ -415,6 +417,7 @@ addEventHandler( "acceptSteviePhoneDeal", getRootElement(), acceptDeal_S )
 function decreaseDeals_S()
 	if getElementData(source, "stevie.money") and doneDeals > 0 then
 		doneDeals = doneDeals - 1
+		setElementData( getRootElement( ), "stevie.done", doneDeals, false )
 	end
 end
 addEventHandler( "onPlayerQuit", getRootElement(), decreaseDeals_S )
