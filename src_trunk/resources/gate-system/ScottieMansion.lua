@@ -35,6 +35,7 @@ local function useDoor(thePlayer, commandName, ...)
 			moveObject(Gate[1], 1000, 292.42388916016, -1313.7192382813, 56.391410827637, 0, 0, 0)
 			moveObject(Gate[2], 1000, 272.58129882813, -1326.4306640625, 56.31640625, 0, 0, 0)
 			setTimer(closeDoor, 5000, 1, thePlayer)
+			open = true
 		else
 			outputChatBox("Invalid Password", thePlayer, 255, 0, 0)
 		end

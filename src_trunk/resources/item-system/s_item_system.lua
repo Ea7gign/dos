@@ -1037,7 +1037,7 @@ function givePlayerBadge(thePlayer, commandName, targetPlayer, badgeNumber )
 							exports.global:sendLocalMeAction(thePlayer, "issues "..targetPlayerName.." a police badge with number "..badgeNumber..".")
 						else -- If the player is a ES leader
 							exports.global:giveItem(targetPlayer, 65, badgeNumber) -- Give the player the badge.
-							exports.global:sendLocalMeAction(thePlayer, "issues "..targetPlayerName.." a Las Venturas Emergency Service ID badge with number "..badgeNumber..".")
+							exports.global:sendLocalMeAction(thePlayer, "issues "..targetPlayerName.." a Los Santos Emergency Service ID badge with number "..badgeNumber..".")
 						end
 					end
 				end
@@ -1046,6 +1046,35 @@ function givePlayerBadge(thePlayer, commandName, targetPlayer, badgeNumber )
 	end
 end
 addCommandHandler("issuebadge", givePlayerBadge, false, false)
+
+function issuePilotCertificate(thePlayer, commandName, targetPlayer)
+	if getElementData(thePlayer, "dbid") == 8408 then -- for Mr. I have a flight school, Charlie Baggett.
+		if not (targetPlayer) then
+			outputChatBox("SYNTAX: /" .. commandName .. " [player]", thePlayer, 255, 194, 14)
+		else
+			local targetPlayer = exports.global:findPlayerByPartialNick(targetPlayer)
+			if not (targetPlayer) then -- is the player online?
+				outputChatBox("Player not found.", thePlayer, 255, 0, 0)
+			else
+				local targetPlayerName = string.gsub(getPlayerName(targetPlayer), "_", " ")
+				local logged = getElementData(targetPlayer, "loggedin")
+				if (logged==0) then -- Are they logged in?
+					outputChatBox("Player is not logged in.", thePlayer, 255, 0, 0)
+				else
+					local x, y, z = getElementPosition(thePlayer)
+					local tx, ty, tz = getElementPosition(targetPlayer)
+					if (getDistanceBetweenPoints3D(x, y, z, tx, ty, tz)>4) then -- Are they standing next to each other?
+						outputChatBox("You are too far away to issue this player a pilot certificate.", thePlayer, 255, 0, 0)
+					else -- If the player is a ES leader
+						exports.global:giveItem(targetPlayer, 78, targetPlayerName) -- Give the player the badge.
+						exports.global:sendLocalMeAction(thePlayer, "issues "..targetPlayerName.." a San Andreas Pilot Certificate.")
+					end
+				end
+			end
+		end
+	end
+end
+addCommandHandler("issuepilotcertificate", issuePilotCertificate, false, false)
 
 function writeNote(thePlayer, commandName, ...)
 	if not (...) then

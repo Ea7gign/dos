@@ -607,6 +607,9 @@ function useItem(button)
 				return
 			elseif (itemID==72) then -- Note
 				outputChatBox("The Note reads: " .. itemValue, 255, 194, 14)
+			elseif (itemID==78) then
+				outputChatBox("This San Andreas Pilot License was issued for " .. itemValue .. ".", 255, 194, 14)
+				return
 			end
 			
 			triggerServerEvent("useItem", getLocalPlayer(), itemSlot, additional)

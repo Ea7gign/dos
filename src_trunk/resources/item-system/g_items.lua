@@ -85,7 +85,8 @@ g_items = {
 	{ "Bomb", "What could possibly happen when you use this?", 4, 1271 },
 	{ "Bomb Remote", "Has a funny red button.", 4, 1271 },
 	{ "Riot Shield", "A heavy riot shield.", 4, 1631 },
-	{ "Card Deck", "A card deck to play some games.", 4, 1271 }
+	{ "Card Deck", "A card deck to play some games.", 4, 1271 },
+	{ "San Andreas Pilot Certificate", "An official permission to fly planes and helicopters.", 4, 1271 }
 }
 
 function getItemName(id)
