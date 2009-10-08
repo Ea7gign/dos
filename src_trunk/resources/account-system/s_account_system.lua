@@ -1454,7 +1454,7 @@ addEventHandler("cguiSavePassword", getRootElement(), cguiSetNewPassword)
 
 function timerPDUnjailPlayer(jailedPlayer)
 	if(isElement(jailedPlayer)) then
-		local timeServed = getElementData(jailedPlayer, "pd.jailserved", false)
+		local timeServed = getElementData(jailedPlayer, "pd.jailserved", false) or 0
 		local timeLeft = getElementData(jailedPlayer, "pd.jailtime", false) or 0
 		local username = getPlayerName(jailedPlayer)
 		setElementData(jailedPlayer, "pd.jailserved", timeServed+1, false)
