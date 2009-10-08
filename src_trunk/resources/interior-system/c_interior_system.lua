@@ -127,12 +127,9 @@ function createBlipsFromTable(interiors)
 		end
 	end
 
+	-- spawn the new ones.
 	for key, value in ipairs(interiors) do
-		local inttype = interiors[key][1]
-		local x = interiors[key][2]
-		local y = interiors[key][3]
-		
-		createBlip(x, y, 10, 31+inttype, 2, 255, 0, 0, 255, 0, 300)
+		createBlipAtXY(interiors[key][1], interiors[key][2], interiors[key][3])
 	end
 end
 addEvent("createBlipsFromTable", true)

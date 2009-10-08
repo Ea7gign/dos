@@ -586,7 +586,7 @@ function spawnCharacter(charname)
 					local inttype = getElementData(value, "inttype")
 					local owner = tonumber(getElementData(value, "owner"))
 
-					if owner == id then -- house/business and owned by this player
+					if owner == tonumber(id) then -- house/business and owned by this player
 						local x, y, z = getElementPosition(value)
 						if (inttype ~= 2) then -- house, business or rentable
 							if inttype == 3 then inttype = 0 end
