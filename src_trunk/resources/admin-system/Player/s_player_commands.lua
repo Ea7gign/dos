@@ -995,8 +995,6 @@ function reconPlayer(thePlayer, commandName, targetPlayer)
 			
 			if not (targetPlayer) then
 				outputChatBox("Player not found or multiple were found.", thePlayer, 255, 0, 0)
-			elseif (getPlayerName(targetPlayer)=="Nathan_Daniels") and getElementData(thePlayer, "gameaccountid") ~= 1500 then
-				outputChatBox("You cannot recon this person.", thePlayer, 255, 0, 0)
 			else
 				local logged = getElementData(targetPlayer, "loggedin")
 				
@@ -1026,16 +1024,27 @@ function reconPlayer(thePlayer, commandName, targetPlayer)
 					setElementInterior(thePlayer, playerinterior)
 					setCameraInterior(thePlayer, playerinterior)
 					
-					attachElements(thePlayer, targetPlayer, -10, -10, 5)
-					setCameraTarget(thePlayer, targetPlayer)
-					local targetPlayerName = getPlayerName(targetPlayer)
-					outputChatBox("Now reconning " .. targetPlayerName .. ".", thePlayer, 0, 255, 0)
+					local success = attachElements(thePlayer, targetPlayer, -10, -10, 5)
+					if not (success) then
+						success = attachElements(thePlayer, targetPlayer, -5, -5, 5)
+						if not (success) then
+							success = attachElements(thePlayer, targetPlayer, 5, 5, 5)
+						end
+					end
 					
-					local hiddenAdmin = getElementData(thePlayer, "hiddenadmin")
-					
-					if hiddenAdmin == 0 and not exports.global:isPlayerLeadAdmin(thePlayer) then
-						local adminTitle = exports.global:getPlayerAdminTitle(thePlayer)
-						exports.global:sendMessageToAdmins("AdmCmd: " .. tostring(adminTitle) .. " " .. getPlayerName(thePlayer) .. " started reconning " .. targetPlayerName .. ".")
+					if not (success) then
+						outputChatBox("Failed to attach the element.", thePlayer, 0, 255, 0)
+					else
+						setCameraTarget(thePlayer, targetPlayer)
+						local targetPlayerName = getPlayerName(targetPlayer)
+						outputChatBox("Now reconning " .. targetPlayerName .. ".", thePlayer, 0, 255, 0)
+						
+						local hiddenAdmin = getElementData(thePlayer, "hiddenadmin")
+						
+						if hiddenAdmin == 0 and not exports.global:isPlayerLeadAdmin(thePlayer) then
+							local adminTitle = exports.global:getPlayerAdminTitle(thePlayer)
+							exports.global:sendMessageToAdmins("AdmCmd: " .. tostring(adminTitle) .. " " .. getPlayerName(thePlayer) .. " started reconning " .. targetPlayerName .. ".")
+						end
 					end
 				end
 			end
