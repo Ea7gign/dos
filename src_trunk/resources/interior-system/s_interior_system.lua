@@ -249,6 +249,9 @@ function sellTo(thePlayer, commandName, targetPlayerName)
 								local query = mysql_query(handler, "UPDATE interiors SET owner = '" .. getElementData(targetPlayer, "dbid") .. "' WHERE id='" .. dbid .. "'")
 								if query then
 									mysql_free_result(query)
+									
+									
+									
 									setElementData(entrance, "owner", getElementData(targetPlayer, "dbid"))
 									setElementData(exit, "owner", getElementData(targetPlayer, "dbid"))
 									
@@ -264,8 +267,16 @@ function sellTo(thePlayer, commandName, targetPlayerName)
 									triggerClientEvent(thePlayer, "removeBlipAtXY", thePlayer, interiorType, getElementPosition(entrance))
 									triggerClientEvent(targetPlayer, "createBlipAtXY", targetPlayer, interiorType, getElementPosition(entrance))
 									
-									outputChatBox("You've successfully sold your property to " .. targetPlayerName .. ".", thePlayer, 0, 255, 0)
-									outputChatBox((getPlayerName(thePlayer):gsub("_", " ")) .. " sold you this property.", targetPlayer, 0, 255, 0)
+									local rent = getElementData(entrance, "rent")
+									
+									if interiorType == 0 or interiorType == 1 then
+										outputChatBox("You've successfully sold your property to " .. targetPlayerName .. ".", thePlayer, 0, 255, 0)
+										outputChatBox((getPlayerName(thePlayer):gsub("_", " ")) .. " sold you this property.", targetPlayer, 0, 255, 0)
+									else
+										outputChatBox(targetPlayerName .. " has taken over your rent contract.", thePlayer, 0, 255, 0)
+										outputChatBox("You did take over " .. getPlayerName(thePlayer):gsub("_", " ") .. "'s renting contract.",  targetPlayer, 0, 255, 0)
+									end
+									
 								else
 									outputChatBox("Error 09002 - Report on Forums.", thePlayer, 255, 0, 0)
 								end
