@@ -1,7 +1,7 @@
 <?php
 	if (!$_GET["id"] || !$_GET["uid"])
 	{
-		header('Location: http://www.valhallagaming.net/mtaucp/main.php');
+		header('Location: main.php');
 		exit;
 	}
 ?><?php include("config.php"); ?><?php 
