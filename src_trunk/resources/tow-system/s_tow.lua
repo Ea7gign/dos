@@ -99,7 +99,7 @@ function payRelease(vehID)
 	if exports.global:takeMoney(source, 75) then
 		exports.global:giveMoney(getTeamFromName("Best's Towing and Recovery"), 75)
 		setElementData(vehID, "Impounded", 0)
-		setElementPosition(vehID, 2743.0905761719, -1462.744750, 33.453125)
+		setElementPosition(vehID, 2743.0905761719, -1462.744750, 32.453125)
 		setVehicleLocked(vehID, true)
 		setElementData(vehID, "enginebroke", 0, false)
 		setVehicleDamageProof(vehID, false)
