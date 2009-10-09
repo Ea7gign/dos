@@ -1218,8 +1218,9 @@ function setVehiclePosition(thePlayer, commandName)
 					outputChatBox("This vehicle is not permanently spawned.", thePlayer, 255, 0, 0)
 				else
 					if (call(getResourceFromName("tow-system"), "CanTowTruckDriverGetPaid", thePlayer)) then
+						-- pd has to pay for this impound
 						exports.global:giveMoney(getTeamFromName("Best's Towing and Recovery"), 75)
-						exports.global:giveMoney(getTeamFromName("Los Santos Police Department"), 75)
+						exports.global:takeMoney(getTeamFromName("Los Santos Police Department"), 75)
 					end
 					removeElementData(veh, "requires.vehpos")
 					local x, y, z = getElementPosition(veh)
