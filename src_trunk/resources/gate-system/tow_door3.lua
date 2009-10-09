@@ -13,7 +13,7 @@ function useImpoundDoorc(thePlayer)
 		if (distance<=15) and (open==false) then
 			open = true
 			outputChatBox("The impound lot gate is now open!", thePlayer, 0, 255, 0)
-			moveObject(objGatec, 1000, 2812.6259765625, -1466.4775390625, 18.799030303955, 0,-90,0)
+			moveObject(objGatec, 1000, 2812.6259765625, -1466.4775390625, 18.799030303955, 0,90,0)
 			setTimer(closeImpoundDoorc, 7500, 1, thePlayer)
 		end
 	end
@@ -21,7 +21,7 @@ end
 addCommandHandler("gate", useImpoundDoorc)
 
 function closeImpoundDoorc(thePlayer)
-	moveObject(objGatec, 1000, 2812.6376953125, -1468.373046875, 17.148530960083, 0, 90, 0)
+	moveObject(objGatec, 1000, 2812.6376953125, -1468.373046875, 17.148530960083, 0, -90, 0)
 	setTimer(resetState1c, 1000, 1)
 end
 
