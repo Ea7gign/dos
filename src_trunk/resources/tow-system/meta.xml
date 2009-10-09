@@ -1,6 +1,6 @@
 <meta>
 	<info author="vG MTA Scripting Team" type="script" description="Towing system"/>
-	<map src="tow.map" />
+	<map src="tow-interior.map" />
 	<script src="s_tow.lua" />
 	<export function="CanTowTruckDriverVehPos" type="server" />
 	<export function="CanTowTruckDriverGetPaid" type="server" />
