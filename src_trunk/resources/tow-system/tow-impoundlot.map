@@ -1,3 +1,4 @@
+<map edf:definitions="editor_main">
     <object id="object (meshfence1_LAn) (1)" model="4100" interior="0" dimension="0" posX="2814.9096679688" posY="-1468.3328857422" posZ="20.726627349854" rotX="0" rotY="0" rotZ="320.3701171875" />
     <object id="object (meshfence1_LAn) (2)" model="4100" interior="0" dimension="0" posX="2814.8188476563" posY="-1468.3044433594" posZ="25.354038238525" rotX="0" rotY="0" rotZ="320.3701171875" />
     <object id="object (meshfence1_LAn) (3)" model="4100" interior="0" dimension="0" posX="2814.7744140625" posY="-1468.3408203125" posZ="29.139453887939" rotX="0" rotY="0" rotZ="320.361328125" />
@@ -30,3 +31,4 @@
     <object id="object (meshfence1_LAn) (3)" model="4100" interior="0" dimension="0" posX="2792.4951171875" posY="-1476.1024169922" posZ="22.313562393188" rotX="140.72399902344" rotY="87.533203125" rotZ="146.83935546875" />
     <object id="object (meshfence1_LAn) (56)" model="4100" interior="0" dimension="0" posX="2789.5651855469" posY="-1472.0787353516" posZ="21.049299240112" rotX="141.38305664063" rotY="91.697387695313" rotZ="289.15893554688" />
     <object id="object (meshfence1_LAn) (56)" model="4100" interior="0" dimension="0" posX="2788.6782226563" posY="-1469.4794921875" posZ="20.742866516113" rotX="139.13305664063" rotY="92.197387695313" rotZ="278.40466308594" />
+</map>
