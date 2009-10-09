@@ -168,3 +168,4 @@ end
 
 addEvent( "openElementInventory", true )
 addEventHandler( "openElementInventory", getRootElement(), openElementInventory )
+addEventHandler( "onClientChangeChar", getRootElement(), hideMenu )
