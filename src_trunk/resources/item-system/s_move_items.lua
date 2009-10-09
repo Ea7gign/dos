@@ -53,7 +53,9 @@ local function moveToElement( element, slot, ammo )
 			outputChatBox("You can't put this spray can into a " .. name .. ".", source, 255, 0, 0)
 		else
 			exports.global:takeWeapon( source, slot )
-			giveItem( element, -slot, ammo )
+			if ammo > 0 then
+				giveItem( element, -slot, ammo )
+			end
 		end
 	end
 end

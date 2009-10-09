@@ -25,7 +25,7 @@ local function forceUpdate( )
 	
 	-- WEAPONS
 	for slot = 0, 12 do
-		if getPedWeapon(localPlayer, slot) and getPedWeapon(localPlayer, slot) > 0 then
+		if getPedWeapon(localPlayer, slot) and getPedWeapon(localPlayer, slot) > 0 and getPedTotalAmmo( localPlayer, slot ) > 0 then
 			local row = guiGridListAddRow(gUserItems)
 			
 			guiGridListSetItemText(gUserItems, row, UIColName, getWeaponNameFromID( getPedWeapon(localPlayer, slot) ) .. " - " .. getPedTotalAmmo( localPlayer, slot ), false, false)
