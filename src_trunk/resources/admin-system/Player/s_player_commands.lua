@@ -184,6 +184,44 @@ function adminUncuff(thePlayer, commandName, targetPlayer)
 end
 addCommandHandler("auncuff", adminUncuff, false, false)
 
+--/AUNMASK
+function adminUnmask(thePlayer, commandName, targetPlayer)
+	if (exports.global:isPlayerAdmin(thePlayer)) then
+		if not (targetPlayer) then
+			outputChatBox("SYNTAX: /" .. commandName .. " [Player Partial Nick / ID]", thePlayer, 255, 194, 14)
+		else
+			local targetPlayer = exports.global:findPlayerByPartialNick(targetPlayer)
+			
+			if not (targetPlayer) then
+				outputChatBox("Player not found or multiple were found.", thePlayer, 255, 0, 0)
+			else
+				local targetPlayerName = getPlayerName(targetPlayer)
+				local logged = getElementData(targetPlayer, "loggedin")
+				local username = getPlayerName(thePlayer)
+				
+				if (logged==0) then
+					outputChatBox("Player is not logged in.", thePlayer, 255, 0, 0)
+				else
+					local gasmask = getElementData(targetPlayer, "gasmask")
+					local mask = getElementData(targetPlayer, "mask")
+					
+					if (gasmask==1 or mask==1) then
+						local name = string.gsub(getPlayerName(targetPlayer), "_", " ")
+						setPlayerNametagText(targetPlayer, tostring(name))
+
+						removeElementData(targetPlayer, "gasmask")
+						removeElementData(targetPlayer, "mask")
+						outputChatBox("You have removed the mask from " .. name .. ".", thePlayer, 255, 0, 0)
+					else
+						outputChatBox("Player is not masked.", thePlayer, 255, 0, 0)
+					end
+				end
+			end
+		end
+	end
+end
+addCommandHandler("aunmask", adminUnmask, false, false)
+
 function infoDisplay(thePlayer)
 	if (exports.global:isPlayerAdmin(thePlayer)) then
 		outputChatBox("---[        Useful Information        ]---", getRootElement(), 255, 194, 15)
