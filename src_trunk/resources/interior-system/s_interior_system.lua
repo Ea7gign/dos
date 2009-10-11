@@ -543,7 +543,7 @@ addEventHandler("onResourceStart", getResourceRootElement(getThisResource()), lo
 
 function setPickupElementData(pickup, id, optAngle, locked, owner, inttype, cost, name, max_items, tennant, rent, interiorwithin, dimension, money, fee)
 	if(pickup) then
-		setElementData(pickup, "dbid", id, false)
+		setElementData(pickup, "dbid", id)
 		setElementData(pickup, "angle", optAngle, false)
 		setElementData(pickup, "locked", locked, false)
 		setElementData(pickup, "owner", owner, false)
@@ -563,7 +563,7 @@ end
 function setIntPickupElementData(intpickup, id, rot, locked, owner, inttype, interior)
 	if(intpickup) then
 		-- For Interior Pickup
-		setElementData(intpickup, "dbid", id, false)
+		setElementData(intpickup, "dbid", id)
 		setElementData(intpickup, "angle", rot, false)
 		setElementData(intpickup, "locked", locked, false)
 		setElementData(intpickup, "owner", owner, false)
@@ -1006,6 +1006,37 @@ addEventHandler( "lockUnlockHouse", getRootElement(),
 			for key, value in ipairs(exports.pool:getPoolElementsByType("pickup")) do
 				local dbid = getElementData(value, "dbid")
 				if dbid == itemValue then
+					setElementData(value, "locked", locked, false)
+				end
+			end
+		else
+			cancelEvent( )
+		end	
+	end
+)
+
+
+addEvent( "lockUnlockHouseID",true )
+addEventHandler( "lockUnlockHouseID", getRootElement(),
+	function( id )
+		if id and hasKey(source, id) then
+			local result = mysql_query(handler, "SELECT 1-locked FROM interiors WHERE id = " .. id)
+			local locked = 0
+			if result then
+				locked = tonumber(mysql_result(result, 1, 1))
+				mysql_free_result(result)
+			end
+			
+			mysql_free_result( mysql_query(handler, "UPDATE interiors SET locked='" .. locked .. "' WHERE id='" .. id .. "' LIMIT 1") )
+			if locked == 0 then
+				exports.global:sendLocalMeAction(source, "puts the key in the door to unlock it.")
+			else
+				exports.global:sendLocalMeAction(source, "puts the key in the door to lock it.")
+			end
+			
+			for key, value in ipairs(exports.pool:getPoolElementsByType("pickup")) do
+				local dbid = getElementData(value, "dbid")
+				if dbid == id then
 					setElementData(value, "locked", locked, false)
 				end
 			end

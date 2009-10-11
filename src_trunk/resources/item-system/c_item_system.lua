@@ -27,24 +27,26 @@ function clickItem(button, state, absX, absY, wx, wy, wz)
 		local px, py, pz = getElementPosition(getLocalPlayer())
 		local x, y, z = nil
 		for key, value in ipairs(getElementsByType("object",getResourceRootElement())) do
-			x, y, z = getElementPosition(value)
-			local minx, miny, minz, maxx, maxy, maxz = getElementBoundingBox(value)
-			
-			local offset = 0.34
-			
-			minx = x + minx - offset
-			miny = y + miny - offset
-			minz = z + minz - offset
-			
-			maxx = x + maxx + offset
-			maxy = y + maxy + offset
-			maxz = z + maxz + offset
-			
-			local dist = getDistanceBetweenPoints3D(x, y, z, px, py, pz)
-			
-			if (wx >= minx and wx <=maxx) and (wy >= miny and wy <=maxy) and (wz >= minz and wz <=maxz) then
-				element = value
-				break
+			if isElementStreamedIn(value) then
+				x, y, z = getElementPosition(value)
+				local minx, miny, minz, maxx, maxy, maxz = getElementBoundingBox(value)
+				
+				local offset = 0.34
+				
+				minx = x + minx - offset
+				miny = y + miny - offset
+				minz = z + minz - offset
+				
+				maxx = x + maxx + offset
+				maxy = y + maxy + offset
+				maxz = z + maxz + offset
+				
+				local dist = getDistanceBetweenPoints3D(x, y, z, px, py, pz)
+				
+				if (wx >= minx and wx <=maxx) and (wy >= miny and wy <=maxy) and (wz >= minz and wz <=maxz) then
+					element = value
+					break
+				end
 			end
 		end
 		
