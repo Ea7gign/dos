@@ -9,7 +9,7 @@ g_items = {
 	-- 5 = Books
 	-- 6 = Clothing & Accessories
 	-- 7 = Electronics
-	{ "Haggis", "A plump haggis animal, straight from the hills of Scotland.", 1, 1271 },
+	{ "Haggis", "A plump haggis animal, straight from the hills of Scotland.", 1, 2215 },
 	{ "Cellphone", "A sleek cellphone, look's like a new one too.", 7, 1271 },
 	{ "Vehicle Key", "A vehicle key with a small manufacturers badge on it. (( Opens vehicle ##v ))", 2, 1581 },
 	{ "House Key", "A green house key.", 2, 1581 },

@@ -17,23 +17,54 @@ showClothes = true
 showElectronics = true
 showEmpty = true
 
-function clickItem(button, state, absX, absY, wx, wy, wz, element)
-	if getElementData(getLocalPlayer(), "exclusiveGUI") then
-		return
-	end
-	if (element) and (getElementType(element)=="object") and (button=="right") and (state=="down") and getElementParent(getElementParent(element)) == getResourceRootElement() then
-		local x, y, z = getElementPosition(getLocalPlayer())
-		if getDistanceBetweenPoints3D(x, y, z, wx, wy, wz) < 3 then
+function clickItem(button, state, absX, absY, wx, wy, wz)
+	if (button == "right") and (state=="down") then
+		if getElementData(getLocalPlayer(), "exclusiveGUI") then
+			return
+		end
+		
+		local element = nil
+		local px, py, pz = getElementPosition(getLocalPlayer())
+		local x, y, z = nil
+		for key, value in ipairs(getElementsByType("object")) do
+			x, y, z = getElementPosition(value)
+			local minx, miny, minz, maxx, maxy, maxz = getElementBoundingBox(value)
+			
+			local offset = 0.34
+			
+			minx = x + minx - offset
+			miny = y + miny - offset
+			minz = z + minz - offset
+			
+			maxx = x + maxx + offset
+			maxy = y + maxy + offset
+			maxz = z + maxz + offset
+			
+			local dist = getDistanceBetweenPoints3D(x, y, z, px, py, pz)
+			
+			if (wx >= minx and wx <=maxx) and (wy >= miny and wy <=maxy) and (wz >= minz and wz <=maxz) then
+				element = value
+				break
+			end
+		end
+		
+		if (element) and (getElementType(element)=="object") and (button=="right") and (state=="down") and getElementParent(getElementParent(element)) == getResourceRootElement() then
+			if getDistanceBetweenPoints3D(x, y, z, wx, wy, wz) < 3 then
+				if (wRightClick) then
+					hideItemMenu()
+				end
+				showCursor(true)
+				ax = absX
+				ay = absY
+				item = element
+				showItemMenu()
+			else
+				outputChatBox("You are too far away from that item.", 255, 0, 0)
+			end
+		else
 			if (wRightClick) then
 				hideItemMenu()
 			end
-			showCursor(true)
-			ax = absX
-			ay = absY
-			item = element
-			showItemMenu()
-		else
-			outputChatBox("You are too far away from that item.", 255, 0, 0)
 		end
 	end
 end
