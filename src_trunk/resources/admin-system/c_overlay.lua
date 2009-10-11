@@ -10,7 +10,7 @@ local ownReports = {}
 -- Admin Titles
 function getAdminTitle(thePlayer)
 	local adminLevel = tonumber(getElementData(thePlayer, "adminlevel")) or 0
-	local text = ({ "Trial Admin", "Admin", "Super Admin", "Lead Admin", "Head Admin", "Owner" })[adminLevel] or "Player"
+	local text = ({ "Trial Admin", "Admin", "Super Admin", "Lead Admin", "Head Admin", "Owner", nil, nil, nil, "Scripter" })[adminLevel] or "Player"
 	
 	local hiddenAdmin = getElementData(thePlayer, "hiddenadmin") or 0
 	if (hiddenAdmin==1) then
@@ -24,7 +24,7 @@ function getAdminCount()
 	for key, value in ipairs(getElementsByType("player")) do
 		if (isElement(value)) then
 			local level = getElementData( value, "adminlevel" ) or 0
-			if level >= 1 then
+			if level >= 1 and level <= 6 then
 				online = online + 1
 				
 				local aod = getElementData( value, "adminduty" ) or 0
@@ -59,11 +59,11 @@ local function updateGUI()
 			ownreporttext = ": #" .. table.concat(ownReports, ", #")
 		end
 		
-		local onduty = "Off Duty"
+		local onduty = getElementData( localPlayer, "adminlevel" ) <= 6 and "Off Duty" .. " :: " or ""
 		if getElementData( localPlayer, "adminduty" ) == 1 then
-			onduty = "On Duty"
+			onduty = "On Duty" .. " :: "
 		end
-		guiSetText( statusLabel, getAdminTitle( localPlayer ) .. " :: " .. onduty .. " :: " .. getElementData( localPlayer, "gameaccountusername" ) .. " :: " .. duty .. "/" .. online .. " Admins :: " .. leadduty .. "/" .. lead .. " Lead+ Admins :: " .. ( openReports - handledReports ) .. " unanswered reports" .. reporttext .. " :: " .. handledReports .. " handled reports" .. ownreporttext )
+		guiSetText( statusLabel, getAdminTitle( localPlayer ) .. " :: " .. onduty .. getElementData( localPlayer, "gameaccountusername" ) .. " :: " .. duty .. "/" .. online .. " Admins :: " .. leadduty .. "/" .. lead .. " Lead+ Admins" .. ( getElementData( localPlayer, "adminlevel" ) <= 6 and ( " :: " .. ( openReports - handledReports ) .. " unanswered reports" .. reporttext .. " :: " .. handledReports .. " handled reports" .. ownreporttext ) or "" ) )
 	end
 end
 
