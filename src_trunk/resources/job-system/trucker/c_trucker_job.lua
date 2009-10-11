@@ -135,7 +135,7 @@ end
 function nextDeliveryCheckpoint()
 	deliveryStopTimer = nil
 	if jobstate == 2 or jobstate == 3 then
-		local vehicle = getPedOccupiedVehicle(localPlayer))
+		local vehicle = getPedOccupiedVehicle(localPlayer)
 		if vehicle and getVehicleController(vehicle) == localPlayer and truck[getElementModel(vehicle)] then
 			destroyElement(marker)
 			destroyElement(blip)
