@@ -628,16 +628,18 @@ function dropItem(itemID, x, y, z, ammo, keepammo)
 			
 			-- Create Object
 			local modelid = getItemModel(tonumber(itemID))
-			local obj = createObject(modelid, x, y, z)
+			
+			local rx, ry, rz, zoffset = getItemRotInfo(itemID)
+			local obj = createObject(modelid, x, y, z - zoffset, rx, ry, rz)
 			exports.pool:allocateElement(obj)
 			
 			setElementInterior(obj, interior)
 			setElementDimension(obj, dimension)
 			
 			if (itemID==76) then
-				moveObject(obj, 200, x, y, z+0.3, 90, 0, 0)
+				moveObject(obj, 200, x, y, z + 0.05, 90, 0, 0)
 			else
-				moveObject(obj, 200, x, y, z+0.3)
+				moveObject(obj, 200, x, y, z + 0.05)
 			end
 			
 			setElementData(obj, "id", id, false)
@@ -815,7 +817,9 @@ function loadWorldItems(res)
 		else
 			local modelid = getItemModel(itemID)
 			
-			local obj = createObject(modelid, x, y, z)
+			local rx, ry, rz, zoffset= getItemRotInfo(itemID)
+			local obj = createObject(modelid, x, y, z - zoffset, rx, ry, rz)
+			
 			exports.pool:allocateElement(obj)
 			setElementDimension(obj, dimension)
 			setElementInterior(obj, interior)

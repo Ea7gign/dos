@@ -26,6 +26,8 @@
 	<script src="g_items.lua" type="server" />
 	<export function="getItemName" type="client"/>
 	<export function="getItemName" type="server"/>
+	<export function="getItemRotInfo" type="server"/>
+	<export function="getItemRotInfo" type="client"/>
 
 	<script src="s_item_system.lua" type="server" />
 	<script src="c_item_system.lua" type="client" />
