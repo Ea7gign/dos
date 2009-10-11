@@ -9,6 +9,8 @@ function doCheck(sourcePlayer, command, ...)
 				local ip = getPlayerIP(noob)
 				local adminreports = tonumber(getElementData(noob, "adminreports"))
 				local donatorlevel = exports.global:getPlayerDonatorTitle(noob)
+				
+				-- get admin note
 				local note = ""
 				local result = mysql_query( handler, "SELECT adminnote FROM accounts WHERE id = " .. tostring(getElementData(noob, "gameaccountid")) )
 				if result then
@@ -21,7 +23,17 @@ function doCheck(sourcePlayer, command, ...)
 					outputDebugString( "Check Error: " .. mysql_error( handler ) )
 				end
 				
-				triggerClientEvent( sourcePlayer, "onCheck", noob, ip, adminreports, donatorlevel, note)
+				-- get admin history count
+				local history = '?'
+				local result = mysql_query( handler, "SELECT COUNT(*) FROM adminhistory WHERE user = " .. tostring(getElementData(noob, "gameaccountid")) )
+				if result then
+					history = tonumber( mysql_result( result, 1, 1 ) ) or '?'
+					mysql_free_result( result )
+				else
+					outputDebugString( "Check2 Error: " .. mysql_error( handler ) )
+				end
+				
+				triggerClientEvent( sourcePlayer, "onCheck", noob, ip, adminreports, donatorlevel, note, history)
 			else
 				outputChatBox("No such player online.", sourcePlayer, 255, 194, 14)
 			end
@@ -50,6 +62,48 @@ function savePlayerNote( target, text )
 end
 addEvent( "savePlayerNote", true )
 addEventHandler( "savePlayerNote", getRootElement(), savePlayerNote )
+
+function showAdminHistory( target )
+	if exports.global:isPlayerAdmin( source ) then
+		local targetID = getElementData( target, "gameaccountid" )
+		if targetID then
+			local result = mysql_query( handler, "SELECT date, action, reason, duration, a.username, user_char FROM adminhistory h LEFT JOIN accounts a ON a.id = h.admin WHERE user = " .. targetID .. " ORDER BY h.id" )
+			if result then
+				local info = {}
+				for res, row in mysql_rows( result ) do
+					table.insert( info, row )
+				end
+				
+				triggerClientEvent( source, "cshowAdminHistory", target, info )
+				mysql_free_result( result )
+			else
+				outputDebugString( "History: " .. mysql_error( handler ) )
+				outputChatBox( "Failed to retrieve history.", source, 255, 0, 0)
+			end
+		else
+			outputChatBox("Unable to find the account id.", source, 255, 0, 0)
+		end
+	end
+end
+addEvent( "showAdminHistory", true )
+addEventHandler( "showAdminHistory", getRootElement(), showAdminHistory )
+
+addCommandHandler( "history", 
+	function( thePlayer, commandName, ... )
+		if exports.global:isPlayerAdmin( thePlayer ) then
+			if not (...) then
+				outputChatBox("SYNTAX: /" .. commandName .. " [player]", 255, 194, 14)
+			else
+				local targetPlayer = exports.global:findPlayerByPartialNick(...)
+				if not targetPlayer then
+					outputChatBox("No such player online.", thePlayer, 255, 194, 14)
+				else
+					triggerEvent("showAdminHistory", thePlayer, targetPlayer)
+				end
+			end
+		end
+	end
+)
 
 function deleteall()
 	for key, value in ipairs(getElementChildren(getRootElement())) do

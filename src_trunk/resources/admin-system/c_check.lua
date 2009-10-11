@@ -21,15 +21,15 @@ function CreateCheckWindow()
 		guiCreateLabel(0.03,0.27,0.66,0.0806,"Ping: N/A",true,Window),
 		guiCreateLabel(0.03,0.56,0.66,0.0806,"Vehicle: N/A",true,Window),
 		false,
-		guiCreateLabel(0.6,0.43,0.4031,0.0766,"Location: N/A",true,Window),
+		guiCreateLabel(0.6,0.41,0.4031,0.0766,"Location: N/A",true,Window),
 		guiCreateLabel(0.6,0.12,0.4031,0.0766,"X:",true,Window),
 		guiCreateLabel(0.6,0.17,0.4031,0.0766,"Y: N/A",true,Window),
-		guiCreateLabel(0.6,0.24,0.4031,0.0766,"Z: N/A",true,Window),
-		guiCreateLabel(0.6,0.31,0.2907,0.0806,"Interior: N/A",true,Window),
-		guiCreateLabel(0.6,0.36,0.2907,0.0806,"Dimension: N/A",true,Window),
+		guiCreateLabel(0.6,0.22,0.4031,0.0766,"Z: N/A",true,Window),
+		guiCreateLabel(0.6,0.29,0.2907,0.0806,"Interior: N/A",true,Window),
+		guiCreateLabel(0.6,0.34,0.2907,0.0806,"Dimension: N/A",true,Window),
 		guiCreateLabel(0.03,0.17,0.66,0.0887,"Admin Level: N/A", true,Window),
 		guiCreateLabel(0.03,0.22,0.66,0.0887,"Donator Level: N/A",true,Window),
-		guiCreateLabel(0.6,0.5,0.4093,0.0806,"Hours Ingame: N/A",true,Window),
+		guiCreateLabel(0.6,0.48,0.4093,0.0806,"Hours Ingame: N/A",true,Window),
 	}
 	
 	-- player notes
@@ -46,7 +46,10 @@ function CreateCheckWindow()
 		end
 	)
 	Button[4] = guiCreateButton(0.85,0.7,0.12, 0.14,"Save\nNote",true,Window)
-	addEventHandler( "onClientGUIClick", Button[4], SaveNote )
+	addEventHandler( "onClientGUIClick", Button[4], SaveNote, false )
+	
+	Button[5] = guiCreateButton(0.6,0.56,0.4093,0.1,"History: N/A",true,Window)
+	addEventHandler( "onClientGUIClick", Button[5], ShowHistory, false )
 
 	--Image[1] = guiCreateStaticImage(0.4758,0.1089,0.1278,0.2177,"search.png",true,Window)
 	guiSetVisible(Window, false)
@@ -59,12 +62,13 @@ addEventHandler("onClientResourceStart", getResourceRootElement(getThisResource(
 )
 
 local levels = { "Trial Admin", "Admin", "Super Admin", "Lead Admin", "Head Admin", "Owner" }
-function OpenCheck( ip, adminreports, donatorlevel, note )
+function OpenCheck( ip, adminreports, donatorlevel, note, history )
 	player = source
 
 	guiSetText ( Label[2], "IP: " .. ip )
 	guiSetText ( Label[18], "Admin Level: " .. ( levels[getElementData(player, "adminlevel") or 0] or "Player" ) .. " (" .. adminreports .. " Reports)" )
 	guiSetText ( Label[19], "Donator Level: " .. donatorlevel )
+	guiSetText ( Button[5], "History: " .. history )
 	guiSetText ( memo, note )
 
 	if not guiGetVisible( Window ) then
@@ -78,7 +82,7 @@ addEventHandler( "onCheck", getRootElement(), OpenCheck )
 
 addEventHandler( "onClientRender", getRootElement(),
 	function()
-		if guiGetVisible(Window) then
+		if guiGetVisible(Window) and isElement( player ) then
 			guiSetText ( Label[1], "Name: " .. getPlayerName(player) .. " (" .. getElementData( player, "gameaccountusername" ) .. ")")
 			
 			local x, y, z = getElementPosition(player)
@@ -138,3 +142,84 @@ function SaveNote( button, state )
 	end
 end
 
+function ShowHistory( button, state )
+	if source == Button[5] and button == "left" and state == "up" then
+		triggerServerEvent( "showAdminHistory", getLocalPlayer(), player )
+	end
+end
+
+local wHist, gHist, bClose
+
+-- window
+local actions = { [0] = "jail", [1] = "kick", [2] = "ban", [3] = "app", [4] = "warn", [5] = "aban" }
+
+function duration( d, a )
+	if a == 1 or a == 3 or a == 4 or a == 6 then
+		return ""
+	elseif a == 0 then
+		return d .. " min"
+	elseif a == 2 and d ~= 0 then
+		return d .. " hrs"
+	else
+		return "perm"
+	end
+end
+addEvent( "cshowAdminHistory", true )
+addEventHandler( "cshowAdminHistory", getRootElement(),
+	function( info )
+		if wHist then
+			destroyElement( wHist )
+			wHist = nil
+			
+			showCursor( false )
+		else
+			local sx, sy = guiGetScreenSize()
+			wHist = guiCreateWindow( sx / 2 - 350, sy / 2 - 250, 700, 500, "Admin History: " .. getPlayerName( source ), false )
+			
+			-- date, action, reason, duration, , a.username, c.charactername
+			
+			gHist = guiCreateGridList( 0.03, 0.04, 0.94, 0.88, true, wHist )
+			local colAction = guiGridListAddColumn( gHist, "Action", 0.07 )
+			local colChar = guiGridListAddColumn( gHist, "Character", 0.2 )
+			local colReason = guiGridListAddColumn( gHist, "Reason", 0.25 )
+			local colDuration = guiGridListAddColumn( gHist, "Time", 0.07 )
+			local colAdmin = guiGridListAddColumn( gHist, "Admin", 0.15 )
+			local colDate = guiGridListAddColumn( gHist, "Date", 0.2 )
+			
+			for _, res in pairs( info ) do
+				local row = guiGridListAddRow( gHist )
+				guiGridListSetItemText( gHist, row, colAction, actions[ tonumber( res[2] ) ] or "?", false, false )
+				guiGridListSetItemText( gHist, row, colChar, res[6], false, false )
+				guiGridListSetItemText( gHist, row, colReason, res[3], false, false )
+				guiGridListSetItemText( gHist, row, colDuration, duration( res[4], tonumber( res[2] ) ), false, false )
+				guiGridListSetItemText( gHist, row, colAdmin, res[5], false, false )
+				guiGridListSetItemText( gHist, row, colDate, res[1], false, false )
+			end
+--[[			for _, res in pairs( results ) do
+				local row = guiGridListAddRow( gHist )
+				guiGridListSetItemText( gHist, row, colName, res[1]:gsub("_", " "), false, false )
+				guiGridListSetItemText( gHist, row, colVotes, tostring( res[2] ), false, true )
+				
+				if total > 0 and res[1] ~= "Not voted" then
+					guiGridListSetItemText( gHist, row, colPercent, ("%.2f%%"):format( tonumber( res[2] ) / total * 100 ), false, true )
+				else
+					guiGridListSetItemText( gHist, row, colPercent, " ", false, false )
+				end
+			end]]
+			
+			bClose = guiCreateButton( 0.03, 0.93, 0.94, 0.07, "Close", true, wHist )
+			addEventHandler( "onClientGUIClick", bClose,
+				function( button, state )
+					if button == "left" and state == "up" then
+						destroyElement( wHist )
+						wHist = nil
+						
+						showCursor( false )
+					end
+				end, false
+			)
+			
+			showCursor( true )
+		end
+	end
+)
