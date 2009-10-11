@@ -48,7 +48,7 @@ function clickItem(button, state, absX, absY, wx, wy, wz)
 			end
 		end
 		
-		if (element) and (getElementType(element)=="object") and (button=="right") and (state=="down") and getElementParent(getElementParent(element)) == getResourceRootElement() then
+		if (element) and (getElementType(element)=="object") and getElementParent(getElementParent(element)) == getResourceRootElement() then
 			if getDistanceBetweenPoints3D(x, y, z, wx, wy, wz) < 3 then
 				if (wRightClick) then
 					hideItemMenu()
