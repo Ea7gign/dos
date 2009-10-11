@@ -709,8 +709,8 @@ function dropItem(button)
 				
 				local x, y, z = getElementPosition(getLocalPlayer())
 				local rot = getPedRotation(getLocalPlayer())
-				x = x - math.sin( math.rad( rot ) ) * 1
-				y = y - math.cos( math.rad( rot ) ) * 1
+				x = x + math.sin( math.rad( rot ) ) * 1
+				y = y + math.cos( math.rad( rot ) ) * 1
 				
 				local z = getGroundPosition( x, y, z + 2 )
 				triggerServerEvent("dropItem", getLocalPlayer(), itemSlot, x, y, z)
