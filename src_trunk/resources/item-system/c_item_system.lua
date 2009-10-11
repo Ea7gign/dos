@@ -743,10 +743,19 @@ function dropItem(button)
 
 				guiGridListSetSelectedItem(guiGetSelectedTab(tabPanel) == tabKeys and gKeys or gItems, 0, 0)
 				
-				local x, y, z = getElementPosition(getLocalPlayer())
-				local rot = getPedRotation(getLocalPlayer())
-				x = x + math.sin( math.rad( rot ) ) * 1
-				y = y + math.cos( math.rad( rot ) ) * 1
+				--local x, y, z = getElementPosition(getLocalPlayer())
+				--local rot = getPedRotation(getLocalPlayer())
+				--x = x + math.sin( math.rad( rot ) ) * 1
+				--y = y + math.cos( math.rad( rot ) ) * 1
+				
+				-- DIRECTLY INFRONT OF PLAYER
+				local matrix = getElementMatrix(getLocalPlayer())
+				local oldX = 0
+				local oldY = 1
+				local oldZ = 0
+				local x = oldX * matrix[1][1] + oldY * matrix [2][1] + oldZ * matrix [3][1] + matrix [4][1]
+				local y = oldX * matrix[1][2] + oldY * matrix [2][2] + oldZ * matrix [3][2] + matrix [4][2]
+				local z = oldX * matrix[1][3] + oldY * matrix [2][3] + oldZ * matrix [3][3] + matrix [4][3]
 				
 				local z = getGroundPosition( x, y, z + 2 )
 				triggerServerEvent("dropItem", getLocalPlayer(), itemSlot, x, y, z)
