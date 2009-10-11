@@ -43,7 +43,7 @@ function getCharacterName( id )
 			local name = mysql_result(query, 1, 1)
 			mysql_free_result(query)
 			
-			charCache[ id ] = name
+			charCache[ id ] = name:gsub("_", " ")
 		end
 	end
 	return charCache[ id ]
@@ -860,7 +860,7 @@ function setRealInVehicle(thePlayer)
 			local ownerName = getCharacterName(owner)
 			
 			if ownerName then
-				outputChatBox("(( This " .. carName .. " belongs to " .. ownerName:gsub("_", " ") .. ". ))", thePlayer, 255, 195, 14)
+				outputChatBox("(( This " .. carName .. " belongs to " .. ownerName .. ". ))", thePlayer, 255, 195, 14)
 				if (getElementData(source, "Impounded") > 0) then
 					local output = getRealTime().yearday-getElementData(source, "Impounded")
 					outputChatBox("(( This " .. carName .. " has been Impounded for: " .. output .. (output == 1 and " Day." or " Days.") .. " ))", thePlayer, 255, 195, 14)
