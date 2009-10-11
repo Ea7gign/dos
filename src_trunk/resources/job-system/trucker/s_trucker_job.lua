@@ -3,7 +3,7 @@ local truckruns = { }
 local truckwage = { }
 
 function giveTruckingMoney(vehicle)
-	outputChatBox("You earned $" .. truckwage[vehicle] .. " on your trucking runs.", source, 255, 194, 15)
+	outputChatBox("You earned $" .. ( truckwage[vehicle] or 0 ) .. " on your trucking runs.", source, 255, 194, 15)
 	exports.global:giveMoney(source, truckwage[vehicle])
 
 	-- respawn the vehicle
