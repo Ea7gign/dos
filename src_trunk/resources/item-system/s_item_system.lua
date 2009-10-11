@@ -177,7 +177,7 @@ function useItem(itemSlot, additional)
 			exports.global:sendLocalMeAction(source, "drinks a bottle of water.")
 			takeItemFromSlot(source, itemSlot)
 		elseif (itemID==16) then -- clothes
-			local result = mysql_query(handler, "SELECT gender,skincolor FROM characters WHERE charactername='" .. getPlayerName(source) .. "' LIMIT 1")
+			local result = mysql_query(handler, "SELECT gender,skincolor FROM characters WHERE id='" .. getElementData(source, "dbid") .. "' LIMIT 1")
 			local gender = tonumber(mysql_result(result,1,1))
 			local race = tonumber(mysql_result(result,1,2))
 			mysql_free_result(result)
@@ -555,7 +555,7 @@ function destroyItem(itemID, isWeapon)
 			takeItemFromSlot(source, itemSlot)
 			
 			if tonumber(itemID) == 16 and tonumber(itemValue) == getPedSkin(source) and not exports.global:hasItem(source, 16, tonumber(itemValue)) then
-				local result = mysql_query(handler, "SELECT skincolor, gender FROM characters WHERE charactername='" .. getPlayerName(source) .. "' LIMIT 1")
+				local result = mysql_query(handler, "SELECT skincolor, gender FROM characters WHERE id='" .. getElementData(source, "dbid") .. "' LIMIT 1")
 				local skincolor = tonumber(mysql_result(result, 1, 1))
 				local gender = tonumber(mysql_result(result, 1, 2))
 				
@@ -671,7 +671,7 @@ function dropItem(itemID, x, y, z, ammo, keepammo)
 			
 			-- Check if he drops his current clothes
 			if itemID == 16 and itemValue == getPedSkin(source) and not hasItem(source, 16, itemValue) then
-				local result = mysql_query(handler, "SELECT skincolor, gender FROM characters WHERE charactername='" .. getPlayerName(source) .. "' LIMIT 1")
+				local result = mysql_query(handler, "SELECT skincolor, gender FROM characters WHERE id='" .. getElementData(source, "dbid") .. "' LIMIT 1")
 				local skincolor = tonumber(mysql_result(result, 1, 1))
 				local gender = tonumber(mysql_result(result, 1, 2))
 				
@@ -1013,7 +1013,7 @@ function givePlayerBadge(thePlayer, commandName, targetPlayer, badgeNumber )
 	local teamName = getTeamName(theTeam)
 	
 	if (teamName=="Los Santos Police Department") or (teamName=="Los Santos Emergency Services") then -- Are they in the PD or ES?
-		local query = mysql_query(handler, "SELECT faction_leader FROM characters WHERE charactername='" .. mysql_escape_string(handler, getPlayerName(thePlayer)) .."'")
+		local query = mysql_query(handler, "SELECT faction_leader FROM characters WHERE id='" .. getElementData(thePlayer, "dbid") .. "'")
 		local leader = tonumber(mysql_result(query, 1, 1))
 		mysql_free_result(query)
 		

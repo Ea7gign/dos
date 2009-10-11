@@ -157,7 +157,7 @@ function spawnCharacter(charname)
 	
 	local safecharname = mysql_escape_string(handler, charname)
 	
-	local result = mysql_query(handler, "SELECT id, x, y, z, rotation, interior_id, dimension_id, health, armor, skin, money, faction_id, cuffed, radiochannel, masked, duty, cellnumber, fightstyle, pdjail, pdjail_time, job, casualskin, weapons, ammo, items, itemvalues, car_license, gun_license, bankmoney, fingerprint, tag, hoursplayed, pdjail_station, timeinserver, restrainedobj, restrainedby, faction_rank, dutyskin, phoneoff, blindfold, lang1, lang1skill, lang2, lang2skill, lang3, lang3skill, currLang, gender FROM characters WHERE charactername='" .. charname .. "' AND account='" .. id .. "'")
+	local result = mysql_query(handler, "SELECT id, x, y, z, rotation, interior_id, dimension_id, health, armor, skin, money, faction_id, cuffed, radiochannel, masked, duty, cellnumber, fightstyle, pdjail, pdjail_time, job, casualskin, weapons, ammo, items, itemvalues, car_license, gun_license, bankmoney, fingerprint, tag, hoursplayed, pdjail_station, timeinserver, restrainedobj, restrainedby, faction_rank, dutyskin, phoneoff, blindfold, lang1, lang1skill, lang2, lang2skill, lang3, lang3skill, currLang, gender FROM characters WHERE charactername='" .. safecharname .. "' AND account='" .. id .. "'")
 	
 	if (result) then
 		local id = mysql_result(result, 1, 1)
@@ -488,18 +488,7 @@ function spawnCharacter(charname)
 		end
 		
 		-- LAST LOGIN
-		--local time = getRealTime()
-		--local days = time.monthday
-		--local months = (time.month+1)
-		--local years = (1900+time.year)
-				
-		--local yearday = time.yearday
-
-			
-		local username = getPlayerName(source)
-		local safeusername = mysql_escape_string(handler, username)
-		
-		local update = mysql_query(handler, "UPDATE characters SET lastlogin=NOW() WHERE charactername='" .. safeusername .. "'")
+		local update = mysql_query(handler, "UPDATE characters SET lastlogin=NOW() WHERE id='" .. id .. "'")
 		
 		if (update) then
 			mysql_free_result(update)
