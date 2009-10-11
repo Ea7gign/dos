@@ -76,8 +76,7 @@ function weaponAim(target)
 				local mode = getElementData(localPlayer, "deaglemode")
 				
 				if (mode==2) then
-					local speedx, speedy, speedz = getElementVelocity(target)
-					actualspeed = math.ceil(((speedx^2 + speedy^2 + speedz^2)^(0.5)*100))
+					actualspeed = exports.global:getVehicleVelocity(target)
 					outputChatBox(getVehicleName(target) .. " clocked in at " .. actualspeed .. " km/h.", 255, 194, 14)
 				end
 			end

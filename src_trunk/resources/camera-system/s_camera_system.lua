@@ -45,20 +45,17 @@ function stopMonitorSpeed(element, matchingDimension)
 end
 
 function checkSpeed(vehicle, player, colshape)
-	speedx, speedy, speedz = getElementVelocity(vehicle)
-	if (speedx) and (speedy) and (speedz) then
-		speed = ((speedx^2 + speedy^2 + speedz^2)^(0.5)*100)
-		
-		if (colshape==stripCamera1Col) then -- strip camera 1
-			if (speed>stripCamera1Speed) then
-				local x, y, z = getElementPosition(player)
-				local timer = getElementData(player, "cameratimer")
-				if timer then
-					killTimer(timer)
-					removeElementData(player, "cameratimer")
-				end
-				setTimer(sendWarningToCops, 1000, 1, vehicle, player, colshape, x, y, z, speed)
+	speed = exports.global:getVehicleVelocity(vehicle)
+	
+	if (colshape==stripCamera1Col) then -- strip camera 1
+		if (speed>stripCamera1Speed) then
+			local x, y, z = getElementPosition(player)
+			local timer = getElementData(player, "cameratimer")
+			if timer then
+				killTimer(timer)
+				removeElementData(player, "cameratimer")
 			end
+			setTimer(sendWarningToCops, 1000, 1, vehicle, player, colshape, x, y, z, speed)
 		end
 	end
 end
@@ -115,8 +112,8 @@ end
 
 function showspeed(thePlayer)
 	local veh = getPedOccupiedVehicle(thePlayer)
-	speedx, speedy, speedz = getElementVelocity (veh)
-	actualspeed = ((speedx^2 + speedy^2 + speedz^2)^(0.5)*100)
+
+	actualspeed = exports.global:getVehicleVelocity(veh)
 	outputChatBox("SPEED: " .. actualspeed .. "(" .. getTrainSpeed(veh) .. ")")
 	setVehicleEngineState(veh, true)
 end

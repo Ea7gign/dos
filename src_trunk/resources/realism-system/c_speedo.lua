@@ -8,8 +8,8 @@ function drawSpeedo()
 	if active and not isPlayerMapVisible() then
 		local vehicle = getPedOccupiedVehicle(getLocalPlayer())
 		if (vehicle) then
-			speedx, speedy, speedz = getElementVelocity(vehicle)
-			speed = ((speedx^2 + speedy^2 + speedz^2)^(0.5)*100)
+
+			speed = exports.global:cgetVehicleVelocity(vehicle)
 			local width, height = guiGetScreenSize()
 			local x = width
 			local y = height

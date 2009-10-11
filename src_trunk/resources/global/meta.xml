@@ -24,6 +24,12 @@
 	
 	<script src="optomization_globals.lua" type="server"/>
 	
+	<script src="vehicle_globals.lua" type="server"/>
+	<export function="getVehicleVelocity" type="server"/>
+	
+	<script src="c_vehicle_globals.lua" type="client"/>
+	<export function="cgetVehicleVelocity" type="client"/>
+	
 	<script src="money_globals.lua" type="server"/>
 	<script src="c_money_globals.lua" type="client"/>
 	<export function="giveMoney" type="server"/>
