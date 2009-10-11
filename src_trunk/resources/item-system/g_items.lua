@@ -55,7 +55,7 @@ g_items = {
 	{ "Chemistry Set", "A small chemistry set.", 4, 1210, 90, 0, 0, 0.2 },
 	{ "Handcuffs", "A pair of metal handcuffs.", 4, 2386, 0, 0, 0, 0.2 },
 	{ "Rope", "A long rope.", 4, 1271, 0, 0, 0, 0.0 },
-	{ "Handcuff Keys", "A small pair of handcuff keys.", 4, 270, 270, 0, 0.3 },
+	{ "Handcuff Keys", "A small pair of handcuff keys.", 4, 2386, 0, 0, 0, 0.2 },
 	{ "Backpack", "A reasonably sized backpack.", 4, 3026, 270, 0, 0, 0.3 },
 	{ "Fishing Rod", "A 7 foot carbon steel fishing rod.", 4, 338, 80, 0, 0, 0.32 },
 	{ "Los Santos Highway Code", "The Los Santos Highway Code.", 5, 2824, 0, 0, 0, 0.3 },
