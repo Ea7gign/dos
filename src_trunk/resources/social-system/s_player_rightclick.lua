@@ -10,7 +10,7 @@ function retrievePlayerInfo(targetPlayer)
 		end
 		mysql_free_result( result )
 		
-		local result = mysql_query(handler, "SELECT description, age, weight, height, skincolor FROM characters WHERE charactername='" .. getPlayerName(targetPlayer) .. "'")
+		local result = mysql_query(handler, "SELECT description, age, weight, height, skincolor FROM characters WHERE charactername='" .. getElementData(targetPlayer, "dbid") .. "'")
 		local description = tostring(mysql_result(result, 1, 1))
 		local age = tostring(mysql_result(result, 1, 2))
 		local weight = tostring(mysql_result(result, 1, 3))

@@ -131,7 +131,7 @@ end
 addCommandHandler("nearbyatms", getNearbyATMs, false, false)
 
 function showATMInterface(atm)
-	local result = mysql_query(handler, "SELECT faction_id, faction_leader FROM characters WHERE charactername='" .. getPlayerName(source) .. "' LIMIT 1")
+	local result = mysql_query(handler, "SELECT faction_id, faction_leader FROM characters WHERE id = " .. getElementData(source, "dbid") .. " LIMIT 1")
 	
 	if (result) then
 		local faction_id = tonumber(mysql_result(result, 1, 1))

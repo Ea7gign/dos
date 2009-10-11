@@ -97,7 +97,7 @@ function arrestPlayer(thePlayer, commandName, targetPlayerNick, fine, jailtime, 
 							
 							setElementData(targetPlayer, "pd.jailstation", station)
 							
-							local query = mysql_query(handler, "UPDATE characters SET pdjail='1', pdjail_time='" .. jailtime .. "', pdjail_station='" .. station .. "' WHERE charactername='" .. targetPlayerNick .. "'")
+							local query = mysql_query(handler, "UPDATE characters SET pdjail='1', pdjail_time='" .. jailtime .. "', pdjail_station='" .. station .. "' WHERE charactername='" .. mysql_escape_string(handler, targetPlayerNick) .. "'")
 							mysql_free_result(query)
 							outputChatBox("You jailed " .. targetPlayerNick .. " for " .. jailtime .. " Minutes.", thePlayer, 255, 0, 0)
 							
@@ -114,7 +114,7 @@ function arrestPlayer(thePlayer, commandName, targetPlayerNick, fine, jailtime, 
 							local theTeam = getTeamFromName("Los Santos Police Department")
 							local teamPlayers = getPlayersInTeam(theTeam)
 							
-							local result = mysql_query(handler, "SELECT faction_id, faction_rank FROM characters WHERE charactername='" .. username .. "' LIMIT 1")
+							local result = mysql_query(handler, "SELECT faction_id, faction_rank FROM characters WHERE charactername='" .. mysql_escape_string(handler, username) .. "' LIMIT 1")
 							
 							local factionID = tonumber(mysql_result(result, 1, 1))
 							local factionRank = tonumber(mysql_result(result, 1, 2))
@@ -162,7 +162,7 @@ function timerPDUnjailPlayer(jailedPlayer)
 		if (timeLeft<=0) and (theMagicTimer) then
 			killTimer(theMagicTimer) -- 0001290: PD /release bug
 			fadeCamera(jailedPlayer, false)
-			local query = mysql_query(handler, "UPDATE characters SET pdjail_time='0', pdjail='0', pdjail_station='0' WHERE charactername='" .. username .. "'")
+			local query = mysql_query(handler, "UPDATE characters SET pdjail_time='0', pdjail='0', pdjail_station='0' WHERE id=" .. getElementData(jailedPlayer, "dbid"))
 			mysql_free_result(query)
 			removeElementData(jailedPlayer, "jailtimer")
 			setElementDimension(jailedPlayer, 1)
@@ -186,7 +186,7 @@ function timerPDUnjailPlayer(jailedPlayer)
 			outputChatBox("Your time has been served.", jailedPlayer, 0, 255, 0)
 
 		elseif (timeLeft>0) then
-			local query = mysql_query(handler, "UPDATE characters SET pdjail_time='" .. timeLeft .. "' WHERE charactername='" .. username .. "'")
+			local query = mysql_query(handler, "UPDATE characters SET pdjail_time='" .. timeLeft .. "' WHERE id=" .. getElementData(jailedPlayer, "dbid"))
 			mysql_free_result(query)
 		end
 	else

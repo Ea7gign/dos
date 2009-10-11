@@ -213,7 +213,7 @@ function chatMain(message, messageType)
 				local languagename = call(getResourceFromName("language-system"), "getLanguageName", language)
 				
 				-- get faction rank title
-				local result = mysql_query(handler, "SELECT faction_id, faction_rank FROM characters WHERE charactername='" .. username:gsub(" ", "_") .. "' LIMIT 1")
+				local result = mysql_query(handler, "SELECT faction_id, faction_rank FROM characters WHERE id = " .. getElementData(source, "dbid") .. " LIMIT 1")
 									
 				local factionID = tonumber(mysql_result(result, 1, 1))
 				local factionRank = tonumber(mysql_result(result, 1, 2))
@@ -294,7 +294,7 @@ function govAnnouncement(thePlayer, commandName, ...)
 		if (teamID==1 or teamID==2 or teamID==4) then
 			local message = table.concat({...}, " ")
 			
-			local result = mysql_query(handler, "SELECT faction_id, faction_rank FROM characters WHERE charactername='" .. getPlayerName(thePlayer):gsub(" ", "_") .. "' LIMIT 1")
+			local result = mysql_query(handler, "SELECT faction_id, faction_rank FROM characters WHERE id=" .. getElementData(thePlayer, "dbid") .. " LIMIT 1")
 								
 			local factionID = tonumber(mysql_result(result, 1, 1))
 			local factionRank = tonumber(mysql_result(result, 1, 2))

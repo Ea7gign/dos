@@ -450,7 +450,7 @@ function phoneBook(thePlayer, commandName, partialNick)
 				outputChatBox("SYNTAX: /phonebook [Partial Name]", thePlayer, 255, 194, 14)
 			else
 				exports.global:sendLocalMeAction(thePlayer, "looks into their phonebook.")
-				local result = mysql_query(handler, "SELECT cellnumber, charactername FROM characters WHERE charactername LIKE '%" .. partialNick .. "%'")
+				local result = mysql_query(handler, "SELECT cellnumber, charactername FROM characters WHERE charactername LIKE '%" .. mysql_escape_string(handler, partialNick) .. "%'")
 				
 				if (mysql_num_rows(result)>0) then
 					for result, row in mysql_rows(result) do

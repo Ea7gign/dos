@@ -105,9 +105,7 @@ function savePlayer(reason, player)
 			triggerEvent("onVehicleExit", vehicle, source, seat)
 		end
 		
-		local x, y, z, rot, health, armour, interior, dimension, blindfold, username, cuffed, skin, duty, fightstyle, casualskin, hoursplayed, timeinserver
-		
-		username = getPlayerName(source)
+		local x, y, z, rot, health, armour, interior, dimension, blindfold, cuffed, skin, duty, fightstyle, casualskin, hoursplayed, timeinserver
 		
 		x, y, z = getElementPosition(source)
 		rot = getPedRotation(source)
@@ -180,7 +178,7 @@ function savePlayer(reason, player)
 		-- LAST AREA
 		local zone = exports.global:getElementZoneName(source)
 		
-		local update = mysql_query(handler, "UPDATE characters SET casualskin='" .. casualskin .. "', x='" .. x .. "', y='" .. y .. "', z='" .. z .. "', rotation='" .. rot .. "', health='" .. health .. "', armor='" .. armor .. "', skin='" .. skin .. "', dimension_id='" .. dimension .. "', interior_id='" .. interior .. "', money='" .. money .. "', cuffed='" .. cuffed .. "', duty='" .. duty .. "', fightstyle='" .. fightstyle .. "', lastlogin=NOW(), lastarea='" .. mysql_escape_string(handler, zone) .. "', bankmoney='" .. bankmoney .. "', hoursplayed='" .. hoursplayed .. "', timeinserver='" .. timeinserver .. "', restrainedobj='" .. restrainedobj .. "', restrainedby='" .. restrainedby .. "', dutyskin='" .. dutyskin .. "', blindfold='" .. blindfold .. "', lang1='" .. lang1 .. "', lang1skill='" .. lang1skill .. "', lang2='" .. lang2 .. "', lang2skill='" .. lang2skill .. "', lang3='" .. lang3 .. "', lang3skill='" .. lang3skill .. "', currLang='" .. currentLanguage .. "' WHERE charactername='" .. username .. "'")
+		local update = mysql_query(handler, "UPDATE characters SET casualskin='" .. casualskin .. "', x='" .. x .. "', y='" .. y .. "', z='" .. z .. "', rotation='" .. rot .. "', health='" .. health .. "', armor='" .. armor .. "', skin='" .. skin .. "', dimension_id='" .. dimension .. "', interior_id='" .. interior .. "', money='" .. money .. "', cuffed='" .. cuffed .. "', duty='" .. duty .. "', fightstyle='" .. fightstyle .. "', lastlogin=NOW(), lastarea='" .. mysql_escape_string(handler, zone) .. "', bankmoney='" .. bankmoney .. "', hoursplayed='" .. hoursplayed .. "', timeinserver='" .. timeinserver .. "', restrainedobj='" .. restrainedobj .. "', restrainedby='" .. restrainedby .. "', dutyskin='" .. dutyskin .. "', blindfold='" .. blindfold .. "', lang1='" .. lang1 .. "', lang1skill='" .. lang1skill .. "', lang2='" .. lang2 .. "', lang2skill='" .. lang2skill .. "', lang3='" .. lang3 .. "', lang3skill='" .. lang3skill .. "', currLang='" .. currentLanguage .. "' WHERE id='" .. getElementData(source, "dbid") .. "'")
 		if (update) then
 			mysql_free_result(update)
 		else

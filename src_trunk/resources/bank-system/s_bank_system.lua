@@ -41,7 +41,7 @@ setElementData(bankPickup, "depositable", true)
 
 function pickupUse(thePlayer)
 	cancelEvent()
-	local result = mysql_query(handler, "SELECT faction_id, faction_leader FROM characters WHERE charactername='" .. getPlayerName(thePlayer) .. "' LIMIT 1")
+	local result = mysql_query(handler, "SELECT faction_id, faction_leader FROM characters WHERE id = " .. getElementData(thePlayer, "dbid") .. " LIMIT 1")
 	
 	if (result) then
 		local faction_id = tonumber(mysql_result(result, 1, 1))
@@ -129,7 +129,7 @@ function transferMoneyToPersonal(business, name, amount, reason)
 	end
 	local dbid = nil
 	if not reciever then
-		local result = mysql_query(handler, "SELECT id FROM characters WHERE charactername='" .. string.gsub(name," ","_") .. "' LIMIT 1")
+		local result = mysql_query(handler, "SELECT id FROM characters WHERE charactername='" .. mysql_escape_string(handler, string.gsub(name," ","_")) .. "' LIMIT 1")
 		if result then
 			if mysql_num_rows(result) > 0 then
 				dbid = tonumber(mysql_result(result, 1, 1))

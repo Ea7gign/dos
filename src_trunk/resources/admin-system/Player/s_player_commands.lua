@@ -108,7 +108,7 @@ function lookPlayer(thePlayer, commandName, targetPlayer)
 			if (logged==0) then
 				outputChatBox("Player is not logged in.", thePlayer, 255, 0, 0)
 			else
-				local query = mysql_query(handler, "SELECT description, age, weight, height, skincolor FROM characters WHERE charactername='" .. targetPlayerName .. "'")
+				local query = mysql_query(handler, "SELECT description, age, weight, height, skincolor FROM characters WHERE charactername='" .. mysql_escape_string(handler, targetPlayerName) .. "'")
 				local description = tostring(mysql_result(query, 1, 1))
 				local age = tostring(mysql_result(query, 1, 2))
 				local weight = tostring(mysql_result(query, 1, 3))
@@ -425,7 +425,7 @@ function ckPlayer(thePlayer, commandName, targetPlayer)
 				if (logged==0) then
 					outputChatBox("Player is not logged in.", thePlayer, 255, 0, 0)
 				elseif (logged==1) then
-					local query = mysql_query(handler, "UPDATE characters SET cked='1' WHERE charactername='" .. targetPlayerName .. "'")
+					local query = mysql_query(handler, "UPDATE characters SET cked='1' WHERE charactername='" .. mysql_escape_string(handler, targetPlayerName) .. "'")
 					
 					local x, y, z = getElementPosition(targetPlayer)
 					local skin = getPedSkin(targetPlayer)
@@ -456,7 +456,7 @@ function unckPlayer(thePlayer, commandName, ...)
 			outputChatBox("SYNTAX: /" .. commandName .. " [Full Player Name]", thePlayer, 255, 194, 14)
 		else
 			local targetPlayer = table.concat({...}, "_")
-			local result = mysql_query(handler, "SELECT id FROM characters WHERE charactername='" .. tostring(targetPlayer) .. "' AND cked > 0")
+			local result = mysql_query(handler, "SELECT id FROM characters WHERE charactername='" .. mysql_escape_string(handler, tostring(targetPlayer)) .. "' AND cked > 0")
 			
 			if (mysql_num_rows(result)>1) then
 				outputChatBox("Too many results - Please enter a more exact name.", thePlayer, 255, 0, 0)
@@ -464,7 +464,7 @@ function unckPlayer(thePlayer, commandName, ...)
 				outputChatBox("Player does not exist or is not CK'ed.", thePlayer, 255, 0, 0)
 			else
 				local dbid = tonumber(mysql_result(result, 1, 1)) or 0
-				local query = mysql_query(handler, "UPDATE characters SET cked='0' WHERE charactername='" .. tostring(targetPlayer) .. "' LIMIT 1")
+				local query = mysql_query(handler, "UPDATE characters SET cked='0' WHERE id = " .. dbid .. " LIMIT 1")
 				mysql_free_result(query)
 				
 				-- delete all peds for him
@@ -491,7 +491,7 @@ function buryPlayer(thePlayer, commandName, ...)
 			outputChatBox("SYNTAX: /" .. commandName .. " [Full Player Name]", thePlayer, 255, 194, 14)
 		else
 			local targetPlayer = table.concat({...}, "_")
-			local result = mysql_query(handler, "SELECT id, cked FROM characters WHERE charactername='" .. tostring(targetPlayer) .. "'")
+			local result = mysql_query(handler, "SELECT id, cked FROM characters WHERE charactername='" .. mysql_escape_string(handler, tostring(targetPlayer)) .. "'")
 			
 			if (mysql_num_rows(result)>1) then
 				outputChatBox("Too many results - Please enter a more exact name.", thePlayer, 255, 0, 0)
@@ -505,7 +505,7 @@ function buryPlayer(thePlayer, commandName, ...)
 				elseif cked == 2 then
 					outputChatBox("Player is already buried.", thePlayer, 255, 0, 0)
 				else
-					local query = mysql_query(handler, "UPDATE characters SET cked='2' WHERE charactername='" .. tostring(targetPlayer) .. "' LIMIT 1")
+					local query = mysql_query(handler, "UPDATE characters SET cked='2' WHERE id = " .. dbid .. " LIMIT 1")
 					mysql_free_result(query)
 					
 					-- delete all peds for him
@@ -1243,7 +1243,7 @@ function unbanPlayer(thePlayer, commandName, nickName)
 			local bans = getBans()
 			local found = false
 			
-			local result1 = mysql_query(handler, "SELECT account FROM characters WHERE charactername='" .. tostring(nickName) .. "' LIMIT 1")
+			local result1 = mysql_query(handler, "SELECT account FROM characters WHERE charactername='" .. mysql_escape_string(handler, tostring(nickName)) .. "' LIMIT 1")
 			
 			if (result1) then
 				if (mysql_num_rows(result1)>0) then
@@ -2309,7 +2309,7 @@ function resetCharacter(thePlayer, commandName, ...)
 				kickPlayer(getPlayerFromName(character), "Character Reset")
 			end
 				
-			local result = mysql_query(handler, "SELECT id, account FROM characters WHERE charactername='" .. character .. "'")
+			local result = mysql_query(handler, "SELECT id, account FROM characters WHERE charactername='" .. mysql_escape_string(handler, character) .. "'")
 			local charid = tonumber(mysql_result(result, 1, 1))
 			local account = tonumber(mysql_result(result, 1, 2))
 			mysql_free_result(result)
