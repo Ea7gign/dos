@@ -26,7 +26,7 @@ function clickItem(button, state, absX, absY, wx, wy, wz)
 		local element = nil
 		local px, py, pz = getElementPosition(getLocalPlayer())
 		local x, y, z = nil
-		for key, value in ipairs(getElementsByType("object")) do
+		for key, value in ipairs(getElementsByType("object",getResourceRootElement())) do
 			x, y, z = getElementPosition(value)
 			local minx, miny, minz, maxx, maxy, maxz = getElementBoundingBox(value)
 			
@@ -48,7 +48,7 @@ function clickItem(button, state, absX, absY, wx, wy, wz)
 			end
 		end
 		
-		if (element) and (getElementType(element)=="object") and getElementParent(getElementParent(element)) == getResourceRootElement() then
+		if element then
 			if getDistanceBetweenPoints3D(x, y, z, wx, wy, wz) < 3 then
 				if (wRightClick) then
 					hideItemMenu()
