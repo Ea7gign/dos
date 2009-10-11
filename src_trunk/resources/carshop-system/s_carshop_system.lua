@@ -116,7 +116,12 @@ function makeCar(thePlayer, id, cost, col1, col2, x, y, z, rz, px, py, pz, prz)
 		setElementData(veh, "owner", dbid, false)
 		setElementData(veh, "job", 0, false)
 		triggerEvent("onVehicleSpawn", veh, false)
-		exports.global:givePlayerAchievement(thePlayer, 17) -- my ride
+		
+		if getVehicleType(veh) == "Boat" then
+			exports.global:givePlayerAchievement(thePlayer, 27)
+		else
+			exports.global:givePlayerAchievement(thePlayer, 17) -- my ride
+		end
 		
 		exports.logs:logMessage("[CAR SHOP] " .. getPlayerName( thePlayer ) .. " bought car #" .. insertid .. " (" .. getVehicleNameFromModel( id ) .. ")", 9)
 	end
