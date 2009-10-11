@@ -1,24 +1,26 @@
 function retrievePlayerInfo(targetPlayer)
 	local accid = tonumber(getElementData(source, "gameaccountid"))
 	local targetID = tonumber(getElementData(targetPlayer, "gameaccountid"))
-	local result = mysql_query(handler, "SELECT friend FROM friends WHERE id = " .. accid .. " AND friend = " .. targetID .. " LIMIT 1")
+	if targetID then
+		local result = mysql_query(handler, "SELECT friend FROM friends WHERE id = " .. accid .. " AND friend = " .. targetID .. " LIMIT 1")
 
-	if result then
-		local friend = false
-		if mysql_num_rows( result ) == 1 then
-			friend = true
+		if result then
+			local friend = false
+			if mysql_num_rows( result ) == 1 then
+				friend = true
+			end
+			mysql_free_result( result )
+			
+			local result = mysql_query(handler, "SELECT description, age, weight, height, skincolor FROM characters WHERE charactername='" .. getElementData(targetPlayer, "dbid") .. "'")
+			local description = tostring(mysql_result(result, 1, 1))
+			local age = tostring(mysql_result(result, 1, 2))
+			local weight = tostring(mysql_result(result, 1, 3))
+			local height = tostring(mysql_result(result, 1, 4))
+			local race = tonumber(mysql_result(result, 1, 5))
+			mysql_free_result(result)
+			
+			triggerClientEvent(source, "displayPlayerMenu", source, targetPlayer, friend, description, age, weight, height, race)
 		end
-		mysql_free_result( result )
-		
-		local result = mysql_query(handler, "SELECT description, age, weight, height, skincolor FROM characters WHERE charactername='" .. getElementData(targetPlayer, "dbid") .. "'")
-		local description = tostring(mysql_result(result, 1, 1))
-		local age = tostring(mysql_result(result, 1, 2))
-		local weight = tostring(mysql_result(result, 1, 3))
-		local height = tostring(mysql_result(result, 1, 4))
-		local race = tonumber(mysql_result(result, 1, 5))
-		mysql_free_result(result)
-		
-		triggerClientEvent(source, "displayPlayerMenu", source, targetPlayer, friend, description, age, weight, height, race)
 	end
 end
 addEvent("sendPlayerInfo", true)
