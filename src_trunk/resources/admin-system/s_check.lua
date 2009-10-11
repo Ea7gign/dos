@@ -92,7 +92,7 @@ addCommandHandler( "history",
 	function( thePlayer, commandName, ... )
 		if exports.global:isPlayerAdmin( thePlayer ) then
 			if not (...) then
-				outputChatBox("SYNTAX: /" .. commandName .. " [player]", 255, 194, 14)
+				outputChatBox("SYNTAX: /" .. commandName .. " [player]", thePlayer, 255, 194, 14)
 			else
 				local targetPlayer = exports.global:findPlayerByPartialNick(...)
 				if not targetPlayer then
