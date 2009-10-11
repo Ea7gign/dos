@@ -26,6 +26,16 @@ addEventHandler("onResourceStop", getResourceRootElement(getThisResource()), clo
 -- //			MYSQL END			 //
 -- ////////////////////////////////////
 
+-- ADMIN HISTORY:
+-- 0: jail
+-- 1: kick
+-- 2: ban
+-- 3: forceapp
+-- 4: warn
+-- 5: auto-ban
+
+-- ////////////////////////////////////
+
 -- /GLUE
 local glueSpace = { [406] = 25, [422] = 10, [444] = 10, [455] = 10, [525] = 3, [543] = 10, [554] = 10, [556] = 10, [557] = 10, [600] = 10, [605] = 5 }
 function gluePlayer(thePlayer, commandName)
@@ -380,8 +390,8 @@ function forceApplication(thePlayer, commandName, targetPlayer, ...)
 			
 			if not (targetPlayer) then
 				outputChatBox("Player not found or multiple were found.", thePlayer, 255, 0, 0)
-			elseif exports.global:isPlayerAdmin(targetPlayer) then
-				outputChatBox("No.", thePlayer, 255, 0, 0)
+			--elseif exports.global:isPlayerAdmin(targetPlayer) then
+				--outputChatBox("No.", thePlayer, 255, 0, 0)
 			else
 				local targetPlayerName = getPlayerName(targetPlayer)
 				local logged = getElementData(targetPlayer, "loggedin")
@@ -400,6 +410,14 @@ function forceApplication(thePlayer, commandName, targetPlayer, ...)
 					
 					local adminTitle = exports.global:getPlayerAdminTitle(thePlayer)
 					exports.global:sendMessageToAdmins("AdmCmd: " .. tostring(adminTitle) .. " " .. getPlayerName(thePlayer) .. " sent " .. targetPlayerName .. " back to the application stage.")
+					
+					local res = mysql_query( handler, 'INSERT INTO adminhistory (user, user_char, admin, admin_char, hiddenadmin, action, duration, reason) VALUES (' .. tostring(getElementData(targetPlayer, "dbid") or 0) .. ',' .. tostring(getElementData(targetPlayer, "gameaccountid") or 0) .. ',' .. tostring(getElementData(thePlayer, "dbid") or 0) .. ',' .. tostring(getElementData(thePlayer, "gameaccountid") or 0) .. ',0,3,0,"' .. mysql_escape_string(handler, reason) .. '")' )
+					if res then
+						mysql_free_result( res )
+					else
+						outputDebugString( mysql_error( handler ) )
+					end
+					
 					redirectPlayer(targetPlayer, "67.210.235.106", port, password)
 				end
 			end
@@ -1113,6 +1131,13 @@ function kickAPlayer(thePlayer, commandName, targetPlayer, ...)
 					local playerName = getPlayerName(thePlayer)
 					local targetPlayerName = getPlayerName(targetPlayer)
 					
+					local res = mysql_query( handler, 'INSERT INTO adminhistory (user, user_char, admin, admin_char, hiddenadmin, action, duration, reason) VALUES (' .. tostring(getElementData(targetPlayer, "dbid") or 0) .. ',' .. tostring(getElementData(targetPlayer, "gameaccountid") or 0) .. ',' .. tostring(getElementData(thePlayer, "dbid") or 0) .. ',' .. tostring(getElementData(thePlayer, "gameaccountid") or 0) .. ',' .. hiddenAdmin .. ',1,0,"' .. mysql_escape_string(handler, reason) .. '")' )
+					if res then
+						mysql_free_result( res )
+					else
+						outputDebugString( mysql_error( handler ) )
+					end
+					
 					if (hiddenAdmin==0) then
 						local adminTitle = exports.global:getPlayerAdminTitle(thePlayer)
 						outputChatBox("AdmKick: " .. adminTitle .. " " .. playerName .. " kicked " .. targetPlayerName .. ".", getRootElement(), 255, 0, 51)
@@ -1159,7 +1184,7 @@ function banAPlayer(thePlayer, commandName, targetPlayer, hours, ...)
 					local accountID = getElementData(targetPlayer, "gameaccountid")
 					
 					local seconds = ((hours*60)*60)
-					
+					local rhours = hours
 					-- text value
 					if (hours==0) then
 						hours = "Permanent"
@@ -1171,6 +1196,12 @@ function banAPlayer(thePlayer, commandName, targetPlayer, hours, ...)
 					
 					reason = reason .. " (" .. hours .. ")"
 					
+					local res = mysql_query( handler, 'INSERT INTO adminhistory (user, user_char, admin, admin_char, hiddenadmin, action, duration, reason) VALUES (' .. tostring(getElementData(targetPlayer, "dbid") or 0) .. ',' .. tostring(getElementData(targetPlayer, "gameaccountid") or 0) .. ',' .. tostring(getElementData(thePlayer, "dbid") or 0) .. ',' .. tostring(getElementData(thePlayer, "gameaccountid") or 0) .. ',' .. hiddenAdmin .. ',2,' .. rhours .. ',"' .. mysql_escape_string(handler, reason) .. '")' )
+					if res then
+						mysql_free_result( res )
+					else
+						outputDebugString( mysql_error( handler ) )
+					end
 					if (hiddenAdmin==0) then
 						local adminTitle = exports.global:getPlayerAdminTitle(thePlayer)
 						outputChatBox("AdmBan: " .. adminTitle .. " " .. playerName .. " banned " .. targetPlayerName .. ". (" .. hours .. ")", getRootElement(), 255, 0, 51)
@@ -1493,6 +1524,13 @@ function jailPlayer(thePlayer, commandName, who, minutes, ...)
 				outputChatBox("You jailed " .. targetPlayerNick .. " for " .. minutes .. " Minutes.", thePlayer, 255, 0, 0)
 				
 				local hiddenAdmin = getElementData(thePlayer, "hiddenadmin")
+				local res = mysql_query( handler, 'INSERT INTO adminhistory (user, user_char, admin, admin_char, hiddenadmin, action, duration, reason) VALUES (' .. tostring(getElementData(targetPlayer, "dbid") or 0) .. ',' .. tostring(getElementData(targetPlayer, "gameaccountid") or 0) .. ',' .. tostring(getElementData(thePlayer, "dbid") or 0) .. ',' .. tostring(getElementData(thePlayer, "gameaccountid") or 0) .. ',' .. hiddenAdmin .. ',0,' .. ( minutes == 999 and 0 or minutes ) .. ',"' .. mysql_escape_string(handler, reason) .. '")' )
+				if res then
+					mysql_free_result( res )
+				else
+					outputDebugString( mysql_error( handler ) )
+				end
+				
 				if (hiddenAdmin==0) then
 					local adminTitle = exports.global:getPlayerAdminTitle(thePlayer)
 					outputChatBox("AdmJail: " .. adminTitle .. " " .. playerName .. " jailed " .. targetPlayerNick .. " for " .. minutes .. " Minutes.", getRootElement(), 255, 0, 0)
@@ -2159,6 +2197,7 @@ function warnPlayer(thePlayer, commandName, targetPlayer)
 				outputChatBox("Player not found or multiple were found.", thePlayer, 255, 0, 0)
 			else
 				local targetPlayerName = getPlayerName(targetPlayer)
+				local playerName = getPlayerName(thePlayer)
 				local warns = getElementData(targetPlayer, "warns")
 				warns = warns + 1
 				local accountID = getElementData(targetPlayer, "gameaccountid")
@@ -2168,13 +2207,27 @@ function warnPlayer(thePlayer, commandName, targetPlayer)
 				
 				setElementData(targetPlayer, "warns", warns, false)
 				
+				local hiddenAdmin = getElementData(thePlayer, "hiddenadmin")
+				local res = mysql_query( handler, 'INSERT INTO adminhistory (user, user_char, admin, admin_char, hiddenadmin, action, duration, reason) VALUES (' .. tostring(getElementData(targetPlayer, "dbid") or 0) .. ',' .. tostring(getElementData(targetPlayer, "gameaccountid") or 0) .. ',' .. tostring(getElementData(thePlayer, "dbid") or 0) .. ',' .. tostring(getElementData(thePlayer, "gameaccountid") or 0) .. ',' .. hiddenAdmin .. ',4,0,"")' )
+				if res then
+					mysql_free_result( res )
+				else
+					outputDebugString( mysql_error( handler ) )
+				end
 				if (hiddenAdmin==0) then
 					local adminTitle = exports.global:getPlayerAdminTitle(thePlayer)
 					outputChatBox("AdmWarn: " .. adminTitle .. " " .. playerName .. " warned " .. targetPlayerName .. ". (" .. warns .. "/3)", getRootElement(), 255, 0, 51)
 				end
 				
 				if (warns>=3) then
-					banPlayer(targetPlayer, true, false, false, thePlayer, "Received 3 admin warnings.", 0)
+					local res = mysql_query( handler, 'INSERT INTO adminhistory (user, user_char, admin, admin_char, hiddenadmin, action, duration, reason) VALUES (' .. tostring(getElementData(targetPlayer, "dbid") or 0) .. ',' .. tostring(getElementData(targetPlayer, "gameaccountid") or 0) .. ',' .. tostring(getElementData(thePlayer, "dbid") or 0) .. ',' .. tostring(getElementData(thePlayer, "gameaccountid") or 0) .. ',' .. hiddenAdmin .. ',5,0,"' .. warns .. ' Admin Warnings")' )
+					if res then
+						mysql_free_result( res )
+					else
+						outputDebugString( mysql_error( handler ) )
+					end
+					
+					banPlayer(targetPlayer, true, false, false, thePlayer, "Received " .. warns .. " admin warnings.", 0)
 					outputChatBox("AdmWarn: " .. targetPlayerName .. " was banned for several admin warnings.", getRootElement(), 255, 0, 51)
 					
 					local query = mysql_query(handler, "UPDATE accounts SET banned='1', banned_reason='3 Admin Warnings', banned_by='Warn System' WHERE id='" .. accountID .. "'")
