@@ -54,7 +54,7 @@ end
 -- Check if the vehicle is engineless or fuelless when a player enters. If not, draw the speedo and fuel needles.
 function onVehicleEnter(thePlayer, seat)
 	if (thePlayer==getLocalPlayer()) then
-		if (seat<2) then
+		if (seat==0) then
 			local id = getElementModel(source)
 			if not (fuellessVehicle[id]) then
 				addEventHandler("onClientRender", getRootElement(), drawFuel)
