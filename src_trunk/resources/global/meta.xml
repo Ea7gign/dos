@@ -25,6 +25,7 @@
 	<script src="optomization_globals.lua" type="server"/>
 	
 	<script src="vehicle_globals.lua" type="server"/>
+	<script src="vehicle_globals.lua" type="client"/>
 	<export function="getVehicleVelocity" type="server"/>
 	<export function="getVehicleVelocity" type="client"/>
 	<export function="relateVelocity" type="server"/>
