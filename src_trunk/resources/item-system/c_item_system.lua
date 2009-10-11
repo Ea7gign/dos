@@ -218,8 +218,13 @@ function toggleCategory()
 	end
 	
 	-- let's add the items again
-	guiGridListClear(gItems)
-	guiGridListClear(gKeys)
+	if (isElement(gItems)) then
+		guiGridListClear(gItems)
+	end
+	
+	if (isElement(gKeys)) then
+		guiGridListClear(gKeys)
+	end
 	
 	local items, slots = getItems( showinvPlayer ), getInventorySlots( showinvPlayer )
 	
