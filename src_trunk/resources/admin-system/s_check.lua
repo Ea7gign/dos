@@ -67,7 +67,7 @@ function showAdminHistory( target )
 	if exports.global:isPlayerAdmin( source ) then
 		local targetID = getElementData( target, "gameaccountid" )
 		if targetID then
-			local result = mysql_query( handler, "SELECT date, action, reason, duration, a.username, user_char FROM adminhistory h LEFT JOIN accounts a ON a.id = h.admin WHERE user = " .. targetID .. " ORDER BY h.id" )
+			local result = mysql_query( handler, "SELECT date, action, reason, duration, a.username, user_char FROM adminhistory h LEFT JOIN accounts a ON a.id = h.admin WHERE user = " .. targetID .. " ORDER BY h.id DESC" )
 			if result then
 				local info = {}
 				for res, row in mysql_rows( result ) do
