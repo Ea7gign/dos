@@ -748,10 +748,10 @@ function dropItem(itemID, x, y, z, ammo, keepammo)
 				elseif (itemID==42) then
 					modelid = 2690
 				else
-					modelid = 2969
+					modelid = weaponmodels[itemID]
 				end
 				
-				local obj = createObject(modelid, x, y, z, 0, 0, 0)
+				local obj = createObject(modelid, x, y, z - 0.4, 75, -10, 0)
 				exports.pool:allocateElement(obj)
 				
 				setElementInterior(obj, interior)
@@ -804,10 +804,10 @@ function loadWorldItems(res)
 			elseif itemValue == 42 then
 				modelid = 2690
 			else
-				modelid = 2969
+				modelid = weaponmodels[itemID]
 			end
 		
-			local obj = createObject(modelid, x, y, z)
+			local obj = createObject(modelid, x, y, z - 0.1, 75, -10, 0)
 			exports.pool:allocateElement(obj)
 			setElementDimension(obj, dimension)
 			setElementInterior(obj, interior)
