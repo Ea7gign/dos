@@ -5,7 +5,7 @@ function getAdmins()
 	local count = 1
 	
 	for key, value in ipairs(players) do
-		if isPlayerAdmin(value) then
+		if isPlayerAdmin(value) and getPlayerAdminLevel(thePlayer) <= 6 then
 			admins[count] = value
 			count = count + 1
 		end
