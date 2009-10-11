@@ -411,7 +411,7 @@ function forceApplication(thePlayer, commandName, targetPlayer, ...)
 					local adminTitle = exports.global:getPlayerAdminTitle(thePlayer)
 					exports.global:sendMessageToAdmins("AdmCmd: " .. tostring(adminTitle) .. " " .. getPlayerName(thePlayer) .. " sent " .. targetPlayerName .. " back to the application stage.")
 					
-					local res = mysql_query( handler, 'INSERT INTO adminhistory (user, user_char, admin, admin_char, hiddenadmin, action, duration, reason) VALUES (' .. tostring(getElementData(targetPlayer, "dbid") or 0) .. ',' .. tostring(getElementData(targetPlayer, "gameaccountid") or 0) .. ',' .. tostring(getElementData(thePlayer, "dbid") or 0) .. ',' .. tostring(getElementData(thePlayer, "gameaccountid") or 0) .. ',0,3,0,"' .. mysql_escape_string(handler, reason) .. '")' )
+					local res = mysql_query( handler, 'INSERT INTO adminhistory (user, user, admin_char, admin, hiddenadmin, action, duration, reason) VALUES (' .. tostring(getElementData(targetPlayer, "dbid") or 0) .. ',' .. tostring(getElementData(targetPlayer, "gameaccountid") or 0) .. ',' .. tostring(getElementData(thePlayer, "dbid") or 0) .. ',' .. tostring(getElementData(thePlayer, "gameaccountid") or 0) .. ',0,3,0,"' .. mysql_escape_string(handler, reason) .. '")' )
 					if res then
 						mysql_free_result( res )
 					else
@@ -1131,7 +1131,7 @@ function kickAPlayer(thePlayer, commandName, targetPlayer, ...)
 					local playerName = getPlayerName(thePlayer)
 					local targetPlayerName = getPlayerName(targetPlayer)
 					
-					local res = mysql_query( handler, 'INSERT INTO adminhistory (user, user_char, admin, admin_char, hiddenadmin, action, duration, reason) VALUES (' .. tostring(getElementData(targetPlayer, "dbid") or 0) .. ',' .. tostring(getElementData(targetPlayer, "gameaccountid") or 0) .. ',' .. tostring(getElementData(thePlayer, "dbid") or 0) .. ',' .. tostring(getElementData(thePlayer, "gameaccountid") or 0) .. ',' .. hiddenAdmin .. ',1,0,"' .. mysql_escape_string(handler, reason) .. '")' )
+					local res = mysql_query( handler, 'INSERT INTO adminhistory (user, user, admin_char, admin, hiddenadmin, action, duration, reason) VALUES (' .. tostring(getElementData(targetPlayer, "dbid") or 0) .. ',' .. tostring(getElementData(targetPlayer, "gameaccountid") or 0) .. ',' .. tostring(getElementData(thePlayer, "dbid") or 0) .. ',' .. tostring(getElementData(thePlayer, "gameaccountid") or 0) .. ',' .. hiddenAdmin .. ',1,0,"' .. mysql_escape_string(handler, reason) .. '")' )
 					if res then
 						mysql_free_result( res )
 					else
@@ -1196,7 +1196,7 @@ function banAPlayer(thePlayer, commandName, targetPlayer, hours, ...)
 					
 					reason = reason .. " (" .. hours .. ")"
 					
-					local res = mysql_query( handler, 'INSERT INTO adminhistory (user, user_char, admin, admin_char, hiddenadmin, action, duration, reason) VALUES (' .. tostring(getElementData(targetPlayer, "dbid") or 0) .. ',' .. tostring(getElementData(targetPlayer, "gameaccountid") or 0) .. ',' .. tostring(getElementData(thePlayer, "dbid") or 0) .. ',' .. tostring(getElementData(thePlayer, "gameaccountid") or 0) .. ',' .. hiddenAdmin .. ',2,' .. rhours .. ',"' .. mysql_escape_string(handler, reason) .. '")' )
+					local res = mysql_query( handler, 'INSERT INTO adminhistory (user, user, admin_char, admin, hiddenadmin, action, duration, reason) VALUES (' .. tostring(getElementData(targetPlayer, "dbid") or 0) .. ',' .. tostring(getElementData(targetPlayer, "gameaccountid") or 0) .. ',' .. tostring(getElementData(thePlayer, "dbid") or 0) .. ',' .. tostring(getElementData(thePlayer, "gameaccountid") or 0) .. ',' .. hiddenAdmin .. ',2,' .. rhours .. ',"' .. mysql_escape_string(handler, reason) .. '")' )
 					if res then
 						mysql_free_result( res )
 					else
@@ -1524,7 +1524,7 @@ function jailPlayer(thePlayer, commandName, who, minutes, ...)
 				outputChatBox("You jailed " .. targetPlayerNick .. " for " .. minutes .. " Minutes.", thePlayer, 255, 0, 0)
 				
 				local hiddenAdmin = getElementData(thePlayer, "hiddenadmin")
-				local res = mysql_query( handler, 'INSERT INTO adminhistory (user, user_char, admin, admin_char, hiddenadmin, action, duration, reason) VALUES (' .. tostring(getElementData(targetPlayer, "dbid") or 0) .. ',' .. tostring(getElementData(targetPlayer, "gameaccountid") or 0) .. ',' .. tostring(getElementData(thePlayer, "dbid") or 0) .. ',' .. tostring(getElementData(thePlayer, "gameaccountid") or 0) .. ',' .. hiddenAdmin .. ',0,' .. ( minutes == 999 and 0 or minutes ) .. ',"' .. mysql_escape_string(handler, reason) .. '")' )
+				local res = mysql_query( handler, 'INSERT INTO adminhistory (user, user, admin_char, admin, hiddenadmin, action, duration, reason) VALUES (' .. tostring(getElementData(targetPlayer, "dbid") or 0) .. ',' .. tostring(getElementData(targetPlayer, "gameaccountid") or 0) .. ',' .. tostring(getElementData(thePlayer, "dbid") or 0) .. ',' .. tostring(getElementData(thePlayer, "gameaccountid") or 0) .. ',' .. hiddenAdmin .. ',0,' .. ( minutes == 999 and 0 or minutes ) .. ',"' .. mysql_escape_string(handler, reason) .. '")' )
 				if res then
 					mysql_free_result( res )
 				else
@@ -2208,7 +2208,7 @@ function warnPlayer(thePlayer, commandName, targetPlayer)
 				setElementData(targetPlayer, "warns", warns, false)
 				
 				local hiddenAdmin = getElementData(thePlayer, "hiddenadmin")
-				local res = mysql_query( handler, 'INSERT INTO adminhistory (user, user_char, admin, admin_char, hiddenadmin, action, duration, reason) VALUES (' .. tostring(getElementData(targetPlayer, "dbid") or 0) .. ',' .. tostring(getElementData(targetPlayer, "gameaccountid") or 0) .. ',' .. tostring(getElementData(thePlayer, "dbid") or 0) .. ',' .. tostring(getElementData(thePlayer, "gameaccountid") or 0) .. ',' .. hiddenAdmin .. ',4,0,"")' )
+				local res = mysql_query( handler, 'INSERT INTO adminhistory (user, user, admin_char, admin, hiddenadmin, action, duration, reason) VALUES (' .. tostring(getElementData(targetPlayer, "dbid") or 0) .. ',' .. tostring(getElementData(targetPlayer, "gameaccountid") or 0) .. ',' .. tostring(getElementData(thePlayer, "dbid") or 0) .. ',' .. tostring(getElementData(thePlayer, "gameaccountid") or 0) .. ',' .. hiddenAdmin .. ',4,0,"")' )
 				if res then
 					mysql_free_result( res )
 				else
@@ -2220,7 +2220,7 @@ function warnPlayer(thePlayer, commandName, targetPlayer)
 				end
 				
 				if (warns>=3) then
-					local res = mysql_query( handler, 'INSERT INTO adminhistory (user, user_char, admin, admin_char, hiddenadmin, action, duration, reason) VALUES (' .. tostring(getElementData(targetPlayer, "dbid") or 0) .. ',' .. tostring(getElementData(targetPlayer, "gameaccountid") or 0) .. ',' .. tostring(getElementData(thePlayer, "dbid") or 0) .. ',' .. tostring(getElementData(thePlayer, "gameaccountid") or 0) .. ',' .. hiddenAdmin .. ',5,0,"' .. warns .. ' Admin Warnings")' )
+					local res = mysql_query( handler, 'INSERT INTO adminhistory (user, user, admin_char, admin, hiddenadmin, action, duration, reason) VALUES (' .. tostring(getElementData(targetPlayer, "dbid") or 0) .. ',' .. tostring(getElementData(targetPlayer, "gameaccountid") or 0) .. ',' .. tostring(getElementData(thePlayer, "dbid") or 0) .. ',' .. tostring(getElementData(thePlayer, "gameaccountid") or 0) .. ',' .. hiddenAdmin .. ',5,0,"' .. warns .. ' Admin Warnings")' )
 					if res then
 						mysql_free_result( res )
 					else
