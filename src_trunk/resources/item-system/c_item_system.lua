@@ -49,11 +49,10 @@ function clickItem(button, state, absX, absY, wx, wy, wz)
 		end
 		
 		if element then
-			if getDistanceBetweenPoints3D(x, y, z, wx, wy, wz) < 3 then
+			if getDistanceBetweenPoints3D(x, y, z, px, py, pz) < 3 then
 				if (wRightClick) then
 					hideItemMenu()
 				end
-				showCursor(true)
 				ax = absX
 				ay = absY
 				item = element
