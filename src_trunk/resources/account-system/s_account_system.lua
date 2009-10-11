@@ -1452,7 +1452,7 @@ function timerPDUnjailPlayer(jailedPlayer)
 
 		if (timeLeft<=0) then
 			fadeCamera(jailedPlayer, false)
-			local query = mysql_query(handler, "UPDATE characters SET pdjail_time='0', pdjail='0', pdjail_station='0' WHERE charactername='" .. username .. "'")
+			local query = mysql_query(handler, "UPDATE characters SET pdjail_time='0', pdjail='0', pdjail_station='0' WHERE charactername='" .. mysql_escape_string(handler, username) .. "'")
 			mysql_free_result(query)
 			removeElementData(jailedPlayer, "jailtimer")
 			setElementDimension(jailedPlayer, 1)
@@ -1471,7 +1471,7 @@ function timerPDUnjailPlayer(jailedPlayer)
 			fadeCamera(jailedPlayer, true)
 			outputChatBox("Your time has been served.", jailedPlayer, 0, 255, 0)
 		elseif (timeLeft>0) then
-			local query = mysql_query(handler, "UPDATE characters SET pdjail_time='" .. timeLeft .. "' WHERE charactername='" .. username .. "'")
+			local query = mysql_query(handler, "UPDATE characters SET pdjail_time='" .. timeLeft .. "' WHERE charactername='" .. mysql_escape_string(handler, username) .. "'")
 			mysql_free_result(query)
 		end
 	else
