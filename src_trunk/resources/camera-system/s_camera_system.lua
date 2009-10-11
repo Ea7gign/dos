@@ -13,7 +13,7 @@ function resourceStart(res)
 	exports.pool:allocateElement(stripCamera1Col)
 	stripCamera1ColWarn = createColTube(1342.5859375, -1471.4306640625, 5, 150, 10)
 	exports.pool:allocateElement(stripCamera1ColWarn)
-	stripCamera1Speed = 65
+	stripCamera1Speed = 60
 	addEventHandler("onColShapeHit", stripCamera1ColWarn, sendWarning)
 	addEventHandler("onColShapeHit", stripCamera1Col, monitorSpeed)
 	addEventHandler("onColShapeLeave", stripCamera1Col, stopMonitorSpeed)
@@ -48,7 +48,7 @@ function checkSpeed(vehicle, player, colshape)
 	speed = exports.global:getVehicleVelocity(vehicle)
 	
 	if (colshape==stripCamera1Col) then -- strip camera 1
-		if (speed>stripCamera1Speed) then
+		if (speed>exports.global:relateVelocity(stripCamera1Speed+5)) then
 			local x, y, z = getElementPosition(player)
 			local timer = getElementData(player, "cameratimer")
 			if timer then
@@ -104,7 +104,7 @@ function sendWarning(element, matchingDimension)
 		local thePlayer = getVehicleOccupant(element)
 		
 		if (isElement(thePlayer) and (thePlayer~=getRootElement())) then
-			outputChatBox("You are entering a speed control area. The speed limit is 60Kph (40Mph). Watch your speed.", thePlayer)
+			outputChatBox("You are entering a speed control area. The speed limit is " .. math.ceil(exports.global:relateVelocity(stripCamera1Speed)) .. "Kph (" .. math.ceil(exports.global:relateVelocity(stripCamera1Speed*2/3)) .. "Mph). Watch your speed.", thePlayer)
 			outputChatBox("Courtesy of the Los Santos Police Department.", thePlayer)
 		end
 	end

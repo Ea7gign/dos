@@ -9,7 +9,7 @@ function drawSpeedo()
 		local vehicle = getPedOccupiedVehicle(getLocalPlayer())
 		if (vehicle) then
 
-			speed = exports.global:cgetVehicleVelocity(vehicle)
+			speed = exports.global:getVehicleVelocity(vehicle)
 			local width, height = guiGetScreenSize()
 			local x = width
 			local y = height
