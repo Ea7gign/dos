@@ -237,7 +237,7 @@ function clickStoreKeeper(ped)
 
 	local race, gender = -1, -1
 	if(shoptype == 5) then -- if its a clothes shop, we also need the players race
-		local result = mysql_query(handler, "SELECT gender,skincolor FROM characters WHERE charactername='" .. getElementData(source, "dbid") .. "' LIMIT 1")
+		local result = mysql_query(handler, "SELECT gender,skincolor FROM characters WHERE id='" .. getElementData(source, "dbid") .. "' LIMIT 1")
 		gender = tonumber(mysql_result(result,1,1))
 		race = tonumber(mysql_result(result,1,2))
 		mysql_free_result(result)

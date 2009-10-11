@@ -43,7 +43,9 @@ function getCharacterName( id )
 			local name = mysql_result(query, 1, 1)
 			mysql_free_result(query)
 			
-			charCache[ id ] = name:gsub("_", " ")
+			if name then
+				charCache[ id ] = name:gsub("_", " ")
+			end
 		end
 	end
 	return charCache[ id ]
