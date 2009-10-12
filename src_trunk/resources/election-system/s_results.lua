@@ -14,6 +14,14 @@ addCommandHandler( "pollresults",
 				end
 			end
 			mysql_free_result( result )
+			
+			-- stuff for people who werent voted
+			local result = mysql_query( handler, "SELECT c.charactername, ( SELECT COUNT(*) FROM characters x WHERE x.election_votedfor = c.id ) AS cnt FROM characters c WHERE election_candidate = 1 ORDER BY cnt DESC" )
+			for res, row in mysql_rows( result ) do
+				if tonumber( row[2] ) and tonumber( row[2] ) == 0 then
+					table.insert( results, row[1], 0 )
+				end
+			end
 			triggerClientEvent( thePlayer, "showPollResults", thePlayer, results, total, notvoted )
 		end
 	end
