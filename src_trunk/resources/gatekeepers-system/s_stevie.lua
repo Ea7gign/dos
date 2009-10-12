@@ -418,6 +418,11 @@ function decreaseDeals_S()
 	if getElementData(source, "stevie.money") and doneDeals > 0 then
 		doneDeals = doneDeals - 1
 		setElementData( getRootElement( ), "stevie.done", doneDeals, false )
+		
+		destroyElement(stevieCol)
+		stevieCol = nil
+		destroyElement(stevieMarker)
+		stevieMarker = nil
 	end
 end
 addEventHandler( "onPlayerQuit", getRootElement(), decreaseDeals_S )
