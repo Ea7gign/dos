@@ -62,16 +62,6 @@ function getPlayerName(p)
 	return gpn(p):gsub("_", " ")
 end
 
--- Taxi
-function taxi(thePlayer, commandName)
-	local logged = tonumber(getElementData(thePlayer, "loggedin"))
-	 
-	if (logged==1) then
-		outputChatBox("The new taxi number is /call 8294.", thePlayer, 255, 194, 15)
-	end
-end
-addCommandHandler("taxi", taxi)
-
 -- /ad
 function advertMessage(thePlayer, commandName, showNumber, ...)
 	local logged = tonumber(getElementData(thePlayer, "loggedin"))
