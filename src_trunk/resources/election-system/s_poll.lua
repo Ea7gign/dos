@@ -36,7 +36,7 @@ addEventHandler( "electionWantVote", getRootElement( ),
 			elseif id == 0 then
 				triggerClientEvent( source, "showPoll", source )
 			elseif candidates[ id ] then
-				outputChatBox( "You voted already for " .. candidates[ id ]:gsub("_", " ") .. ".", source, 255, 255, 0 )
+				outputChatBox( "You already voted for " .. candidates[ id ]:gsub("_", " ") .. ".", source, 255, 255, 0 )
 			else
 				outputChatBox( "You voted already.", source, 255, 255, 0 )
 			end
@@ -68,7 +68,7 @@ addEventHandler( "electionVote", getRootElement( ),
 					outputChatBox( "Error during the Vote, try later.", source, 255, 0, 0 )
 				end
 			elseif candidates[ id ] then
-				outputChatBox( "You voted already for " .. candidates[ id ]:gsub("_", " ") .. ".", source, 255, 255, 0 )
+				outputChatBox( "You already voted for " .. candidates[ id ]:gsub("_", " ") .. ".", source, 255, 255, 0 )
 			else
 				outputChatBox( "You voted already.", source, 255, 255, 0 )
 			end
