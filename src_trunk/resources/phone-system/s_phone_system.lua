@@ -388,7 +388,7 @@ function talkPhone(thePlayer, commandName, ...)
 									local job = getElementData(value, "job")
 									
 									if (job == 2) then
-										if (getElementModel(source)==438 or getElementModel(source)==420) then
+										if (getElementModel(value)==438 or getElementModel(value)==420) then
 											outputChatBox("[New Fare] " .. getPlayerName(thePlayer) .." Ph:" .. playerNumber .. " Location: " .. message .."." , value, 0, 183, 239)
 											founddriver = true
 										end
