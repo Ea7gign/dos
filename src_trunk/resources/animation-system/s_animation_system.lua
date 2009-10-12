@@ -270,6 +270,16 @@ function pedLightup (thePlayer)
 end
 addCommandHandler ( "lightup", pedLightup, false, false )
 
+-- Light up Animation -------------------------------------------------------------------------
+function pedHeil (thePlayer)
+	local logged = getElementData(thePlayer, "loggedin")
+	
+	if (logged==1) then
+		exports.global:applyAnimation( thePlayer, "ON_LOOKERS", "Pointup_in", 999999, false, true, false)
+	end
+end
+addCommandHandler ( "heil", pedHeil, false, false )
+
 -- Drink Animation -------------------------------------------------------------------------
 function pedDrink( thePlayer )
 	local logged = getElementData(thePlayer, "loggedin")
