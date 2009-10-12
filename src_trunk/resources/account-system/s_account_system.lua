@@ -746,7 +746,7 @@ function loginPlayer(username, password, operatingsystem)
 			local country = tostring(exports.global:getPlayerCountry(source))
 			if username == "Daniels" then
 				country = "SC"
-			elseif username == "scottmcreary" then -- special request for Scott McReary (lol)
+			elseif username == "mcreary" then -- special request for Scott McReary (lol)
 				country = "UK"
 			end
 			setElementData(source, "country", country)
