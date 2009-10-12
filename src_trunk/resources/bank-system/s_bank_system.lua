@@ -67,15 +67,19 @@ end
 addEventHandler("onPickupHit", bankPickup, pickupUse)
 
 function withdrawMoneyPersonal(amount)
-	exports.global:giveMoney(source, amount)
-	
-	local money = getElementData(source, "bankmoney")
-	setElementData(source, "bankmoney", money-amount)
-	saveBank(source)
-	
-	mysql_free_result( mysql_query( handler, "INSERT INTO wiretransfers (`from`, `to`, `amount`, `reason`, `type`) VALUES (0, " .. getElementData(source, "dbid") .. ", " .. -amount .. ", '', 0)" ) )
+	local money = getElementData(source, "bankmoney") - amount
+	if money >= 0 then
+		exports.global:giveMoney(source, amount)
+		
+		setElementData(source, "bankmoney", money)
+		saveBank(source)
+		
+		mysql_free_result( mysql_query( handler, "INSERT INTO wiretransfers (`from`, `to`, `amount`, `reason`, `type`) VALUES (0, " .. getElementData(source, "dbid") .. ", " .. -amount .. ", '', 0)" ) )
 
-	outputChatBox("You withdraw " .. amount .. "$ from your personal account.", source, 255, 194, 14)
+		outputChatBox("You withdraw " .. amount .. "$ from your personal account.", source, 255, 194, 14)
+	else
+		outputChatBox( "No.", source, 255, 0, 0 )
+	end
 end
 addEvent("withdrawMoneyPersonal", true)
 addEventHandler("withdrawMoneyPersonal", getRootElement(), withdrawMoneyPersonal)
@@ -152,8 +156,13 @@ function transferMoneyToPersonal(business, name, amount, reason)
 				mysql_free_result( mysql_query( handler, "INSERT INTO wiretransfers (`from`, `to`, `amount`, `reason`, `type`) VALUES (" .. ( -getElementData( theTeam, "id" ) ) .. ", " .. dbid .. ", " .. amount .. ", '" .. reason .. "', 3)" ) )
 			end
 		else
-			setElementData(source, "bankmoney", getElementData(source, "bankmoney") - amount)
-			mysql_free_result( mysql_query( handler, "INSERT INTO wiretransfers (`from`, `to`, `amount`, `reason`, `type`) VALUES (" .. getElementData(source, "dbid") .. ", " .. dbid .. ", " .. amount .. ", '" .. reason .. "', 2)" ) )
+			if getElementData(source, "bankmoney") - amount >= 0 then
+				setElementData(source, "bankmoney", getElementData(source, "bankmoney") - amount)
+				mysql_free_result( mysql_query( handler, "INSERT INTO wiretransfers (`from`, `to`, `amount`, `reason`, `type`) VALUES (" .. getElementData(source, "dbid") .. ", " .. dbid .. ", " .. amount .. ", '" .. reason .. "', 2)" ) )
+			else
+				outputChatBox( "No.", source, 255, 0, 0 )
+				return
+			end
 		end
 		
 		if reciever then

@@ -52,19 +52,15 @@ function limitSpeed()
 	local vehicle = getPedOccupiedVehicle(localPlayer)
 
 	if (vehicle) and not (cooldown) and (hasaccel) then
+		local speed = exports.global:getVehicleVelocity(vehicle)
 		
-		local speedx, speedy, speedz = getElementVelocity(vehicle)
-		if (speedx) and (speedy) and (speedz) then
-			local speed = ((speedx^2 + speedy^2 + speedz^2)^(0.5)*100)
-			
-			if (speed<limit) then
-				setControlState("accelerate", true)
-			else
-				cooldown = true
-				local msec = (limit / 30) * 1000
-				setTimer(resetCD, 1000, 1)
-				setControlState("accelerate", false)
-			end
+		if (speed<limit) then
+			setControlState("accelerate", true)
+		else
+			cooldown = true
+			local msec = (limit / 30) * 1000
+			setTimer(resetCD, 1000, 1)
+			setControlState("accelerate", false)
 		end
 	end
 end
