@@ -65,7 +65,7 @@ function callSomeone(thePlayer, commandName, phoneNumber, ...)
 						setTimer(startPhoneAnim, 3050, 1, thePlayer)
 					elseif phoneNumber == "8294" then
 						exports.global:sendLocalMeAction(thePlayer, "takes out a cell phone.")
-						outputChatBox("Taxi Operator says: LS Cabs here. Please state your location.", thePlayer)
+						outputChatBox("Taxi Operator says: Los Santos Cabs here. Please state your location.", thePlayer)
 						setElementData(thePlayer, "callprogress", 1, false)
 						setElementData(thePlayer, "phonestate", 1)
 						setElementData(thePlayer, "calling", 8294)
@@ -381,18 +381,25 @@ function talkPhone(thePlayer, commandName, ...)
 							end
 						elseif (tonumber(target)==8294) then -- TAXI
 							if (callprogress==1) then
-								outputChatBox("Taxi Operator says: Thanks for your call, a taxi will be with you shortly.", thePlayer)
-								
+								local founddriver = false								
 								local playerNumber = getElementData(thePlayer, "cellnumber")
 								
 								for key, value in ipairs(exports.pool:getPoolElementsByType("player")) do
 									local job = getElementData(value, "job")
 									
-									if (job==2) then
-										outputChatBox("[New Fare] " .. getPlayerName(thePlayer) .." Ph:" .. playerNumber .. " Location: " .. message .."." , value, 0, 183, 239)
+									if (job == 2) then
+										if (getElementModel(source)==438 or getElementModel(source)==420) then
+											outputChatBox("[New Fare] " .. getPlayerName(thePlayer) .." Ph:" .. playerNumber .. " Location: " .. message .."." , value, 0, 183, 239)
+											founddriver = true
+										end
 									end
 								end
 								
+								if founddriver == true
+									outputChatBox("Taxi Operator says: Thanks for your call, a taxi will be with you shortly.", thePlayer)
+								else
+									outputChatBox("Taxi Operator says: There is no taxi available in that area, please try again later.", thePlayer)
+								end
 								removeElementData(thePlayer, "calling")
 								removeElementData(thePlayer, "caller")
 								removeElementData(thePlayer, "callprogress")
