@@ -86,7 +86,8 @@ g_items = {
 	{ "Bomb Remote", "Has a funny red button.", 4, 364, 0, 0, 0, 0.25 },
 	{ "Riot Shield", "A heavy riot shield.", 4, 1631, 90, 0, 0, 0.1 },
 	{ "Card Deck", "A card deck to play some games.", 4,2824, 0, 0, 0, 0.3 },
-	{ "San Andreas Pilot Certificate", "An official permission to fly planes and helicopters.", 4, 1581, 270, 270, 0, 0.3 }
+	{ "San Andreas Pilot Certificate", "An official permission to fly planes and helicopters.", 4, 1581, 270, 270, 0, 0.3 },
+	{ "Porn Tape", "A porn tape, starring #v", 4,2824, 0, 0, 0, 0.3 }
 }
 
 function getItemRotInfo(id)
