@@ -459,7 +459,7 @@ end
 function askAcceptFriend()
 	local sx, sy = guiGetScreenSize() 
 	wConfirmFriendRequest = guiCreateWindow(sx/2 - 150,sy/2 - 50,300,100,"Friend request", false)
-	local lQuestion = guiCreateLabel(0.05,0.25,0.9,0.3,getPlayerName(source):gsub("_", " ") .. "wants to add you to his/her friend list. Do you want to accept this request?",true,wConfirmFriendRequest)
+	local lQuestion = guiCreateLabel(0.05,0.25,0.9,0.3,getPlayerName(source):gsub("_", " ") .. " wants to add you to his/her friend list. Do you want to accept this request?",true,wConfirmFriendRequest)
 	guiLabelSetHorizontalAlign (lQuestion,"center",true)
 	bButtonYes = guiCreateButton(0.1,0.65,0.37,0.23,"Yes",true,wConfirmFriendRequest)
 	bButtonNo = guiCreateButton(0.53,0.65,0.37,0.23,"No",true,wConfirmFriendRequest)
