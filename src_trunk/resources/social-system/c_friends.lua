@@ -26,6 +26,8 @@ local removes = { }
 local buttonUpdate = nil
 local textMessage = nil
 
+local wConfirmFriendRequest,bButtonYes,bButtonNo,bButtonPlayer = nil
+
 function isPlayerOnline(id)
 	for key, value in ipairs(getElementsByType("player")) do
 		local pid = getElementData(value, "gameaccountid")
@@ -454,12 +456,33 @@ function fadeOutFriend(key)
 	end
 end
 
+function askAcceptFriend()
+	local sx, sy = guiGetScreenSize() 
+	wConfirmFriendRequest = guiCreateWindow(sx/2 - 150,sy/2 - 50,300,100,"Friend request", false)
+	local lQuestion = guiCreateLabel(0.05,0.25,0.9,0.3,getPlayerName(source):gsub("_", " ") .. "wants to add you to his/her friend list. Do you want to accept this request?",true,wConfirmFriendRequest)
+	guiLabelSetHorizontalAlign (lQuestion,"center",true)
+	bButtonYes = guiCreateButton(0.1,0.65,0.37,0.23,"Yes",true,wConfirmFriendRequest)
+	bButtonNo = guiCreateButton(0.53,0.65,0.37,0.23,"No",true,wConfirmFriendRequest)
+	addEventHandler("onClientGUIClick", getRootElement(), askAcceptFriendClick)
+	bButtonPlayer = source
+end
+addEvent("askAcceptFriend", true)
+addEventHandler("askAcceptFriend", getRootElement(), askAcceptFriend)
 
-
-
-
-
-
+function askAcceptFriendClick(button)
+	if ( source == bButtonYes or source == bButtonNo ) then
+		if source == bButtonYes then
+			-- clicked yes
+			triggerServerEvent("acceptFriendSystemRequest", getLocalPlayer(), bButtonPlayer)
+			destroyElement(wConfirmFriendRequest)
+		end
+		if source == bButtonNo then
+			-- clicked no
+			triggerServerEvent("declineFriendSystemRequest", getLocalPlayer(), bButtonPlayer)
+			destroyElement(wConfirmFriendRequest)
+		end
+	end
+end
 
 function toggleCursor()
 	if (isCursorShowing()) then
