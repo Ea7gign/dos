@@ -8,10 +8,39 @@ help_menu =
 		text = "Welcome to the Help System\n\nJust select the topic that interests you in the menu on the left.\n\nIf this help didn't help you any further, You can always ask online admins for help by using /report (F2)"
 	},
 	{
-		name = "Getting Started"
+		name = "Getting Started",
+		multi = true,
+		{
+			name = "Arrival",
+			camera = {
+				{ matrix = { 1733 ,-1854, 16, 1802, -1920, -11, 0, 70 }, interior = 0, dimension = 0 },
+				{ matrix = { 1707, -2183, 15, 1638, -2254, 10, 0, 70 }, interior = 0, dimension = 0 },
+				{ matrix = { 1470, -1760, 22, 1535, -1833, 0, 0, 70 }, interior = 0, dimension = 0 }
+			},
+			window = {
+				bottom = true,
+				text = "Since you just arrived into town, you might want to go look for a job. The best way to do that is to go to City Hall.\nLegal jobs are the best way to go if you don't want to get in trouble, if you're into criminal activities, read the jobs section."
+			}
+		},
+		
+		{
+			name = "Start your Journey",
+			camera = {
+				{ matrix = { 1948, -1745, 16, 1914, -1838, -0, 0, 70 }, interior = 0, dimension = 0 },
+				{ matrix = { 1777, -1368, 41, 1747, -1301, -25, 0, 70 }, interior = 0, dimension = 0 }
+			},
+			window = {
+				bottom = true,
+				text = "Now that you're making money from you're job, you might want to go make some new friends? If so, maybe you should visit Idlewood Gas, it's filled with people.\nOr you want to hit a club? Who knows, but it's all up to you.\nIt's your life, you live it how you want!"
+			},
+		}
 	},
 	{
-		name = "Rules"
+		name = "Factions",
+		window = {
+			bottom = true,
+			text = "If you're wanting to join a faction you'll have to roleplay get into one, or you may have to apply for it at the following website:\n\nwww.ValhallaGaming.net\n\nFor some government factions you have to apply on the website."
+		},
 	},
 	{
 		name = "Jobs",
@@ -92,46 +121,178 @@ help_menu =
 			}
 		},
 		{
-			name = "Taxi Driver"
+			name = "Taxi Driver",
+			multi = true,
+			-- page one: Getting the Job
+			{
+				name = "Taxi Driver I",
+				camera = {
+					{ matrix = { 1451, -1723, 46, 1515, -1779, -6, 0, 70 }, interior = 0, dimension = 0 },
+					{ matrix = { 1512, -1730, 16, 1436, -1795, 14, 0, 70 }, interior = 0, dimension = 0 },
+					{ matrix = { 1470, -1760, 22, 1535, -1833, 0, 0, 70 }, interior = 0, dimension = 0 }
+				},
+				window = {
+					bottom = true,
+					text = "\nTo become a Taxi Driver, you must first go to City Hall (The Building on your screen).\nAs you walk inside of the building, walk up to the person behind the desk and right click on them.\nSelect the Taxi Driver Job and hit accept.\nOnce you do all that, you're able to move onto the next step of being a Taxi Driver!"
+				}
+			},
+			
+			-- page two: starting the job
+			{
+				name = "Taxi Driver II",
+				camera = {
+					{ matrix = { 1819, -1815, 29, 1754, -1887, 6, 0, 70 }, interior = 0, dimension = 0 },
+					{ matrix = { 1756, -1950, 32, 1803, -1869, 5, 0, 70 }, interior = 0, dimension = 0 }
+				},
+				window = {
+					bottom = true,
+					text = "\nThis is where you go after you've gotten the job to get your Taxi.\nThis is Unity Station, and the Taxi's are located in the back of the station's parking lot.\nOnce you've completed this step you're ready to start working!"
+				},
+			},
+			
+			-- page three: On Duty
+			{
+				name = "Taxi Driver III",
+				camera = {
+					{ matrix = { 1810, -1750, 45, 1833, -1664, -0, 0, 70 }, interior = 0, dimension = 0 },
+					{ matrix = { 2058, -1147, 76, 1982, -1190, 28, 0, 70 }, interior = 0, dimension = 0 },
+					{ matrix = { 2044, -1442, 48, 1956, -1468, 10, 0, 70 }, interior = 0, dimension = 0 }
+				},
+				window = {
+					bottom = true,
+					text = "\nNow, you're on your way to making money as a Taxi Driver! From here on everything you do is quite easy and simple.\nFrom now on, you just drive around, and wait for calls or for someone who wants a ride.\nOnce you get a call, go to the location stated, then do your job!"
+				},
+			} 
 		},
 		{
-			name = "Bus Driver"
+			name = "Bus Driver",
+			multi = true,
+			-- page one: Getting the job
+			{
+				name = "Bus Driver I",
+				camera = {
+					{ matrix = { 1451, -1723, 46, 1515, -1779, -6, 0, 70 }, interior = 0, dimension = 0 },
+					{ matrix = { 1512, -1730, 16, 1436, -1795, 14, 0, 70 }, interior = 0, dimension = 0 },
+					{ matrix = { 1470, -1760, 22, 1535, -1833, 0, 0, 70 }, interior = 0, dimension = 0 }
+				},
+				window = {
+					bottom = true,
+					text = "\nTo become a Bus Driver, you must first go to City Hall (The Building on your screen).\nAs you walk inside of the building, walk up to the person behind the desk and right click on them.\nSelect the Bus Driver Job and hit accept.\nOnce you do all that, you're able to move onto the next step of being a Bus Driver!"
+				}
+			},
+			
+			-- page two: Starting the job
+			{
+				name = "Bus Driver II",
+				camera = {
+					{ matrix = { 1819, -1815, 29, 1754, -1887, 6, 0, 70 }, interior = 0, dimension = 0 },
+					{ matrix = { 1756, -1950, 32, 1803, -1869, 5, 0, 70 }, interior = 0, dimension = 0 }
+				},
+				window = {
+					bottom = true,
+					text = "\nThis is where you go after you've gotten the job to get your Bus.\nThis is Unity Station, and the Busses are located in the back of the station's parking lot.\nOnce you've completed this step you're ready to start working!"
+				},
+			},
+			
+			-- page three: On Duty
+			{
+				name = "Bus Driver III", 
+				camera = {
+					{ matrix = { 1810, -1750, 45, 1833, -1664, -0, 0, 70 }, interior = 0, dimension = 0 },
+					{ matrix = { 2058, -1147, 76, 1982, -1190, 28, 0, 70 }, interior = 0, dimension = 0 },
+					{ matrix = { 2044, -1442, 48, 1956, -1468, 10, 0, 70 }, interior = 0, dimension = 0 }
+				},
+				window = {
+					bottom = true,
+					text = "After you type /startbus, you notice a lot of blips on your map. Yellow and red. What your objective is to do is to go through the yellow markers, and stop at the red ones.\n\nRed = Stop | Yellow = Route\n\nJust continue doing that and you'll get paid."
+				},
+			},	
 		},
 		{
-			name = "City Maintenance"
+			name = "City Maintenance",
+			multi = true,
+			-- page one: getting the job
+			{
+				name = "City Maintenance I",
+				camera = {
+					{ matrix = { 1451, -1723, 46, 1515, -1779, -6, 0, 70 }, interior = 0, dimension = 0 },
+					{ matrix = { 1512, -1730, 16, 1436, -1795, 14, 0, 70 }, interior = 0, dimension = 0 },
+					{ matrix = { 1470, -1760, 22, 1535, -1833, 0, 0, 70 }, interior = 0, dimension = 0 }
+				},
+				window = {
+					bottom = true,
+					text = "\nTo become a City Maintenance, you must first go to City Hall (The Building on your screen).\nAs you walk inside of the building, walk up to the person behind the desk and right click on them.\nSelect the City Maintenance and hit accept.\nOnce you do all that, you're able to move onto the next step of being a City Maintenance!"
+				},
+			},
+			
+			-- page two: how to do the job
+			{
+				name = "City Maintenance II",
+				camera = {
+					{ matrix = { 1810, -1750, 45, 1833, -1664, -0, 0, 70 }, interior = 0, dimension = 0 },
+					{ matrix = { 2058, -1147, 76, 1982, -1190, 28, 0, 70 }, interior = 0, dimension = 0 },
+					{ matrix = { 2044, -1442, 48, 1956, -1468, 10, 0, 70 }, interior = 0, dimension = 0 }
+				},
+				window = {
+					bottom = true,
+					text = "\nAs City Maintenance, your objective is to go around the city, and clean all those grafitti tags off the walls that people do.\nAll you have to do is find the grafitti, and spray over it with your spraycan.\nEverytime you clean some grafitti, you get a small amount of money."
+				},
+			}
 		},
 		{
-			name = "Mechanic"
+			name = "Mechanic",
+			window = {
+				bottom = true,
+				text = "\nAs a Mechanic, you can fix peoples vehicles if it's need, or add onto them.\nYou do this buy having a certain amount of money on you (Each Upgrade/Repair costs money), and you right click the vehicle you're wanting to work on. You select 'Fix/Upgrade' then choose the option."
+			}
 		},
 		{
-			name = "Locksmith"
+			name = "Locksmith",
+			window = {
+				bottom = true,
+				text = "\nAs a Locksmith, there's nothing really important to do. It's not a job that many people require, but it sure is useful.\nWhat you do is you can make duplicate keys of Vehicle/Business/House keys if you have the original copy."
+			}
 		},
 		{
-			name = "Illegal Jobs"
-		},
-		{
-			name = "Police Department",
-			requirement =
-				function( )
-					return getElementData( localPlayer, "faction" ) ~= 1
-				end
-		},
-		{
-			name = "Emergency Services",
-			requirement =
-				function( )
-					return getElementData( localPlayer, "faction" ) ~= 2
-				end
+			name = "Illegal Jobs",
+			camera = {
+				{ matrix = { 1425, -1334, 23, 1402, -1241, -2, 0, 70 }, interior = 0, dimension = 0 }
+			},
+			window = {
+				bottom = true,
+				text = "\nIllegal Jobs can be anything you want to roleplay that is illegal. There is no actual job you can get that is illegal.\n\nThere is no actual 'illegal' job, the possibilities are endless!"
+			}
 		}
 	},
 	{
 		name = "Vehicles",
-	},
-	{
-		name = "Admin Help",
-		requirement =
-			function( )
-				return getElementData( localPlayer, "adminlevel" ) and getElementData( localPlayer, "adminlevel" ) >= 1
-			end
+		multi = true,
+		-- page one: Grotti Dealership (Cars)
+		{
+			name = "Grotti Dealership",
+			camera = {
+				{ matrix = { 556, -1263, 34, 526, -1342, -19, 0, 70 }, interior = 0, dimension = 0 },
+				{ matrix = { 507, -1280, 34, 591, -1296, -16, 0, 70 }, interior = 0, dimension = 0 }
+			},
+			window = {
+				bottom = true,
+				text = "\nThis is where you can buy a vehicle for yourself if you have enough money, and a license.\nThere is a variety of vehicles that you can buy from thie dealership.\nREMINDER: /vehpos to park your vehicle and save it's position so it spawns there."
+			}
+		},
+		
+		-- page two: The Rusted Anchor (Boats)
+		{
+			name = "The Rusted Anchor",
+			camera = {
+				{ matrix = { 736, -1727, 14, 676, -1657, -24, 0, 70 }, interior = 0, dimension = 0 },
+				{ matrix = { 697, -1681, 18, 758, -1743, -29, 0, 70 }, interior = 0, dimension = 0 },
+				{ matrix = { 170, -1765, 28, 104, -1836, 3, 0, 70 }, interior = 0, dimension = 0 },
+				{ matrix = { 37, -1835, 24, 130, -1816, -6, 0, 70 }, interior = 0, dimension = 0 }
+			},
+			window = {
+				bottom = true,
+				text = "\nNow, this is where you can buy a boat if you've got the extra cash. You must have a license to do this, too. There is about 5 different boats you can buy with your hard earned money. The boating dock is located in Santa Maria Beach.\nREMINDER: /vehpos to park your boat and save it's position so it spawns there."
+			},
+		}
 	}
 }
