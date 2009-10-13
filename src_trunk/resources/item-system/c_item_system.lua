@@ -801,7 +801,7 @@ function showItem(button)
 			local row, col = guiGridListGetSelectedItem(guiGetSelectedTab(tabPanel) == tabKeys and gKeys or gItems)
 			local itemName = guiGridListGetItemText(guiGetSelectedTab(tabPanel) == tabKeys and gKeys or gItems, row, 2)
 			if itemName == "Porn Tape" then
-				itemName = itemName .. ", starring " .. guiGridListGetItemText(guiGetSelectedTab(tabPanel) == tabKeys and gKeys or gItems, row, 3)
+				itemName = itemName .. ", " .. guiGridListGetItemText(guiGetSelectedTab(tabPanel) == tabKeys and gKeys or gItems, row, 3)
 			end
 			triggerServerEvent("showItem", getLocalPlayer(), itemName)
 		elseif (guiGetSelectedTab(tabPanel)==tabWeapons) then -- WEAPONS
