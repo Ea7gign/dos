@@ -85,5 +85,12 @@ function applyMods()
 
 	tag8 = engineLoadTXD ( "tags/tags_laazteca.txd" ) -- Los Malvados
 	engineImportTXD ( tag8, 1531 )
+	
+	----------------------------
+	-- Pacific Flight Company --
+	----------------------------
+	pfc = engineLoadTXD ( "lv/airport3_las.txd" )
+	engineImportTXD ( pfc, 4828 )
+	
 end
 addEventHandler("onClientResourceStart", getResourceRootElement(), applyMods)
