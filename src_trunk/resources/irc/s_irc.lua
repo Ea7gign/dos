@@ -91,7 +91,7 @@ function displayStatus()
 	local playerCount = getPlayerCount()
 	local maxPlayers = getMaxPlayers()
 	local servername = getServerName()
-	local ip = "67.210.235.106:22003"
+	local ip = "87.238.173.138:22003"
 		
 	local totalping = 0
 	local averageping = 0

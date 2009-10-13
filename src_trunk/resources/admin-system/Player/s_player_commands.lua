@@ -418,7 +418,7 @@ function forceApplication(thePlayer, commandName, targetPlayer, ...)
 						outputDebugString( mysql_error( handler ) )
 					end
 					
-					redirectPlayer(targetPlayer, "67.210.235.106", port, password)
+					redirectPlayer(targetPlayer, "87.238.173.138", port, password)
 				end
 			end
 		end
@@ -566,7 +566,7 @@ function forceReconnect(thePlayer, commandName, targetPlayer)
 					local port = getServerPort()
 					local password = getServerPassword()
 					
-					redirectPlayer(targetPlayer, "67.210.235.106", port, password)
+					redirectPlayer(targetPlayer, "87.238.173.138", port, password)
 				end
 			end
 		end
