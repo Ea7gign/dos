@@ -1339,6 +1339,11 @@ function showCharacterUI(accounts, firstTime)
 		bChangeChar = nil
 	end
 	
+	-- Change Account button
+	bChangeAccount = guiCreateButton(0.835, 0.925, 0.15, 0.05, "Change Account", true)
+	guiSetAlpha(bChangeAccount, 0.75)
+	addEventHandler("onClientGUIClick", bChangeAccount, changeAccount)
+	
 	--triggerEvent("hideHud", getLocalPlayer())
 	if not (firstTime) then
 		showChat(false)
@@ -1522,11 +1527,6 @@ function showCharacterUI(accounts, firstTime)
 	showCursor(true)
 	setElementAlpha(getLocalPlayer(), 0)
 	fadeCamera(true, 2)
-	
-	-- Change Account button
-	bChangeAccount = guiCreateButton(0.835, 0.925, 0.15, 0.05, "Change Account", true)
-	guiSetAlpha(bChangeAccount, 0.75)
-	addEventHandler("onClientGUIClick", bChangeAccount, changeAccount)
 	
 	guiSetInputEnabled(true)
 end
@@ -3579,7 +3579,7 @@ function displayAccountManagement()
 	if (donator==0) then
 		guiSetText(lDonator, "Donator: No")
 	elseif (donator>1) then
-		local title = exports.global:cgetPlayerDonatorTitle(getLocalPlayer())
+		local title = tostring(exports.global:cgetPlayerDonatorTitle(getLocalPlayer()))
 		guiSetText(lDonator, "Donator: " .. title)
 	end
 	
