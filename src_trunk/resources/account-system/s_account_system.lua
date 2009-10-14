@@ -717,10 +717,6 @@ function loginPlayer(username, password, operatingsystem)
 			end
 		end
 		
-		-- 0331: Query to check for invalid accounts, can possibly remove this later
-		--local resultUpdate = mysql_query(handler, "UPDATE characters SET money=0 WHERE money<0")
-		--mysql_free_result(resultUpdate)
-		
 		if not (found) then
 			triggerClientEvent(source, "hideUI", source, false)
 			local admin = tonumber(mysql_result(result, 1, 2))
