@@ -170,11 +170,11 @@ function publicSellProperty(thePlayer, dbid, showmessages, givemoney)
 		mysql_free_result(query)
 		
 		if getElementDimension(thePlayer) == dbid then
+			setElementDimension(thePlayer, getElementDimension(entrance))
 			setElementPosition(thePlayer, getElementPosition(entrance))
 			removeElementData(thePlayer, "interiormarker")
 			
 			setElementInterior(thePlayer, getElementInterior(entrance))
-			setElementDimension(thePlayer, getElementDimension(entrance))
 			setCameraInterior(thePlayer, getElementInterior(entrance))
 		end
 
@@ -312,10 +312,10 @@ function deleteInterior(thePlayer, commandName)
 				-- move all players outside
 				for key, value in pairs( getElementsByType( "player" ) ) do
 					if isElement( value ) and getElementDimension( value ) == dbid then
+						setElementDimension( value, getElementDimension( entrance ) )
 						setElementPosition( value, getElementPosition( entrance ) )
 						setElementInterior( value, getElementInterior( entrance ) )
 						setCameraInterior( value, getElementInterior( entrance ) )
-						setElementDimension( value, getElementDimension( entrance ) )
 						removeElementData( value, "interiormarker" )
 						
 						triggerEvent("onPlayerInteriorChange", value, exit, entrance)
@@ -810,9 +810,9 @@ function setPlayerInsideInterior(thePickup, thePlayer)
 		-- teleport the player during the black fade
 		setTimer(function(thePlayer, thePickup, other)
 			if isElement(thePlayer) then
+				setElementDimension(thePlayer, dimension)
 				setElementPosition(thePlayer, x, y, z)
 				setElementInterior(thePlayer, interior)
-				setElementDimension(thePlayer, dimension)
 				setCameraInterior(thePlayer, interior)
 				if rot then
 					setPedRotation(thePlayer, rot)
@@ -1125,9 +1125,9 @@ function gotoHouse( thePlayer, commandName, houseID )
 				local interior = getElementInterior( entrance )
 				local x, y, z = getElementPosition( entrance )
 				
+				setElementDimension(thePlayer, dimension)
 				setElementPosition(thePlayer, x, y, z)
 				setElementInterior(thePlayer, interior)
-				setElementDimension(thePlayer, dimension)
 				setCameraInterior(thePlayer, interior)
 				
 				outputChatBox( "Teleported to House #" .. houseID, thePlayer, 0, 255, 0 )

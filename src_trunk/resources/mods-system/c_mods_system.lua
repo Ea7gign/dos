@@ -1,4 +1,6 @@
-function applyMods()	
+local club420 = nil
+
+function applyMods()
 	----------------------
 	-- Pig Pen Interior --
 	----------------------
@@ -113,5 +115,33 @@ function applyMods()
 	
 	rohane2 = engineLoadTXD( "lv/billbrd01_lan.txd" )
 	engineImportTXD ( rohane2, 4239 )
+	
+	--------------
+	-- Club 420 --
+	--------------
+	club420col = createColSphere( -2658.7900390625, 1410.015625, 910.17034912109, 100 )
+	setElementDimension( club420col, 1355 )
+	setElementInterior( club420col, 3 )
+	
+	addEventHandler( "onClientColShapeHit", club420col,
+		function( p, d )
+			if p == getLocalPlayer( ) and d and not club420 then
+				club420 = engineLoadTXD( "lv/pdomes_logo.txd" )
+				engineImportTXD ( club420, 14539 )
+			end
+		end
+	)
+	
+	addEventHandler( "onClientColShapeLeave", club420col,
+		function( p )
+			if p == getLocalPlayer( ) and club420 then
+				destroyElement( club420 )
+				club420 = nil
+			end
+		end
+	)
+	club420b = engineLoadTXD( "lv/lanlacmab_lan2.txd" )
+	engineImportTXD ( club420b, 4594 )
+	
 end
 addEventHandler("onClientResourceStart", getResourceRootElement(), applyMods)
