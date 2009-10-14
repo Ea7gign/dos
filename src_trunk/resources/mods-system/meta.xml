@@ -10,6 +10,7 @@
 	<file src="lv/bustopm.txd"/>
 	<file src="lv/gen_pol_vegas.txd"/>
 	<file src="lv/airport3_las.txd"/>
+	<file src="lv/ground3_las.txd"/>
 
 	<file src="tags/tags_lafront.txd"/>
 	<file src="tags/tags_lakilo.txd"/>

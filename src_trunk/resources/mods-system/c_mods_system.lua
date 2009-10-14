@@ -92,5 +92,8 @@ function applyMods()
 	pfc = engineLoadTXD ( "lv/airport3_las.txd" )
 	engineImportTXD ( pfc, 4828 )
 	
+	ground3_las = engineLoadTXD ( "lv/ground3_las.txd" )
+	engineImportTXD ( ground3_las, 1267 )
+	engineImportTXD ( ground3_las, 5017 )
 end
 addEventHandler("onClientResourceStart", getResourceRootElement(), applyMods)
