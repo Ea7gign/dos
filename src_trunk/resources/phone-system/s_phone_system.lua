@@ -51,7 +51,7 @@ function callSomeone(thePlayer, commandName, phoneNumber, ...)
 						setElementData(thePlayer, "calling", 911)
 						
 						exports.global:applyAnimation(thePlayer, "ped", "phone_in", 3000, false)
-						toggleAllControls(thePlayer, true, true, true)
+						setTimer(toggleAllControls, 150, 1, thePlayer, true, true, true)
 						setTimer(startPhoneAnim, 3050, 1, thePlayer)
 					elseif phoneNumber == "999" then
 						exports.global:sendLocalMeAction(thePlayer, "takes out a cell phone.")
@@ -61,7 +61,7 @@ function callSomeone(thePlayer, commandName, phoneNumber, ...)
 						setElementData(thePlayer, "calling", 999)
 						
 						exports.global:applyAnimation(thePlayer, "ped", "phone_in", 3000, false)
-						toggleAllControls(thePlayer, true, true, true)
+						setTimer(toggleAllControls, 150, 1, thePlayer, true, true, true)
 						setTimer(startPhoneAnim, 3050, 1, thePlayer)
 					elseif phoneNumber == "8294" then
 						exports.global:sendLocalMeAction(thePlayer, "takes out a cell phone.")
@@ -71,7 +71,7 @@ function callSomeone(thePlayer, commandName, phoneNumber, ...)
 						setElementData(thePlayer, "calling", 8294)
 						
 						exports.global:applyAnimation(thePlayer, "ped", "phone_in", 3000, false)
-						toggleAllControls(thePlayer, true, true, true)
+						setTimer(toggleAllControls, 150, 1, thePlayer, true, true, true)
 						setTimer(startPhoneAnim, 3050, 1, thePlayer)
 					elseif phoneNumber == "081016" then
 						if not executeCommandHandler( "081016", thePlayer ) then
@@ -121,7 +121,7 @@ function callSomeone(thePlayer, commandName, phoneNumber, ...)
 								
 								-- local player
 								exports.global:applyAnimation(thePlayer, "ped", "phone_in", 3000, false)
-								toggleAllControls(thePlayer, true, true, true)
+								setTimer(toggleAllControls, 150, 1, thePlayer, true, true, true)
 								setTimer(startPhoneAnim, 3002, 1, thePlayer)
 								setTimer(startPhoneAnim, 3050, 1, thePlayer)
 								
@@ -157,7 +157,7 @@ addEventHandler("remoteCall", getRootElement(), callSomeone)
 
 function startPhoneAnim(thePlayer)
 	exports.global:applyAnimation(thePlayer, "ped", "phone_talk", -1, true, true, true)
-	toggleAllControls(thePlayer, true, true, true)
+	setTimer(toggleAllControls, 150, 1, thePlayer, true, true, true)
 end
 	
 
@@ -193,7 +193,7 @@ function answerPhone(thePlayer, commandName)
 					end
 					
 					exports.global:applyAnimation(calling, "ped", "phone_in", 3000, false)
-					toggleAllControls(calling, true, true, true)
+					setTimer(toggleAllControls, 150, 1, calling, true, true, true)
 					setTimer(startPhoneAnim, 3002, 1, thePlayer)
 					setTimer(startPhoneAnim, 3050, 1, thePlayer)
 				end
@@ -236,7 +236,7 @@ function hangupPhone(thePlayer, commandName)
 					removeElementData(calling, "caller")
 					setElementData(calling, "phonestate", 0, false)
 					exports.global:applyAnimation(calling, "ped", "phone_out", 1300, false)
-					toggleAllControls(calling, true, true, true)
+					setTimer(toggleAllControls, 150, 1, calling, true, true, true)
 				end
 				
 				removeElementData(thePlayer, "calling")
@@ -248,7 +248,7 @@ function hangupPhone(thePlayer, commandName)
 				exports.global:sendLocalMeAction(thePlayer, "hangs up their cellphone.")
 				
 				exports.global:applyAnimation(thePlayer, "ped", "phone_out", 1300, false)
-				toggleAllControls(thePlayer, true, true, true)
+				setTimer(toggleAllControls, 150, 1, thePlayer, true, true, true)
 			else
 				outputChatBox("Your phone is not in use.", thePlayer, 255, 0, 0)
 			end
