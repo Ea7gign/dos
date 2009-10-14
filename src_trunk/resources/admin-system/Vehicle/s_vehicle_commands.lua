@@ -439,7 +439,7 @@ function respawnVehiclesStop(thePlayer, commandName)
 end
 addCommandHandler("respawnstop", respawnVehiclesStop, false, false)
 
-function respawnAllCivVehicles(thePlayer, commandName, timeToRespawn)
+function respawnAllCivVehicles(thePlayer, commandName)
 	if (exports.global:isPlayerAdmin(thePlayer)) then
 		local vehicles = exports.pool:getPoolElementsByType("vehicle")
 		local counter = 0
@@ -468,6 +468,48 @@ function respawnAllCivVehicles(thePlayer, commandName, timeToRespawn)
 	end
 end
 addCommandHandler("respawnciv", respawnAllCivVehicles, false, false)
+
+function respawnAllInteriorVehicles(thePlayer, commandName, repair)
+	local repair = tonumber( repair ) == 1 and exports.global:isPlayerAdmin( thePlayer )
+	local dimension = getElementDimension(thePlayer)
+	if dimension > 0 and ( exports.global:hasItem(thePlayer, 4, dimension) or exports.global:hasItem(thePlayer, 5, dimension) ) then
+		local vehicles = exports.pool:getPoolElementsByType("vehicle")
+		local counter = 0
+		
+		for k, theVehicle in ipairs(vehicles) do
+			if getElementData(theVehicle, "dimension") == dimension then
+				local dbid = getElementData(theVehicle, "dbid")
+				if dbid and dbid > 0 then
+					local driver = getVehicleOccupant(theVehicle)
+					local pass1 = getVehicleOccupant(theVehicle, 1)
+					local pass2 = getVehicleOccupant(theVehicle, 2)
+					local pass3 = getVehicleOccupant(theVehicle, 3)
+
+					if not pass1 and not pass2 and not pass3 and not driver and not getVehicleTowingVehicle(theVehicle) then
+						local checkx, checky, checkz = getElementPosition( theVehicle )
+						local x, y, z, rx, ry, rz = unpack(getElementData(theVehicle, "respawnposition"))
+						
+						if (round(checkx, 6) ~= x) or (round(checky, 6) ~= y) then
+							if repair then
+								respawnVehicle(theVehicle)
+							else
+								setElementPosition(theVehicle, x, y, z)
+								setVehicleRotation(theVehicle, rx, ry, rz)
+								setElementInterior(theVehicle, getElementData(theVehicle, "interior"))
+								setElementDimension(theVehicle, dimension)
+							end
+							counter = counter + 1
+						end
+					end
+				end
+			end
+		end
+		outputChatBox("Respawned " .. counter .. " district vehicles.", thePlayer)
+	else
+		outputChatBox( "Ain't your place, is it?", thePlayer, 255, 0, 0 )
+	end
+end
+addCommandHandler("respawnint", respawnAllInteriorVehicles, false, false)
 
 function addUpgrade(thePlayer, commandName, target, upgradeID)
 	if (exports.global:isPlayerAdmin(thePlayer)) then
