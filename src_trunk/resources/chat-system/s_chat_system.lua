@@ -250,7 +250,8 @@ function chatMain(message, messageType)
 				for key, value in ipairs(getElementsByType("player")) do
 					if getElementDistance(source, value) < 10 then
 						if (value~=source) then
-							outputChatBox(getPlayerName(source) .. " [RADIO] Says: " .. message, value, 255, 255, 255)
+							local message2 = call(getResourceFromName("language-system"), "applyLanguage", source, value, message, language)
+							outputChatBox("[" .. languagename .. "] " .. getPlayerName(source) .. " [RADIO] Says: " .. message2, value, 255, 255, 255)
 						end
 					end
 				end
