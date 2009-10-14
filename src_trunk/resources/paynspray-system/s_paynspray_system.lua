@@ -189,6 +189,9 @@ function sprayEffect(vehicle, thePlayer, shape, free)
 		else
 			setVehicleDamageProof(vehicle, false)
 		end
+		if (getElementData(vehicle, "Impounded") == 0) then
+			setElementData(vehicle, "enginebroke", 0, false)
+		end
 	else
 		outputChatBox("You forgot to wait for your repair!", thePlayer, 255, 0, 0)
 	end
