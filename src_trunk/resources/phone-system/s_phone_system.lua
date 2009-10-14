@@ -395,7 +395,7 @@ function talkPhone(thePlayer, commandName, ...)
 									end
 								end
 								
-								if founddriver == true
+								if founddriver == true then
 									outputChatBox("Taxi Operator says: Thanks for your call, a taxi will be with you shortly.", thePlayer)
 								else
 									outputChatBox("Taxi Operator says: There is no taxi available in that area, please try again later.", thePlayer)
