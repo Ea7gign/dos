@@ -193,7 +193,7 @@ end
 addEvent("showBankUI", true)
 addEventHandler("showBankUI", getRootElement(), showBankUI)
 
-function hideBankUI()		
+function hideBankUI()
 	destroyElement(wBank)
 	wBank = nil
 		
@@ -203,7 +203,8 @@ function hideBankUI()
 	setElementData(getLocalPlayer(), "exclusiveGUI", false, false)
 end
 addEvent("hideBankUI", true)
-addEventHandler("hideBankUI", getRootElement(), showBankUI)
+addEventHandler("hideBankUI", getRootElement(), hideBankUI)
+addEventHandler("onClientChangeChar", getRootElement(), hideBankUI)
 
 function withdrawMoneyPersonal(button)
 	if (button=="left") then
