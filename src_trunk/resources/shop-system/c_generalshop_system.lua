@@ -308,10 +308,10 @@ function getItemsForSale(shop_type, race, gender)
 	-- drugs/chemicals
 	elseif(shop_type == 7) then
 		item = {
-			{"Cannabis Sativa","A chemical used to make drugs.", "0", 30, 1, 1, false,0},
-			{"Cocaine Alkaloid","A chemical used to make drugs.", "0", 31, 1, 1, false,0},
-			{"Lysergic Acid","A chemical used to make drugs.", "0", 32, 1, 1, false,0},
-			{"Unprocessed PCP","A chemical used to make drugs.", "0", 33, 1, 1, false,0}
+			--{"Cannabis Sativa","A chemical used to make drugs.", "0", 30, 1, 1, false,0},
+			--{"Cocaine Alkaloid","A chemical used to make drugs.", "0", 31, 1, 1, false,0},
+			--{"Lysergic Acid","A chemical used to make drugs.", "0", 32, 1, 1, false,0},
+			--{"Unprocessed PCP","A chemical used to make drugs.", "0", 33, 1, 1, false,0}
 		}
 	-- electronics
 	elseif(shop_type == 8) then
