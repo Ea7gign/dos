@@ -95,5 +95,23 @@ function applyMods()
 	ground3_las = engineLoadTXD ( "lv/ground3_las.txd" )
 	engineImportTXD ( ground3_las, 1267 )
 	engineImportTXD ( ground3_las, 5017 )
+
+	towing = engineLoadTXD ( "lv/eastbeach3c_lae2.txd" )
+	engineImportTXD ( towing, 17555 )
+	
+	------------
+	-- PRO LS --
+	------------
+	proLS = engineLoadTXD ( "lv/sunset02_law2.txd" )
+	engineImportTXD ( proLS, 6364 )
+	
+	-------------------
+	-- Rohane McLean --
+	-------------------
+	rohane = engineLoadTXD( "lv/lawnbillbrd.txd" )
+	engineImportTXD ( rohane, 5846 )
+	
+	rohane2 = engineLoadTXD( "lv/billbrd01_lan.txd" )
+	engineImportTXD ( rohane2, 4239 )
 end
 addEventHandler("onClientResourceStart", getResourceRootElement(), applyMods)
