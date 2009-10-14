@@ -96,8 +96,8 @@ addEventHandler("onColShapeHit", towSphere, UnlockVehicle)
 addEventHandler("onColShapeHit", towSphere2, UnlockVehicle)
 
 function payRelease(vehID)
-	if exports.global:takeMoney(source, 75) then
-		exports.global:giveMoney(getTeamFromName("Best's Towing and Recovery"), 75)
+	if exports.global:takeMoney(source, 95) then
+		exports.global:giveMoney(getTeamFromName("Best's Towing and Recovery"), 95)
 		setElementData(vehID, "Impounded", 0)
 		setElementPosition(vehID, 2743.0905761719, -1462.744750, 32.453125)
 		setVehicleLocked(vehID, true)
@@ -189,7 +189,7 @@ function updateCivilianVehicles(theTruck)
 		local dbid = getElementData(source, "dbid")
 
 		if (dbid >= 0 and faction == -1 and owner < 0) then
-			exports.global:giveMoney(getTeamFromName("Best's Towing and Recovery"), 75)
+			exports.global:giveMoney(getTeamFromName("Best's Towing and Recovery"), 95)
 			outputChatBox("The state has un-impounded the vehicle you where towing.", getVehicleOccupant(theTruck), 255, 194, 14)
 			respawnVehicle(source)
 		end
