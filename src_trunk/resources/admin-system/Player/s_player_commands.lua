@@ -2186,10 +2186,10 @@ end
 addCommandHandler("eject", ejectPlayer, false, false)
 
 -- WARNINGS
-function warnPlayer(thePlayer, commandName, targetPlayer)
+function warnPlayer(thePlayer, commandName, targetPlayer, ...)
 	if (exports.global:isPlayerAdmin(thePlayer)) then
-		if not (targetPlayer) then
-			outputChatBox("SYNTAX: /" .. commandName .. " [Partial Player Nick]", thePlayer, 255, 194, 14)
+		if not (targetPlayer) or not (...) then
+			outputChatBox("SYNTAX: /" .. commandName .. " [Partial Player Nick] [Reason]", thePlayer, 255, 194, 14)
 		else
 			local targetPlayer = exports.global:findPlayerByPartialNick(targetPlayer)
 			
@@ -2199,16 +2199,18 @@ function warnPlayer(thePlayer, commandName, targetPlayer)
 				local targetPlayerName = getPlayerName(targetPlayer)
 				local playerName = getPlayerName(thePlayer)
 				local warns = getElementData(targetPlayer, "warns")
+				reason = table.concat({...}, " ")
 				warns = warns + 1
 				local accountID = getElementData(targetPlayer, "gameaccountid")
 				mysql_free_result( mysql_query( handler, "UPDATE accounts SET warns=" .. warns .. " WHERE id = " .. accountID ) )
 				outputChatBox("You have given " .. targetPlayerName .. " a warning. (" .. warns .. "/3).", thePlayer, 255, 0, 0)
 				outputChatBox("You have been given a warning by " .. getPlayerName(thePlayer) .. ".", targetPlayer, 255, 0, 0)
+				outputChatBox("Reason: " .. reason, targetPlayer, 255, 0, 0)
 				
 				setElementData(targetPlayer, "warns", warns, false)
 				
 				local hiddenAdmin = getElementData(thePlayer, "hiddenadmin")
-				local res = mysql_query( handler, 'INSERT INTO adminhistory (user_char, user, admin_char, admin, hiddenadmin, action, duration, reason) VALUES ("' .. mysql_escape_string(handler, getPlayerName(targetPlayer)) .. '",' .. tostring(getElementData(targetPlayer, "gameaccountid") or 0) .. ',"' .. mysql_escape_string(handler, getPlayerName(thePlayer)) .. '",' .. tostring(getElementData(thePlayer, "gameaccountid") or 0) .. ',' .. hiddenAdmin .. ',4,0,"")' )
+				local res = mysql_query( handler, 'INSERT INTO adminhistory (user_char, user, admin_char, admin, hiddenadmin, action, duration, reason) VALUES ("' .. mysql_escape_string(handler, getPlayerName(targetPlayer)) .. '",' .. tostring(getElementData(targetPlayer, "gameaccountid") or 0) .. ',"' .. mysql_escape_string(handler, getPlayerName(thePlayer)) .. '",' .. tostring(getElementData(thePlayer, "gameaccountid") or 0) .. ',' .. hiddenAdmin .. ',4,0,"' .. mysql_escape_string(handler, reason) .. '")' )
 				if res then
 					mysql_free_result( res )
 				else
