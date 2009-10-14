@@ -30,7 +30,7 @@ local function useDoor(thePlayer, commandName, ...)
 	local distance = getDistanceBetweenPoints3D(1961.697, -2189.776, 13.553, x, y, z)
 
 	if (distance<=20) and (open==false) then
-		if exports.global:hasItem(thePlayer, 78) then
+		if exports.global:hasItem(thePlayer, 78) or getPlayerTeam(thePlayer) == getTeamFromName("Los Santos Police Department") or getPlayerTeam(thePlayer) == getTeamFromName("Los Santos Emergency Services") then
 			outputChatBox("The " .. GateName .. " are now open!", thePlayer, 0, 255, 0)
 			moveObject(Gate[1], 1000, 1968.342, -2189.776, 13.533, 0, 0, 0)
 			moveObject(Gate[2], 1000, 1954.342, -2189.776, 13.533, 0, 0, 0)
