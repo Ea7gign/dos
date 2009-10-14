@@ -1079,7 +1079,7 @@ function lockUnlockOutside(vehicle)
 	local locked = getElementData(vehicle, "locked")
 	local dbid = getElementData(vehicle, "dbid")
 	
-	exports.global:applyAnimation(source, "GHANDS", "gsign3LH", -1, false, false, false)
+	exports.global:applyAnimation(source, "GHANDS", "gsign3LH", 2000, false, false, false)
 	
 	if (isVehicleLocked(vehicle)) then
 		setVehicleLocked(vehicle, false)
