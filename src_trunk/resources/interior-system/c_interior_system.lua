@@ -5,7 +5,11 @@ timer = nil
 -- Message on enter
 function showIntName(name, ownerName, inttype, cost, fee)
 	if (guiGetVisible(gInteriorName)) then
-		killTimer(timer)
+		if isTimer(timer) then
+			killTimer(timer)
+			timer = nil
+		end
+		
 		destroyElement(gInteriorName)
 		gInteriorName = nil
 			
