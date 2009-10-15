@@ -350,7 +350,7 @@ function respawnAllVehicles(thePlayer, commandName, timeToRespawn)
 					local pass2 = getVehicleOccupant(theVehicle, 2)
 					local pass3 = getVehicleOccupant(theVehicle, 3)
 
-					if (pass1) or (pass2) or (pass3) or (driver) or (getVehicleTowingVehicle(theVehicle)) then
+					if (pass1) or (pass2) or (pass3) or (driver) or (getVehicleTowingVehicle(theVehicle)) or #getAttachedElements(theVehicle) > 0 then
 						tempoccupied = tempoccupied + 1
 					else
 						destroyElement(theVehicle)
@@ -362,7 +362,7 @@ function respawnAllVehicles(thePlayer, commandName, timeToRespawn)
 					local pass2 = getVehicleOccupant(theVehicle, 2)
 					local pass3 = getVehicleOccupant(theVehicle, 3)
 
-					if (pass1) or (pass2) or (pass3) or (driver) or (getVehicleTowingVehicle(theVehicle)) then
+					if (pass1) or (pass2) or (pass3) or (driver) or (getVehicleTowingVehicle(theVehicle)) or #getAttachedElements(theVehicle) > 0 then
 						occupiedcounter = occupiedcounter + 1
 					else
 						if isVehicleBlown(theVehicle) or isElementInWater(theVehicle) then
@@ -452,7 +452,7 @@ function respawnAllCivVehicles(thePlayer, commandName)
 				local pass2 = getVehicleOccupant(theVehicle, 2)
 				local pass3 = getVehicleOccupant(theVehicle, 3)
 
-				if not pass1 and not pass2 and not pass3 and not driver and not getVehicleTowingVehicle(theVehicle) then
+				if not pass1 and not pass2 and not pass3 and not driver and not getVehicleTowingVehicle(theVehicle) and #getAttachedElements(theVehicle) == 0 then
 					-- civ vehicles
 					if getElementData(theVehicle, "owner") == -2 then
 						respawnVehicle(theVehicle)
@@ -485,7 +485,7 @@ function respawnAllInteriorVehicles(thePlayer, commandName, repair)
 					local pass2 = getVehicleOccupant(theVehicle, 2)
 					local pass3 = getVehicleOccupant(theVehicle, 3)
 
-					if not pass1 and not pass2 and not pass3 and not driver and not getVehicleTowingVehicle(theVehicle) then
+					if not pass1 and not pass2 and not pass3 and not driver and not getVehicleTowingVehicle(theVehicle) and #getAttachedElements(theVehicle) == 0 then
 						local checkx, checky, checkz = getElementPosition( theVehicle )
 						local x, y, z, rx, ry, rz = unpack(getElementData(theVehicle, "respawnposition"))
 						
