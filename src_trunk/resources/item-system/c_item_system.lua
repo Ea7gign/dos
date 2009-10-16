@@ -374,7 +374,7 @@ function showInventory(player, syncw, synca)
 		colWName = guiGridListAddColumn(gWeapons, "Name", 0.625)
 		colWValue = guiGridListAddColumn(gWeapons, "Ammo", 0.225)
 		
-		if syncw and synca and #syncw > 0 and #synca > 0 then
+		if syncw and synca then
 			for i=0, 12 do
 				local tokenweapon = tonumber(gettok(syncw, i+1, 59))
 				local tokenammo = tonumber(gettok(synca, i+1, 59))
