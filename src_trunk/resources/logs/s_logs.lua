@@ -25,7 +25,7 @@ function logMessage(message, type)
 	local file = createFileIfNotExists(filename)
 	local size = fileGetSize(file)
 	fileSetPos(file, size)
-	fileWrite(file, "[" .. time.hour .. ":" .. time.minute .. "] " .. message .. "\r\n")
+	fileWrite(file, "[" .. ("%04-%02-%02 %02d:%02d"):format(r.year+1900, r.month + 1, r.monthday, r.hour,r.minute) .. "] " .. message .. "\r\n")
 	fileFlush(file)
 	fileClose(file)
 end
