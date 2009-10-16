@@ -41,6 +41,8 @@ function callSomeone(thePlayer, commandName, phoneNumber, ...)
 				
 				if (calling) then -- Using phone already
 					outputChatBox("You are already using your phone.", thePlayer, 255, 0, 0)
+				elseif getElementData(thePlayer, "injuriedanimation") then
+					outputChatBox("You can't use your phone while knocked out.", thePlayer, 255, 0, 0)
 				else
 					
 					if phoneNumber == "911" then
@@ -291,6 +293,8 @@ function talkPhone(thePlayer, commandName, ...)
 		if (exports.global:hasItem(thePlayer, 2)) then -- 71 = Cell phone item
 			if not (...) then
 				outputChatBox("SYNTAX: /p [Message]", thePlayer, 255, 194, 14)
+			elseif getElementData(thePlayer, "injuriedanimation") then
+				outputChatBox("You can't use your phone while knocked out.", thePlayer, 255, 0, 0)
 			else
 				local phoneState = getElementData(thePlayer, "phonestate")
 				
@@ -519,6 +523,8 @@ function sendSMS(thePlayer, commandName, number, ...)
 				outputChatBox("SYNTAX: /" .. commandName .. " [number] [message]", thePlayer, 255, 194, 14)
 			elseif getElementData(thePlayer, "phoneoff") == 1 then
 				outputChatBox("Your phone is off.", thePlayer, 255, 0, 0)
+			elseif getElementData(thePlayer, "injuriedanimation") then
+				outputChatBox("You can't use your phone while knocked out.", thePlayer, 255, 0, 0)
 			elseif exports.global:hasMoney(thePlayer, 1) or exports.global:isPlayerSilverDonator(thePlayer) then
 				local target = nil
 				
