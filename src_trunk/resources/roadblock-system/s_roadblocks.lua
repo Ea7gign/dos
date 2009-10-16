@@ -91,9 +91,5 @@ end
 addCommandHandler("rbs", onRoadblockStart, false, false)
 
 function isRoadblockEditAllowed(thePlayer)
-	if (getElementData(thePlayer, "roadblocks") == true) then
-		return true
-	else
-		return false
-	end
+	return getElementData(thePlayer, "roadblocks")
 end
