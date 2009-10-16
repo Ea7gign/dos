@@ -56,26 +56,28 @@ end
 
 function checkWeapons()
 	for i = 1, 47 do
-		local onslot = getSlotFromWeapon(i)
-		if getPedWeapon(localPlayer, onslot) == i then
-			local ammo = getElementData(localPlayer, "ACweapon" .. i) or 0
-			if ammo < 0 then
-				ammo = 0
-				setElementData(localPlayer, "ACweapon" .. i, 0, false)
+		if i ~= 40 then
+			local onslot = getSlotFromWeapon(i)
+			if getPedWeapon(localPlayer, onslot) == i then
+				local ammo = getElementData(localPlayer, "ACweapon" .. i) or 0
+				if ammo < 0 then
+					ammo = 0
+					setElementData(localPlayer, "ACweapon" .. i, 0, false)
+				end
+				local totalAmmo = getPedTotalAmmo(localPlayer, onslot)
+				if i <= 15 or i >= 44 then -- fix for melee with 60k+ ammo
+					totalAmmo = 1
+				end
+				if totalAmmo > ammo then
+					strikes = strikes + 1
+					triggerServerEvent("notifyWeaponHacks", localPlayer, i, totalAmmo, ammo, strikes)
+				elseif totalAmmo < ammo then
+					-- update the new ammo count
+					setElementData(localPlayer, "ACweapon" .. i, totalAmmo, false)
+				end
+			else -- weapon on that slot, but not the current one
+				setElementData(localPlayer, "ACweapon" .. i, nil, false)
 			end
-			local totalAmmo = getPedTotalAmmo(localPlayer, onslot)
-			if i <= 15 or i >= 44 then -- fix for melee with 60k+ ammo
-				totalAmmo = 1
-			end
-			if totalAmmo > ammo then
-				strikes = strikes + 1
-				triggerServerEvent("notifyWeaponHacks", localPlayer, i, totalAmmo, ammo, strikes)
-			elseif totalAmmo < ammo then
-				-- update the new ammo count
-				setElementData(localPlayer, "ACweapon" .. i, totalAmmo, false)
-			end
-		else -- weapon on that slot, but not the current one
-			setElementData(localPlayer, "ACweapon" .. i, nil, false)
 		end
 	end
 end
