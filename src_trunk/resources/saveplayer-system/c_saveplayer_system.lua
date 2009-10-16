@@ -3,8 +3,6 @@ function resourceStart(res)
 end
 addEventHandler("onClientResourceStart", getResourceRootElement(), resourceStart)
 
-local dontsave = { [35] = true, [36] = true, [37] = true, [38] = true, [16] = true, [18] = true, [39] = true, [40] = true }
-
 local lastweaponstring = nil
 local lastammostring = nil
 
@@ -17,7 +15,7 @@ function saveGuns()
 		
 		for i=0, 12 do
 			local weapon = getPedWeapon(getLocalPlayer(), i)
-			if weapon and not dontsave[weapon] then
+			if weapon then
 				local ammo = math.min( getPedTotalAmmo(getLocalPlayer(), i), getElementData(getLocalPlayer(), "ACweapon" .. weapon) or 0 )
 				
 				if ammo > 0 then
