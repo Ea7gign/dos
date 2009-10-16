@@ -818,7 +818,7 @@ function loadWorldItems(res)
 			local modelid = getItemModel(itemID)
 			
 			local rx, ry, rz, zoffset= getItemRotInfo(itemID)
-			local obj = createObject(modelid, x, y, z - zoffset, rx, ry, rz)
+			local obj = createObject(modelid, x, y, z - ( zoffset or 0 ), rx, ry, rz)
 			
 			exports.pool:allocateElement(obj)
 			setElementDimension(obj, dimension)
