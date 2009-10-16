@@ -16,7 +16,7 @@ enumTypes = {
 
 function logMessage(message, type)
 	local filename = nil
-	local time = getRealTime()
+	local r = getRealTime()
 	local partialname = enumTypes[type]
 	
 	if (partialname == nil) then return end
