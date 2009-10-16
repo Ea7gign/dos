@@ -115,7 +115,7 @@ function lookPlayer(thePlayer, commandName, targetPlayer)
 			if (logged==0) then
 				outputChatBox("Player is not logged in.", thePlayer, 255, 0, 0)
 			else
-				local query = mysql_query(handler, "SELECT description, age, weight, height, skincolor FROM characters WHERE charactername='" .. mysql_escape_string(handler, targetPlayerName) .. "'")
+				local query = mysql_query(handler, "SELECT description, age, weight, height, skincolor FROM characters WHERE id = " .. getElementData(targetPlayer, "dbid"))
 				local description = tostring(mysql_result(query, 1, 1))
 				local age = tostring(mysql_result(query, 1, 2))
 				local weight = tostring(mysql_result(query, 1, 3))
