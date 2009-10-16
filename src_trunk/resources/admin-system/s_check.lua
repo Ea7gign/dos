@@ -3,7 +3,7 @@ function doCheck(sourcePlayer, command, ...)
 		if not (...) then
 			outputChatBox("SYNTAX: /" .. command .. " [Partial Player Name / ID]", sourcePlayer, 255, 194, 14)
 		else
-			local noob = exports.global:findPlayerByPartialNick(...)
+			local noob = exports.global:findPlayerByPartialNick(thePlayer, table.concat({...},"_"))
 			
 			if noob and isElement(noob) then
 				local ip = getPlayerIP(noob)
@@ -34,8 +34,6 @@ function doCheck(sourcePlayer, command, ...)
 				end
 				
 				triggerClientEvent( sourcePlayer, "onCheck", noob, ip, adminreports, donatorlevel, note, history)
-			else
-				outputChatBox("No such player online.", sourcePlayer, 255, 194, 14)
 			end
 		end
 	end
@@ -94,10 +92,8 @@ addCommandHandler( "history",
 			if not (...) then
 				outputChatBox("SYNTAX: /" .. commandName .. " [player]", thePlayer, 255, 194, 14)
 			else
-				local targetPlayer = exports.global:findPlayerByPartialNick(...)
-				if not targetPlayer then
-					outputChatBox("No such player online.", thePlayer, 255, 194, 14)
-				else
+				local targetPlayer = exports.global:findPlayerByPartialNick(thePlayer, table.concat({...},"_"))
+				if targetPlayer then
 					triggerEvent("showAdminHistory", thePlayer, targetPlayer)
 				end
 			end

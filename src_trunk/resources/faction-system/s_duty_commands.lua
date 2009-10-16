@@ -44,10 +44,8 @@ function lvesHeal(thePlayer, commandName, targetPartialNick, price)
 	if not (targetPartialNick) or not (price) then -- if missing target player arg.
 		outputChatBox("SYNTAX: /" .. commandName .. " [Player Partial Nick / ID] [Price of Heal]", thePlayer, 255, 194, 14)
 	else
-		local targetPlayer = exports.global:findPlayerByPartialNick(targetPartialNick)
-		if not (targetPlayer) then -- is the player online?
-			outputChatBox("Player not found or multiple were found.", thePlayer, 255, 0, 0)
-		else
+		local targetPlayer, targetPlayerName = exports.global:findPlayerByPartialNick(thePlayer, targetPartialNick)
+		if targetPlayer then -- is the player online?
 			local logged = getElementData(thePlayer, "loggedin")
 	
 			if (logged==1) then
@@ -61,7 +59,6 @@ function lvesHeal(thePlayer, commandName, targetPartialNick, price)
 					if price > 600 then
 						outputChatBox("This is too much to ask him for.", thePlayer, 255, 0, 0)
 					else
-						local targetPlayerName = getPlayerName(targetPlayer)
 						local x, y, z = getElementPosition(thePlayer)
 						local tx, ty, tz = getElementPosition(targetPlayer)
 						
@@ -88,7 +85,7 @@ function lvesHeal(thePlayer, commandName, targetPartialNick, price)
 								
 								setElementHealth(targetPlayer, 100)
 								triggerEvent("onPlayerHeal", targetPlayer, true)
-								outputChatBox("You healed '" ..getPlayerName(targetPlayer).. "'.", thePlayer, 0, 255, 0)
+								outputChatBox("You healed '" ..targetPlayerName.. "'.", thePlayer, 0, 255, 0)
 								outputChatBox("You have been healed by '" ..getPlayerName(thePlayer).. "' for $" .. price .. ".", targetPlayer, 0, 255, 0)
 							end
 						end
@@ -104,10 +101,8 @@ function lvesExamine(thePlayer, commandName, targetPartialNick)
 	if not targetPartialNick then -- if missing target player arg.
 		outputChatBox("SYNTAX: /" .. commandName .. " [Player Partial Nick / ID]", thePlayer, 255, 194, 14)
 	else
-		local targetPlayer = exports.global:findPlayerByPartialNick(targetPartialNick)
-		if not targetPlayer then -- is the player online?
-			outputChatBox("Player not found or multiple were found.", thePlayer, 255, 0, 0)
-		else
+		local targetPlayer, targetPlayerName = exports.global:findPlayerByPartialNick(thePlayer, targetPartialNick)
+		if targetPlayer then -- is the player online?
 			local logged = getElementData(thePlayer, "loggedin")
 	
 			if logged==1 then
@@ -117,12 +112,11 @@ function lvesExamine(thePlayer, commandName, targetPartialNick)
 				if not (factionType==4) then
 					outputChatBox("You have no basic medic skills, contact the ES.", thePlayer, 255, 0, 0)
 				else
-					local targetPlayerName = getPlayerName(targetPlayer)
 					local x, y, z = getElementPosition(thePlayer)
 					local tx, ty, tz = getElementPosition(targetPlayer)
 				
 					if (getDistanceBetweenPoints3D(x, y, z, tx, ty, tz)>5) then -- Are they standing next to each other?
-						outputChatBox("You are too far away to examine '"..getPlayerName(targetPlayerName).."'.", thePlayer, 255, 0, 0)
+						outputChatBox("You are too far away to examine '"..targetPlayerName.."'.", thePlayer, 255, 0, 0)
 					else
 						triggerEvent("onPlayerExamine", targetPlayer, thePlayer)
 					end

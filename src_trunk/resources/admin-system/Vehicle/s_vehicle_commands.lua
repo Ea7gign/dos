@@ -517,17 +517,14 @@ function addUpgrade(thePlayer, commandName, target, upgradeID)
 			outputChatBox("SYNTAX: /" .. commandName .. " [Partial Player Nick] [Upgrade ID]", thePlayer, 255, 194, 14)
 		else
 			local username = getPlayerName(thePlayer)
-			local targetPlayer = exports.global:findPlayerByPartialNick(target)
+			local targetPlayer, targetPlayerName = exports.global:findPlayerByPartialNick(thePlayer, target)
 			
-			if not (targetPlayer) then
-				outputChatBox("Player not found or multiple were found.", thePlayer, 255, 0, 0)
-			else
+			if targetPlayer then
 				if not (isPedInVehicle(targetPlayer)) then
 					outputChatBox("That player is not in a vehicle.", thePlayer, 255, 0, 0)
 				else
 					local theVehicle = getPedOccupiedVehicle(targetPlayer)
 					local success = addVehicleUpgrade(theVehicle, upgradeID)
-					local targetPlayerName = getPlayerName(targetPlayer)
 					
 					if (success) then
 						outputChatBox(getVehicleUpgradeSlotName(upgradeID) .. " upgrade added to " .. targetPlayerName .. "'s vehicle.", thePlayer)
@@ -548,11 +545,9 @@ function addPaintjob(thePlayer, commandName, target, paintjobID)
 			outputChatBox("SYNTAX: /" .. commandName .. " [Partial Player Nick] [Paintjob ID]", thePlayer, 255, 194, 14)
 		else
 			local username = getPlayerName(thePlayer)
-			local targetPlayer = exports.global:findPlayerByPartialNick(target)
+			local targetPlayer, targetPlayerName = exports.global:findPlayerByPartialNick(thePlayer, target)
 			
-			if not (targetPlayer) then
-				outputChatBox("Player not found or multiple were found.", thePlayer, 255, 0, 0)
-			else
+			if targetPlayer then
 				if not (isPedInVehicle(targetPlayer)) then
 					outputChatBox("That player is not in a vehicle.", thePlayer, 255, 0, 0)
 				else
@@ -562,7 +557,6 @@ function addPaintjob(thePlayer, commandName, target, paintjobID)
 						outputChatBox("This Vehicle already has this paintjob.", thePlayer, 255, 0, 0)
 					else
 						local success = setVehiclePaintjob(theVehicle, paintjobID)
-						local targetPlayerName = getPlayerName(targetPlayer)
 						
 						if (success) then
 							outputChatBox("Paintjob #" .. paintjobID .. " added to " .. targetPlayerName .. "'s vehicle.", thePlayer)
@@ -585,11 +579,9 @@ function resetUpgrades(thePlayer, commandName, target)
 			outputChatBox("SYNTAX: /" .. commandName .. " [Partial Player Nick]", thePlayer, 255, 194, 14)
 		else
 			local username = getPlayerName(thePlayer)
-			local targetPlayer = exports.global:findPlayerByPartialNick(target)
+			local targetPlayer, targetPlayerName = exports.global:findPlayerByPartialNick(thePlayer, target)
 			
-			if not (targetPlayer) then
-				outputChatBox("Player not found or multiple were found.", thePlayer, 255, 0, 0)
-			else
+			if targetPlayer then
 				if not (isPedInVehicle(targetPlayer)) then
 					outputChatBox("That player is not in a vehicle.", thePlayer, 255, 0, 0)
 				else
@@ -631,16 +623,13 @@ function fixPlayerVehicle(thePlayer, commandName, target)
 			outputChatBox("SYNTAX: /" .. commandName .. " [Partial Player Nick]", thePlayer, 255, 194, 14)
 		else
 			local username = getPlayerName(thePlayer)
-			local targetPlayer = exports.global:findPlayerByPartialNick(target)
+			local targetPlayer, targetPlayerName = exports.global:findPlayerByPartialNick(thePlayer, target)
 			
-			if not (targetPlayer) then
-				outputChatBox("Player not found or multiple were found.", thePlayer, 255, 0, 0)
-			else
+			if targetPlayer then
 				local logged = getElementData(targetPlayer, "loggedin")
 				if (logged==0) then
 					outputChatBox("Player is not logged in.", thePlayer, 255, 0, 0)
 				else
-					local targetPlayerName = getPlayerName(targetPlayer)
 					local veh = getPedOccupiedVehicle(targetPlayer)
 					if (veh) then
 						fixVehicle(veh)
@@ -671,16 +660,13 @@ function fixPlayerVehicleVisual(thePlayer, commandName, target)
 			outputChatBox("SYNTAX: /" .. commandName .. " [Partial Player Nick]", thePlayer, 255, 194, 14)
 		else
 			local username = getPlayerName(thePlayer)
-			local targetPlayer = exports.global:findPlayerByPartialNick(target)
+			local targetPlayer, targetPlayerName = exports.global:findPlayerByPartialNick(thePlayer, target)
 			
-			if not (targetPlayer) then
-				outputChatBox("Player not found or multiple were found.", thePlayer, 255, 0, 0)
-			else
+			if targetPlayer then
 				local logged = getElementData(targetPlayer, "loggedin")
 				if (logged==0) then
 					outputChatBox("Player is not logged in.", thePlayer, 255, 0, 0)
 				else
-					local targetPlayerName = getPlayerName(targetPlayer)
 					local veh = getPedOccupiedVehicle(targetPlayer)
 					if (veh) then
 						local health = getElementHealth(veh)
@@ -705,16 +691,13 @@ function blowPlayerVehicle(thePlayer, commandName, target)
 			outputChatBox("SYNTAX: /" .. commandName .. " [Partial Player Nick]", thePlayer, 255, 194, 14)
 		else
 			local username = getPlayerName(thePlayer)
-			local targetPlayer = exports.global:findPlayerByPartialNick(target)
+			local targetPlayer, targetPlayerName = exports.global:findPlayerByPartialNick(thePlayer, target)
 			
-			if not (targetPlayer) then
-				outputChatBox("Player not found or multiple were found.", thePlayer, 255, 0, 0)
-			else
+			if targetPlayer then
 				local logged = getElementData(targetPlayer, "loggedin")
 				if (logged==0) then
 					outputChatBox("Player is not logged in.", thePlayer, 255, 0, 0)
 				else
-					local targetPlayerName = getPlayerName(targetPlayer)
 					local veh = getPedOccupiedVehicle(targetPlayer)
 					if (veh) then
 						blowVehicle(veh)
@@ -736,16 +719,13 @@ function setCarHP(thePlayer, commandName, target, hp)
 			outputChatBox("SYNTAX: /" .. commandName .. " [Partial Player Nick] [Health]", thePlayer, 255, 194, 14)
 		else
 			local username = getPlayerName(thePlayer)
-			local targetPlayer = exports.global:findPlayerByPartialNick(target)
+			local targetPlayer, targetPlayerName = exports.global:findPlayerByPartialNick(thePlayer, target)
 			
-			if not (targetPlayer) then
-				outputChatBox("Player not found or multiple were found.", thePlayer, 255, 0, 0)
-			else
+			if targetPlayer then
 				local logged = getElementData(targetPlayer, "loggedin")
 				if (logged==0) then
 					outputChatBox("Player is not logged in.", thePlayer, 255, 0, 0)
 				else
-					local targetPlayerName = getPlayerName(targetPlayer)
 					local veh = getPedOccupiedVehicle(targetPlayer)
 					if (veh) then
 						local sethp = setElementHealth(veh, tonumber(hp))
@@ -791,16 +771,13 @@ function fuelPlayerVehicle(thePlayer, commandName, target)
 			outputChatBox("SYNTAX: /" .. commandName .. " [Partial Player Nick]", thePlayer, 255, 194, 14)
 		else
 			local username = getPlayerName(thePlayer)
-			local targetPlayer = exports.global:findPlayerByPartialNick(target)
+			local targetPlayer, targetPlayerName = exports.global:findPlayerByPartialNick(thePlayer, target)
 			
-			if not (targetPlayer) then
-				outputChatBox("Player not found or multiple were found.", thePlayer, 255, 0, 0)
-			else
+			if targetPlayer then
 				local logged = getElementData(targetPlayer, "loggedin")
 				if (logged==0) then
 					outputChatBox("Player is not logged in.", thePlayer, 255, 0, 0)
 				else
-					local targetPlayerName = getPlayerName(targetPlayer)
 					local veh = getPedOccupiedVehicle(targetPlayer)
 					if (veh) then
 						setElementData(veh, "fuel", 100, false)
@@ -835,16 +812,13 @@ function setPlayerVehicleColor(thePlayer, commandName, target, col1, col2)
 			outputChatBox("SYNTAX: /" .. commandName .. " [Partial Player Nick] [Color 1] [Color 2]", thePlayer, 255, 194, 14)
 		else
 			local username = getPlayerName(thePlayer)
-			local targetPlayer = exports.global:findPlayerByPartialNick(target)
+			local targetPlayer, targetPlayerName = exports.global:findPlayerByPartialNick(thePlayer, target)
 			
-			if not (targetPlayer) then
-				outputChatBox("Player not found or multiple were found.", thePlayer, 255, 0, 0)
-			else
+			if targetPlayer then
 				local logged = getElementData(targetPlayer, "loggedin")
 				if (logged==0) then
 					outputChatBox("Player is not logged in.", thePlayer, 255, 0, 0)
 				else
-					local targetPlayerName = getPlayerName(targetPlayer)
 					local veh = getPedOccupiedVehicle(targetPlayer)
 					if (veh) then
 						local color = setVehicleColor(veh, col1, col2, col1, col2)

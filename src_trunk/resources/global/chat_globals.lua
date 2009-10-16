@@ -18,23 +18,32 @@ function sendMessageToAdmins(message)
 	end
 end
 
-function findPlayerByPartialNick(partialNick)
+function findPlayerByPartialNick(thePlayer, partialNick)
+	if not partialNick and not isElement(thePlayer) and type( thePlayer ) == "string" then
+		outputDebugString( "Incorrect Parameters in findPlayerByPartialNick" )
+		partialNick = thePlayer
+		thePlayer = nil
+	end
+	local candidates = {}
 	local matchPlayer = nil
 	local matchNick = nil
-	local matchNickAccuracy=0
+	local matchNickAccuracy = -1
 	local partialNick = string.lower(partialNick)
 
 	local players = exports.pool:getPoolElementsByType("player")
 	local count = 0
 	
+	if getPlayerFromName(partialNick) then
+		return getPlayerFromName(partialNick), partialNick
 	-- IDS
-	if tonumber(partialNick) then
+	elseif tonumber(partialNick) then
 		for key, value in ipairs(players) do
 			if isElement(value) then
 				local id = getElementData(value, "playerid")
 				
 				if id and id == tonumber(partialNick) then
 					matchPlayer = value
+					candidates = { matchPlayer }
 					break
 				end
 			end
@@ -51,10 +60,12 @@ function findPlayerByPartialNick(partialNick)
 						matchNickAccuracy = posEnd-posStart
 						matchNick = playerName
 						matchPlayer = arrayPlayer
+						candidates = { arrayPlayer }
 					elseif posEnd - posStart == matchNickAccuracy then
 						-- found someone who matches up the same way, so pretend we didnt find any
 						matchNick = nil
 						matchPlayer = nil
+						table.insert( candidates, arrayPlayer )
 					end
 				end
 			end
@@ -62,10 +73,19 @@ function findPlayerByPartialNick(partialNick)
 	end
 	
 	if not matchPlayer or not isElement(matchPlayer) then
+		if isElement( thePlayer ) then
+			if #candidates == 0 then
+				outputChatBox("No such player found.", thePlayer, 255, 0, 0)
+			else
+				outputChatBox( #candidates .. " players matching:", thePlayer, 255, 194, 14)
+				for _, arrayPlayer in ipairs( candidates ) do
+					outputChatBox("  (" .. tostring( getElementData( arrayPlayer, "playerid" ) ) .. ") " .. getPlayerName( arrayPlayer ), thePlayer, 255, 255, 0)
+				end
+			end
+		end
 		return false
 	else
-		local dbid = getElementData(matchPlayer, "dbid")
-		return matchPlayer, dbid
+		return matchPlayer, getPlayerName( matchPlayer ):gsub("_", " ")
 	end
 end
 

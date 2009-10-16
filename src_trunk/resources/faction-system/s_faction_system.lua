@@ -606,13 +606,10 @@ function adminSetPlayerFaction(thePlayer, commandName, partialNick, factionID)
 		if not (partialNick) or not (factionID) then
 			outputChatBox("SYNTAX: /" .. commandName .. " [Player Partial Name/ID] [Faction ID (-1 for none)]", thePlayer, 255, 194, 14)
 		else
-			local targetPlayer = exports.global:findPlayerByPartialNick(partialNick)
+			local targetPlayer, targetPlayerNick = exports.global:findPlayerByPartialNick(thePlayer, partialNick)
 			
-			if not (targetPlayer) then
-				outputChatBox("Player does not exist.", thePlayer, 255, 0, 0)
-			else
-				local targetPlayerNick = getPlayerName(targetPlayer)
-				local query = mysql_query(handler, "UPDATE characters SET faction_leader='0', faction_id='" .. factionID .. "', faction_rank='1' WHERE charactername='" .. mysql_escape_string(handler, targetPlayerNick) .. "'")
+			if targetPlayer then
+				local query = mysql_query(handler, "UPDATE characters SET faction_leader='0', faction_id='" .. factionID .. "', faction_rank='1' WHERE id=" .. getElementData(targetPlayer, "dbid"))
 				
 				factionID = tonumber(factionID)
 				if (query) then
@@ -663,12 +660,9 @@ function adminSetFactionLeader(thePlayer, commandName, partialNick, factionID)
 		if not (partialNick) or not (factionID)  then
 			outputChatBox("SYNTAX: /" .. commandName .. " [Player Partial Name] [Faction ID]", thePlayer, 255, 194, 14)
 		else
-			local targetPlayer = exports.global:findPlayerByPartialNick(partialNick)
+			local targetPlayer, targetPlayerNick = exports.global:findPlayerByPartialNick(thePlayer, partialNick)
 			
-			if not (targetPlayer) then
-				outputChatBox("Player does not exist.", thePlayer, 255, 0, 0)
-			else
-				local targetPlayerNick = getPlayerName(targetPlayer)
+			if targetPlayer then
 				local query = mysql_query(handler, "UPDATE characters SET faction_leader='1', faction_id='" .. tonumber(factionID) .. "', faction_rank='1' WHERE charactername='" .. mysql_escape_string(handler, targetPlayerNick) .. "'")
 				
 				if (query) then

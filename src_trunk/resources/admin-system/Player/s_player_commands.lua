@@ -106,12 +106,9 @@ function lookPlayer(thePlayer, commandName, targetPlayer)
 	if not (targetPlayer) then
 		outputChatBox("SYNTAX: /" .. commandName .. " [Player Partial Nick / ID]", thePlayer, 255, 194, 14)
 	else
-		local targetPlayer = exports.global:findPlayerByPartialNick(targetPlayer)
+		local targetPlayer, targetPlayerName = exports.global:findPlayerByPartialNick(thePlayer, targetPlayer)
 		
-		if not (targetPlayer) then
-			outputChatBox("Player not found or multiple were found.", thePlayer, 255, 0, 0)
-		else
-			local targetPlayerName = getPlayerName(targetPlayer)
+		if targetPlayer then
 			local logged = getElementData(targetPlayer, "loggedin")
 			local username = getPlayerName(thePlayer)
 			
@@ -154,12 +151,9 @@ function adminUncuff(thePlayer, commandName, targetPlayer)
 		if not (targetPlayer) then
 			outputChatBox("SYNTAX: /" .. commandName .. " [Player Partial Nick / ID]", thePlayer, 255, 194, 14)
 		else
-			local targetPlayer = exports.global:findPlayerByPartialNick(targetPlayer)
+			local targetPlayer, targetPlayerName = exports.global:findPlayerByPartialNick(thePlayer, targetPlayer)
 			
-			if not (targetPlayer) then
-				outputChatBox("Player not found or multiple were found.", thePlayer, 255, 0, 0)
-			else
-				local targetPlayerName = getPlayerName(targetPlayer)
+			if targetPlayer then
 				local logged = getElementData(targetPlayer, "loggedin")
 				local username = getPlayerName(thePlayer)
 				
@@ -171,7 +165,6 @@ function adminUncuff(thePlayer, commandName, targetPlayer)
 					if (restrain==0) then
 						outputChatBox("Player is not restrained.", thePlayer, 255, 0, 0)
 					else
-						local targetPlayerName = getPlayerName(targetPlayer)
 						outputChatBox("You have been uncuffed by " .. username .. ".", targetPlayer)
 						outputChatBox("You have uncuffed " .. targetPlayerName .. ".", thePlayer)
 						toggleControl(targetPlayer, "sprint", true)
@@ -200,12 +193,9 @@ function adminUnmask(thePlayer, commandName, targetPlayer)
 		if not (targetPlayer) then
 			outputChatBox("SYNTAX: /" .. commandName .. " [Player Partial Nick / ID]", thePlayer, 255, 194, 14)
 		else
-			local targetPlayer = exports.global:findPlayerByPartialNick(targetPlayer)
+			local targetPlayer, targetPlayerName = exports.global:findPlayerByPartialNick(thePlayer, targetPlayer)
 			
-			if not (targetPlayer) then
-				outputChatBox("Player not found or multiple were found.", thePlayer, 255, 0, 0)
-			else
-				local targetPlayerName = getPlayerName(targetPlayer)
+			if targetPlayer then
 				local logged = getElementData(targetPlayer, "loggedin")
 				local username = getPlayerName(thePlayer)
 				
@@ -216,7 +206,7 @@ function adminUnmask(thePlayer, commandName, targetPlayer)
 					local mask = getElementData(targetPlayer, "mask")
 					
 					if (gasmask==1 or mask==1) then
-						local name = string.gsub(getPlayerName(targetPlayer), "_", " ")
+						local name = targetPlayerName:gsub("_", " ")
 						setPlayerNametagText(targetPlayer, tostring(name))
 
 						removeElementData(targetPlayer, "gasmask")
@@ -249,12 +239,9 @@ function adminUnblindfold(thePlayer, commandName, targetPlayer)
 		if not (targetPlayer) then
 			outputChatBox("SYNTAX: /" .. commandName .. " [Player Partial Nick / ID]", thePlayer, 255, 194, 14)
 		else
-			local targetPlayer = exports.global:findPlayerByPartialNick(targetPlayer)
+			local targetPlayer, targetPlayerName = exports.global:findPlayerByPartialNick(thePlayer, targetPlayer)
 			
-			if not (targetPlayer) then
-				outputChatBox("Player not found or multiple were found.", thePlayer, 255, 0, 0)
-			else
-				local targetPlayerName = getPlayerName(targetPlayer)
+			if targetPlayer then
 				local logged = getElementData(targetPlayer, "loggedin")
 				local username = getPlayerName(thePlayer)
 				
@@ -283,12 +270,9 @@ function mutePlayer(thePlayer, commandName, targetPlayer)
 		if not (targetPlayer) then
 			outputChatBox("SYNTAX: /" .. commandName .. " [Player Partial Nick / ID]", thePlayer, 255, 194, 14)
 		else
-			local targetPlayer = exports.global:findPlayerByPartialNick(targetPlayer)
+			local targetPlayer, targetPlayerName = exports.global:findPlayerByPartialNick(thePlayer, targetPlayer)
 			
-			if not (targetPlayer) then
-				outputChatBox("Player not found or multiple were found.", thePlayer, 255, 0, 0)
-			else
-				local targetPlayerName = getPlayerName(targetPlayer)
+			if targetPlayer then
 				local logged = getElementData(targetPlayer, "loggedin")
 				
 				if (logged==0) then
@@ -359,12 +343,9 @@ function disarmPlayer(thePlayer, commandName, targetPlayer)
 		if not (targetPlayer) then
 			outputChatBox("SYNTAX: /" .. commandName .. " [Player Partial Nick / ID]", thePlayer, 255, 194, 14)
 		else
-			local targetPlayer = exports.global:findPlayerByPartialNick(targetPlayer)
+			local targetPlayer, targetPlayerName = exports.global:findPlayerByPartialNick(thePlayer, targetPlayer)
 			
-			if not (targetPlayer) then
-				outputChatBox("Player not found or multiple were found.", thePlayer, 255, 0, 0)
-			else
-				local targetPlayerName = getPlayerName(targetPlayer)
+			if targetPlayer then
 				local logged = getElementData(targetPlayer, "loggedin")
 				
 				if (logged==0) then
@@ -386,14 +367,12 @@ function forceApplication(thePlayer, commandName, targetPlayer, ...)
 		if not (targetPlayer) or not (...) then
 			outputChatBox("SYNTAX: /" .. commandName .. " [Player Partial Nick/ID] [Reason]", thePlayer, 255, 194, 14)
 		else
-			local targetPlayer = exports.global:findPlayerByPartialNick(targetPlayer)
+			local targetPlayer, targetPlayerName = exports.global:findPlayerByPartialNick(thePlayer, targetPlayer)
 			
 			if not (targetPlayer) then
-				outputChatBox("Player not found or multiple were found.", thePlayer, 255, 0, 0)
-			--elseif exports.global:isPlayerAdmin(targetPlayer) then
-				--outputChatBox("No.", thePlayer, 255, 0, 0)
+			elseif exports.global:isPlayerAdmin(targetPlayer) then
+				outputChatBox("No.", thePlayer, 255, 0, 0)
 			else
-				local targetPlayerName = getPlayerName(targetPlayer)
 				local logged = getElementData(targetPlayer, "loggedin")
 				
 				if (logged==0) then
@@ -432,12 +411,9 @@ function ckPlayer(thePlayer, commandName, targetPlayer)
 		if not (targetPlayer) then
 			outputChatBox("SYNTAX: /" .. commandName .. " [Player Partial Nick / ID]", thePlayer, 255, 194, 14)
 		else
-			local targetPlayer = exports.global:findPlayerByPartialNick(targetPlayer)
+			local targetPlayer, targetPlayerName = exports.global:findPlayerByPartialNick(thePlayer, targetPlayer)
 			
-			if not (targetPlayer) then
-				outputChatBox("Player not found or multiple were found.", thePlayer, 255, 0, 0)
-			else
-				local targetPlayerName = getPlayerName(targetPlayer)
+			if targetPlayer then
 				local logged = getElementData(targetPlayer, "loggedin")
 				
 				if (logged==0) then
@@ -458,7 +434,7 @@ function ckPlayer(thePlayer, commandName, targetPlayer)
 					setElementData(targetPlayer, "loggedin", 0, false)
 					outputChatBox("Your character was CK'ed by " .. getPlayerName(thePlayer) .. ".", targetPlayer, 255, 194, 14)
 					showChat(targetPlayer, true)
-					outputChatBox("You have CK'ed ".. getPlayerName(targetPlayer) ..".", thePlayer, 255, 194, 1, 14)
+					outputChatBox("You have CK'ed ".. targetPlayerName ..".", thePlayer, 255, 194, 1, 14)
 					mysql_free_result(query)
 				end
 			end
@@ -550,12 +526,9 @@ function forceReconnect(thePlayer, commandName, targetPlayer)
 		if not (targetPlayer) then
 			outputChatBox("SYNTAX: /" .. commandName .. " [Player Partial Nick / ID]", thePlayer, 255, 194, 14)
 		else
-			local targetPlayer = exports.global:findPlayerByPartialNick(targetPlayer)
+			local targetPlayer, targetPlayerName = exports.global:findPlayerByPartialNick(thePlayer, targetPlayer)
 			
-			if not (targetPlayer) then
-				outputChatBox("Player not found or multiple were found.", thePlayer, 255, 0, 0)
-			else
-				local targetPlayerName = getPlayerName(targetPlayer)
+			if targetPlayer then
 				local logged = getElementData(targetPlayer, "loggedin")
 				
 				if (logged==0) then
@@ -581,11 +554,9 @@ function givePlayerGun(thePlayer, commandName, targetPlayer, ...)
 		if not (targetPlayer) or (#args < 1) then
 			outputChatBox("SYNTAX: /" .. commandName .. " [Player Partial Nick / ID] [Weapon ID/Name] [Ammo]", thePlayer, 255, 194, 14)
 		else
-			local targetPlayer = exports.global:findPlayerByPartialNick(targetPlayer)
+			local targetPlayer, targetPlayerName = exports.global:findPlayerByPartialNick(thePlayer, targetPlayer)
 			
-			if not (targetPlayer) then
-				outputChatBox("Player not found or multiple were found.", thePlayer, 255, 0, 0)
-			else
+			if targetPlayer then
 				local weapon = tonumber(args[1])
 				local ammo = #args ~= 1 and tonumber(args[#args]) or -1
 				
@@ -605,7 +576,6 @@ function givePlayerGun(thePlayer, commandName, targetPlayer, ...)
 					outputChatBox("Invalid Weapon ID.", thePlayer, 255, 0, 0)
 				end
 				
-				local targetPlayerName = getPlayerName(targetPlayer)
 				local logged = getElementData(targetPlayer, "loggedin")
 				local hiddenAdmin = getElementData(thePlayer, "hiddenadmin")
 				
@@ -638,12 +608,9 @@ function givePlayerItem(thePlayer, commandName, targetPlayer, itemID, ...)
 		if not (itemID) or not (...) or not (targetPlayer) then
 			outputChatBox("SYNTAX: /" .. commandName .. " [Player Partial Nick / ID] [Item ID] [Item Value]", thePlayer, 255, 194, 14)
 		else
-			local targetPlayer = exports.global:findPlayerByPartialNick(targetPlayer)
+			local targetPlayer, targetPlayerName = exports.global:findPlayerByPartialNick(thePlayer, targetPlayer)
 			
-			if not (targetPlayer) then
-				outputChatBox("Player not found or multiple were found.", thePlayer, 255, 0, 0)
-			else
-				local targetPlayerName = getPlayerName(targetPlayer)
+			if targetPlayer then
 				local logged = getElementData(targetPlayer, "loggedin")
 				
 				itemID = tonumber(itemID)
@@ -680,12 +647,9 @@ function takePlayerItem(thePlayer, commandName, targetPlayer, itemID, ...)
 		if not (itemID) or not (...) or not (targetPlayer) then
 			outputChatBox("SYNTAX: /" .. commandName .. " [Player Partial Nick / ID] [Item ID] [Item Value]", thePlayer, 255, 194, 14)
 		else
-			local targetPlayer = exports.global:findPlayerByPartialNick(targetPlayer)
+			local targetPlayer, targetPlayerName = exports.global:findPlayerByPartialNick(thePlayer, targetPlayer)
 			
-			if not (targetPlayer) then
-				outputChatBox("Player not found or multiple were found.", thePlayer, 255, 0, 0)
-			else
-				local targetPlayerName = getPlayerName(targetPlayer)
+			if targetPlayer then
 				local logged = getElementData(targetPlayer, "loggedin")
 				
 				itemID = tonumber(itemID)
@@ -714,12 +678,9 @@ function setPlayerHealth(thePlayer, commandName, targetPlayer, health)
 		if not (health) or not (targetPlayer) then
 			outputChatBox("SYNTAX: /" .. commandName .. " [Player Partial Nick / ID] [Health]", thePlayer, 255, 194, 14)
 		else
-			local targetPlayer = exports.global:findPlayerByPartialNick(targetPlayer)
+			local targetPlayer, targetPlayerName = exports.global:findPlayerByPartialNick(thePlayer, targetPlayer)
 			
-			if not (targetPlayer) then
-				outputChatBox("Player not found or multiple were found.", thePlayer, 255, 0, 0)
-			else
-				local targetPlayerName = getPlayerName(targetPlayer)
+			if targetPlayer then
 				local logged = getElementData(targetPlayer, "loggedin")
 				local hp = nil
 				
@@ -747,12 +708,9 @@ function setPlayerArmour(thePlayer, commandName, targetPlayer, armor)
 		if not (armor) or not (targetPlayer) then
 			outputChatBox("SYNTAX: /" .. commandName .. " [Player Partial Nick / ID] [Armor]", thePlayer, 255, 194, 14)
 		else
-			local targetPlayer = exports.global:findPlayerByPartialNick(targetPlayer)
+			local targetPlayer, targetPlayerName = exports.global:findPlayerByPartialNick(thePlayer, targetPlayer)
 			
-			if not (targetPlayer) then
-				outputChatBox("Player not found or multiple were found.", thePlayer, 255, 0, 0)
-			else
-				local targetPlayerName = getPlayerName(targetPlayer)
+			if targetPlayer then
 				local logged = getElementData(targetPlayer, "loggedin")
 				
 				if (logged==0) then
@@ -775,12 +733,9 @@ function setPlayerSkinCmd(thePlayer, commandName, targetPlayer, skinID)
 		if not (skinID) or not (targetPlayer) then
 			outputChatBox("SYNTAX: /" .. commandName .. " [Player Partial Nick / ID] [Skin ID]", thePlayer, 255, 194, 14)
 		else
-			local targetPlayer = exports.global:findPlayerByPartialNick(targetPlayer)
+			local targetPlayer, targetPlayerName = exports.global:findPlayerByPartialNick(thePlayer, targetPlayer)
 			
-			if not (targetPlayer) then
-				outputChatBox("Player not found or multiple were found.", thePlayer, 255, 0, 0)
-			else
-				local targetPlayerName = getPlayerName(targetPlayer)
+			if targetPlayer then
 				local logged = getElementData(targetPlayer, "loggedin")
 				
 				if (logged==0) then
@@ -816,12 +771,9 @@ function asetPlayerName(thePlayer, commandName, targetPlayer, ...)
 			outputChatBox("SYNTAX: /" .. commandName .. " [Player Partial Nick / ID] [Player New Nick]", thePlayer, 255, 194, 14)
 		else
 			local newName = table.concat({...}, "_")
-			local targetPlayer = exports.global:findPlayerByPartialNick(targetPlayer)
+			local targetPlayer, targetPlayerName = exports.global:findPlayerByPartialNick(thePlayer, targetPlayer)
 			
-			if not (targetPlayer) then
-				outputChatBox("Player not found or multiple were found.", thePlayer, 255, 0, 0)
-			else
-				local targetPlayerName = getPlayerName(targetPlayer)
+			if targetPlayer then
 				if newName == targetPlayerName then
 					outputChatBox( "The player's name is already that.", thePlayer, 255, 0, 0)
 				else
@@ -886,11 +838,9 @@ function slapPlayer(thePlayer, commandName, targetPlayer)
 		if not (targetPlayer) then
 			outputChatBox("SYNTAX: /" .. commandName .. " [Player Partial Nick / ID]", thePlayer, 255, 194, 14)
 		else
-			local targetPlayer = exports.global:findPlayerByPartialNick(targetPlayer)
+			local targetPlayer, targetPlayerName = exports.global:findPlayerByPartialNick(thePlayer, targetPlayer)
 			
-			if not (targetPlayer) then
-				outputChatBox("Player not found or multiple were found.", thePlayer, 255, 0, 0)
-			else
+			if targetPlayer then
 				local thePlayerPower = exports.global:getPlayerAdminLevel(thePlayer)
 				local targetPlayerPower = exports.global:getPlayerAdminLevel(targetPlayer)
 				local logged = getElementData(targetPlayer, "loggedin")
@@ -900,8 +850,6 @@ function slapPlayer(thePlayer, commandName, targetPlayer)
 				elseif (targetPlayerPower > thePlayerPower) then -- Check the admin isn't slapping someone higher rank them him
 					outputChatBox("You cannot slap this player as they are a higher admin rank then you.", thePlayer, 255, 0, 0)
 				else
-					local targetPlayerName = getPlayerName(targetPlayer)
-					
 					local x, y, z = getElementPosition(targetPlayer)
 					
 					if (isPedInVehicle(targetPlayer)) then
@@ -929,11 +877,9 @@ function hugeSlapPlayer(thePlayer, commandName, targetPlayer)
 		if not (targetPlayer) then
 			outputChatBox("SYNTAX: /" .. commandName .. " [Player Partial Nick / ID]", thePlayer, 255, 194, 14)
 		else
-			local targetPlayer = exports.global:findPlayerByPartialNick(targetPlayer)
+			local targetPlayer, targetPlayerName = exports.global:findPlayerByPartialNick(thePlayer, targetPlayer)
 			
-			if not (targetPlayer) then
-				outputChatBox("Player not found or multiple were found.", thePlayer, 255, 0, 0)
-			else
+			if targetPlayer then
 				local thePlayerPower = exports.global:getPlayerAdminLevel(thePlayer)
 				local targetPlayerPower = exports.global:getPlayerAdminLevel(targetPlayer)
 				local logged = getElementData(targetPlayer, "loggedin")
@@ -943,8 +889,6 @@ function hugeSlapPlayer(thePlayer, commandName, targetPlayer)
 				elseif (targetPlayerPower > thePlayerPower) then -- Check the admin isn't slapping someone higher rank them him
 					outputChatBox("You cannot hugeslap this player as they are a higher admin rank then you.", thePlayer, 255, 0, 0)
 				else
-					local targetPlayerName = getPlayerName(targetPlayer)
-					
 					local x, y, z = getElementPosition(targetPlayer)
 					
 					if (isPedInVehicle(targetPlayer)) then
@@ -997,21 +941,18 @@ function hiddenWhisper(thePlayer, command, who, ...)
 			outputChatBox("SYNTAX: /" .. commandName .. " [Player Partial Nick / ID] [Message]", thePlayer, 255, 194, 14)
 		else
 			message = table.concat({...}, " ")
-			local targetPlayer = exports.global:findPlayerByPartialNick(who)
+			local targetPlayer, targetPlayerName = exports.global:findPlayerByPartialNick(thePlayer, who)
 			
 			if (targetPlayer) then
 				local logged = getElementData(targetPlayer, "loggedin")
 				
 				if (logged==1) then
 					local playerName = getPlayerName(thePlayer)
-					local targetPlayerName = getPlayerName(targetPlayer)
 					outputChatBox("PM From Hidden Admin: " .. message, targetPlayer, 255, 255, 0)
 					outputChatBox("Hidden PM Sent to " .. targetPlayerName .. ": " .. message, thePlayer, 255, 255, 0)
 				elseif (logged==0) then
 					outputChatBox("Player is not logged in yet.", thePlayer, 255, 255, 0)
 				end
-			else
-				outputChatBox("Player not found or multiple were found.", thePlayer, 255, 255, 0)
 			end
 		end
 	end
@@ -1049,11 +990,9 @@ function reconPlayer(thePlayer, commandName, targetPlayer)
 				outputChatBox("Recon turned off.", thePlayer, 255, 194, 14)
 			end
 		else
-			local targetPlayer = exports.global:findPlayerByPartialNick(targetPlayer)
+			local targetPlayer, targetPlayerName = exports.global:findPlayerByPartialNick(thePlayer, targetPlayer)
 			
-			if not (targetPlayer) then
-				outputChatBox("Player not found or multiple were found.", thePlayer, 255, 0, 0)
-			else
+			if targetPlayer then
 				local logged = getElementData(targetPlayer, "loggedin")
 				
 				if (logged==0) then
@@ -1094,7 +1033,6 @@ function reconPlayer(thePlayer, commandName, targetPlayer)
 						outputChatBox("Failed to attach the element.", thePlayer, 0, 255, 0)
 					else
 						setCameraTarget(thePlayer, targetPlayer)
-						local targetPlayerName = getPlayerName(targetPlayer)
 						outputChatBox("Now reconning " .. targetPlayerName .. ".", thePlayer, 0, 255, 0)
 						
 						local hiddenAdmin = getElementData(thePlayer, "hiddenadmin")
@@ -1117,11 +1055,9 @@ function kickAPlayer(thePlayer, commandName, targetPlayer, ...)
 		if not (targetPlayer) or not (...) then
 			outputChatBox("SYNTAX: /" .. commandName .. " [Partial Player Nick] [Reason]", thePlayer, 255, 194, 14)
 		else
-			local targetPlayer = exports.global:findPlayerByPartialNick(targetPlayer)
+			local targetPlayer, targetPlayerName = exports.global:findPlayerByPartialNick(thePlayer, targetPlayer)
 			
-			if not (targetPlayer) then
-				outputChatBox("Player not found or multiple were found.", thePlayer, 255, 0, 0)
-			else
+			if targetPlayer then
 				local thePlayerPower = exports.global:getPlayerAdminLevel(thePlayer)
 				local targetPlayerPower = exports.global:getPlayerAdminLevel(targetPlayer)
 				reason = table.concat({...}, " ")
@@ -1129,7 +1065,6 @@ function kickAPlayer(thePlayer, commandName, targetPlayer, ...)
 				if (targetPlayerPower <= thePlayerPower) then
 					local hiddenAdmin = getElementData(thePlayer, "hiddenadmin")
 					local playerName = getPlayerName(thePlayer)
-					local targetPlayerName = getPlayerName(targetPlayer)
 					
 					local res = mysql_query( handler, 'INSERT INTO adminhistory (user_char, user, admin_char, admin, hiddenadmin, action, duration, reason) VALUES ("' .. mysql_escape_string(handler, getPlayerName(targetPlayer)) .. '",' .. tostring(getElementData(targetPlayer, "gameaccountid") or 0) .. ',"' .. mysql_escape_string(handler, getPlayerName(thePlayer)) .. '",' .. tostring(getElementData(thePlayer, "gameaccountid") or 0) .. ',' .. hiddenAdmin .. ',1,0,"' .. mysql_escape_string(handler, reason) .. '")' )
 					if res then
@@ -1165,11 +1100,10 @@ function banAPlayer(thePlayer, commandName, targetPlayer, hours, ...)
 		if not (targetPlayer) or not (hours) or (tonumber(hours)<0) or not (...) then
 			outputChatBox("SYNTAX: /" .. commandName .. " [Player Partial Nick / ID] [Time in Hours, 0 = Infinite] [Reason]", thePlayer, 255, 194, 14)
 		else
-			local targetPlayer = exports.global:findPlayerByPartialNick(targetPlayer)
+			local targetPlayer, targetPlayerName = exports.global:findPlayerByPartialNick(thePlayer, targetPlayer)
 			hours = tonumber(hours)
 			
 			if not (targetPlayer) then
-				outputChatBox("Player not found or multiple were found.", thePlayer, 255, 0, 0)
 			elseif (hours>168) then
 				outputChatBox("You cannot ban for more than 7 days (168 Hours).", thePlayer, 255, 194, 14)
 			else
@@ -1180,7 +1114,6 @@ function banAPlayer(thePlayer, commandName, targetPlayer, hours, ...)
 				if (targetPlayerPower <= thePlayerPower) then -- Check the admin isn't banning someone higher rank them him
 					local hiddenAdmin = getElementData(thePlayer, "hiddenadmin")
 					local playerName = getPlayerName(thePlayer)
-					local targetPlayerName = getPlayerName(targetPlayer)
 					local accountID = getElementData(targetPlayer, "gameaccountid")
 					
 					local seconds = ((hours*60)*60)
@@ -1432,10 +1365,9 @@ function makePlayerAdmin(thePlayer, commandName, who, rank)
 		if not (who) then
 			outputChatBox("SYNTAX: /" .. commandName .. " [Player Partial Name/ID] [Rank]", thePlayer, 255, 194, 14)
 		else
-			local targetPlayer = exports.global:findPlayerByPartialNick(who)
+			local targetPlayer, targetPlayerName = exports.global:findPlayerByPartialNick(thePlayer, who)
 			
 			if (targetPlayer) then
-				local targetPlayerName = getPlayerName(targetPlayer)
 				local username = getPlayerName(thePlayer)
 				local accountID = getElementData(targetPlayer, "gameaccountid")
 				
@@ -1470,8 +1402,6 @@ function makePlayerAdmin(thePlayer, commandName, who, rank)
 				else
 					outputChatBox("Hidden admin set your admin rank to " .. rank .. ".", targetPlayer, 255, 194, 14)
 				end
-			else
-				outputChatBox("Player not found or multiple were found.", thePlayer, 255, 0, 0)
 			end
 		end
 	end
@@ -1486,11 +1416,10 @@ function jailPlayer(thePlayer, commandName, who, minutes, ...)
 		if not (who) or not (minutes) or not (...) or (minutes<1) then
 			outputChatBox("SYNTAX: /" .. commandName .. " [Player Partial Name/ID] [Minutes(>=1) 999=Perm] [Reason]", thePlayer, 255, 194, 14)
 		else
-			local targetPlayer = exports.global:findPlayerByPartialNick(who)
+			local targetPlayer, targetPlayerName = exports.global:findPlayerByPartialNick(thePlayer, who)
 			local reason = table.concat({...}, " ")
 			
 			if (targetPlayer) then
-				local targetPlayerNick = getPlayerName(targetPlayer)
 				local playerName = getPlayerName(thePlayer)
 				local jailTimer = getElementData(targetPlayer, "jailtimer")
 				local accountID = getElementData(targetPlayer, "gameaccountid")
@@ -1521,7 +1450,7 @@ function jailPlayer(thePlayer, commandName, who, minutes, ...)
 				setElementData(targetPlayer, "jailtime", minutes, false)
 				setElementData(targetPlayer, "jailadmin", getPlayerName(thePlayer), false)
 				
-				outputChatBox("You jailed " .. targetPlayerNick .. " for " .. minutes .. " Minutes.", thePlayer, 255, 0, 0)
+				outputChatBox("You jailed " .. targetPlayerName .. " for " .. minutes .. " Minutes.", thePlayer, 255, 0, 0)
 				
 				local hiddenAdmin = getElementData(thePlayer, "hiddenadmin")
 				local res = mysql_query( handler, 'INSERT INTO adminhistory (user_char, user, admin_char, admin, hiddenadmin, action, duration, reason) VALUES ("' .. mysql_escape_string(handler, getPlayerName(targetPlayer)) .. '",' .. tostring(getElementData(targetPlayer, "gameaccountid") or 0) .. ',"' .. mysql_escape_string(handler, getPlayerName(thePlayer)) .. '",' .. tostring(getElementData(thePlayer, "gameaccountid") or 0) .. ',' .. hiddenAdmin .. ',0,' .. ( minutes == 999 and 0 or minutes ) .. ',"' .. mysql_escape_string(handler, reason) .. '")' )
@@ -1533,23 +1462,13 @@ function jailPlayer(thePlayer, commandName, who, minutes, ...)
 				
 				if (hiddenAdmin==0) then
 					local adminTitle = exports.global:getPlayerAdminTitle(thePlayer)
-					outputChatBox("AdmJail: " .. adminTitle .. " " .. playerName .. " jailed " .. targetPlayerNick .. " for " .. minutes .. " Minutes.", getRootElement(), 255, 0, 0)
+					outputChatBox("AdmJail: " .. adminTitle .. " " .. playerName .. " jailed " .. targetPlayerName .. " for " .. minutes .. " Minutes.", getRootElement(), 255, 0, 0)
 					outputChatBox("AdmJail: Reason: " .. reason, getRootElement(), 255, 0, 0)
 				else
-					outputChatBox("AdmJail: Hidden Admin jailed " .. targetPlayerNick .. " for " .. minutes .. " Minutes.", getRootElement(), 255, 0, 0)
+					outputChatBox("AdmJail: Hidden Admin jailed " .. targetPlayerName .. " for " .. minutes .. " Minutes.", getRootElement(), 255, 0, 0)
 					outputChatBox("AdmJail: Reason: " .. reason, getRootElement(), 255, 0, 0)
 				end
-				
-				local incVal = 0
-				for key, value in ipairs(exports.pool:getPoolElementsByType("player")) do
-					local name = getPlayerName(value)
-					if (name==getPlayerName(targetPlayer)) then
-						incVal = key
-						break
-					end
-				end
-				
-				setElementDimension(targetPlayer, 65400+incVal)
+				setElementDimension(targetPlayer, 65400+getElementData(targetPlayer, "playerid"))
 				setElementInterior(targetPlayer, 6)
 				setCameraInterior(targetPlayer, 6)
 				setElementPosition(targetPlayer, 263.821807, 77.848365, 1001.0390625)
@@ -1560,8 +1479,6 @@ function jailPlayer(thePlayer, commandName, who, minutes, ...)
 				toggleControl(targetPlayer,'fire',false)
 				toggleControl(targetPlayer,'aim_weapon',false)
 				setPedWeaponSlot(targetPlayer,0)
-			else
-				outputChatBox("Player not found or multiple were found.", thePlayer, 255, 0, 0)
 			end
 		end
 	end
@@ -1618,16 +1535,15 @@ function unjailPlayer(thePlayer, commandName, who)
 		if not (who) then
 			outputChatBox("SYNTAX: /" .. commandName .. " [Player Partial Name/ID]", thePlayer, 255, 194, 14)
 		else
-			local targetPlayer = exports.global:findPlayerByPartialNick(who)
+			local targetPlayer, targetPlayerName = exports.global:findPlayerByPartialNick(thePlayer, who)
 			
 			if (targetPlayer) then
-				local targetPlayerNick = getPlayerName(targetPlayer)
 				local jailed = getElementData(targetPlayer, "jailtimer", nil)
 				local username = getPlayerName(thePlayer)
 				local accountID = getElementData(targetPlayer, "gameaccountid")
 				
 				if not (jailed) then
-					outputChatBox(targetPlayerNick .. " is not jailed.", thePlayer, 255, 0, 0)
+					outputChatBox(targetPlayerName .. " is not jailed.", thePlayer, 255, 0, 0)
 				else
 					local query = mysql_query(handler, "UPDATE accounts SET adminjail_time='0', adminjail='0' WHERE id='" .. accountID .. "'")
 					mysql_free_result(query)
@@ -1649,11 +1565,9 @@ function unjailPlayer(thePlayer, commandName, who)
 					toggleControl(targetPlayer,'fire',true)
 					toggleControl(targetPlayer,'aim_weapon',true)
 					outputChatBox("You were unjailed by " .. username .. ", Behave next time!", targetPlayer, 0, 255, 0)
-					exports.global:sendMessageToAdmins("AdmJail: " .. targetPlayerNick .. " was unjailed by " .. username .. ".")
-					exports.irc:sendMessage("[ADMIN] " .. targetPlayerNick .. " was unjailed by " .. username .. ".")
+					exports.global:sendMessageToAdmins("AdmJail: " .. targetPlayerName .. " was unjailed by " .. username .. ".")
+					exports.irc:sendMessage("[ADMIN] " .. targetPlayerName .. " was unjailed by " .. username .. ".")
 				end
-			else
-				outputChatBox("Player is not online.", thePlayer, 255, 0, 0)
 			end
 		end
 	end
@@ -1690,18 +1604,14 @@ function gotoPlayer(thePlayer, commandName, target)
 			outputChatBox("SYNTAX: /" .. commandName .. " [Partial Player Nick]", thePlayer, 255, 194, 14)
 		else
 			local username = getPlayerName(thePlayer)
-			local targetPlayer = exports.global:findPlayerByPartialNick(target)
+			local targetPlayer, targetPlayerName = exports.global:findPlayerByPartialNick(thePlayer, target)
 			
-			if not (targetPlayer) then
-				outputChatBox("Player not found or multiple were found.", thePlayer, 255, 0, 0)
-			else
+			if targetPlayer then
 				local logged = getElementData(targetPlayer, "loggedin")
 				
 				if (logged==0) then
 					outputChatBox("Player is not logged in.", thePlayer, 255, 0 , 0)
 				else
-					local targetPlayerName = getPlayerName(targetPlayer)
-					
 					local x, y, z = getElementPosition(targetPlayer)
 					local interior = getElementInterior(targetPlayer)
 					local dimension = getElementDimension(targetPlayer)
@@ -1745,18 +1655,14 @@ function getPlayer(thePlayer, commandName, target)
 			outputChatBox("SYNTAX: /" .. commandName .. " /gethere [Partial Player Nick]", thePlayer, 255, 194, 14)
 		else
 			local username = getPlayerName(thePlayer)
-			local targetPlayer = exports.global:findPlayerByPartialNick(target)
+			local targetPlayer, targetPlayerName = exports.global:findPlayerByPartialNick(thePlayer, target)
 			
-			if not (targetPlayer) then
-				outputChatBox("Player not found or multiple were found.", thePlayer, 255, 0, 0)
-			else
+			if targetPlayer then
 				local logged = getElementData(targetPlayer, "loggedin")
 				
 				if (logged==0) then
 					outputChatBox("Player is not logged in.", thePlayer, 255, 0 , 0)
 				else
-					local targetPlayerName = getPlayerName(targetPlayer)
-					
 					local x, y, z = getElementPosition(thePlayer)
 					local interior = getElementInterior(thePlayer)
 					local dimension = getElementDimension(thePlayer)
@@ -1795,13 +1701,9 @@ function setMoney(thePlayer, commandName, target, money)
 			outputChatBox("SYNTAX: /" .. commandName .. " [Partial Player Nick] [Money]", thePlayer, 255, 194, 14)
 		else
 			local username = getPlayerName(thePlayer)
-			local targetPlayer = exports.global:findPlayerByPartialNick(target)
+			local targetPlayer, targetPlayerName = exports.global:findPlayerByPartialNick(thePlayer, target)
 			
-			if not (targetPlayer) then
-				outputChatBox("Player not found or multiple were found.", thePlayer, 255, 0, 0)
-			else
-				local targetPlayerName = getPlayerName(targetPlayer)
-				
+			if targetPlayer then
 				exports.global:setMoney(targetPlayer, money)
 				outputChatBox(targetPlayerName .. " now has " .. money .. " $.", thePlayer)
 				outputChatBox("Admin " .. username .. " set your money to " .. money .. " $.", targetPlayer)
@@ -1817,13 +1719,9 @@ function giveMoney(thePlayer, commandName, target, money)
 			outputChatBox("SYNTAX: /" .. commandName .. " [Partial Player Nick] [Money]", thePlayer, 255, 194, 14)
 		else
 			local username = getPlayerName(thePlayer)
-			local targetPlayer = exports.global:findPlayerByPartialNick(target)
+			local targetPlayer, targetPlayerName = exports.global:findPlayerByPartialNick(thePlayer, target)
 			
-			if not (targetPlayer) then
-				outputChatBox("Player not found or multiple were found.", thePlayer, 255, 0, 0)
-			else
-				local targetPlayerName = getPlayerName(targetPlayer)
-				
+			if targetPlayer then
 				exports.global:giveMoney(targetPlayer, money)
 				outputChatBox("You have given " .. targetPlayerName .. " $" .. money .. ".", thePlayer)
 				outputChatBox("Admin " .. username .. " has given you $" .. money .. ".", targetPlayer)
@@ -1839,10 +1737,8 @@ function freezePlayer(thePlayer, commandName, target)
 		if not (target) then
 			outputChatBox("SYNTAX: /" .. commandName .. " [Partial Player Nick]", thePlayer, 255, 194, 14)
 		else
-			local targetPlayer = exports.global:findPlayerByPartialNick(target)
+			local targetPlayer, targetPlayerName = exports.global:findPlayerByPartialNick(thePlayer, target)
 			if targetPlayer then
-				local targetPlayerName = getPlayerName(targetPlayer)
-				
 				local veh = getPedOccupiedVehicle( targetPlayer )
 				if (veh) then
 					setVehicleFrozen(veh, true)
@@ -1859,8 +1755,6 @@ function freezePlayer(thePlayer, commandName, target)
 				local adminTitle = exports.global:getPlayerAdminTitle(thePlayer)
 				local username = getPlayerName(thePlayer)
 				exports.global:sendMessageToAdmins("AdmCmd: " .. tostring(adminTitle) .. " " .. username .. " froze " .. targetPlayerName .. ".")
-			else
-				outputChatBox("Player not found or multiple were found.", thePlayer, 255, 0, 0)
 			end
 		end
 	end
@@ -1875,10 +1769,8 @@ function unfreezePlayer(thePlayer, commandName, target)
 		if not (target) then
 			outputChatBox("SYNTAX: /" .. commandName .. " /unfreeze [Partial Player Nick]", thePlayer, 255, 194, 14)
 		else
-			local targetPlayer = exports.global:findPlayerByPartialNick(target)
+			local targetPlayer, targetPlayerName = exports.global:findPlayerByPartialNick(thePlayer, target)
 			if targetPlayer then
-				local targetPlayerName = getPlayerName(targetPlayer)
-				
 				local veh = getPedOccupiedVehicle( targetPlayer )
 				if (veh) then
 					setVehicleFrozen(veh, false)
@@ -1907,8 +1799,6 @@ function unfreezePlayer(thePlayer, commandName, target)
 				local adminTitle = exports.global:getPlayerAdminTitle(thePlayer)
 				local username = getPlayerName(thePlayer)
 				exports.global:sendMessageToAdmins("AdmCmd: " .. tostring(adminTitle) .. " " .. username .. " unfroze " .. targetPlayerName .. ".")
-			else
-				outputChatBox("Player not found or multiple were found.", thePlayer, 255, 0, 0)
 			end
 		end
 	end
@@ -2009,18 +1899,15 @@ function makePlayerDonator(thePlayer, commandName, target, level)
 			outputChatBox("SYNTAX: /" .. commandName .. " [Partial Player Nick] [Level 0=None, 1=Bronze, 2=Silver, 3=Gold, 4=Platinum, 5=Pearl, 6=Diamond, 7=Godly]", thePlayer, 255, 194, 14)
 		else
 			local username = getPlayerName(thePlayer)
-			local targetPlayer = exports.global:findPlayerByPartialNick(target)
+			local targetPlayer, targetPlayerName = exports.global:findPlayerByPartialNick(thePlayer, target)
 			
 			
-			if not (targetPlayer) then
-				outputChatBox("Player not found or multiple were found.", thePlayer, 255, 0, 0)
-			else
+			if targetPlayer then
 				local logged = getElementData(targetPlayer, "loggedin")
 				
 				if (logged==0) then
 					outputChatBox("Player is not logged in.", thePlayer, 255, 0 , 0)
 				else
-					local targetPlayerName = getPlayerName(targetPlayer)
 					local levelString = ""
 					local gameaccountID = getElementData(targetPlayer, "gameaccountid")
 					
@@ -2126,11 +2013,9 @@ function getPlayerID(thePlayer, commandName, target)
 		outputChatBox("SYNTAX: /" .. commandName .. " [Partial Player Nick]", thePlayer, 255, 194, 14)
 	else
 		local username = getPlayerName(thePlayer)
-		local targetPlayer = exports.global:findPlayerByPartialNick(target)
+		local targetPlayer, targetPlayerName = exports.global:findPlayerByPartialNick(thePlayer, target)
 		
-		if (targetPlayer) then
-			local targetPlayerName = getPlayerName(targetPlayer)
-			
+		if targetPlayer then
 			local logged = getElementData(targetPlayer, "loggedin")
 			if (logged==1) then
 				local id = getElementData(targetPlayer, "playerid")
@@ -2138,8 +2023,6 @@ function getPlayerID(thePlayer, commandName, target)
 			else
 				outputChatBox("Player is not logged in.", thePlayer, 255, 0, 0)
 			end
-		else
-			outputChatBox("Player not found or multiple were found.", thePlayer, 255, 0, 0)
 		end
 	end
 end
@@ -2160,15 +2043,12 @@ function ejectPlayer(thePlayer, commandName, target)
 			if (seat~=0) then
 				outputChatBox("You must be the driver to eject.", thePlayer, 255, 0, 0)
 			else
-				local targetPlayer = exports.global:findPlayerByPartialNick(target)
+				local targetPlayer, targetPlayerName = exports.global:findPlayerByPartialNick(thePlayer, target)
 				
 				if not (targetPlayer) then
-					outputChatBox("Player not found or multiple were found.", thePlayer, 255, 0, 0)
 				elseif (targetPlayer==thePlayer) then
 					outputChatBox("You cannot eject yourself.", thePlayer, 255, 0, 0)
 				else
-					local targetPlayerName = getPlayerName(targetPlayer)
-					
 					local targetvehicle = getPedOccupiedVehicle(targetPlayer)
 					
 					if targetvehicle~=vehicle and not exports.global:isPlayerAdmin(thePlayer) then
@@ -2191,12 +2071,9 @@ function warnPlayer(thePlayer, commandName, targetPlayer, ...)
 		if not (targetPlayer) or not (...) then
 			outputChatBox("SYNTAX: /" .. commandName .. " [Partial Player Nick] [Reason]", thePlayer, 255, 194, 14)
 		else
-			local targetPlayer = exports.global:findPlayerByPartialNick(targetPlayer)
+			local targetPlayer, targetPlayerName = exports.global:findPlayerByPartialNick(thePlayer, targetPlayer)
 			
-			if not (targetPlayer) then
-				outputChatBox("Player not found or multiple were found.", thePlayer, 255, 0, 0)
-			else
-				local targetPlayerName = getPlayerName(targetPlayer)
+			if targetPlayer then
 				local playerName = getPlayerName(thePlayer)
 				local warns = getElementData(targetPlayer, "warns")
 				reason = table.concat({...}, " ")
@@ -2483,7 +2360,7 @@ function findAltChars(thePlayer, commandName, ...)
 			outputChatBox("SYNTAX: /" .. commandName .. " [Partial Player Nick]", thePlayer, 255, 194, 14)
 		else
 			local targetPlayerName = table.concat({...}, "_")
-			local targetPlayer = exports.global:findPlayerByPartialNick(targetPlayerName)
+			local targetPlayer = exports.global:findPlayerByPartialNick(nil, targetPlayerName)
 			
 			if not targetPlayer then
 				-- select by character name
@@ -2529,12 +2406,9 @@ function givePlayerLicense(thePlayer, commandName, targetPlayerName, licenseType
 			outputChatBox("Type 1 = Driver", thePlayer, 255, 194, 14)
 			outputChatBox("Type 2 = Weapon", thePlayer, 255, 194, 14)
 		else
-			local targetPlayer = exports.global:findPlayerByPartialNick(targetPlayerName)
+			local targetPlayer, targetPlayerName = exports.global:findPlayerByPartialNick(thePlayer, targetPlayerName)
 			
-			if not targetPlayer then
-				outputChatBox("Player not found or multiple were found.", thePlayer, 255, 0, 0)
-			else
-				targetPlayerName = getPlayerName(targetPlayer)
+			if targetPlayer then
 				local logged = getElementData(targetPlayer, "loggedin")
 				
 				if (logged==0) then
@@ -2573,9 +2447,8 @@ function setLanguage(thePlayer, commandName, targetPlayerName, language, skill)
 		if not targetPlayerName or not language or not tonumber( skill ) then
 			outputChatBox("SYNTAX: /" .. commandName .. " [Partial Player Nick] [Language] [Skill]", thePlayer, 255, 194, 14)
 		else
-			local targetPlayer = exports.global:findPlayerByPartialNick( targetPlayerName )
-			if not targetPlayer then
-				outputChatBox( "Player not found or multiple were found.", thePlayer, 255, 0, 0 )		
+			local targetPlayer, targetPlayerName = exports.global:findPlayerByPartialNick( thePlayer, targetPlayerName )
+			if not targetPlayer then	
 			elseif getElementData( targetPlayer, "loggedin" ) ~= 1 then
 				outputChatBox( "Player is not logged in.", thePlayer, 255, 0, 0 )
 			else
@@ -2587,9 +2460,9 @@ function setLanguage(thePlayer, commandName, targetPlayerName, language, skill)
 					local langname = call( getResourceFromName( "language-system" ), "getLanguageName", lang )
 					local success, reason = call( getResourceFromName( "language-system" ), "learnLanguage", targetPlayer, lang, false, skill )
 					if success then
-						outputChatBox( getPlayerName( targetPlayer ) .. " learned " .. langname .. ".", thePlayer, 0, 255, 0 )
+						outputChatBox( targetPlayerName .. " learned " .. langname .. ".", thePlayer, 0, 255, 0 )
 					else
-						outputChatBox( getPlayerName( targetPlayer ) .. " couldn't learn " .. langname .. ": " .. tostring( reason ), thePlayer, 255, 0, 0 )
+						outputChatBox( targetPlayerName .. " couldn't learn " .. langname .. ": " .. tostring( reason ), thePlayer, 255, 0, 0 )
 					end
 				end
 			end
@@ -2603,9 +2476,8 @@ function deleteLanguage(thePlayer, commandName, targetPlayerName, language)
 		if not targetPlayerName or not language then
 			outputChatBox("SYNTAX: /" .. commandName .. " [Partial Player Nick] [Language]", thePlayer, 255, 194, 14)
 		else
-			local targetPlayer = exports.global:findPlayerByPartialNick( targetPlayerName )
+			local targetPlayer, targetPlayerName = exports.global:findPlayerByPartialNick( thePlayer, targetPlayerName )
 			if not targetPlayer then
-				outputChatBox( "Player not found or multiple were found.", thePlayer, 255, 0, 0 )		
 			elseif getElementData( targetPlayer, "loggedin" ) ~= 1 then
 				outputChatBox( "Player is not logged in.", thePlayer, 255, 0, 0 )
 			else
@@ -2615,9 +2487,9 @@ function deleteLanguage(thePlayer, commandName, targetPlayerName, language)
 				else
 					local langname = call( getResourceFromName( "language-system" ), "getLanguageName", lang )
 					if call( getResourceFromName( "language-system" ), "removeLanguage", targetPlayer, lang ) then
-						outputChatBox( getPlayerName( targetPlayer ) .. " forgot " .. langname .. ".", thePlayer, 0, 255, 0 )
+						outputChatBox( targetPlayerName .. " forgot " .. langname .. ".", thePlayer, 0, 255, 0 )
 					else
-						outputChatBox( getPlayerName( targetPlayer ) .. " doesn't speak " .. langname, thePlayer, 255, 0, 0 )
+						outputChatBox( targetPlayerName .. " doesn't speak " .. langname, thePlayer, 255, 0, 0 )
 					end
 				end
 			end

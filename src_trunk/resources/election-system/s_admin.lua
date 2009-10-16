@@ -31,18 +31,16 @@ function addCandidate( thePlayer, commandName, targetPlayer )
 		if not targetPlayer then
 			outputChatBox("SYNTAX: /" .. commandName .. " [player]", thePlayer, 255, 194, 14 )
 		else
-			local targetPlayer = exports.global:findPlayerByPartialNick( targetPlayer )
+			local targetPlayer, targetPlayerName = exports.global:findPlayerByPartialNick( thePlayer, targetPlayer )
 			if targetPlayer then
 				if getElementData( targetPlayer, "loggedin" ) == 1 then
 					mysql_free_result( mysql_query( handler, "UPDATE characters SET election_candidate = 1 WHERE id = " .. getElementData( targetPlayer, "dbid" ) ) )
-					outputChatBox(getPlayerName( targetPlayer ) .. " is now a candidate for the election.", thePlayer, 0, 255, 0)
-					candidates[ getElementData( targetPlayer, "dbid" ) ] = getPlayerName( targetPlayer )
+					outputChatBox(targetPlayerName .. " is now a candidate for the election.", thePlayer, 0, 255, 0)
+					candidates[ getElementData( targetPlayer, "dbid" ) ] = targetPlayerName
 					setElementData( getResourceRootElement( ), "candidates", candidates )
 				else
 					outputChatBox("Player is not logged in.", thePlayer, 255, 0, 0)
 				end
-			else
-				outputChatBox("No such player online.", thePlayer, 255, 0, 0)
 			end
 		end
 	end
@@ -54,18 +52,16 @@ function delCandidate( thePlayer, commandName, targetPlayer )
 		if not targetPlayer then
 			outputChatBox("SYNTAX: /" .. commandName .. " [player]", thePlayer, 255, 194, 14 )
 		else
-			local targetPlayer = exports.global:findPlayerByPartialNick( targetPlayer )
+			local targetPlayer, targetPlayerName = exports.global:findPlayerByPartialNick( thePlayer, targetPlayer )
 			if targetPlayer then
 				if getElementData( targetPlayer, "loggedin" ) == 1 then
 					mysql_free_result( mysql_query( handler, "UPDATE characters SET election_candidate = 0 WHERE id = " .. getElementData( targetPlayer, "dbid" ) ) )
-					outputChatBox(getPlayerName( targetPlayer ) .. " is now no candidate for the election anymore.", thePlayer, 0, 255, 0)
+					outputChatBox(targetPlayerName .. " is now no candidate for the election anymore.", thePlayer, 0, 255, 0)
 					candidates[ getElementData( targetPlayer, "dbid" ) ] = nil
 					setElementData( getResourceRootElement( ), "candidates", candidates )
 				else
 					outputChatBox("Player is not logged in.", thePlayer, 255, 0, 0)
 				end
-			else
-				outputChatBox("No such player online.", thePlayer, 255, 0, 0)
 			end
 		end
 	end

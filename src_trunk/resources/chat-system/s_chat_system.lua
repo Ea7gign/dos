@@ -430,71 +430,67 @@ function isFriendOf(thePlayer, targetPlayer)
 end
 
 function pmPlayer(thePlayer, commandName, who, ...)
+	if not (who) or not (...) then
+		outputChatBox("SYNTAX: /" .. commandName .. " [Player Partial Nick] [Message]", thePlayer, 255, 194, 14)
+	else
+		message = table.concat({...}, " ")
+		local targetPlayer, targetPlayerName = exports.global:findPlayerByPartialNick(thePlayer, who)
+		
+		if (targetPlayer) then
+			local logged = getElementData(targetPlayer, "loggedin")
+			local pmblocked = getElementData(targetPlayer, "pmblocked")
 
-		if not (who) or not (...) then
-			outputChatBox("SYNTAX: /" .. commandName .. " [Player Partial Nick] [Message]", thePlayer, 255, 194, 14)
-		else
-			message = table.concat({...}, " ")
-			local targetPlayer = exports.global:findPlayerByPartialNick(who)
+			if not (pmblocked) then
+				pmblocked = 0
+				setElementData(targetPlayer, "pmblocked", 0, false)
+			end
 			
-			if (targetPlayer) then
-				local logged = getElementData(targetPlayer, "loggedin")
-				local pmblocked = getElementData(targetPlayer, "pmblocked")
-
-				if not (pmblocked) then
-					pmblocked = 0
-					setElementData(targetPlayer, "pmblocked", 0, false)
+			if (logged==1) and (pmblocked==0 or exports.global:isPlayerAdmin(thePlayer) or exports.global:isPlayerScripter(thePlayer) or getElementData(thePlayer, "reportadmin") == targetPlayer or isFriendOf(thePlayer, targetPlayer)) then
+				local playerName = getPlayerName(thePlayer):gsub("_", " ")
+				
+				if not exports.global:isPlayerScripter(thePlayer) and not exports.global:isPlayerScripter(targetPlayer) then
+					-- Check for advertisements
+					for k,v in ipairs(advertisementMessages) do
+						local found = string.find(string.lower(message), "%s" .. tostring(v))
+						local found2 = string.find(string.lower(message), tostring(v) .. "%s")
+						if (found) or (found2) or (string.lower(message)==tostring(v)) then
+							exports.global:sendMessageToAdmins("AdmWrn: " .. tostring(playerName) .. " sent a possible advertisement PM to " .. tostring(targetPlayerName) .. ".")
+							exports.global:sendMessageToAdmins("AdmWrn: Message: " .. tostring(message))
+							break
+						end
+					end
 				end
 				
-				if (logged==1) and (pmblocked==0 or exports.global:isPlayerAdmin(thePlayer) or exports.global:isPlayerScripter(thePlayer) or getElementData(thePlayer, "reportadmin") == targetPlayer or isFriendOf(thePlayer, targetPlayer)) then
-					local playerName = getPlayerName(thePlayer)
-					local targetPlayerName = getPlayerName(targetPlayer)
-					
-					if not exports.global:isPlayerScripter(thePlayer) and not exports.global:isPlayerScripter(targetPlayer) then
-						-- Check for advertisements
-						for k,v in ipairs(advertisementMessages) do
-							local found = string.find(string.lower(message), "%s" .. tostring(v))
-							local found2 = string.find(string.lower(message), tostring(v) .. "%s")
-							if (found) or (found2) or (string.lower(message)==tostring(v)) then
-								exports.global:sendMessageToAdmins("AdmWrn: " .. tostring(playerName) .. " sent a possible advertisement PM to " .. tostring(targetPlayerName) .. ".")
-								exports.global:sendMessageToAdmins("AdmWrn: Message: " .. tostring(message))
-								break
+				-- Send the message
+				local playerid = getElementData(thePlayer, "playerid")
+				local targetid = getElementData(targetPlayer, "playerid")
+				outputChatBox("PM From (" .. playerid .. ") " .. playerName .. ": " .. message, targetPlayer, 255, 255, 0)
+				outputChatBox("PM Sent to (" .. targetid .. ") " .. targetPlayerName .. ": " .. message, thePlayer, 255, 255, 0)
+				
+				exports.logs:logMessage("[PM From " ..playerName .. " TO " .. targetPlayerName .. "]" .. message, 8)
+				
+				if not exports.global:isPlayerScripter(thePlayer) and not exports.global:isPlayerScripter(targetPlayer) then
+					-- big ears
+					local received = {}
+					received[thePlayer] = true
+					received[targetPlayer] = true
+					for key, value in pairs( getElementsByType( "player" ) ) do
+						if isElement( value ) and not received[value] then
+							local listening = getElementData( value, "bigears" )
+							if listening == thePlayer or listening == targetPlayer then
+								received[value] = true
+								outputChatBox("(" .. playerid .. ") " .. playerName .. " -> (" .. targetid .. ") " .. targetPlayerName .. ": " .. message, value, 255, 255, 0)
 							end
 						end
 					end
-					
-					-- Send the message
-					local playerid = getElementData(thePlayer, "playerid")
-					local targetid = getElementData(targetPlayer, "playerid")
-					outputChatBox("PM From (" .. playerid .. ") " .. playerName .. ": " .. message, targetPlayer, 255, 255, 0)
-					outputChatBox("PM Sent to (" .. targetid .. ") " .. targetPlayerName .. ": " .. message, thePlayer, 255, 255, 0)
-					
-					exports.logs:logMessage("[PM From " ..playerName .. " TO " .. targetPlayerName .. "]" .. message, 8)
-					
-					if not exports.global:isPlayerScripter(thePlayer) and not exports.global:isPlayerScripter(targetPlayer) then
-						-- big ears
-						local received = {}
-						received[thePlayer] = true
-						received[targetPlayer] = true
-						for key, value in pairs( getElementsByType( "player" ) ) do
-							if isElement( value ) and not received[value] then
-								local listening = getElementData( value, "bigears" )
-								if listening == thePlayer or listening == targetPlayer then
-									received[value] = true
-									outputChatBox("(" .. playerid .. ") " .. playerName .. " -> (" .. targetid .. ") " .. targetPlayerName .. ": " .. message, value, 255, 255, 0)
-								end
-							end
-						end
-					end
-				elseif (logged==0) then
-					outputChatBox("Player is not logged in yet.", thePlayer, 255, 255, 0)
-				elseif (pmblocked==1) then
-					outputChatBox("Player is ignoring whispers!", thePlayer, 255, 255, 0)
 				end
-			else
-				outputChatBox("Player not found or multiple were found.", thePlayer, 255, 255, 0)
+			elseif (logged==0) then
+				outputChatBox("Player is not logged in yet.", thePlayer, 255, 255, 0)
+			elseif (pmblocked==1) then
+				outputChatBox("Player is ignoring whispers!", thePlayer, 255, 255, 0)
 			end
 		end
+	end
 end
 addCommandHandler("pm", pmPlayer, false, false)
 
@@ -1002,11 +998,9 @@ function payPlayer(thePlayer, commandName, targetPlayerNick, amount)
 		if not (targetPlayerNick) or not (amount) or not tonumber(amount) then
 			outputChatBox("SYNTAX: /" .. commandName .. " [Player Partial Nick] [Amount]", thePlayer, 255, 194, 14)
 		else
-			local targetPlayer = exports.global:findPlayerByPartialNick(targetPlayerNick)
+			local targetPlayer, targetPlayerName = exports.global:findPlayerByPartialNick(thePlayer, targetPlayerNick)
 			
-			if not (targetPlayer) then
-				outputChatBox("Player is not online.", thePlayer, 255, 0, 0)
-			else
+			if targetPlayer then
 				local x, y, z = getElementPosition(thePlayer)
 				local tx, ty, tz = getElementPosition(targetPlayer)
 				
@@ -1025,9 +1019,9 @@ function payPlayer(thePlayer, commandName, targetPlayerNick, amount)
 						outputChatBox("You must play atleast 5 hours before transferring over 50$", thePlayer, 255, 0, 0)
 					elseif exports.global:takeMoney(thePlayer, amount) then
 						
-						exports.logs:logMessage("[Money Transfer From " .. getPlayerName(thePlayer) .. " To: " .. getPlayerName(targetPlayer) .. "] Value: " .. amount .. "$", 5)
+						exports.logs:logMessage("[Money Transfer From " .. getPlayerName(thePlayer) .. " To: " .. targetPlayerName .. "] Value: " .. amount .. "$", 5)
 						if (hoursplayed<5) then
-							exports.global:sendMessageToAdmins("AdmWarn: New Player '" .. getPlayerName(thePlayer) .. "' transferred " .. amount .. "$ to '" .. getPlayerName(targetPlayer) .. "'.")
+							exports.global:sendMessageToAdmins("AdmWarn: New Player '" .. getPlayerName(thePlayer) .. "' transferred " .. amount .. "$ to '" .. targetPlayerName .. "'.")
 						end
 						
 						exports.global:giveMoney(targetPlayer, amount)
@@ -1038,17 +1032,17 @@ function payPlayer(thePlayer, commandName, targetPlayerNick, amount)
 							genderm = "her"
 						end
 						
-						exports.global:sendLocalMeAction(thePlayer, "takes some dollar notes from " .. genderm .. " wallet and gives them to " .. getPlayerName(targetPlayer) .. ".")
-						outputChatBox("You gave $" .. amount .. " to " .. getPlayerName(targetPlayer) .. ".", thePlayer)
+						exports.global:sendLocalMeAction(thePlayer, "takes some dollar notes from " .. genderm .. " wallet and gives them to " .. targetPlayerName .. ".")
+						outputChatBox("You gave $" .. amount .. " to " .. targetPlayerName .. ".", thePlayer)
 						outputChatBox(getPlayerName(thePlayer) .. " gave you $" .. amount .. ".", targetPlayer)
-						exports.irc:sendMessage("[MONEY TRANSFER] From '" .. getPlayerName(thePlayer) .. "' to " .. getPlayerName(targetPlayer) .. "' Amount: $" .. amount .. ".")
+						exports.irc:sendMessage("[MONEY TRANSFER] From '" .. getPlayerName(thePlayer) .. "' to " .. targetPlayerName .. "' Amount: $" .. amount .. ".")
 						
 						exports.global:applyAnimation(thePlayer, "DEALER", "shop_pay", 4000, false, true, true)
 					else
 						outputChatBox("You do not have enough money.", thePlayer, 255, 0, 0)
 					end
 				else
-					outputChatBox("You are too far away from " .. getPlayerName(targetPlayer) .. ".", thePlayer, 255, 0, 0)
+					outputChatBox("You are too far away from " .. targetPlayerName .. ".", thePlayer, 255, 0, 0)
 				end
 			end
 		end
@@ -1068,11 +1062,9 @@ function localWhisper(thePlayer, commandName, targetPlayerNick, ...)
 		if not (targetPlayerNick) or not (...) then
 			outputChatBox("SYNTAX: /" .. commandName .. " [Player Partial Nick / ID] [Message]", thePlayer, 255, 194, 14)
 		else
-			local targetPlayer = exports.global:findPlayerByPartialNick(targetPlayerNick)
+			local targetPlayer, targetPlayerName = exports.global:findPlayerByPartialNick(thePlayer, targetPlayerNick)
 			
-			if not (targetPlayer) then
-				outputChatBox("Player not found or multiple were found.", thePlayer, 255, 0, 0)
-			else
+			if targetPlayer then
 				local x, y, z = getElementPosition(thePlayer)
 				local tx, ty, tz = getElementPosition(targetPlayer)
 				
@@ -1085,13 +1077,12 @@ function localWhisper(thePlayer, commandName, targetPlayerNick, ...)
 					local message2 = call(getResourceFromName("language-system"), "applyLanguage", thePlayer, targetPlayer, message, language)
 					
 					local name = getPlayerName(thePlayer)
-					local targetName = getPlayerName(targetPlayer)
 					
-					exports.global:sendLocalMeAction(thePlayer, "whispers to " .. targetName .. ".")
+					exports.global:sendLocalMeAction(thePlayer, "whispers to " .. targetPlayerName .. ".")
 					outputChatBox("[" .. languagename .. "] " .. name .. " whispers: " .. message, thePlayer, 255, 255, 255)
 					outputChatBox("[" .. languagename .. "] " .. name .. " whispers: " .. message2, targetPlayer, 255, 255, 255)
 				else
-					outputChatBox("You are too far away from " .. getPlayerName(targetPlayer) .. ".", thePlayer, 255, 0, 0)
+					outputChatBox("You are too far away from " .. targetPlayerName .. ".", thePlayer, 255, 0, 0)
 				end
 			end
 		end
@@ -1236,10 +1227,8 @@ function StartInterview(thePlayer, commandName, targetPartialPlayer)
 			if not (targetPartialPlayer) then
 				outputChatBox("SYNTAX: /" .. commandName .. " [Player Partial Nick]", thePlayer, 255, 194, 14)
 			else
-				local targetPlayer = exports.global:findPlayerByPartialNick(targetPartialPlayer)
-				if not(targetPlayer) then
-					outputChatBox("Player not found.", thePlayer, 255, 255, 0)
-				else
+				local targetPlayer, targetPlayerName = exports.global:findPlayerByPartialNick(thePlayer, targetPartialPlayer)
+				if targetPlayer then
 					local targetLogged = getElementData(targetPlayer, "loggedin")
 					if (targetLogged==1) then
 						if(getElementData(targetPlayer,"interview"))then
@@ -1247,7 +1236,6 @@ function StartInterview(thePlayer, commandName, targetPartialPlayer)
 						else
 							setElementData(targetPlayer, "interview", true, false)
 							local playerName = getPlayerName(thePlayer)
-							local targetPlayerName = getPlayerName(targetPlayer)
 							outputChatBox(playerName .." has offered you for an interview.", targetPlayer, 0, 255, 0)
 							outputChatBox("((Use /i to talk during the interview.))", targetPlayer, 0, 255, 0)
 							local NewsFaction = getPlayersInTeam(getPlayerTeam(thePlayer))
@@ -1273,10 +1261,8 @@ function endInterview(thePlayer, commandName, targetPartialPlayer)
 			if not (targetPartialPlayer) then
 				outputChatBox("SYNTAX: /" .. commandName .. " [Player Partial Nick]", thePlayer, 255, 194, 14)
 			else
-				local targetPlayer = exports.global:findPlayerByPartialNick(targetPartialPlayer)
-				if not(targetPlayer) then
-					outputChatBox("Player not found.", thePlayer, 255, 255, 0)
-				else
+				local targetPlayer, targetPlayerName = exports.global:findPlayerByPartialNick(thePlayer, targetPartialPlayer)
+				if targetPlayer then
 					local targetLogged = getElementData(targetPlayer, "loggedin")
 					if (targetLogged==1) then
 						if not(getElementData(targetPlayer,"interview"))then
@@ -1284,7 +1270,6 @@ function endInterview(thePlayer, commandName, targetPartialPlayer)
 						else
 							removeElementData(targetPlayer, "interview")
 							local playerName = getPlayerName(thePlayer)
-							local targetPlayerName = getPlayerName(targetPlayer)
 							outputChatBox(playerName .." has ended your interview.", targetPlayer, 255, 0, 0)
 						
 							local NewsFaction = getPlayersInTeam(getPlayerTeam(thePlayer))
@@ -1446,12 +1431,10 @@ function bigEars(thePlayer, commandName, targetPlayerNick)
 			removeElementData(thePlayer, "bigears")
 			outputChatBox("Big Ears turned off.", thePlayer, 255, 0, 0)
 		else
-			local targetPlayer = exports.global:findPlayerByPartialNick(targetPlayerNick)
+			local targetPlayer, targetPlayerName = exports.global:findPlayerByPartialNick(thePlayer, targetPlayerNick)
 			
-			if not targetPlayer then
-				outputChatBox("Player not found or multiple were found.", thePlayer, 255, 0, 0)
-			else
-				outputChatBox("Now Listening to " .. getPlayerName(targetPlayer) .. ".", thePlayer, 0, 255, 0)
+			if targetPlayer then
+				outputChatBox("Now Listening to " .. targetPlayerName .. ".", thePlayer, 0, 255, 0)
 				setElementData(thePlayer, "bigears", targetPlayer, false)
 			end
 		end

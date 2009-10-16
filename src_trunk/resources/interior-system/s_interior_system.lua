@@ -237,9 +237,8 @@ function sellTo(thePlayer, commandName, targetPlayerName)
 			outputChatBox("Sells the Property you're in to that Player.", thePlayer, 255, 194, 14)
 			outputChatBox("Ask the buyer to use /pay to recieve the money for the Property.", thePlayer, 255, 194, 14)
 		else
-			local targetPlayer = exports.global:findPlayerByPartialNick(targetPlayerName)
+			local targetPlayer, targetPlayerName = exports.global:findPlayerByPartialNick(thePlayer, targetPlayerName)
 			if targetPlayer and getElementData(targetPlayer, "dbid") then
-				targetPlayerName = getPlayerName(targetPlayer):gsub("_", " ")
 				local px, py, pz = getElementPosition(thePlayer)
 				local tx, ty, tz = getElementPosition(targetPlayer)
 				if getDistanceBetweenPoints3D(px, py, pz, tx, ty, tz) < 20 and getElementDimension(targetPlayer) == getElementDimension(thePlayer) then
@@ -292,8 +291,6 @@ function sellTo(thePlayer, commandName, targetPlayerName)
 				else
 					outputChatBox("You are too far away from " .. targetPlayerName .. ".", thePlayer, 255, 0, 0)
 				end
-			else
-				outputChatBox("No such player online.", thePlayer, 255, 0, 0)
 			end
 		end
 	end

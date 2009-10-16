@@ -94,12 +94,9 @@ function showLicenses(thePlayer, commandName, targetPlayer)
 		if not (targetPlayer) then
 			outputChatBox("SYNTAX: /" .. commandName .. " [Player Partial Nick / ID]", thePlayer, 255, 194, 14)
 		else
-			local targetPlayer = exports.global:findPlayerByPartialNick(targetPlayer)
+			local targetPlayer, targetPlayerName = exports.global:findPlayerByPartialNick(thePlayer, targetPlayer)
 			
-			if not (targetPlayer) then
-				outputChatBox("Player not found or multiple were found.", thePlayer, 255, 0, 0)
-			else
-				local targetPlayerName = getPlayerName(targetPlayer)
+			if targetPlayer then
 				local logged = getElementData(targetPlayer, "loggedin")
 				
 				if (logged==0) then

@@ -98,12 +98,9 @@ function createPermVehicle(thePlayer, commandName, ...)
 			x = x + ( ( math.cos ( math.rad ( r ) ) ) * 5 )
 			y = y + ( ( math.sin ( math.rad ( r ) ) ) * 5 )
 			
-			local targetPlayer = exports.global:findPlayerByPartialNick(userName)
+			local targetPlayer, username = exports.global:findPlayerByPartialNick(thePlayer, userName)
 			
-			if not (targetPlayer) then
-				outputChatBox("No such player found.", thePlayer, 255, 0, 0)
-			else
-				local username = getPlayerName(targetPlayer)
+			if targetPlayer then
 				local dbid = getElementData(targetPlayer, "dbid")
 				
 				if (factionVehicle==1) then
@@ -995,9 +992,8 @@ function sellVehicle(thePlayer, commandName, targetPlayerName)
 			outputChatBox("Sells the Vehicle you're in to that Player.", thePlayer, 255, 194, 14)
 			outputChatBox("Ask the buyer to use /pay to recieve the money for the vehicle.", thePlayer, 255, 194, 14)
 		else
-			local targetPlayer = exports.global:findPlayerByPartialNick(targetPlayerName)
+			local targetPlayer, targetPlayerName = exports.global:findPlayerByPartialNick(thePlayer, targetPlayerName)
 			if targetPlayer and getElementData(targetPlayer, "dbid") then
-				targetPlayerName = getPlayerName(targetPlayer):gsub("_", " ")
 				local px, py, pz = getElementPosition(thePlayer)
 				local tx, ty, tz = getElementPosition(targetPlayer)
 				if getDistanceBetweenPoints3D(px, py, pz, tx, ty, tz) < 20 then
@@ -1037,8 +1033,6 @@ function sellVehicle(thePlayer, commandName, targetPlayerName)
 				else
 					outputChatBox("You are too far away from " .. targetPlayerName .. ".", thePlayer, 255, 0, 0)
 				end
-			else
-				outputChatBox("No such player online.", thePlayer, 255, 0, 0)
 			end
 		end
 	end

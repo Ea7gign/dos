@@ -904,12 +904,9 @@ function breathTest(thePlayer, commandName, targetPlayer)
 		if not (targetPlayer) then
 			outputChatBox("SYNTAX: /" .. commandName .. " [Player Partial Nick / ID]", thePlayer, 255, 194, 14)
 		else
-			local targetPlayer = exports.global:findPlayerByPartialNick(targetPlayer)
+			local targetPlayer, targetPlayerName = exports.global:findPlayerByPartialNick(thePlayer, targetPlayer)
 			
-			if not (targetPlayer) then
-				outputChatBox("Player not found or multiple were found.", thePlayer, 255, 0, 0)
-			else
-				local targetPlayerName = getPlayerName(targetPlayer)
+			if targetPlayer then
 				local logged = getElementData(targetPlayer, "loggedin")
 				local username = getPlayerName(thePlayer)
 				
@@ -995,12 +992,10 @@ function showInventoryRemote(thePlayer, commandName, targetPlayer)
 		if not (targetPlayer) then
 			outputChatBox("SYNTAX: /" .. commandName .. " [Player Partial Nick / ID]", thePlayer, 255, 194, 14)
 		else
-			local targetPlayer = exports.global:findPlayerByPartialNick(targetPlayer)
+			local targetPlayer = exports.global:findPlayerByPartialNick(thePlayer, targetPlayer)
 			if targetPlayer then
 				triggerEvent("subscribeToInventoryChanges",thePlayer,targetPlayer)
 				triggerClientEvent(thePlayer,"showInventory",thePlayer,targetPlayer, unpack(exports['saveplayer-system']:getWeapons(targetPlayer)))
-			else
-				outputChatBox("Player not found or multiple were found.", thePlayer, 255, 0, 0)
 			end
 		end
 	end
@@ -1023,11 +1018,9 @@ function givePlayerBadge(thePlayer, commandName, targetPlayer, badgeNumber )
 			if not (targetPlayer) or not (badgeNumber) then
 				outputChatBox("SYNTAX: /" .. commandName .. " [Player Partial Nick / ID][Badge Number]", thePlayer, 255, 194, 14)
 			else
-				local targetPlayer = exports.global:findPlayerByPartialNick(targetPlayer)
-				if not (targetPlayer) then -- is the player online?
-					outputChatBox("Player not found.", thePlayer, 255, 0, 0)
-				else
-					local targetPlayerName = string.gsub(getPlayerName(targetPlayer), "_", " ")
+				local targetPlayer, targetPlayerName = exports.global:findPlayerByPartialNick(thePlayer, targetPlayer)
+				if targetPlayer then -- is the player online?
+					local targetPlayerName = targetPlayerName:gsub("_", " ")
 					local logged = getElementData(targetPlayer, "loggedin")
 					if (logged==0) then -- Are they logged in?
 						outputChatBox("Player is not logged in.", thePlayer, 255, 0, 0)
@@ -1056,11 +1049,8 @@ function issuePilotCertificate(thePlayer, commandName, targetPlayer)
 		if not (targetPlayer) then
 			outputChatBox("SYNTAX: /" .. commandName .. " [player]", thePlayer, 255, 194, 14)
 		else
-			local targetPlayer = exports.global:findPlayerByPartialNick(targetPlayer)
-			if not (targetPlayer) then -- is the player online?
-				outputChatBox("Player not found.", thePlayer, 255, 0, 0)
-			else
-				local targetPlayerName = string.gsub(getPlayerName(targetPlayer), "_", " ")
+			local targetPlayer, targetPlayerName = exports.global:findPlayerByPartialNick(targetPlayer)
+			if targetPlayer then -- is the player online?
 				local logged = getElementData(targetPlayer, "loggedin")
 				if (logged==0) then -- Are they logged in?
 					outputChatBox("Player is not logged in.", thePlayer, 255, 0, 0)

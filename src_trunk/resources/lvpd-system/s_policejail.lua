@@ -29,11 +29,9 @@ function arrestPlayer(thePlayer, commandName, targetPlayerNick, fine, jailtime, 
 			if not (targetPlayerNick) or not (fine) or not (jailtime) or not (...) or (jailtime<1) or (jailtime>180) then
 				outputChatBox("SYNTAX: /arrest [Player Partial Nick / ID] [Fine] [Jail Time (Minutes 1->180)] [Crimes Committed]", thePlayer, 255, 194, 14)
 			else
-				local targetPlayer = exports.global:findPlayerByPartialNick(targetPlayerNick)
+				local targetPlayer, targetPlayerNick = exports.global:findPlayerByPartialNick(thePlayer, targetPlayerNick)
 				
-				if not (targetPlayer) then
-					outputChatBox("Player is not online.", thePlayer, 255, 0, 0)
-				else
+				if targetPlayer then
 					local elems = getElementsWithinColShape(arrestColShape, "player")
 					
 					local found = false
@@ -48,7 +46,6 @@ function arrestPlayer(thePlayer, commandName, targetPlayerNick, fine, jailtime, 
 					else
 						local jailTimer = getElementData(targetPlayer, "pd.jailtimer")
 						local username  = getPlayerName(thePlayer)
-						local targetPlayerNick  = getPlayerName(targetPlayer)
 						local reason = table.concat({...}, " ")
 						
 						if (jailTimer) then
@@ -227,14 +224,11 @@ function jailRelease(thePlayer, commandName, targetPlayerNick)
 			if not (targetPlayerNick) then
 				outputChatBox("SYNTAX: /release [Player Partial Nick / ID]", thePlayer, 255, 194, 14)
 			else
-				local targetPlayer = exports.global:findPlayerByPartialNick(targetPlayerNick)
+				local targetPlayer, targetPlayerNick = exports.global:findPlayerByPartialNick(thePlayer, targetPlayerNick)
 				
-				if not (targetPlayer) then
-					outputChatBox("Player is not online.", thePlayer, 255, 0, 0)
-				else
+				if targetPlayer then
 					local jailTimer = getElementData(targetPlayer, "pd.jailtimer")
 					local username  = getPlayerName(thePlayer)
-					local targetPlayerNick  = getPlayerName(targetPlayer)
 						
 					if (jailTimer) then
 						setElementData(targetPlayer, "pd.jailtime", 1, false)

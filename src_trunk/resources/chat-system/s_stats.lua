@@ -1,7 +1,7 @@
 function showStats(thePlayer, commandName, targetPlayerName)
 	local showPlayer = thePlayer
 	if exports.global:isPlayerAdmin(thePlayer) and targetPlayerName then
-		targetPlayer = exports.global:findPlayerByPartialNick(targetPlayerName)
+		targetPlayer = exports.global:findPlayerByPartialNick(thePlayer, targetPlayerName)
 		if targetPlayer then
 			if getElementData(targetPlayer, "loggedin") == 1 then
 				thePlayer = targetPlayer
@@ -10,7 +10,6 @@ function showStats(thePlayer, commandName, targetPlayerName)
 				return
 			end
 		else
-			outputChatBox("Player not found", showPlayer, 255, 0, 0)
 			return
 		end
 	end
