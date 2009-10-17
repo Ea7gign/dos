@@ -340,9 +340,9 @@ function enterElevator(player, pickup)
 			if vehicle then
 				if isElement(vehicle) then
 					local offset = getElementData(vehicle, "groundoffset") or 2
-					setElementPosition(vehicle, x, y, z - 1 + offset)
 					setElementInterior(vehicle, interior)
 					setElementDimension(vehicle, dimension)
+					setElementPosition(vehicle, x, y, z - 1 + offset)
 					setElementVelocity(vehicle, 0, 0, 0)
 					setVehicleTurnVelocity(vehicle, 0, 0, 0)
 					local rx, ry, rz = getVehicleRotation(vehicle)
@@ -379,10 +379,10 @@ function enterElevator(player, pickup)
 					end
 				end
 			elseif isElement(player) then
-				setElementPosition(player, x, y, z)
 				setElementInterior(player, interior)
 				setCameraInterior(player, interior)
 				setElementDimension(player, dimension)
+				setElementPosition(player, x, y, z)
 				
 				triggerEvent("onPlayerInteriorChange", player, pickup, other)
 				
