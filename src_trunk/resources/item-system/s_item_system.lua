@@ -585,9 +585,11 @@ function destroyItem(itemID, isWeapon)
 				removeElementData(source,"ESbadge")
 				exports.global:sendLocalMeAction(source, "removes an Emergency Services ID.")
 				exports.global:updateNametagColor(source)
-			elseif tonumber(itemID)== 76 and not exports.global:hasItem(source, 76) then
+			elseif tonumber(itemID) == 76 and not exports.global:hasItem(source, 76) then
 				destroyElement(shields[source])
 				shields[source] = nil
+			elseif tonumber(itemID) == 80 then
+				itemName = itemValue
 			end
 		end
 	else
@@ -622,7 +624,7 @@ function dropItem(itemID, x, y, z, ammo, keepammo)
 			local id = mysql_insert_id(handler)
 			mysql_free_result(insert)
 			
-			outputChatBox("You dropped a " .. getItemName( itemID ) .. ".", source, 255, 194, 14)
+			outputChatBox("You dropped a " .. ( itemID == 80 and itemValue or getItemName( itemID ) ) .. ".", source, 255, 194, 14)
 			
 			-- Animation
 			exports.global:applyAnimation(source, "CARRY", "putdwn", 500, false, false, true)
@@ -705,7 +707,7 @@ function dropItem(itemID, x, y, z, ammo, keepammo)
 				destroyElement(shields[source])
 				shields[source] = nil
 			end
-			exports.global:sendLocalMeAction(source, "dropped a " .. getItemName( itemID ) .. ".")
+			exports.global:sendLocalMeAction(source, "dropped a " .. ( itemID == 80 and itemValue or getItemName( itemID ) ) .. ".")
 		else
 			outputDebugString( mysql_error( handler ) )
 		end
@@ -890,8 +892,8 @@ function pickupItem(object, leftammo)
 			exports.global:giveWeapon(source, -itemID, itemValue, true)
 			triggerClientEvent(source, "saveGuns", source)
 		end
-		outputChatBox("You picked up a " .. getItemName( itemID ) .. ".", source, 255, 194, 14)
-		exports.global:sendLocalMeAction(source, "bends over and picks up a " .. getItemName( itemID ) .. ".")
+		outputChatBox("You picked up a " .. ( itemID == 80 and itemValue or getItemName( itemID ) ) .. ".", source, 255, 194, 14)
+		exports.global:sendLocalMeAction(source, "bends over and picks up a " .. ( itemID == 80 and itemValue or getItemName( itemID ) ) .. ".")
 	else
 		outputDebugString("Distance between Player and Pickup too large")
 	end

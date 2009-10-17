@@ -76,7 +76,7 @@ function showItemMenu()
 	local itemValue = getElementData(item, "itemValue")
 	local itemName = getItemName( itemID )
 	
-	wRightClick = guiCreateWindow(ax, ay, 150, 200, itemName .. " (" .. itemValue .. ")", false)
+	wRightClick = guiCreateWindow(ax, ay, 150, 200, itemID == 80 and itemValue or ( itemName .. " (" .. itemValue .. ")" ), false)
 	
 	local y = 0.13
 	bPickup = guiCreateButton(0.05, y, 0.9, 0.1, "Pick Item Up", true, wRightClick)
@@ -269,8 +269,8 @@ function toggleCategory()
 					local row = guiGridListAddRow(itemtype == 2 and gKeys or gItems)
 					guiGridListSetItemText(itemtype == 2 and gKeys or gItems, row, colSlot, tostring(row+1), false, true)
 					guiGridListSetItemData(itemtype == 2 and gKeys or gItems, row, colSlot, tostring(i))
-					guiGridListSetItemText(itemtype == 2 and gKeys or gItems, row, colName, getItemName(itemid), false, false)
-					guiGridListSetItemText(itemtype == 2 and gKeys or gItems, row, colValue, tostring(itemvalue), false, false)
+					guiGridListSetItemText(itemtype == 2 and gKeys or gItems, row, colName, itemid == 80 and itemvalue or getItemName(itemid, itemvalue), false, false)
+					guiGridListSetItemText(itemtype == 2 and gKeys or gItems, row, colValue, itemid == 80 and "" or tostring(itemvalue), false, false)
 				end
 			end
 		end
@@ -646,6 +646,9 @@ function useItem(button)
 				outputChatBox("The Note reads: " .. itemValue, 255, 194, 14)
 			elseif (itemID==78) then
 				outputChatBox("This San Andreas Pilot License was issued for " .. itemValue .. ".", 255, 194, 14)
+				return
+			elseif (itemID==80) then
+				outputChatBox("This is a Generic Item. It only exists for roleplay purposes.", 255, 194, 14)
 				return
 			end
 			
