@@ -8,7 +8,7 @@ function checkSpeedHacks()
 	if (vehicle) and not (cooldown) then
 		local speedx, speedy, speedz = getElementVelocity(vehicle)
 		local actualspeed = math.ceil(((speedx^2 + speedy^2 + speedz^2)^(0.5)*100))
-		if (actualspeed>151) then
+		if (actualspeed>153) then -- you can fall at 152 mph
 			cooldown = true
 			setTimer(resetCD, 5000, 1)
 			triggerServerEvent("alertAdminsOfSpeedHacks", localPlayer, actualspeed)

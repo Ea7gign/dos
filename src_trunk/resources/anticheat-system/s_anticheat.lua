@@ -1,11 +1,12 @@
 function anticheatStarted()
-	exports.global:sendMessageToAdmins("[ANTICHEAT] Version 2.1 Protection Started.")
-	exports.irc:sendMessage("[ANTICHEAT] Version 2.1 Protection Started.")
+	exports.global:sendMessageToAdmins("[ANTICHEAT] Version 2.2 Protection Started.")
+	exports.irc:sendMessage("[ANTICHEAT] Version 2.2 Protection Started.")
 end
 addEventHandler("onResourceStart", getResourceRootElement(), anticheatStarted)
 
 function showSpeedToAdmins(velocity)
-	exports.global:sendMessageToAdmins("[Possible Speedhack/HandlingHack] " .. getPlayerName(source) .. ": " .. velocity .. "Mph.")
+	kph = velocity * 1.609344
+	exports.global:sendMessageToAdmins("[Possible Speedhack/HandlingHack] " .. getPlayerName(source) .. ": " .. velocity .. "Mph/".. kph .." Kph")
 end
 addEvent("alertAdminsOfSpeedHacks", true)
 addEventHandler("alertAdminsOfSpeedHacks", getRootElement(), showSpeedToAdmins)
@@ -91,7 +92,7 @@ function notifyWeaponHacks(weapon, actualammo, expectedammo, strikes)
 	end
 	
 	-- tell people
-	adminmsg = "[Weapon Hacks] " .. getPlayerName(source) .. " (" .. strikes .. ") - " .. getWeaponNameFromID(weapon) .. " (" .. actualammo .. " ammo, expected " .. expectedammo .. ")"
+	adminmsg = "[Weapon Hacks] " .. getPlayerName(source) .. " (" .. strikes .. " times) - " .. getWeaponNameFromID(weapon) .. " (" .. actualammo .. " ammo, expected " .. expectedammo .. ")"
 	exports.global:sendMessageToAdmins(adminmsg)
 	outputServerLog(adminmsg)
 	exports.irc:sendMessage("[ANTICHEAT] " .. adminmsg)
