@@ -1180,6 +1180,32 @@ function setInteriorID( thePlayer, commandName, interiorID )
 end
 addCommandHandler( "setinteriorid", setInteriorID )
 
+function setInteriorPrice( thePlayer, commandName, cost )
+	if exports.global:isPlayerLeadAdmin( thePlayer ) then
+		cost = tonumber( cost )
+		if not cost then
+			outputChatBox( "SYNTAX: /" .. commandName .. " [interior id] - changes the house interior", thePlayer, 255, 194, 14 )
+		else
+			local dbid, entrance, exit = findProperty( thePlayer )
+			if exit then
+				local query = mysql_query(handler, "UPDATE interiors SET cost=" .. cost .. " WHERE id=" .. dbid)
+				if query then
+					mysql_free_result( query )
+					
+					setElementData(entrance, "cost", cost, false)
+					
+					outputChatBox( "Interior Updated.", thePlayer, 0, 255, 0 )
+				else
+					outputChatBox( "Interior Update failed.", thePlayer, 255, 0, 0 )
+				end
+			else
+				outputChatBox( "You are not in an interior.", thePlayer, 255, 0, 0 )
+			end
+		end
+	end
+end
+addCommandHandler( "setinteriorprice", setInteriorPrice )
+
 function getInteriorID( thePlayer, commandName )
 	local c = 0
 	local interior = getElementInterior( thePlayer )
