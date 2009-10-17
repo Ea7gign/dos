@@ -275,7 +275,7 @@ function friskShowItems(items)
 	FriskColName = guiGridListAddColumn(gFriskItems, "Name", 0.9)
 	
 	for k, v in ipairs(items) do
-		local itemName = exports.global:getItemName(v[1])
+		local itemName = v[1] ~= 80 and exports.global:getItemName(v[1]) or v[2]
 		local row = guiGridListAddRow(gFriskItems)
 		guiGridListSetItemText(gFriskItems, row, FriskColName, tostring(itemName), false, false)
 		guiGridListSetSortingEnabled(gFriskItems, false)
