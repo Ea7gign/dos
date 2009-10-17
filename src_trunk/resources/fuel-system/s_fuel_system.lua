@@ -125,7 +125,7 @@ function fuelDepleting()
 end
 setTimer(fuelDepleting, 10000, 0)
 
---[[function FuelDepetingEmptyVehicles()
+function FuelDepetingEmptyVehicles()
 	local vehicles = exports.pool:getPoolElementsByType("vehicle")
 	for ka, theVehicle in ipairs(vehicles) do
 		local enginestatus = getElementData(theVehicle, "engine")
@@ -147,7 +147,8 @@ setTimer(fuelDepleting, 10000, 0)
 		end
 	end
 end
-setTimer(FuelDepetingEmptyVehicles, 30000,0)]]
+setTimer(FuelDepetingEmptyVehicles, 30000,0)
+
 -- [////ADMIN COMMANDS/////]
 function createFuelPoint(thePlayer, commandName)
 	if (exports.global:isPlayerLeadAdmin(thePlayer)) then
