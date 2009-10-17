@@ -74,3 +74,12 @@ function showKills()
 	end
 end
 addCommandHandler("showkills", showKills)
+
+function showKills()
+	for i = 1, 20 do
+		if texts[i] then
+			outputChatBox("Kill " .. i .. ": " .. texts[i])
+		end
+	end
+end
+addCommandHandler("showkills2", showKills)
