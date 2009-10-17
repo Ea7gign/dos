@@ -628,7 +628,7 @@ function givePlayerItem(thePlayer, commandName, targetPlayer, itemID, ...)
 						local success, reason = exports.global:giveItem(targetPlayer, itemID, itemValue)
 						if success then
 							outputChatBox("Player " .. targetPlayerName .. " now has a " .. name .. " with value " .. itemValue .. ".", thePlayer, 0, 255, 0)
-							exports.logs:logMessage(getPlayerName(thePlayer) .. " gave " .. targetPlayerName .. " a " .. name .. " with value " .. itemValue, 13)
+							exports.logs:logMessage(getPlayerName(thePlayer):gsub("_", " ") .. " gave " .. targetPlayerName .. " a " .. name .. " with value " .. itemValue, 13)
 						else
 							outputChatBox("Couldn't give " .. targetPlayerName .. " a " .. name .. ": " .. tostring(reason), thePlayer, 255, 0, 0)
 						end
