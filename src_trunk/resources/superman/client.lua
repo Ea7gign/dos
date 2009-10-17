@@ -285,7 +285,7 @@ function Superman.onJump(key, keyState)
 
   local admin = getElementData(localPlayer, "adminlevel")
   
-  if (admin>0) then
+  if (admin>1) then
 	  local task = getPedSimplestTask(localPlayer)
 	  if not isPlayerFlying(localPlayer) then
 		if task == "TASK_SIMPLE_IN_AIR" then
@@ -304,7 +304,7 @@ function Superman.cmdSuperman()
 
   local admin = getElementData(localPlayer, "adminlevel")
   
-  if (admin>0) then
+  if (admin>1) then
 	  if isPedInVehicle(localPlayer) or isPlayerFlying(localPlayer) then return end
 	  setElementVelocity(localPlayer, 0, 0, TAKEOFF_VELOCITY)
 	  setTimer(Superman.startFlight, TAKEOFF_FLIGHT_DELAY, 1)
