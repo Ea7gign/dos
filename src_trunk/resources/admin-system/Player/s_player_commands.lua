@@ -558,7 +558,7 @@ function givePlayerGun(thePlayer, commandName, targetPlayer, ...)
 			
 			if targetPlayer then
 				local weapon = tonumber(args[1])
-				local ammo = #args ~= 1 and tonumber(args[#args]) or -1
+				local ammo = #args ~= 1 and tonumber(args[#args]) or 1
 				
 				if not weapon then -- weapon is specified as name
 					local weaponEnd = #args
@@ -570,7 +570,7 @@ function givePlayerGun(thePlayer, commandName, targetPlayer, ...)
 						outputChatBox("Invalid Weapon Name.", thePlayer, 255, 0, 0)
 						return
 					elseif weaponEnd == #args - 1 then
-						ammo = -1
+						ammo = 1
 					end
 				elseif not getWeaponNameFromID(weapon) then
 					outputChatBox("Invalid Weapon ID.", thePlayer, 255, 0, 0)
