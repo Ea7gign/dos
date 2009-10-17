@@ -1184,7 +1184,7 @@ function setInteriorPrice( thePlayer, commandName, cost )
 	if exports.global:isPlayerLeadAdmin( thePlayer ) then
 		cost = tonumber( cost )
 		if not cost then
-			outputChatBox( "SYNTAX: /" .. commandName .. " [interior id] - changes the house interior", thePlayer, 255, 194, 14 )
+			outputChatBox( "SYNTAX: /" .. commandName .. " [price] - changes the house price", thePlayer, 255, 194, 14 )
 		else
 			local dbid, entrance, exit = findProperty( thePlayer )
 			if exit then
