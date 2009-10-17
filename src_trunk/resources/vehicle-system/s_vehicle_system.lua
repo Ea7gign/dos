@@ -57,7 +57,7 @@ end
 
 -- /makeveh
 function createPermVehicle(thePlayer, commandName, ...)
-	if (exports.global:isPlayerSuperAdmin(thePlayer)) then
+	if (exports.global:isPlayerLeadAdmin(thePlayer)) then
 		local args = {...}
 		if (#args < 6) then
 			outputChatBox("SYNTAX: /" .. commandName .. " [id/name] [color1] [color2] [Owner] [Faction Vehicle (1/0)] [Cost] [Tinted Windows] ", thePlayer, 255, 194, 14)
@@ -1000,7 +1000,7 @@ function sellVehicle(thePlayer, commandName, targetPlayerName)
 					local theVehicle = getPedOccupiedVehicle(thePlayer)
 					if theVehicle then
 						local vehicleID = getElementData(theVehicle, "dbid")
-						if getElementData(theVehicle, "owner") == getElementData(thePlayer, "dbid") or exports.global:isPlayerSuperAdmin(thePlayer) then
+						if getElementData(theVehicle, "owner") == getElementData(thePlayer, "dbid") or exports.global:isPlayerLeadAdmin(thePlayer) then
 							if getElementData(targetPlayer, "dbid") ~= getElementData(theVehicle, "owner") then
 								if exports.global:hasSpaceForItem(targetPlayer, 3) then
 									local query = mysql_query(handler, "UPDATE vehicles SET owner = '" .. getElementData(targetPlayer, "dbid") .. "' WHERE id='" .. vehicleID .. "'")

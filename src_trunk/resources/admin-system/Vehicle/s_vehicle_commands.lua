@@ -44,6 +44,7 @@ end
 addCommandHandler("unlockcivcars", unlockAllCivilianCars, false, false)
 
 -- /veh
+local leadplus = { [425] = true, [520] = true, [447] = true, [432] = true, [444] = true, [556] = true, [557] = true, [441] = true, [464] = true, [501] = true, [465] = true, [564] = true }
 function createTempVehicle(thePlayer, commandName, ...)
 	if (exports.global:isPlayerFullAdmin(thePlayer)) then
 		local args = {...}
@@ -80,41 +81,50 @@ function createTempVehicle(thePlayer, commandName, ...)
 			local letter2 = string.char(math.random(65,90))
 			local plate = letter1 .. letter2 .. math.random(0, 9) .. " " .. math.random(1000, 9999)
 			
-			local veh = createVehicle(vehicleID, x, y, z, 0, 0, r, plate)
-			
-			if not (veh) then
-				outputChatBox("Invalid Vehicle ID.", thePlayer, 255, 0, 0)
-			else
-				if (armoredCars[vehicleID]) then
-					setVehicleDamageProof(veh, true)
+			if vehicleID then
+				if leadplus[ vehicleID ] and not exports.global:isPlayerLeadAdmin(thePlayer) then
+					outputChatBox( "Insufficient access.", thePlayer, 255, 0, 0)
+					return
 				end
+				
+				local veh = createVehicle(vehicleID, x, y, z, 0, 0, r, plate)
+				
+				if not (veh) then
+					outputChatBox("Invalid Vehicle ID.", thePlayer, 255, 0, 0)
+				else
+					if (armoredCars[vehicleID]) then
+						setVehicleDamageProof(veh, true)
+					end
 
-				exports.pool:allocateElement(veh)
-				setElementData(veh, "fuel", 100, false)
-				
-				setVehicleColor(veh, col1, col2, col1, col2)
-				
-				setElementInterior(veh, getElementInterior(thePlayer))
-				setElementDimension(veh, getElementDimension(thePlayer))
-				
-				setVehicleOverrideLights(veh, 1)
-				setVehicleEngineState(veh, false)
-				setVehicleFuelTankExplodable(veh, false)
-				
-				totalTempVehicles = totalTempVehicles + 1
-				local dbid = (-totalTempVehicles)
-				
-				setElementData(veh, "dbid", dbid)
-				setElementData(veh, "fuel", 100, false)
-				setElementData(veh, "Impounded", 0)
-				setElementData(veh, "engine", 0, false)
-				setElementData(veh, "oldx", x, false)
-				setElementData(veh, "oldy", y, false)
-				setElementData(veh, "oldz", z, false)
-				setElementData(veh, "faction", -1)
-				setElementData(veh, "owner", -1, false)
-				setElementData(veh, "job", 0, false)
-				outputChatBox(getVehicleName(veh) .. " spawned with TEMP ID " .. dbid .. ".", thePlayer, 255, 194, 14)
+					exports.pool:allocateElement(veh)
+					setElementData(veh, "fuel", 100, false)
+					
+					setVehicleColor(veh, col1, col2, col1, col2)
+					
+					setElementInterior(veh, getElementInterior(thePlayer))
+					setElementDimension(veh, getElementDimension(thePlayer))
+					
+					setVehicleOverrideLights(veh, 1)
+					setVehicleEngineState(veh, false)
+					setVehicleFuelTankExplodable(veh, false)
+					
+					totalTempVehicles = totalTempVehicles + 1
+					local dbid = (-totalTempVehicles)
+					
+					setElementData(veh, "dbid", dbid)
+					setElementData(veh, "fuel", 100, false)
+					setElementData(veh, "Impounded", 0)
+					setElementData(veh, "engine", 0, false)
+					setElementData(veh, "oldx", x, false)
+					setElementData(veh, "oldy", y, false)
+					setElementData(veh, "oldz", z, false)
+					setElementData(veh, "faction", -1)
+					setElementData(veh, "owner", -1, false)
+					setElementData(veh, "job", 0, false)
+					outputChatBox(getVehicleName(veh) .. " spawned with TEMP ID " .. dbid .. ".", thePlayer, 255, 194, 14)
+				end
+			else
+				outputChatBox("Invalid Vehicle ID.", thePlayer, 255, 0, 0)
 			end
 		end
 	end
@@ -854,13 +864,14 @@ function deleteVehicle(thePlayer, commandName, id)
 					if (dbid<0) then -- TEMP vehicle
 						destroyElement(theVehicle)
 					else
-						if (exports.global:isPlayerSuperAdmin(thePlayer)) then
+						if (exports.global:isPlayerLeadAdmin(thePlayer)) then
 							local query = mysql_query(handler, "DELETE FROM vehicles WHERE id='" .. dbid .. "'")
 							call( getResourceFromName( "item-system" ), "deleteAll", 3, dbid )
 							call( getResourceFromName( "item-system" ), "clearItems", theVehicle )
 							mysql_free_result(query)
 							destroyElement(theVehicle)
 							exports.irc:sendMessage("[ADMIN] " .. getPlayerName(thePlayer) .. " deleted vehicle #" .. dbid .. ".")
+							exports.logs:logMessage("[DELVEH] " .. getPlayerName( thePlayer ) .. " deleted vehicle #" .. dbid, 9)
 						else
 							outputChatBox("You do not have permission to delete permanent vehicles.", thePlayer, 255, 0, 0)
 							return
@@ -886,7 +897,7 @@ function deleteThisVehicle(thePlayer, commandName)
 	local veh = getPedOccupiedVehicle(thePlayer)
 	local dbid = getElementData(veh, "dbid")
 	if (exports.global:isPlayerAdmin(thePlayer)) then
-		if dbid < 0 or exports.global:isPlayerSuperAdmin(thePlayer) then
+		if dbid < 0 or exports.global:isPlayerLeadAdmin(thePlayer) then
 			if not (isPedInVehicle(thePlayer)) then
 				outputChatBox("You are not in a vehicle.", thePlayer, 255, 0, 0)
 			else
@@ -896,6 +907,7 @@ function deleteThisVehicle(thePlayer, commandName)
 					call( getResourceFromName( "item-system" ), "deleteAll", 3, dbid )
 					call( getResourceFromName( "item-system" ), "clearItems", veh )
 					exports.irc:sendMessage("[ADMIN] " .. getPlayerName(thePlayer) .. " deleted vehicle #" .. dbid .. ".")
+					exports.logs:logMessage("[DELVEH] " .. getPlayerName( thePlayer ) .. " deleted vehicle #" .. dbid, 9)
 				end
 				destroyElement(veh)
 			end
