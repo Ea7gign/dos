@@ -248,27 +248,34 @@ addEventHandler("onSaveSuspectCrime", getRootElement(), saveCrime)
 
 -- function returns all of the crimes for a suspect to the player
 function getSuspectCrime(name)
-	local result = mysql_query(handler, "SELECT id, suspect_name, time, date, officers, ticket, arrest, fine, ticket_price, arrest_price, fine_price, illegal_items, details, done_by FROM suspectCrime WHERE suspect_name='" .. name .. "' LIMIT 1")
+	local result = mysql_query(handler, "SELECT id, suspect_name, time, date, officers, ticket, arrest, fine, ticket_price, arrest_price, fine_price, illegal_items, details, done_by FROM suspectCrime WHERE suspect_name='" .. name .. "'")
 	
 	if (result) then
 		if (mysql_num_rows(result)>0) then
 			-- backwards compatability for jasons code...
 			local tableresult = { }
-			tableresult[1] = { }
-			tableresult[1][1] = mysql_result(result, 1, 1)
-			tableresult[1][2] = mysql_result(result, 1, 2)
-			tableresult[1][3] = mysql_result(result, 1, 3)
-			tableresult[1][4] = mysql_result(result, 1, 4)
-			tableresult[1][5] = mysql_result(result, 1, 5)
-			tableresult[1][6] = mysql_result(result, 1, 6)
-			tableresult[1][7] = mysql_result(result, 1, 7)
-			tableresult[1][8] = mysql_result(result, 1, 8)
-			tableresult[1][9] = mysql_result(result, 1, 9)
-			tableresult[1][10] = mysql_result(result, 1, 10)
-			tableresult[1][11] = mysql_result(result, 1, 11)
-			tableresult[1][12] = mysql_result(result, 1, 12)
-			tableresult[1][13] = mysql_result(result, 1, 13)
-			tableresult[1][14] = mysql_result(result, 1, 14)
+			local tablecount = 1
+			while true do
+				local row = mysql_fetch_assoc(result)
+				if (not row) then break end
+				tableresult[tablecount] = { }
+				tableresult[tablecount][1] = row["id"]
+				tableresult[tablecount][2] = row["suspect_name"]
+				tableresult[tablecount][3] = row["time"]
+				tableresult[tablecount][4] = row["date"]
+				tableresult[tablecount][5] = row["officers"]
+				tableresult[tablecount][6] = row["ticket"]
+				tableresult[tablecount][7] = row["arrest"]
+				tableresult[tablecount][8] = row["fine"]
+				tableresult[tablecount][9] = row["ticket_price"]
+				tableresult[tablecount][10] = row["arrest_price"]
+				tableresult[tablecount][11] = row["fine_price"]
+				tableresult[tablecount][12] = row["illegal_items"]
+				tableresult[tablecount][13] = row["details"]
+				tableresult[tablecount][14] = row["done_by"]
+				
+				tablecount = tablecount + 1
+			end
 			mysql_free_result(result)
 			
 			triggerClientEvent("onClientSaveSuspectCrimes", client, tableresult)
