@@ -34,7 +34,7 @@ function findPlayerByPartialNick(thePlayer, partialNick)
 	local count = 0
 	
 	if getPlayerFromName(partialNick) then
-		return getPlayerFromName(partialNick), partialNick
+		return getPlayerFromName(partialNick), getPlayerName( getPlayerFromName(partialNick) ):gsub("_", " ")
 	-- IDS
 	elseif tonumber(partialNick) then
 		for key, value in ipairs(players) do
