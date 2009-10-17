@@ -13,7 +13,6 @@
 	<script src="Smokes House Wall Fix.lua" type="client"/>
 	<script src="Steak House Floor Fix.lua" type="client"/>
 	<script src="Strip Club Back Room.lua" type="client"/>
-	<script src="Yakuza HQ.lua" type="client"/>
 	<script src="Idlewood Gas.lua" type="client"/>
 	<script src="seville.lua" type="client"/>
 	<script src="Busstops_LS_LineAB.lua" type="client"/>
