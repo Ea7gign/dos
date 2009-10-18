@@ -4,7 +4,7 @@ enumTypes = {
 	"adminchat",
 	"admincmds",
 	"moneytransfers",
-	"policechat",
+	"faction",
 	"meactions",
 	"pms",
 	"vehicles",

@@ -671,9 +671,7 @@ function factionOOC(thePlayer, commandName, ...)
 			else
 				local message = table.concat({...}, " ")
 				
-				if (theTeamName=="Los Santos Police Department") then
-					exports.logs:logMessage("[OOC: Faction Chat] " .. playerName .. ": " .. message, 6)
-				end
+				exports.logs:logMessage("[OOC: " .. theTeamName .. "] " .. playerName .. ": " .. message, 6)
 			
 				for index, arrayPlayer in ipairs( getElementsByType( "player" ) ) do
 					if isElement( arrayPlayer ) then
