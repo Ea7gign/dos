@@ -7,9 +7,7 @@ local open = false
 
 -- Gate code
 function usePDFrontGarageGate(thePlayer)
-	local team = getPlayerTeam(thePlayer)
-	
-	if (team==getTeamFromName("Los Santos Police Department")) then
+	if (exports.global:hasItem(thePlayer, 64)) then
 		local x, y, z = getElementPosition(thePlayer)
 		local distance = getDistanceBetweenPoints3D(1588.5490234375, -1637.95546875, 13.446516990662, x, y, z)
 		
@@ -24,10 +22,6 @@ end
 addCommandHandler("gate", usePDFrontGarageGate)
 
 function closePDFrontGarageGate(thePlayer)
-	if (getElementType(thePlayer)) then
-		outputChatBox("LSPD Garage is now Closed!", thePlayer, 255, 0, 0)
-	end
-	
 	setTimer(resetState8, 1000, 1)
 	moveObject(objGateg, 1000, 1588.5490234375, -1637.95546875, 13.846516990662, 90, 0, 0)
 end

@@ -13,9 +13,6 @@ local function ResetOpenState()
 end
 
 local function closeDoor(thePlayer)
-	if (getElementType(thePlayer)) then
-		outputChatBox("The " .. GateName .. " is now Closed!", thePlayer, 255, 0, 0)
-	end
 	moveObject(Gate[1], 1000, 1577.4779052734,-1617.7227783203,14.1, 0, 0, 0)
 	moveObject(Gate[2], 1000, 1587.1,-1611.25,14.1, 0, 0, 0)
 	setTimer(ResetOpenState, 1000, 1)
@@ -24,10 +21,7 @@ end
 
 -- Gate code / Using local functions to avoid 
 local function useDoor(thePlayer, commandName, ...)
-	local team = getPlayerTeam(thePlayer)
-	
-	
-	if (team==getTeamFromName("Los Santos Police Department")) then
+	if (exports.global:hasItem(thePlayer, 64)) then
 		local x, y, z = getElementPosition(thePlayer)
 		local distance = getDistanceBetweenPoints3D(1581.0400390625, -1617.6396484375, 13.3828125, x, y, z)
 		

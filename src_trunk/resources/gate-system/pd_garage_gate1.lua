@@ -10,10 +10,8 @@ createObject(970, 1544.318359375, -1637.5888671875, 13, 0, 0, 90)
 local open = false
 
 -- Gate code
-function usePDSideGarageGate(thePlayer)
-	local team = getPlayerTeam(thePlayer)
-	
-	if (team==getTeamFromName("Los Santos Police Department")) then
+function usePDSideGarageGate(thePlayer)	
+	if (exports.global:hasItem(thePlayer, 64)) then
 		local x, y, z = getElementPosition(thePlayer)
 		local distance = getDistanceBetweenPoints3D(1544.6875, -1630.785546875, 13.1828125, x, y, z)
 		
@@ -28,10 +26,6 @@ end
 addCommandHandler("gate", usePDSideGarageGate)
 
 function closePDSideGarageGate(thePlayer)
-	if (getElementType(thePlayer)) then
-		outputChatBox("LSPD Barrier is now Closed!", thePlayer, 255, 0, 0)
-	end
-	
 	setTimer(resetState7, 1000, 1)
 	moveObject(objGateh, 1000, 1544.6875, -1630.785546875, 13.1828125, 0, 90, 0)
 end
