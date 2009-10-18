@@ -392,7 +392,8 @@ function talkPhone(thePlayer, commandName, ...)
 									local job = getElementData(value, "job")
 									
 									if (job == 2) then
-										if (getElementModel(value)==438 or getElementModel(value)==420) then
+										local car = getPedOccupiedVehicle(value)
+										if car and (getElementModel(car)==438 or getElementModel(car)==420) then
 											outputChatBox("[New Fare] " .. getPlayerName(thePlayer) .." Ph:" .. playerNumber .. " Location: " .. message .."." , value, 0, 183, 239)
 											founddriver = true
 										end
