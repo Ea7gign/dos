@@ -1123,7 +1123,7 @@ function fillFuelTank(veh, fuel)
 		
 		outputChatBox("You added " .. math.ceil(fuelAdded) .. " litres of petrol to your car from your fuel can.", source, 0, 255, 0 )
 		
-		local gender = getElementData(theChosenOne, "gender")
+		local gender = getElementData(source, "gender")
 		local genderm = "his"
 		if (gender == 1) then
 			genderm = "her"
