@@ -14,7 +14,7 @@ function useImpoundDoorc(thePlayer)
 			open = true
 			outputChatBox("The impound lot gate is now open!", thePlayer, 0, 255, 0)
 			moveObject(objGatec, 1000, 2812.6259765625, -1466.4775390625, 18.799030303955, 0,90,0)
-			setTimer(closeImpoundDoorc, 7500, 1, thePlayer)
+			setTimer(closeImpoundDoorc, 5000, 1, thePlayer)
 		end
 	end
 end
