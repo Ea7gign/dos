@@ -507,6 +507,7 @@ function localOOC(thePlayer, commandName, ...)
 			outputChatBox("You are currenty muted from the OOC Chat.", thePlayer, 255, 0, 0)
 		else
 			exports.global:sendLocalText(thePlayer, getPlayerName(thePlayer) .. ": (( " .. table.concat({...}, " ") .. " ))", 196, 255, 255)
+			exports.logs:logMessage("[OOC: Local Chat] " .. getPlayerName(thePlayer) .. ": " .. table.concat({...}, " "), 1)
 		end
 	end
 end
