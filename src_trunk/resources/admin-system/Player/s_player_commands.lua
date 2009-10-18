@@ -419,7 +419,7 @@ function ckPlayer(thePlayer, commandName, targetPlayer)
 				if (logged==0) then
 					outputChatBox("Player is not logged in.", thePlayer, 255, 0, 0)
 				elseif (logged==1) then
-					local query = mysql_query(handler, "UPDATE characters SET cked='1' WHERE charactername='" .. mysql_escape_string(handler, targetPlayerName) .. "'")
+					local query = mysql_query(handler, "UPDATE characters SET cked='1' WHERE id = " .. getElementData(targetPlayer, "dbid"))
 					
 					local x, y, z = getElementPosition(targetPlayer)
 					local skin = getPedSkin(targetPlayer)
@@ -2421,7 +2421,7 @@ function givePlayerLicense(thePlayer, commandName, targetPlayerName, licenseType
 						outputChatBox(getPlayerName(thePlayer).." has already a "..licenseTypeOutput.." license.", thePlayer, 255, 255, 0)
 					else
 						setElementData(targetPlayer, "license."..licenseType, 1)
-						local query = mysql_query(handler, "UPDATE characters SET "..licenseType.."_license='1' WHERE charactername='"..mysql_escape_string(handler, targetPlayerName).."' LIMIT 1")
+						local query = mysql_query(handler, "UPDATE characters SET "..licenseType.."_license='1' WHERE id = "..getElementData(targetPlayer, "dbid").." LIMIT 1")
 						mysql_free_result(query)
 						outputChatBox("Player "..targetPlayerName.." now has a "..licenseTypeOutput.." license.", thePlayer, 0, 255, 0)
 						outputChatBox("Admin "..getPlayerName(thePlayer):gsub("_"," ").." gives you a "..licenseTypeOutput.." license.", targetPlayer, 0, 255, 0)
