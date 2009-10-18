@@ -15,7 +15,6 @@ function usePDDoor(thePlayer)
 	if (exports.global:hasItem(thePlayer, 64)) then
 		local x, y, z = getElementPosition(thePlayer)
 		local distance = getDistanceBetweenPoints3D(244.90234375, 72.533984375, 1003.640625, x, y, z)
-		outputChatBox(open)
 		if (distance<=5) and (open==false) then
 			open = true
 			outputChatBox("LSPD Door is now Open!", thePlayer, 0, 255, 0)
