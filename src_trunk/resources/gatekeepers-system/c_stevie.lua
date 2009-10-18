@@ -63,6 +63,7 @@ end
 
 -- make sure to quit the Convo GUI when player is killed
 addEventHandler("onClientPlayerWasted", getLocalPlayer(), destroyStevieGUI)
+addEventHandler("onClientChangeChar", getRootElement(), destroyStevieGUI)
 
 -- Quick Close
 function quickClose()
@@ -327,6 +328,7 @@ function cdeclineSteviePhoneDeal()
 	
 end
 
+
 --------------------------
 -- Accepting phone deal --
 --------------------------
@@ -460,6 +462,7 @@ function c_closePhoneGUI()
 end
 addEvent("closePhoneGUI")
 addEventHandler("closePhoneGUI", getRootElement(), c_closePhoneGUI )
+addEventHandler("onClientChangeChar", getRootElement(), c_closePhoneGUI)
 
 --------------------
 -- blip for deals --

@@ -57,6 +57,7 @@ end
 
 -- make sure to quit the Convo GUI when player is killed
 addEventHandler("onClientPlayerWasted", getLocalPlayer(), destroyHunterGUI)
+addEventHandler("onClientChangeChar", getRootElement(), destroyHunterGUI)
 
 -- statement 2
 function hunterStatement2()

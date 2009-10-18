@@ -58,6 +58,7 @@ end
 
 -- make sure to quit the Convo GUI when player is killed
 addEventHandler("onClientPlayerWasted", getLocalPlayer(), destroyRookGUI)
+addEventHandler("onClientChangeChar", getRootElement(), destroyRookGUI)
 
 -- Statement 2
 function rookStatement2()

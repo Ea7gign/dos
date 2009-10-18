@@ -303,3 +303,4 @@ function tyClose()
 end
 addEvent("closeTyWindow", true)
 addEventHandler("closeTyWindow", getRootElement(), tyClose)
+addEventHandler("onClientChangeChar", getRootElement(), tyClose)
