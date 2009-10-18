@@ -186,13 +186,6 @@ function timerPDUnjailPlayer(jailedPlayer)
 			local query = mysql_query(handler, "UPDATE characters SET pdjail_time='" .. timeLeft .. "' WHERE id=" .. getElementData(jailedPlayer, "dbid"))
 			mysql_free_result(query)
 		end
-	else
-		local theTimer = getElementData(jailedPlayer, "jailtimer")
-		killTimer(theTimer)
-		-- 0001290: PD /release bug
-		local theMagicTimer = getElementData(jailedPlayer, "pd.jailtimer")
-		killTimer(theMagicTimer)
-		-- end 0001290: PD /release bug
 	end
 end
 
