@@ -64,7 +64,7 @@ function UnlockVehicle(element, matchingdimension)
 			local owner = getElementData(temp, "owner")
 			local faction = getElementData(temp, "faction")
 			local dbid = getElementData(temp, "dbid")
-			local impounded = getElementData(temp, "impounded")
+			local impounded = getElementData(temp, "Impounded")
 			if (owner > 0) then
 				if (faction > 3 or faction < 0) then
 					if (source == towSphere2) then
