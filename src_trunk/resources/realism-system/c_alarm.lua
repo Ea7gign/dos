@@ -52,8 +52,12 @@ function doCarAlarm(vehicle)
 	if isElement(vehicle) then
 		if (isVehicleLocked(vehicle) == false) then
 			setElementData(vehicle, "alarm", nil, false)
-			killTimer(alarmtable[1][vehicle])
-			killTimer(alarmtable[2][vehicle])
+			if (alarmtable[1][vehicle]) then
+				killTimer(alarmtable[1][vehicle])
+			end
+			if (alarmtable[2][vehicle]) then
+				killTimer(alarmtable[2][vehicle])
+			end
 			alarmtable[2][vehicle] = nil
 			alarmtable[1][vehicle] = nil
 			return
