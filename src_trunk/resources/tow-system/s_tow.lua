@@ -64,6 +64,7 @@ function UnlockVehicle(element, matchingdimension)
 			local owner = getElementData(temp, "owner")
 			local faction = getElementData(temp, "faction")
 			local dbid = getElementData(temp, "dbid")
+			local impounded = getElementData(temp, "impounded")
 			if (owner > 0) then
 				if (faction > 3 or faction < 0) then
 					if (source == towSphere2) then
@@ -76,12 +77,14 @@ function UnlockVehicle(element, matchingdimension)
 						outputChatBox("((Please remember to /park your vehicle in our car park.))", getVehicleOccupant(element), 255, 194, 14)
 					else
 						if (getElementData(temp, "faction") ~= 30) then
-							--unlock it and impound it
-							setVehicleLocked(temp, false)
-							setElementData(temp, "Impounded", getRealTime().yearday)
-							setElementData(temp, "enginebroke", 1, false)
-							setVehicleEngineState(temp, false)
-							outputChatBox("((Please remember to /park your vehicle in our car park.))", getVehicleOccupant(element), 255, 194, 14)
+							if (impounded == 0) then
+								--unlock it and impound it
+								setElementData(temp, "Impounded", getRealTime().yearday)
+								setVehicleLocked(temp, false)
+								setElementData(temp, "enginebroke", 1, false)
+								setVehicleEngineState(temp, false)
+								outputChatBox("((Please remember to /park your vehicle in our car park.))", getVehicleOccupant(element), 255, 194, 14)
+							end
 						end
 					end
 				else
