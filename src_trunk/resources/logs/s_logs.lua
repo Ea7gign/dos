@@ -11,7 +11,8 @@ enumTypes = {
 	"san-photo",
 	"kills",
 	"anticheat",
-	"itemspawn"
+	"itemspawn",
+	"tow"
 }
 
 
