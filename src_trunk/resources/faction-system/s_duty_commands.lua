@@ -294,18 +294,12 @@ function swatduty(thePlayer, commandName)
 					setPedSkin(thePlayer, 285)
 					
 					setElementData(thePlayer, "duty", 1, false)
-					
-					-- Toggle roadblock controls.
-					setElementData(thePlayer, "roadblocks", true, false)
 				elseif (duty==1) then -- SWAT
 					restoreWeapons(thePlayer)
 					outputChatBox("You are now off SWAT duty.", thePlayer)
 					exports.global:sendLocalMeAction(thePlayer, "puts their SWAT gear into their locker.")
 					setPedArmor(thePlayer, 0)
 					setElementData(thePlayer, "duty", 0, false)
-					
-					-- Toggle roadblock controls.
-					removeElementData(thePlayer, "roadblocks")
 					
 					exports.global:takeItem(thePlayer, 26)
 					exports.global:takeItem(thePlayer, 27)
@@ -322,9 +316,6 @@ function swatduty(thePlayer, commandName)
 					setPedArmor(thePlayer, 0)
 					setElementData(thePlayer, "duty", 0, false)
 					
-					-- Toggle roadblock controls.
-					removeElementData(thePlayer, "roadblocks")
-					
 					exports.global:takeItem(thePlayer, 45)
 					
 					local casualskin = getElementData(thePlayer, "casualskin")
@@ -335,9 +326,6 @@ function swatduty(thePlayer, commandName)
 					exports.global:sendLocalMeAction(thePlayer, "puts their cadet gear into their locker.")
 					setPedArmor(thePlayer, 0)
 					setElementData(thePlayer, "duty", 0, false)
-					
-					-- Toggle roadblock controls.
-					removeElementData(thePlayer, "roadblocks")
 					
 					exports.global:takeItem(thePlayer, 45)
 					
@@ -388,9 +376,6 @@ function policeduty(thePlayer, commandName)
 						setPedSkin(thePlayer, dutyskin)
 						
 						setElementData(thePlayer, "duty", 2, false)
-						
-						-- Toggle roadblock controls.
-						setElementData(thePlayer, "roadblocks", true, false)
 					end
 				elseif (duty==1) then -- SWAT
 					restoreWeapons(thePlayer)
@@ -398,9 +383,6 @@ function policeduty(thePlayer, commandName)
 					exports.global:sendLocalMeAction(thePlayer, "puts their SWAT gear into their locker.")
 					setPedArmor(thePlayer, 0)
 					setElementData(thePlayer, "duty", 0, false)
-					
-					-- Toggle roadblock controls.
-					removeElementData(thePlayer, "roadblocks")
 					
 					exports.global:takeItem(thePlayer, 26)
 					exports.global:takeItem(thePlayer, 27)
@@ -417,9 +399,6 @@ function policeduty(thePlayer, commandName)
 					setPedArmor(thePlayer, 0)
 					setElementData(thePlayer, "duty", 0, false)
 					
-					-- Toggle roadblock controls.
-					removeElementData(thePlayer, "roadblocks")
-					
 					exports.global:takeItem(thePlayer, 45)
 					
 					local casualskin = getElementData(thePlayer, "casualskin")
@@ -430,9 +409,6 @@ function policeduty(thePlayer, commandName)
 					exports.global:sendLocalMeAction(thePlayer, "puts their cadet gear into their locker.")
 					setPedArmor(thePlayer, 0)
 					setElementData(thePlayer, "duty", 0, false)
-					
-					-- Toggle roadblock controls.
-					removeElementData(thePlayer, "roadblocks")
 					
 					exports.global:takeItem(thePlayer, 45)
 					
@@ -481,9 +457,6 @@ function cadetduty(thePlayer, commandName)
 						setPedSkin(thePlayer, dutyskin)
 						
 						setElementData(thePlayer, "duty", 3, false)
-						
-						-- Toggle roadblock controls.
-						setElementData(thePlayer, "roadblocks", true, false)
 					end
 				elseif (duty==1) then -- SWAT
 					restoreWeapons(thePlayer)
@@ -491,9 +464,6 @@ function cadetduty(thePlayer, commandName)
 					exports.global:sendLocalMeAction(thePlayer, "puts their SWAT gear into their locker.")
 					setPedArmor(thePlayer, 0)
 					setElementData(thePlayer, "duty", 0, false)
-					
-					-- Toggle roadblock controls.
-					removeElementData(thePlayer, "roadblocks")
 					
 					exports.global:takeItem(thePlayer, 26)
 					exports.global:takeItem(thePlayer, 27)
@@ -510,9 +480,6 @@ function cadetduty(thePlayer, commandName)
 					setPedArmor(thePlayer, 0)
 					setElementData(thePlayer, "duty", 0, false)
 					
-					-- Toggle roadblock controls.
-					removeElementData(thePlayer, "roadblocks")
-					
 					exports.global:takeItem(thePlayer, 45)
 					
 					local casualskin = getElementData(thePlayer, "casualskin")
@@ -523,9 +490,6 @@ function cadetduty(thePlayer, commandName)
 					exports.global:sendLocalMeAction(thePlayer, "puts their cadet gear into their locker.")
 					setPedArmor(thePlayer, 0)
 					setElementData(thePlayer, "duty", 0, false)
-					
-					-- Toggle roadblock controls.
-					removeElementData(thePlayer, "roadblocks")
 					
 					exports.global:takeItem(thePlayer, 45)
 					
@@ -571,9 +535,6 @@ function fbiduty(thePlayer, commandName)
 						setPedSkin(thePlayer, dutyskin)
 						
 						setElementData(thePlayer, "duty", 6, false)
-						
-						-- Toggle roadblock controls.
-						setElementData(thePlayer, "roadblocks", true, false)
 					end
 				elseif (duty==6) then -- FBI
 					restoreWeapons(thePlayer)
@@ -586,9 +547,6 @@ function fbiduty(thePlayer, commandName)
 					
 					local casualskin = getElementData(thePlayer, "casualskin")
 					setPedSkin(thePlayer, casualskin)
-					
-					-- Toggle roadblock controls.
-					removeElementData(thePlayer, "roadblocks")
 				else
 					local casualskin = getElementData(thePlayer, "casualskin")
 					setPedSkin(thePlayer, casualskin)
@@ -598,4 +556,4 @@ function fbiduty(thePlayer, commandName)
 		end
 	end
 end
-addCommandHandler("fbi", fbiduty, false, false)
+--addCommandHandler("fbi", fbiduty, false, false)
