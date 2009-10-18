@@ -88,7 +88,7 @@ function onJoin()
 	setElementData(source, "loginattempts", 0, false)
 	setElementData(source, "timeinserver", 0, false)
 	
-	setElementDimension(source, 0)
+	setElementDimension(source, 9999)
 	setElementInterior(source, 0)
 
 	clearChatBox(source)
