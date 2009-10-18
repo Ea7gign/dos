@@ -150,6 +150,8 @@ function sellProperty(thePlayer, commandName)
 	if dbid > 0 then
 		if interiorType == 2 then
 			outputChatBox("You cannot sell a government property.", thePlayer, 255, 0, 0)
+		elseif interiorType ~= 3 and commandName == "unrent" then
+			outputChatBox("You do not rent this property.", thePlayer, 255, 0, 0)
 		else
 			if exports.global:isPlayerAdmin(thePlayer) or getElementData(entrance, "owner") == getElementData(thePlayer, "dbid") then
 				publicSellProperty(thePlayer, dbid, true, true)
@@ -162,6 +164,7 @@ function sellProperty(thePlayer, commandName)
 	end
 end
 addCommandHandler("sellproperty", sellProperty, false, false)
+addCommandHandler("unrent", sellProperty, false, false)
 
 function publicSellProperty(thePlayer, dbid, showmessages, givemoney)
 	local dbid, entrance, exit, interiorType = findProperty( thePlayer, dbid )
