@@ -14,6 +14,9 @@
 	<script src="san_garage2.lua" type="server"/>
 	<script src="san_door1.lua" type="server"/>
 	
+	<script src="ein_gate1.lua" type="server"/>
+	<script src="ein_gate2.lua" type="server"/>
+	
 	<script src="ScottieMansion.lua" type="server"/>
 	<script src="airport.lua" type="server"/>
 </meta>
