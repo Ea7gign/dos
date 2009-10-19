@@ -144,7 +144,7 @@ function loadItems( element, force )
 	if force or not saveditems[ element ] then
 		saveditems[ element ] = {}
 		notify( element )
-		local result = mysql_query( handler, "SELECT * FROM items WHERE type = " .. getType( element ) .. " AND owner = " .. getID( element ) .. " ORDER BY index" )
+		local result = mysql_query( handler, "SELECT * FROM items WHERE type = " .. getType( element ) .. " AND owner = " .. getID( element ) .. " ORDER BY `index` ASC" )
 		if result then
 			local count = 0
 			repeat
