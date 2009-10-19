@@ -62,9 +62,9 @@ end
 addEvent( "moveToElement", true )
 addEventHandler( "moveToElement", getRootElement(), moveToElement )
 
-local function moveFromElement( element, slot, ammo )
+local function moveFromElement( element, slot, ammo, index )
 	local item = getItems( element )[slot]
-	if item then
+	if item and item[3] == index then
 		if item[1] > 0 then
 			moveItem( element, source, slot )
 		else

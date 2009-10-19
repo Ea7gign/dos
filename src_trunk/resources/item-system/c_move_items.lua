@@ -93,7 +93,7 @@ local function moveFromElement( button )
 		if slot then
 			local item = getItems( element )[ slot ]
 			if item then
-				local itemID, itemValue = item[1], item[2]
+				local itemID, itemValue, itemIndex = unpack( item )
 				
 				if itemID < 0 then -- weapon
 					local free, totalfree = exports.weaponcap:getFreeAmmo( -itemID )
@@ -111,7 +111,7 @@ local function moveFromElement( button )
 					elseif free == 0 then
 						outputChatBox( "You can't carry any more of that weapon.", 255, 0, 0 )
 					else
-						triggerServerEvent( "moveFromElement", localPlayer, element, slot, free )
+						triggerServerEvent( "moveFromElement", localPlayer, element, slot, free, itemIndex )
 					end
 				else
 					triggerServerEvent( "moveFromElement", localPlayer, element, slot )
