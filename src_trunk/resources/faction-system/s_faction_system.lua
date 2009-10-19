@@ -663,7 +663,7 @@ function adminSetFactionLeader(thePlayer, commandName, partialNick, factionID)
 			local targetPlayer, targetPlayerNick = exports.global:findPlayerByPartialNick(thePlayer, partialNick)
 			
 			if targetPlayer then
-				local query = mysql_query(handler, "UPDATE characters SET faction_leader='1', faction_id='" .. tonumber(factionID) .. "', faction_rank='1' WHERE charactername='" .. mysql_escape_string(handler, targetPlayerNick) .. "'")
+				local query = mysql_query(handler, "UPDATE characters SET faction_leader='1', faction_id='" .. tonumber(factionID) .. "', faction_rank='1' WHERE id = " .. getElementData(targetPlayer, "dbid"))
 				
 				if (query) then
 					mysql_free_result(query)
