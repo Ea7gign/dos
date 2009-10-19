@@ -77,6 +77,8 @@ local function moveFromElement( element, slot, ammo, index )
 			end
 			triggerClientEvent( source, "forceElementMoveUpdate", source )
 		end
+	elseif item then
+		outputDebugString( "Index mismatch: " .. tostring( item[3] ) .. " " .. tostring( index ) )
 	end
 end
 

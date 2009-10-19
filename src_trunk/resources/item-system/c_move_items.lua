@@ -114,7 +114,7 @@ local function moveFromElement( button )
 						triggerServerEvent( "moveFromElement", localPlayer, element, slot, free, itemIndex )
 					end
 				else
-					triggerServerEvent( "moveFromElement", localPlayer, element, slot )
+					triggerServerEvent( "moveFromElement", localPlayer, element, slot, nil, itemIndex )
 				end
 			end
 		end
