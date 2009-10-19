@@ -3,7 +3,7 @@ function doCheck(sourcePlayer, command, ...)
 		if not (...) then
 			outputChatBox("SYNTAX: /" .. command .. " [Partial Player Name / ID]", sourcePlayer, 255, 194, 14)
 		else
-			local noob = exports.global:findPlayerByPartialNick(thePlayer, table.concat({...},"_"))
+			local noob = exports.global:findPlayerByPartialNick(sourcePlayer, table.concat({...},"_"))
 			
 			if noob and isElement(noob) then
 				local ip = getPlayerIP(noob)
