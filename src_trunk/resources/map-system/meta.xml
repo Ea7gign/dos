@@ -2,6 +2,7 @@
 	<script src="createObject.lua" type="client"/>
 	<script src="Bank Int.lua" type="client"/>
 	<script src="Church Int.lua" type="client"/>
+	<script src="DieFaust Garage.lua" type="client"/>
 	<script src="falcone map.lua" type="client"/>
 	<script src="Hospital Int.lua" type="client"/>
 	<script src="Jefferson Interior Doors.lua" type="client"/>
