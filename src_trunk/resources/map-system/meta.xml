@@ -23,4 +23,5 @@
 	<script src="PD Impound.lua" type="client"/>
 	<script src="swimming_pool.lua" type="client"/>
 	<script src="ein-barn.lua" type="client"/>
+	<script src="SAN Roof.lua" type="client"/>
 </meta>
