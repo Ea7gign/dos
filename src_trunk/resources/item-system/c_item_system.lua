@@ -17,40 +17,42 @@ showClothes = true
 showElectronics = true
 showEmpty = true
 
-function clickItem(button, state, absX, absY, wx, wy, wz)
+function clickItem(button, state, absX, absY, x, y, z, element)
 	if (button == "right") and (state=="down") then
 		if getElementData(getLocalPlayer(), "exclusiveGUI") then
 			return
 		end
 		
-		local element = nil
 		local px, py, pz = getElementPosition(getLocalPlayer())
-		local x, y, z = nil
-		for key, value in ipairs(getElementsByType("object",getResourceRootElement())) do
-			if isElementStreamedIn(value) then
-				x, y, z = getElementPosition(value)
-				local minx, miny, minz, maxx, maxy, maxz = getElementBoundingBox(value)
-				
-				local offset = 0.34
-				
-				minx = x + minx - offset
-				miny = y + miny - offset
-				minz = z + minz - offset
-				
-				maxx = x + maxx + offset
-				maxy = y + maxy + offset
-				maxz = z + maxz + offset
-				
-				local dist = getDistanceBetweenPoints3D(x, y, z, px, py, pz)
-				
-				if (wx >= minx and wx <=maxx) and (wy >= miny and wy <=maxy) and (wz >= minz and wz <=maxz) then
-					element = value
-					break
+		if not element then
+			local wx, wy, wz = x, y, z
+			local x, y, z = nil
+			for key, value in ipairs(getElementsByType("object",getResourceRootElement())) do
+				if isElementStreamedIn(value) then
+					x, y, z = getElementPosition(value)
+					local minx, miny, minz, maxx, maxy, maxz = getElementBoundingBox(value)
+					
+					local offset = 0.34
+					
+					minx = x + minx - offset
+					miny = y + miny - offset
+					minz = z + minz - offset
+					
+					maxx = x + maxx + offset
+					maxy = y + maxy + offset
+					maxz = z + maxz + offset
+					
+					local dist = getDistanceBetweenPoints3D(x, y, z, px, py, pz)
+					
+					if (wx >= minx and wx <=maxx) and (wy >= miny and wy <=maxy) and (wz >= minz and wz <=maxz) then
+						element = value
+						break
+					end
 				end
 			end
 		end
-		
-		if element then
+			
+		if element and getElementParent(getElementParent(element)) == getResourceRootElement() then
 			if getDistanceBetweenPoints3D(x, y, z, px, py, pz) < 3 then
 				if (wRightClick) then
 					hideItemMenu()
