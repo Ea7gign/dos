@@ -54,7 +54,7 @@ function showVehicleMenu()
 	
 	local y = 0.47
 
-	if getPedOccupiedVehicle(localPlayer) == vehicle or exports.global:hasItem(localPlayer, 3, getElementData(vehicle, "dbid")) or (getElementData(localPlayer, "faction") > 0 and getElementData(localPlayer, "faction") == getElementData(vehicle, "faction")) then
+	if ( isPedInVehicle(localPlayer) and getPedOccupiedVehicle(localPlayer) == vehicle ) or exports.global:hasItem(localPlayer, 3, getElementData(vehicle, "dbid")) or (getElementData(localPlayer, "faction") > 0 and getElementData(localPlayer, "faction") == getElementData(vehicle, "faction")) then
 		bLockUnlock = guiCreateButton(0.05, y, 0.87, 0.1, "Lock/Unlock", true, wRightClick)
 		addEventHandler("onClientGUIClick", bLockUnlock, lockUnlock, false)
 		y = y + 0.14
