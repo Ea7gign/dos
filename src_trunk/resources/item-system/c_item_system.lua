@@ -79,8 +79,21 @@ function showItemMenu()
 	wRightClick = guiCreateWindow(ax, ay, 150, 200, itemID == 80 and itemValue or ( itemName .. " (" .. itemValue .. ")" ), false)
 	
 	local y = 0.13
-	bPickup = guiCreateButton(0.05, y, 0.9, 0.1, "Pick Item Up", true, wRightClick)
-	addEventHandler("onClientGUIClick", bPickup, pickupItem, false)
+	if itemID == 81 then
+		bPickup = guiCreateButton(0.05, y, 0.9, 0.1, "Open", true, wRightClick)
+		addEventHandler("onClientGUIClick", bPickup,
+			function(button)
+				if button=="left" and not getElementData(localPlayer, "exclusiveGUI") then
+					triggerServerEvent( "openFreakinInventory", getLocalPlayer(), item, ax, ay )
+					hideItemMenu()
+				end
+			end,
+			false
+		)
+	else
+		bPickup = guiCreateButton(0.05, y, 0.9, 0.1, "Pick Item Up", true, wRightClick)
+		addEventHandler("onClientGUIClick", bPickup, pickupItem, false)
+	end
 	y = y + 0.14
 	
 	if itemID == 54 then
@@ -650,6 +663,9 @@ function useItem(button)
 			elseif (itemID==80) then
 				outputChatBox("This is a Generic Item. It only exists for roleplay purposes.", 255, 194, 14)
 				return
+			elseif (itemID==81) then
+				outputChatBox("Drop this Fridge in an Interior.", 255, 194, 14)
+				return
 			end
 			
 			triggerServerEvent("useItem", getLocalPlayer(), itemSlot, additional)
@@ -731,6 +747,9 @@ function dropItem(button)
 				local itemID = item[1]
 				if itemID == 60 then
 					outputChatBox("This item cannot be dropped.", 255, 0, 0)
+					return
+				elseif itemID == 81 and getElementDimension(getLocalPlayer()) == 0 then
+					outputChatBox("You need to drop this in an interior.", 255, 0, 0)
 					return
 				end
 				

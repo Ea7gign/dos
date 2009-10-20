@@ -16,20 +16,24 @@ local function forceUpdate( )
 	local items = getItems(localPlayer)
 	for slot, item in ipairs( items ) do
 		if item then
-			local row = guiGridListAddRow(gUserItems)
-			
-			guiGridListSetItemText(gUserItems, row, UIColName, getItemName( item[1] ) .. " - " .. item[2], false, false)
-			guiGridListSetItemData(gUserItems, row, UIColName, tostring( slot ) )
+			if getElementModel( element ) ~= 2147 or getItemType( item[ 1 ] ) == 1 then
+				local row = guiGridListAddRow(gUserItems)
+				
+				guiGridListSetItemText(gUserItems, row, UIColName, getItemName( item[1] ) .. " - " .. item[2], false, false)
+				guiGridListSetItemData(gUserItems, row, UIColName, tostring( slot ) )
+			end
 		end
 	end
 	
 	-- WEAPONS
-	for slot = 0, 12 do
-		if getPedWeapon(localPlayer, slot) and getPedWeapon(localPlayer, slot) > 0 and getPedTotalAmmo( localPlayer, slot ) > 0 then
-			local row = guiGridListAddRow(gUserItems)
-			
-			guiGridListSetItemText(gUserItems, row, UIColName, getWeaponNameFromID( getPedWeapon(localPlayer, slot) ) .. " - " .. getPedTotalAmmo( localPlayer, slot ), false, false)
-			guiGridListSetItemData(gUserItems, row, UIColName, tostring( -slot ) )
+	if getElementModel( element ) ~= 2147 then
+		for slot = 0, 12 do
+			if getPedWeapon(localPlayer, slot) and getPedWeapon(localPlayer, slot) > 0 and getPedTotalAmmo( localPlayer, slot ) > 0 then
+				local row = guiGridListAddRow(gUserItems)
+				
+				guiGridListSetItemText(gUserItems, row, UIColName, getWeaponNameFromID( getPedWeapon(localPlayer, slot) ) .. " - " .. getPedTotalAmmo( localPlayer, slot ), false, false)
+				guiGridListSetItemData(gUserItems, row, UIColName, tostring( -slot ) )
+			end
 		end
 	end
 	
@@ -127,7 +131,7 @@ local function openElementInventory( ax, ay )
 		
 		element = source
 		
-		local type = ( getElementType(source) == "vehicle" and "Vehicle" or "Safe" )
+		local type = getElementModel(source) == 2147 and "Fridge" or ( getElementType(source) == "vehicle" and "Vehicle" or "Safe" )
 		setElementData(localPlayer, "exclusiveGUI", true, false)
 		
 		ax = math.max( 10, math.min( sx - 410, ax ) )

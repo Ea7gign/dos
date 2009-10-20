@@ -43,7 +43,7 @@ local function moveToElement( element, slot, ammo )
 		if not hasSpaceForItem( element, -slot ) then
 			outputChatBox( "The Inventory is full.", source, 255, 0, 0 )
 		else
-			local name = getElementType( element ) == "vehicle" and "Vehicle" or "Safe"
+			local name = getElementModel( element ) == 2147 and "Fridge" or ( getElementType( element ) == "vehicle" and "Vehicle" or "Safe" )
 			
 			if tonumber(getElementData(source, "duty")) > 0 then
 				outputChatBox("You can't put your weapons in a " .. name .. " while being on duty.", source, 255, 0, 0)
