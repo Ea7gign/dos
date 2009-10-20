@@ -72,4 +72,7 @@
 	<export function="showSpeedo" type="client"/>
 	
 	<script src="c_running.lua" type="client"/>
+	
+	<script src="c_radio_fix.lua" type="client"/>
+	<script src="s_radio_fix.lua" type="server"/>
 </meta>

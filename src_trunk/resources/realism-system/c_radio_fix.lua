@@ -5,26 +5,21 @@ function saveRadio(station)
 	local vehicle = getPedOccupiedVehicle(getLocalPlayer())
 	
 	if (vehicle) then
-		if not (lawVehicles[getElementModel(vehicle)]) then
-			radio = station
-			--triggerServerEvent("sendRadioSync", getLocalPlayer(), station, getRadioChannelName(station))
+		if getVehicleOccupant(vehicle) == getLocalPlayer() or getVehicleOccupant(vehicle, 1) == getLocalPlayer() then
+			if not (lawVehicles[getElementModel(vehicle)]) then
+				radio = station
+				triggerServerEvent("sendRadioSync", getLocalPlayer(), station)
+			else
+				cancelEvent()
+				radio = 0
+				setRadioChannel(0)
+			end
 		else
 			cancelEvent()
-			radio = 0
-			setRadioChannel(0)
 		end
 	end
 end
 addEventHandler("onClientPlayerRadioSwitch", getLocalPlayer(), saveRadio)
-
-function setRadio(vehicle)
-	if not (lawVehicles[getElementModel(vehicle)]) then
-		setRadioChannel(radio)
-	else
-		setRadioChannel(0)
-	end
-end
-addEventHandler("onClientPlayerVehicleEnter", getLocalPlayer(), setRadio)
 
 function syncRadio(station)
 	removeEventHandler("onClientPlayerRadioSwitch", getLocalPlayer(), saveRadio)
