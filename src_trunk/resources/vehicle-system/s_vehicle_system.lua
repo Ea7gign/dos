@@ -643,11 +643,12 @@ end
 addEventHandler("onVehicleEnter", getRootElement(), setEngineStatusOnEnter)
 
 function vehicleExit(thePlayer, seat)
-	toggleControl(thePlayer, 'brake_reverse', true)
-	
-	-- For oldcar
-	local vehid = getElementData(source, "dbid")
-	setElementData(thePlayer, "lastvehid", vehid, false)
+	if (isElement(thePlayer)) then 
+		toggleControl(thePlayer, 'brake_reverse', true)
+		-- For oldcar
+		local vehid = getElementData(source, "dbid")
+		setElementData(thePlayer, "lastvehid", vehid, false)
+	end
 end
 addEventHandler("onVehicleExit", getRootElement(), vehicleExit)
 
@@ -874,7 +875,9 @@ function setRealNotInVehicle(thePlayer)
 	local locked = isVehicleLocked(source)
 	
 	if not (locked) then
-		setElementData(thePlayer, "realinvehicle", 0, false)
+		if (thePlayer) then
+			setElementData(thePlayer, "realinvehicle", 0, false)
+		end
 	end
 end
 addEventHandler("onVehicleStartExit", getRootElement(), setRealNotInVehicle)
