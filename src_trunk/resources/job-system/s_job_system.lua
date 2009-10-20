@@ -60,7 +60,7 @@ function givePlayerJob(jobID)
 	local charname = getPlayerName(source)
 	
 	setElementData(source, "job", jobID)
-	mysql_free_result( mysql_query( handler, "UPDATE characters SET job=" .. jobID .. " WHERE id = " .. getElementData(source, "dbid") ) )
+	mysql_free_result( mysql_query( handler, "UPDATE characters SET job=" .. jobID .. ", jobcontract = 3 WHERE id = " .. getElementData(source, "dbid") ) )
 	
 	exports.global:givePlayerAchievement(source, 30)
 
@@ -74,13 +74,59 @@ end
 addEvent("acceptJob", true)
 addEventHandler("acceptJob", getRootElement(), givePlayerJob)
 
-function quitJob(job)
-	setElementData(source, "job", 0)
-	mysql_free_result( mysql_query( handler, "UPDATE characters SET job=0 WHERE id = " .. getElementData(source, "dbid") ) )
-	if job == 4 then
-		setElementData(source, "tag", 1)
-		mysql_free_result( mysql_query( handler, "UPDATE characters SET tag=1 WHERE id = " .. getElementData(source, "dbid") ) )
+function quitJob(source)
+	local logged = getElementData(source, "loggedin")
+	if logged == 1 then
+		local job = getElementData(source, "job")
+		if job == 0 then
+			outputChatBox("You are currently unemployed.", source, 255, 0, 0)
+		else
+			local result = mysql_query( handler, "SELECT jobcontract FROM characters WHERE id = " .. getElementData(source, "dbid") )
+			if result then
+				local contracttime = tonumber( mysql_result( result, 1, 1 ) ) or 0
+				if contracttime > 0 then
+					outputChatBox( "You need to wait " .. contracttime .. " payday(s) before you can leave your job.", source, 255, 0, 0)
+				else
+					setElementData(source, "job", 0)
+					mysql_free_result( mysql_query( handler, "UPDATE characters SET job=0 WHERE id = " .. getElementData(source, "dbid") ) )
+					if job == 4 then
+						setElementData(source, "tag", 1)
+						mysql_free_result( mysql_query( handler, "UPDATE characters SET tag=1 WHERE id = " .. getElementData(source, "dbid") ) )
+					end
+					
+					triggerClientEvent(source, "quitJob", source, job)
+				end
+			else
+				outputDebugString( "QuitJob: " .. mysql_error( handler ) )
+			end
+		end
 	end
 end
-addEvent("quitJob", true)
-addEventHandler("quitJob", getRootElement(), quitJob)
+
+addCommandHandler("endjob", quitJob, false, false)
+addCommandHandler("quitjob", quitJob, false, false)
+
+function resetContract( thePlayer, commandName, targetPlayerName )
+	if exports.global:isPlayerAdmin( thePlayer ) then
+		if targetPlayerName then
+			local targetPlayer, targetPlayerName = exports.global:findPlayerByPartialNick( thePlayer, targetPlayerName )
+			if targetPlayer then
+				if getElementData( targetPlayer, "loggedin" ) == 1 then
+					local result = mysql_query( handler, "UPDATE characters SET jobcontract = 0 WHERE id = " .. getElementData( targetPlayer, "dbid" ) .. " AND jobcontract > 0" )
+					if result then
+						outputChatBox( "Reset Job Contract for " .. targetPlayerName, thePlayer, 0, 255, 0 )
+						mysql_free_result( result )
+					else
+						outputChatBox( "Failed to reset Job Contract Time.", thePlayer, 255, 0, 0 )
+						outputDebugString( "resetContract: " .. mysql_error( handler ) )
+					end
+				else
+					outputChatBox( "Player is not logged in.", thePlayer, 255, 0, 0 )
+				end
+			end
+		else
+			outputChatBox( "SYNTAX: /" .. commandName .. " [player]", thePlayer, 255, 194, 14 )
+		end
+	end
+end
+addCommandHandler("resetcontract", resetContract, false, false)

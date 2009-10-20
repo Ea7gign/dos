@@ -1074,6 +1074,7 @@ function payAllWages(timer)
 		local timeinserver = getElementData(value, "timeinserver")
 		
 		if (logged==1) and (timeinserver>=60) then
+			mysql_free_result( mysql_query( handler, "UPDATE characters SET jobcontract = jobcontract - 1 WHERE id = " .. getElementData( value, "dbid" ) .. " AND jobcontract > 0" ) )
 			local playerFaction = getElementData(value, "faction")
 			if (playerFaction~=-1) then -- In a faction
 				local theTeam = getPlayerTeam(value)
@@ -1082,7 +1083,7 @@ function payAllWages(timer)
 				if (factionType==2) or (factionType==3) or (factionType==4) or (factionType==5) or (factionType==6) then -- Factions with wages
 					local username = getPlayerName(value)
 					
-					local factionRankresult = mysql_query(handler, "SELECT faction_rank FROM characters WHERE charactername='" .. mysql_escape_string(handler, username) .. "' LIMIT 1")
+					local factionRankresult = mysql_query(handler, "SELECT faction_rank FROM characters WHERE id = " .. getElementData( value, "dbid" ) .. " LIMIT 1")
 					local factionRank = mysql_result(factionRankresult, 1, 1)
 					mysql_free_result(factionRankresult)
 					

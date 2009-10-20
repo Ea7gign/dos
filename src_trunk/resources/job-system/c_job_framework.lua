@@ -20,34 +20,24 @@ function playerSpawn()
 end
 addEventHandler("onClientPlayerSpawn", localPlayer, playerSpawn)
 
-function quitJob()
-	local logged = getElementData(localPlayer, "loggedin")
-	
-	if (logged==1) then
-		job = getElementData(localPlayer, "job")
-		
-		if (job==0) then
-			outputChatBox("You are currently unemployed.", 255, 0, 0)
-		elseif (job==1) then -- TRUCKER JOB
-			resetTruckerJob()
-			outputChatBox("You have now quit your job as a delivery driver.", 0, 255, 0)
-		elseif (job==2) then -- TAXI JOB
-			resetTaxiJob()
-			outputChatBox("You have now quit your job as a taxi driver.", 0, 255, 0)
-		elseif (job==3) then -- BUS JOB
-			resetBusJob()
-			outputChatBox("You have now quit your job as a bus driver.", 0, 255, 0)
-		elseif (job==4) then -- CITY MAINTENANCE
-			outputChatBox("You have now quit your job as a city maintenance worker.", 0, 255, 0)
-			triggerServerEvent("cancelCityMaintenance", localPlayer)
-		elseif (job==5) then -- MECHANIC
-			outputChatBox("You have now quit your job as a mechanic.", 0, 255, 0)
-		elseif (job==6) then -- LOCKSMITH
-			outputChatBox("You have now quit your job as a locksmith.", 0, 255, 0)
-		end
-		
-		triggerServerEvent("quitJob", localPlayer, job)
+function quitJob(job)
+	if (job==1) then -- TRUCKER JOB
+		resetTruckerJob()
+		outputChatBox("You have now quit your job as a delivery driver.", 0, 255, 0)
+	elseif (job==2) then -- TAXI JOB
+		resetTaxiJob()
+		outputChatBox("You have now quit your job as a taxi driver.", 0, 255, 0)
+	elseif (job==3) then -- BUS JOB
+		resetBusJob()
+		outputChatBox("You have now quit your job as a bus driver.", 0, 255, 0)
+	elseif (job==4) then -- CITY MAINTENANCE
+		outputChatBox("You have now quit your job as a city maintenance worker.", 0, 255, 0)
+		triggerServerEvent("cancelCityMaintenance", localPlayer)
+	elseif (job==5) then -- MECHANIC
+		outputChatBox("You have now quit your job as a mechanic.", 0, 255, 0)
+	elseif (job==6) then -- LOCKSMITH
+		outputChatBox("You have now quit your job as a locksmith.", 0, 255, 0)
 	end
 end
-addCommandHandler("endjob", quitJob, false, false)
-addCommandHandler("quitjob", quitJob, false, false)
+addEvent("quitJob", true)
+addEventHandler("quitJob", getLocalPlayer(), quitJob)
