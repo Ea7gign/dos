@@ -105,7 +105,7 @@ function lockUnlock(button, state)
 	if (button=="left") then
 		if getPedSimplestTask(localPlayer) == "TASK_SIMPLE_CAR_DRIVE" and getPedOccupiedVehicle(localPlayer) == vehicle then
 			triggerServerEvent("lockUnlockInsideVehicle", localPlayer, vehicle)
-		else
+		elseif exports.global:hasItem(localPlayer, 3, getElementData(vehicle, "dbid")) or (getElementData(localPlayer, "faction") > 0 and getElementData(localPlayer, "faction") == getElementData(vehicle, "faction")) then
 			triggerServerEvent("lockUnlockOutsideVehicle", localPlayer, vehicle)
 		end
 		hideVehicleMenu()
