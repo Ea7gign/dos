@@ -616,10 +616,11 @@ function dropItem(itemID, x, y, z, ammo, keepammo)
 	local interior = getElementInterior(source)
 	local dimension = getElementDimension(source)
 	
+	local rz2 = getPedRotation(source)
 	if not ammo then
 		local itemSlot = itemID
 		local itemID, itemValue = unpack( getItems( source )[ itemSlot ] )
-		local insert = mysql_query(handler, "INSERT INTO worlditems SET itemid='" .. itemID .. "', itemvalue='" .. mysql_escape_string(handler, itemValue) .. "', creationdate = NOW(), x = " .. x .. ", y = " .. y .. ", z= " .. z+0.3 .. ", dimension = " .. dimension .. ", interior = " .. interior)
+		local insert = mysql_query(handler, "INSERT INTO worlditems SET itemid='" .. itemID .. "', itemvalue='" .. mysql_escape_string(handler, itemValue) .. "', creationdate = NOW(), x = " .. x .. ", y = " .. y .. ", z= " .. z .. ", dimension = " .. dimension .. ", interior = " .. interior .. ", rz = " .. rz2)
 		if insert then
 			local id = mysql_insert_id(handler)
 			mysql_free_result(insert)
@@ -634,16 +635,16 @@ function dropItem(itemID, x, y, z, ammo, keepammo)
 			local modelid = getItemModel(tonumber(itemID))
 			
 			local rx, ry, rz, zoffset = getItemRotInfo(itemID)
-			local obj = createObject(modelid, x, y, z - zoffset, rx, ry, rz)
+			local obj = createObject(modelid, x, y, z + zoffset - 0.05, rx, ry, rz+rz2)
 			exports.pool:allocateElement(obj)
 			
 			setElementInterior(obj, interior)
 			setElementDimension(obj, dimension)
 			
 			if (itemID==76) then
-				moveObject(obj, 200, x, y, z + 0.05, 90, 0, 0)
+				moveObject(obj, 200, x, y, z + zoffset, 90, 0, 0)
 			else
-				moveObject(obj, 200, x, y, z + 0.05)
+				moveObject(obj, 200, x, y, z + zoffset)
 			end
 			
 			setElementData(obj, "id", id, false)
@@ -732,7 +733,7 @@ function dropItem(itemID, x, y, z, ammo, keepammo)
 				setPedArmor(source, 0)
 			end
 			
-			local query = mysql_query(handler, "INSERT INTO worlditems SET itemid=" .. -itemID .. ", itemvalue=" .. ammo .. ", creationdate=NOW(), x=" .. x .. ", y=" .. y .. ", z=" .. z+0.1 .. ", dimension=" .. dimension .. ", interior=" .. interior)
+			local query = mysql_query(handler, "INSERT INTO worlditems SET itemid=" .. -itemID .. ", itemvalue=" .. ammo .. ", creationdate=NOW(), x=" .. x .. ", y=" .. y .. ", z=" .. z+0.1 .. ", dimension=" .. dimension .. ", interior=" .. interior .. ", rz = " .. rz2)
 			if query then
 				local id = mysql_insert_id(handler)
 				mysql_free_result(query)
@@ -753,7 +754,7 @@ function dropItem(itemID, x, y, z, ammo, keepammo)
 					modelid = weaponmodels[itemID]
 				end
 				
-				local obj = createObject(modelid, x, y, z - 0.4, 75, -10, 0)
+				local obj = createObject(modelid, x, y, z - 0.4, 75, -10, rz2)
 				exports.pool:allocateElement(obj)
 				
 				setElementInterior(obj, interior)
@@ -786,7 +787,7 @@ function loadWorldItems(res)
 	end
 	
 	-- actually load items
-	local result = mysql_query(handler, "SELECT id, itemid, itemvalue, x, y, z, dimension, interior FROM worlditems")
+	local result = mysql_query(handler, "SELECT id, itemid, itemvalue, x, y, z, dimension, interior, rz FROM worlditems")
 	for result, row in mysql_rows(result) do
 		local id = tonumber(row[1])
 		local itemID = tonumber(row[2])
@@ -796,6 +797,7 @@ function loadWorldItems(res)
 		local z = tonumber(row[6])
 		local dimension = tonumber(row[7])
 		local interior = tonumber(row[8])
+		local rz2 = tonumber(row[9])
 		
 		if itemID < 0 then -- weapon
 			itemID = -itemID
@@ -809,7 +811,7 @@ function loadWorldItems(res)
 				modelid = weaponmodels[itemID]
 			end
 		
-			local obj = createObject(modelid, x, y, z - 0.1, 75, -10, 0)
+			local obj = createObject(modelid, x, y, z - 0.1, 75, -10, rz2)
 			exports.pool:allocateElement(obj)
 			setElementDimension(obj, dimension)
 			setElementInterior(obj, interior)
@@ -819,8 +821,8 @@ function loadWorldItems(res)
 		else
 			local modelid = getItemModel(itemID)
 			
-			local rx, ry, rz, zoffset= getItemRotInfo(itemID)
-			local obj = createObject(modelid, x, y, z - ( zoffset or 0 ), rx, ry, rz)
+			local rx, ry, rz, zoffset = getItemRotInfo(itemID)
+			local obj = createObject(modelid, x, y, z + ( zoffset or 0 ), rx, ry, rz+rz2)
 			
 			exports.pool:allocateElement(obj)
 			setElementDimension(obj, dimension)
