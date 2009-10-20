@@ -103,7 +103,7 @@ end
 
 function lockUnlock(button, state)
 	if (button=="left") then
-		if getPedOccupiedVehicle(localPlayer) == vehicle then
+		if isPedInVehicle(localPlayer) and getPedOccupiedVehicle(localPlayer) == vehicle then
 			triggerServerEvent("lockUnlockInsideVehicle", localPlayer, vehicle)
 		else
 			triggerServerEvent("lockUnlockOutsideVehicle", localPlayer, vehicle)
