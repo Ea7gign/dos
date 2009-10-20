@@ -16,6 +16,7 @@ showBooks = true
 showClothes = true
 showElectronics = true
 showEmpty = true
+activeTab = 0
 
 function clickItem(button, state, absX, absY, x, y, z, element)
 	if (button == "right") and (state=="down") then
@@ -336,6 +337,26 @@ function showInventory(player, syncw, synca)
 		tabItems = guiCreateTab("Items", tabPanel)
 		tabKeys = guiCreateTab("Keys", tabPanel)
 		tabWeapons = guiCreateTab("Weapons", tabPanel)
+		
+		if activeTab == 0 then
+			guiSetSelectedTab(tabPanel, tabItems)
+		elseif activeTab == 1 then
+			guiSetSelectedTab(tabPanel, tabKeys)
+		else
+			guiSetSelectedTab(tabPanel, tabWeapons)
+		end
+		
+		addEventHandler( "onClientGUITabSwitched", tabPanel,
+			function( tab )
+				if tab == tabItems then
+					activeTab = 0
+				elseif tab == tabKeys then
+					activeTab = 1
+				elseif tab == tabWeapons then
+					activeTab = 2
+				end
+			end,
+			false )
 		
 		-- ITEMS
 		gItems = guiCreateGridList(0.025, 0.05, 0.95, 0.9, true, tabItems)
