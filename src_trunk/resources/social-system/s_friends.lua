@@ -161,17 +161,22 @@ function addFriendToDB(player, source)
 	if (count >=23) then
 		outputChatBox("Your friends list is currently full.", source, 255, 0, 0)
 	else
-		local result = mysql_query( handler, "INSERT INTO friends VALUES (" .. accid .. ", " .. targetID .. ")")
-		if result then
-			local friends = getElementData(source, "friends")
-			if friends then
-				friends[ targetID ] = true
-				setElementData(source, "friends", friends, false)
+		local friends = getElementData(source, "friends")	
+		if friends then
+			if (friends[ targetID ] == true) then
+				outputChatBox("'" .. getPlayerName(player) .. "' is already on your friends list.", source, 255, 194, 14)
+			else 
+				local result = mysql_query( handler, "INSERT INTO friends VALUES (" .. accid .. ", " .. targetID .. ")")
+				if result then
+					friends[ targetID ] = true
+					setElementData(source, "friends", friends, false)
+				
+					outputChatBox("'" .. getPlayerName(player) .. "' was added to your friends list.", source, 255, 194, 14)
+					mysql_free_result( result )
+				else
+					outputDebugString( "Add Friend: " .. mysql_error( handler ) )
+				end
 			end
-			outputChatBox("'" .. getPlayerName(player) .. "' was added to your friends list.", source, 255, 194, 14)
-			mysql_free_result( result )
-		else
-			outputDebugString( "Add Friend: " .. mysql_error( handler ) )
 		end
 	end
 end
