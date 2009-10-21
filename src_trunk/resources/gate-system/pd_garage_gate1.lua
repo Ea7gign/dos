@@ -11,7 +11,7 @@ local open = false
 
 -- Gate code
 function usePDSideGarageGate(thePlayer)	
-	if (exports.global:hasItem(thePlayer, 64)) then
+	if (exports.global:hasItem(thePlayer, 64) or exports.global:hasItem(thePlayer, 82)) then
 		local x, y, z = getElementPosition(thePlayer)
 		local distance = getDistanceBetweenPoints3D(1544.6875, -1630.785546875, 13.1828125, x, y, z)
 		
