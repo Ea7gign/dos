@@ -689,6 +689,9 @@ function useItem(button)
 			elseif (itemID==81) then
 				outputChatBox("Drop this Fridge in an Interior.", 255, 194, 14)
 				return
+			elseif (itemID==82) then
+				outputChatBox("A BT&R identification, issued to " .. itemValue .. ".", 255, 194, 14)
+				return
 			end
 			
 			triggerServerEvent("useItem", getLocalPlayer(), itemSlot, additional)
@@ -847,6 +850,8 @@ function showItem(button)
 			local itemName = guiGridListGetItemText(guiGetSelectedTab(tabPanel) == tabKeys and gKeys or gItems, row, 2)
 			if itemName == "Porn Tape" then
 				itemName = itemName .. ", " .. guiGridListGetItemText(guiGetSelectedTab(tabPanel) == tabKeys and gKeys or gItems, row, 3)
+			elseif itemName == "BT&R Identification" then
+				itemName = itemName .. ", issued to " .. guiGridListGetItemText(guiGetSelectedTab(tabPanel) == tabKeys and gKeys or gItems, row, 3)
 			end
 			triggerServerEvent("showItem", getLocalPlayer(), itemName)
 		elseif (guiGetSelectedTab(tabPanel)==tabWeapons) then -- WEAPONS
