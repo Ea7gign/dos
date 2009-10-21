@@ -144,8 +144,7 @@ function showFactionMenu(motd, memberUsernames, memberRanks, memberLeaders, memb
 			addEventHandler("onClientGUIClick", gButtonQuit, btQuitFaction, false)
 			addEventHandler("onClientGUIClick", gButtonExit, hideFactionMenu, false)
 	else
-		guiSetVisible(gFactionWindow, true)
-		guiBringToFront(gFactionWindow)
+		hideFactionMenu()
 	end
 	showCursor(true)
 end
