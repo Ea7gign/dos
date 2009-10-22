@@ -2164,6 +2164,7 @@ function toggleFreecam(thePlayer)
             setPedFrozen(thePlayer, false)
             exports.freecam:setPlayerFreecamDisabled (thePlayer)
         else
+			removePedFromVehicle(thePlayer)
             setElementData(thePlayer, "reconx", 0)
             setElementAlpha(thePlayer, 0)
             setPedFrozen(thePlayer, true)
