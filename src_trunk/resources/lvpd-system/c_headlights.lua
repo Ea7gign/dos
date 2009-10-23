@@ -92,6 +92,10 @@ function doFlashes()
 					setVehicleHeadLightColor(veh, 255, 0, 0)
 				end
 			end
+			local orange = orangeVehicle[modelid]
+			if orange then
+				setVehicleHeadLightColor(veh, 255, 90, 0)
+			end
 			
 			setVehicleLightState(veh, 0, state2)
 			setVehicleLightState(veh, 1, state1)
