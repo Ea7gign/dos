@@ -26,12 +26,146 @@ addEventHandler("onResourceStop", getResourceRootElement(getThisResource()), clo
 -- //			MYSQL END			 //
 -- ////////////////////////////////////
 
+-- PUBLIC PHONES
+addEventHandler( "onResourceStart", getResourceRootElement( ),
+	function( )
+		local result = mysql_query(handler, "SELECT id, x, y, z, dimension FROM publicphones")
+		local count = 0
+		
+		if (result) then
+			for result, row in mysql_rows(result) do
+				local id = tonumber(row[1])
+					
+				local x = tonumber(row[2])
+				local y = tonumber(row[3])
+				local z = tonumber(row[4])
+					
+				local dimension = tonumber(row[5])
+				
+				local shape = createColSphere(x, y, z, 1)
+				exports.pool:allocateElement(shape)
+				setElementDimension(shape, dimension)
+				setElementData(shape, "dbid", id, false)
+				
+				count = count + 1
+			end
+			mysql_free_result(result)
+		end
+	end
+)
+
+function SmallestID( ) -- finds the smallest ID in the SQL instead of auto increment
+	local result = mysql_query(handler, "SELECT MIN(e1.id+1) AS nextID FROM publicphones AS e1 LEFT JOIN publicphones AS e2 ON e1.id +1 = e2.id WHERE e2.id IS NULL")
+	if result then
+		local id = tonumber(mysql_result(result, 1, 1)) or 1
+		mysql_free_result(result)
+		return id
+	end
+	return false
+end
+
+function addPhone(thePlayer, commandName)
+	if (exports.global:isPlayerLeadAdmin(thePlayer)) then
+		local x, y, z = getElementPosition(thePlayer)
+		local dimension = getElementDimension(thePlayer)
+		
+		local id = SmallestID()
+		local query = mysql_query(handler, "INSERT INTO publicphones SET id=" .. id .. ", x="  .. x .. ", y=" .. y .. ", z=" .. z .. ", dimension=" .. dimension)
+		
+		if (query) then
+			mysql_free_result(query)
+			
+			local shape = createColSphere(x, y, z, 1)
+			exports.pool:allocateElement(shape)
+			setElementDimension(shape, dimension)
+			setElementData(shape, "dbid", id, false)
+			
+			outputChatBox("Public Phone spawned with ID #" .. id .. ".", thePlayer, 0, 255, 0)
+		else
+			outputChatBox("Error 200001 - Report on forums.", thePlayer, 255, 0, 0)
+		end
+	end
+end
+addCommandHandler("addphone", addPhone, false, false)
+
+function getNearbyPhones(thePlayer, commandName)
+	if (exports.global:isPlayerAdmin(thePlayer)) then
+		local posX, posY, posZ = getElementPosition(thePlayer)
+		outputChatBox("Nearby Phones:", thePlayer, 255, 126, 0)
+		local count = 0
+		
+		for k, theColshape in ipairs(getElementsByType("colshape", getResourceRootElement())) do
+			local x, y = getElementPosition(theColshape)
+			local distance = getDistanceBetweenPoints2D(posX, posY, x, y)
+			if (distance<=20) then
+				local dbid = getElementData(theColshape, "dbid")
+				outputChatBox("   Public Phone with ID " .. dbid .. ".", thePlayer, 255, 126, 0)
+				count = count + 1
+			end
+		end
+		
+		if (count==0) then
+			outputChatBox("   None.", thePlayer, 255, 126, 0)
+		end
+	end
+end
+addCommandHandler("nearbyphones", getNearbyPhones, false, false)
+
+function delPhone(thePlayer, commandName, id)
+	if exports.global:isPlayerLeadAdmin(thePlayer) then
+		local id = tonumber(id)
+		if not id then
+			outputChatBox( "SYNTAX: /" .. commandName .. " [id]", thePlayer, 255, 194, 14 )
+		else
+			local colShape = nil
+			
+			for key, value in ipairs(getElementsByType("colshape", getResourceRootElement())) do
+				if getElementData(value, "dbid") == id then
+					colShape = value
+				end
+			end
+			
+			if (colShape) then
+				local id = getElementData(colShape, "dbid")
+				local result = mysql_query(handler, "DELETE FROM publicphones WHERE id=" .. id)
+				
+				if (result) then
+					mysql_free_result(result)
+				end
+				
+				outputChatBox("Phone #" .. id .. " deleted.", thePlayer)
+				destroyElement(colShape)
+			else
+				outputChatBox("You are not in a Pay n Spray.", thePlayer, 255, 0, 0)
+			end
+		end
+	end
+end
+addCommandHandler("delphone", delPhone, false, false)
+
+
 -- CELL PHONES
 function callSomeone(thePlayer, commandName, phoneNumber, ...)
 	local logged = getElementData(thePlayer, "loggedin")
 	
 	if (logged==1) then
-		if (exports.global:hasItem(thePlayer, 2)) then -- 2 = Cell phone item
+		local msg = "takes out a cell phone."
+		local publicphone = nil
+		for k, v in pairs( getElementsByType( "colshape", getResourceRootElement( ) ) ) do
+			if isElementWithinColShape( thePlayer, v ) then
+				for kx, vx in pairs( getElementsByType( "player" ) ) do
+					if getElementData( vx, "call.col" ) == v then
+						outputChatBox( "Someone else is already using this phone.", thePlayer, 255, 0, 0 )
+						return
+					end
+				end
+				publicphone = v
+				msg = "reaches for the public phone."
+				break
+			end
+		end
+		
+		if publicphone or exports.global:hasItem(thePlayer, 2) then
 			if not (phoneNumber) then
 				outputChatBox("SYNTAX: /call [Phone Number]", thePlayer, 255, 194, 14)
 			elseif getElementData(thePlayer, "phoneoff") == 1 then
@@ -46,7 +180,7 @@ function callSomeone(thePlayer, commandName, phoneNumber, ...)
 				else
 					
 					if phoneNumber == "911" then
-						exports.global:sendLocalMeAction(thePlayer, "takes out a cell phone.")
+						exports.global:sendLocalMeAction(thePlayer, msg)
 						outputChatBox("911 Operator says: 911 emergency. Please state your location.", thePlayer)
 						setElementData(thePlayer, "callprogress", 1, false)
 						setElementData(thePlayer, "phonestate", 1)
@@ -56,7 +190,7 @@ function callSomeone(thePlayer, commandName, phoneNumber, ...)
 						setTimer(toggleAllControls, 150, 1, thePlayer, true, true, true)
 						setTimer(startPhoneAnim, 3050, 1, thePlayer)
 					elseif phoneNumber == "999" then
-						exports.global:sendLocalMeAction(thePlayer, "takes out a cell phone.")
+						exports.global:sendLocalMeAction(thePlayer, msg)
 						outputChatBox("BT&R Operator says: Best's Towing and Recovery. Please state your location.", thePlayer)
 						setElementData(thePlayer, "callprogress", 1, false)
 						setElementData(thePlayer, "phonestate", 1)
@@ -66,7 +200,7 @@ function callSomeone(thePlayer, commandName, phoneNumber, ...)
 						setTimer(toggleAllControls, 150, 1, thePlayer, true, true, true)
 						setTimer(startPhoneAnim, 3050, 1, thePlayer)
 					elseif phoneNumber == "8294" then
-						exports.global:sendLocalMeAction(thePlayer, "takes out a cell phone.")
+						exports.global:sendLocalMeAction(thePlayer, msg)
 						outputChatBox("Taxi Operator says: Los Santos Cabs here. Please state your location.", thePlayer)
 						setElementData(thePlayer, "callprogress", 1, false)
 						setElementData(thePlayer, "phonestate", 1)
@@ -80,7 +214,7 @@ function callSomeone(thePlayer, commandName, phoneNumber, ...)
 							outputChatBox("You get a dead tone...", thePlayer, 255, 194, 14)
 						end
 					else
-						exports.global:sendLocalMeAction(thePlayer, "takes out a cell phone.")
+						exports.global:sendLocalMeAction(thePlayer, msg)
 						local found, foundElement, foundPhoneItemValue = false
 						
 						for key, value in ipairs(exports.pool:getPoolElementsByType("player")) do
@@ -117,6 +251,7 @@ function callSomeone(thePlayer, commandName, phoneNumber, ...)
 							if (targetCalling) then
 								outputChatBox("You get a busy tone.", thePlayer)
 							else
+								setElementData(thePlayer, "call.col", publicphone, false)
 								setElementData(thePlayer, "calling", foundElement, false)
 								setElementData(thePlayer, "called", true, false)
 								setElementData(foundElement, "calling", thePlayer, false)
@@ -169,6 +304,7 @@ function cancelCall(thePlayer)
 	if (phoneState==0) then
 		setElementData(thePlayer, "calling", nil, false)
 		setElementData(thePlayer, "called", nil, false)
+		setElementData(thePlayer, "call.col", nil, false)
 	end
 end
 
@@ -215,7 +351,7 @@ function hangupPhone(thePlayer, commandName)
 	local logged = getElementData(thePlayer, "loggedin")
 	
 	if (logged==1) then
-		if (exports.global:hasItem(thePlayer, 2)) then -- 2 = Cell phone item
+		if (exports.global:hasItem(thePlayer, 2)) or getElementData(thePlayer, "call.col") then -- 2 = Cell phone item
 			local calling = getElementData(thePlayer, "calling")
 			
 			if (calling) then
@@ -236,6 +372,7 @@ function hangupPhone(thePlayer, commandName)
 					removeElementData(calling, "calling")
 					outputChatBox("They hung up.", target)
 					removeElementData(calling, "caller")
+					removeElementData(calling, "call.col")
 					setElementData(calling, "phonestate", 0, false)
 					exports.global:applyAnimation(calling, "ped", "phone_out", 1300, false)
 					setTimer(toggleAllControls, 150, 1, calling, true, true, true)
@@ -246,6 +383,7 @@ function hangupPhone(thePlayer, commandName)
 				removeElementData(thePlayer, "callprogress")
 				removeElementData(thePlayer, "call.situation")
 				removeElementData(thePlayer, "call.location")
+				removeElementData(thePlayer, "call.col")
 				setElementData(thePlayer, "phonestate", 0, false)
 				exports.global:sendLocalMeAction(thePlayer, "hangs up their cellphone.")
 				
@@ -260,20 +398,27 @@ function hangupPhone(thePlayer, commandName)
 	end
 end
 addCommandHandler("hangup", hangupPhone)
+addEventHandler( "onColShapeLeave", getResourceRootElement(),
+	function( thePlayer )
+		if getElementData( thePlayer, "call.col" ) == source then
+			executeCommandHandler( "hangup", thePlayer )
+		end
+	end
+)
 
 function loudSpeaker(thePlayer, commandName)
 	local logged = getElementData(thePlayer, "loggedin")
 	
 	if (logged==1) then
-		if (exports.global:hasItem(thePlayer, 2)) then -- 2 = Cell phone item
+		if (exports.global:hasItem(thePlayer, 2)) or getElementData(thePlayer, "call.col") then -- 2 = Cell phone item
 			local phoneState = getElementData(thePlayer, "phonestate")
 			
 			if (phoneState==1) then
-				exports.global:sendLocalMeAction(thePlayer, "turns on loudspeaker on the cellphone.")
+				exports.global:sendLocalMeAction(thePlayer, "turns on loudspeaker on the phone.")
 				outputChatBox("You flick your phone onto loudspeaker.", thePlayer)
 				setElementData(thePlayer, "phonestate", 2, false)
 			elseif (phoneState==2) then
-				exports.global:sendLocalMeAction(thePlayer, "turns off loudspeaker on the cellphone.")
+				exports.global:sendLocalMeAction(thePlayer, "turns off loudspeaker on the phone.")
 				outputChatBox("You flick your phone off of loudspeaker.", thePlayer)
 				setElementData(thePlayer, "phonestate", 1, false)
 			else
@@ -290,7 +435,7 @@ function talkPhone(thePlayer, commandName, ...)
 	local logged = getElementData(thePlayer, "loggedin")
 	
 	if (logged==1) then
-		if (exports.global:hasItem(thePlayer, 2)) then -- 71 = Cell phone item
+		if (exports.global:hasItem(thePlayer, 2)) or getElementData(thePlayer, "call.col") then -- 71 = Cell phone item
 			if not (...) then
 				outputChatBox("SYNTAX: /p [Message]", thePlayer, 255, 194, 14)
 			elseif getElementData(thePlayer, "injuriedanimation") then
@@ -301,7 +446,7 @@ function talkPhone(thePlayer, commandName, ...)
 				if (phoneState>=1) then -- The player is in a call, not just dialing (2= loudspeaker)
 					local message = table.concat({...}, " ")
 					local username = getPlayerName(thePlayer):gsub("_", " ")
-					local phoneNumber = getElementData(thePlayer, "cellnumber")
+					local phoneNumber = getElementData( thePlayer, "call.col" ) and "?" or getElementData(thePlayer, "cellnumber")
 					
 					local languageslot = getElementData(thePlayer, "languages.current")
 					local language = getElementData(thePlayer, "languages.lang" .. languageslot)
@@ -386,7 +531,6 @@ function talkPhone(thePlayer, commandName, ...)
 						elseif (tonumber(target)==8294) then -- TAXI
 							if (callprogress==1) then
 								local founddriver = false								
-								local playerNumber = getElementData(thePlayer, "cellnumber")
 								
 								for key, value in ipairs(exports.pool:getPoolElementsByType("player")) do
 									local job = getElementData(value, "job")
@@ -394,7 +538,7 @@ function talkPhone(thePlayer, commandName, ...)
 									if (job == 2) then
 										local car = getPedOccupiedVehicle(value)
 										if car and (getElementModel(car)==438 or getElementModel(car)==420) then
-											outputChatBox("[New Fare] " .. getPlayerName(thePlayer) .." Ph:" .. playerNumber .. " Location: " .. message .."." , value, 0, 183, 239)
+											outputChatBox("[New Fare] " .. getPlayerName(thePlayer) .." Ph:" .. phoneNumber .. " Location: " .. message .."." , value, 0, 183, 239)
 											founddriver = true
 										end
 									end
