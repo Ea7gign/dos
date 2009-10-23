@@ -223,7 +223,7 @@ a:active {
 					?>
 						
                     &nbsp;</p>
-<p><strong><a href="main.php">&lt; Go Home</a></strong></p></td>
+<p><strong><a href="applications.php?show=1">&lt; Go to the other applications</a></strong></p></td>
 		          </tr>
 		        </table></td>
 			    <td width="15%">&nbsp;</td>
