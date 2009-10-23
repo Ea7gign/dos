@@ -56,8 +56,7 @@ function startBusJob()
 		else
 			local vehicle = getPedOccupiedVehicle(getLocalPlayer())
 			if vehicle and getVehicleController(vehicle) == getLocalPlayer() and bus[getElementModel(vehicle)] then
-				--line = math.random( 1, #g_bus_routes )
-				line = 1
+				line = math.random( 1, #g_bus_routes )
 				route = g_bus_routes[line]
 				curCpType = 0
 				
