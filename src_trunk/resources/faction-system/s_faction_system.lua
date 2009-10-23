@@ -214,7 +214,7 @@ function showFactionMenu(source)
 			else
 				outputChatBox("You are not in a faction.", source)
 			end
-		elseif (menuVisible==1) then
+		else
 			triggerClientEvent(source, "hideFactionMenu", getRootElement())
 		end
 	end
