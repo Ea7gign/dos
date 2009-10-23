@@ -354,11 +354,6 @@ function callbackToggleLeader(playerName, isLeader)
 			mysql_free_result(query)
 			exports.irc:sendMessage("[SCRIPT] " .. username .. " promoted " .. tostring(playerName) .. " to leader.")
 			
-			local thePlayer = getPlayerFromName(playerName)
-			if(thePlayer) then -- Player is online, tell them
-				outputChatBox(username .. " promoted you to a leader of your faction.", thePlayer)
-			end
-			
 			-- Send message to everyone in the faction
 			local theTeam = getPlayerTeam(source)
 			local teamPlayers = getPlayersInTeam(theTeam)
@@ -385,7 +380,6 @@ function callbackToggleLeader(playerName, isLeader)
 				if (getElementData(source, "factionMenu")==1) then
 					triggerClientEvent(thePlayer, "hideFactionMenu", getRootElement())
 				end
-				outputChatBox(username .. " demoted you to a member of your faction.", thePlayer)
 			end
 			
 			-- Send message to everyone in the faction
@@ -415,7 +409,6 @@ function callbackPromotePlayer(playerName, rankNum, oldRank, newRank)
 		local thePlayer = getPlayerFromName(playerName)
 		if(thePlayer) then -- Player is online, tell them
 			setElementData(thePlayer, "factionrank", rankNum)
-			outputChatBox(username .. " promoted you from '" .. oldRank .. "' to '" .. newRank .. "'.", thePlayer)
 		end
 		
 		-- Send message to everyone in the faction
@@ -446,7 +439,6 @@ function callbackDemotePlayer(playerName, rankNum, oldRank, newRank)
 		local thePlayer = getPlayerFromName(playerName)
 		if(thePlayer) then -- Player is online, tell them
 			setElementData(thePlayer, "factionrank", rankNum)
-			outputChatBox(username .. " demoted you from '" .. oldRank .. "' to '" .. newRank .. "'.", thePlayer)
 		end
 		
 		-- Send message to everyone in the faction

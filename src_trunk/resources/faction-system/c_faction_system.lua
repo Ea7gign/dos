@@ -484,12 +484,10 @@ function btToggleLeader(button, state)
 			if (currentLevel=="Leader") then
 				guiGridListSetItemText(gMemberGrid, row, tonumber(colLeader), "Member", false, false)
 				guiGridListSetSelectedItem(gMemberGrid, 0, 0)
-				outputChatBox("You demoted " .. playerName .. " from Leader to Member.", 0, 255, 0)
 				triggerServerEvent("cguiToggleLeader", getLocalPlayer(), playerName, false) -- false = not leader
 			else
 				guiGridListSetItemText(gMemberGrid, row, tonumber(colLeader), "Leader", false, false)
 				guiGridListSetSelectedItem(gMemberGrid, 0, 0)
-				outputChatBox("You promoted " .. playerName .. " from Member to Leader.", 0, 255, 0)
 				triggerServerEvent("cguiToggleLeader", getLocalPlayer(), playerName, true) -- true = leader
 			end
 		else
@@ -520,7 +518,6 @@ function btPromotePlayer(button, state)
 				guiGridListSetSelectedItem(gMemberGrid, 0, 0)
 				guiGridListSetItemText(gMemberGrid, row, tonumber(colRank), arrFactionRanks[currRankNumber+1], false, false)
 				guiGridListSetItemText(gMemberGrid, row, tonumber(colWage), arrFactionWages[currRankNumber+1], false, true)
-				outputChatBox("You promoted " .. playerName .. " from '" .. arrFactionRanks[currRankNumber] .. "' to '" .. arrFactionRanks[currRankNumber+1] .. "'.", 0, 255, 0)
 				triggerServerEvent("cguiPromotePlayer", getLocalPlayer(), playerName, currRankNumber+1, arrFactionRanks[currRankNumber], arrFactionRanks[currRankNumber+1])
 				guiGridListSetSelectedItem(gMemberGrid, row, tonumber(colRank))
 			end
@@ -552,7 +549,6 @@ function btDemotePlayer(button, state)
 				guiGridListSetSelectedItem(gMemberGrid, 0, 0)
 				guiGridListSetItemText(gMemberGrid, row, tonumber(colRank), arrFactionRanks[currRankNumber-1], false, false)
 				guiGridListSetItemText(gMemberGrid, row, tonumber(colWage), arrFactionWages[currRankNumber-1], false, true)
-				outputChatBox("You demoted " .. playerName .. " from '" .. arrFactionRanks[currRankNumber] .. "' to '" .. arrFactionRanks[currRankNumber-1] .. "'.", 0, 255, 0)
 				triggerServerEvent("cguiDemotePlayer", getLocalPlayer(), playerName, currRankNumber-1, arrFactionRanks[currRankNumber], arrFactionRanks[currRankNumber-1])
 				guiGridListSetSelectedItem(gMemberGrid, row, tonumber(colRank))
 			end
