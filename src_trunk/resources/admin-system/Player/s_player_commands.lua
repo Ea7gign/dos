@@ -35,7 +35,7 @@ addEventHandler("onResourceStop", getResourceRootElement(getThisResource()), clo
 -- 5: auto-ban
 
 -- ////////////////////////////////////
-
+--[[
 -- /GLUE
 local glueSpace = { [406] = 25, [422] = 10, [444] = 10, [455] = 10, [525] = 3, [543] = 10, [554] = 10, [556] = 10, [557] = 10, [600] = 10, [605] = 5 }
 function gluePlayer(thePlayer, commandName)
@@ -100,6 +100,7 @@ function gluePlayer(thePlayer, commandName)
 	end
 end
 addCommandHandler("glue", gluePlayer, false, false)
+]]
 
 -- /LOOK
 function lookPlayer(thePlayer, commandName, targetPlayer)
