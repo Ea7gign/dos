@@ -41,7 +41,8 @@ local g_achievements = {
 	{ "Where the Past Lies", "Which bones are those in the grave?", 25 },
 	{ "Sea World Los Santos", "Survived the 1st Flood of Los Santos.", 100 },
 	{ "All Rights Reserved", "You broke the SA-MP License Agreement. Well Done.", 25 },
-	{ "Just Another Statistic", "Die in a vehicle crash.", 15 }
+	{ "Just Another Statistic", "Die in a vehicle crash.", 15 },
+	{ "Happy Birthday MTA Roleplay", "Present on MTA Roleplays 2nd Birthday - Two Years Today!", 100}
 }
 
 function getAchievementInfo(id)

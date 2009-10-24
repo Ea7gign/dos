@@ -634,6 +634,13 @@ function spawnCharacter(charname)
 		
 		triggerEvent("onCharacterLogin", source, charname, factionID)
 		mysql_free_result(result)
+		
+		-- 2 years achievement
+		local realtime = getRealTime()
+		
+		if (realtime.yearday == 296 and realtime.year+1900 == 2009) then -- october 24th 2009
+			setTimer(giveBirthdayAchievement, 5000, 1, source)
+		end
 	else
 		outputDebugString( "Spawning Char failed: " .. mysql_error( handler ) )
 	end
@@ -641,6 +648,10 @@ end
 addEvent("onCharacterLogin", false)
 addEvent("spawnCharacter", true)
 addEventHandler("spawnCharacter", getRootElement(), spawnCharacter)
+
+function giveBirthdayAchievement(player)
+	exports.global:givePlayerAchievement(player, 44) -- MTA BETA ONLY
+end
 
 function giveBetaAchievement(player)
 	-- MTA BETA ONLY
