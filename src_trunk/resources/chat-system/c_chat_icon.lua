@@ -7,7 +7,7 @@ function checkForChat()
 		setElementData(getLocalPlayer(), "chatting", 0, true)
 	end
 end
-setTimer(checkForChat, 50, 0)
+setTimer(checkForChat, 100, 0)
 setElementData(getLocalPlayer(), "chatting", 0, true)
 
 function render()
