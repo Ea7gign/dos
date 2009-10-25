@@ -1481,7 +1481,9 @@ end
 addCommandHandler("bigearsf", bigEarsFaction)
 
 function disableMsg(message, player)
-	outputChatBox("/msg is disabled, please use /pm instead.", player, 255, 0, 0)
 	cancelEvent()
+
+	-- send it using our own PM etiquette instead
+	pmPlayer(source, "pm", getPlayerName(player), message)
 end
 addEventHandler("onPlayerPrivateMessage", getRootElement(), disableMsg)
