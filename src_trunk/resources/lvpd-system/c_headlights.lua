@@ -31,6 +31,7 @@ function toggleFlashers()
 			if not policevehicles[veh] then
 				policevehicles[veh] = true
 			end
+			triggerServerEvent ( "syncPoliceVehicleArray", getLocalPlayer(), veh ) 
 			local lights = getVehicleOverrideLights(veh)
 			local state = getElementData(veh, "flashers")
 			
@@ -67,6 +68,12 @@ addEvent("forceElementStreamIn", true)
 addEventHandler("forceElementStreamIn", getRootElement(), streamIn)
 addEventHandler("onClientElementStreamIn", getRootElement(), streamIn)
 
+function syncPoliceVehicleArray(element)
+	policevehicles[element] = true
+end
+addEvent("syncPoliceVehicleArray", true )
+addEventHandler("syncPoliceVehicleArray", getRootElement(), syncPoliceVehicleArray)
+
 function streamOut()
 	if (getElementType(source)=="vehicle") then
 		if policevehicles[source] then
@@ -78,7 +85,7 @@ end
 addEventHandler("onClientElementStreamOut", getRootElement(), streamOut)
 
 function doFlashes()
-	for veh in pairs(policevehicles) do
+	for key, value in ipairs(getElementsByType("vehicle")) do
 		if not (isElement(veh)) then
 			policevehicles[veh] = nil
 		elseif (getElementData(veh, "flashers")) then
