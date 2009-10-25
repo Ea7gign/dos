@@ -86,16 +86,18 @@ function doFlashes()
 			local state2 = getVehicleLightState(veh, 1)
 			
 			local modelid = getElementModel(veh)
-			if governmentVehicle[modelid] or exports.global:hasItem(veh, 61) then
+			--if governmentVehicle[modelid] or exports.global:hasItem(veh, 61) then
+
+			--end
+			local orange = orangeVehicle[modelid]
+			if orange then
+				setVehicleHeadLightColor(veh, 255, 90, 0)
+			else
 				if (state1==0) then
 					setVehicleHeadLightColor(veh, 0, 0, 255)
 				else
 					setVehicleHeadLightColor(veh, 255, 0, 0)
 				end
-			end
-			local orange = orangeVehicle[modelid]
-			if orange then
-				setVehicleHeadLightColor(veh, 255, 90, 0)
 			end
 			
 			setVehicleLightState(veh, 0, state2)
