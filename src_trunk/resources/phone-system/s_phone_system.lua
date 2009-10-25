@@ -385,7 +385,7 @@ function hangupPhone(thePlayer, commandName)
 				removeElementData(thePlayer, "call.location")
 				removeElementData(thePlayer, "call.col")
 				setElementData(thePlayer, "phonestate", 0, false)
-				exports.global:sendLocalMeAction(thePlayer, "hangs up their cellphone.")
+				exports.global:sendLocalMeAction(thePlayer, "hangs up their phone.")
 				
 				exports.global:applyAnimation(thePlayer, "ped", "phone_out", 1300, false)
 				setTimer(toggleAllControls, 150, 1, thePlayer, true, true, true)
