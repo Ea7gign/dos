@@ -434,7 +434,14 @@ function pmPlayer(thePlayer, commandName, who, ...)
 		outputChatBox("SYNTAX: /" .. commandName .. " [Player Partial Nick] [Message]", thePlayer, 255, 194, 14)
 	else
 		message = table.concat({...}, " ")
-		local targetPlayer, targetPlayerName = exports.global:findPlayerByPartialNick(thePlayer, who)
+		
+		local targetPlayer, targetPlayerName
+		if (getElementType(who)=="player") then
+			targetPlayer = who
+			targetPlayerName = getPlayerName(who)
+		else
+			targetPlayer, targetPlayerName = exports.global:findPlayerByPartialNick(thePlayer, who)
+		end
 		
 		if (targetPlayer) then
 			local logged = getElementData(targetPlayer, "loggedin")
@@ -1484,6 +1491,6 @@ function disableMsg(message, player)
 	cancelEvent()
 
 	-- send it using our own PM etiquette instead
-	pmPlayer(source, "pm", getPlayerName(player), message)
+	pmPlayer(source, "pm", player, message)
 end
 addEventHandler("onPlayerPrivateMessage", getRootElement(), disableMsg)
