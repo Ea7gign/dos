@@ -439,6 +439,7 @@ function pmPlayer(thePlayer, commandName, who, ...)
 		if (getElementType(who)=="player") then
 			targetPlayer = who
 			targetPlayerName = getPlayerName(who)
+			message = ...
 		else
 			targetPlayer, targetPlayerName = exports.global:findPlayerByPartialNick(thePlayer, who)
 		end
