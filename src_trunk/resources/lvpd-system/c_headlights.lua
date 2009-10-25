@@ -24,9 +24,10 @@ function toggleFlashers()
 	
 	if (veh) then
 		local modelid = getElementModel(veh)
-		local blueRed = governmentVehicle[modelid] or exports.global:hasItem(veh, 61)
+		local blueRed = governmentVehicle[modelid]
+		local flashers = exports.global:hasItem(veh, 61)
 		local orange = orangeVehicle[modelid]
-		if blueRed or orange then -- Emergency Light Becon
+		if blueRed or orange or flashers then -- Emergency Light Becon
 			if not policevehicles[veh] then
 				policevehicles[veh] = true
 			end
@@ -36,7 +37,7 @@ function toggleFlashers()
 			if (lights==2) then
 				if not (state) then
 					setElementData(veh, "flashers", true, true)
-					if blueRed then
+					if blueRed or flashers then
 						setVehicleHeadLightColor(veh, 0, 0, 255)
 					else
 						setVehicleHeadLightColor(veh, 255, 90, 0)
