@@ -1625,7 +1625,7 @@ function dcselectedCharacter(button, state)
 					destroyElement(tabPanelCharacter)
 					playSoundFrontEnd(32)
 					sent = false
-					triggerServerEvent("spawnCharacter", getLocalPlayer(), charname)
+					triggerServerEvent("spawnCharacter", getLocalPlayer(), charname, getVersion().mta)
 					setTimer(resetTriggers, 100, 1)
 					setTimer(showCursor, 50, 30, false)
 					

@@ -150,7 +150,7 @@ addEvent("attemptRegister", true)
 addEventHandler("attemptRegister", getRootElement(), registerPlayer)
 
 addEvent("restoreJob", false)
-function spawnCharacter(charname)
+function spawnCharacter(charname, version)
 	exports.global:takeAllWeapons(source)
 	local id = getElementData(source, "gameaccountid")
 	charname = string.gsub(tostring(charname), " ", "_")
@@ -630,6 +630,11 @@ function spawnCharacter(charname)
 				end
 				mysql_free_result(impounded)
 			end
+		end
+		
+		if (version) and (version ~= getVersion().mta) then
+			outputChatBox("You are using an Old Version of MTA! (V" .. version .. ").", source, 255, 0, 0)
+			outputChatBox("We recommend you upgrade to V" .. getVersion().mta .. " to ensure full script compatability and improve your experience.", source, 255, 0, 0)
 		end
 		
 		triggerEvent("onCharacterLogin", source, charname, factionID)
