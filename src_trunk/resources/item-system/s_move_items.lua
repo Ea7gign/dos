@@ -57,6 +57,7 @@ local function moveToElement( element, slot, ammo )
 			end
 		end
 	end
+	triggerClientEvent( source, "finishItemMove", source )
 end
 
 addEvent( "moveToElement", true )
@@ -80,6 +81,7 @@ local function moveFromElement( element, slot, ammo, index )
 	elseif item then
 		outputDebugString( "Index mismatch: " .. tostring( item[3] ) .. " " .. tostring( index ) )
 	end
+	triggerClientEvent( source, "finishItemMove", source )
 end
 
 addEvent( "moveFromElement", true )

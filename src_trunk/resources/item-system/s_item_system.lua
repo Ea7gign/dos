@@ -772,6 +772,7 @@ function dropItem(itemID, x, y, z, ammo, keepammo)
 			end
 		end
 	end
+	triggerClientEvent( source, "finishItemDrop", source )
 end
 addEvent("dropItem", true)
 addEventHandler("dropItem", getRootElement(), dropItem)

@@ -34,6 +34,8 @@ local function dropWeaponFromGUI(ammo)
 	triggerServerEvent("dropItem", getLocalPlayer(), _weapon, x, y, z, ammo, keepammo)
 
 	hideDropWeaponGUI()
+	guiSetEnabled( wItems, false )
+	guiSetVisible( wWait, true )
 end
 
 function openWeaponDropGUI(weapon, ammo, row)

@@ -18,6 +18,13 @@ showElectronics = true
 showEmpty = true
 activeTab = 0
 
+-- PLEASE WAIT window
+local sx, sy = guiGetScreenSize( )
+wWait = guiCreateButton( ( sx - 200 ) / 2, ( sy - 60 ) / 2, 200, 60, "Please wait a moment...", false )
+guiSetEnabled( wWait, false )
+guiSetVisible( wWait, false )
+guiSetProperty( wWait, "AlwaysOnTop", "True" )
+
 function clickItem(button, state, absX, absY, x, y, z, element)
 	if (button == "right") and (state=="down") then
 		if getElementData(getLocalPlayer(), "exclusiveGUI") then
@@ -302,7 +309,9 @@ end
 
 function toggleInventory()
 	if wItems then
-		hideInventory()
+		if guiGetEnabled( wItems ) then
+			hideInventory()
+		end
 	elseif not getElementData(getLocalPlayer(), "adminjailed") and not getElementData(getLocalPlayer(), "pd.jailstation") then
 		showInventory(getLocalPlayer())
 	else
@@ -802,6 +811,8 @@ function dropItem(button)
 				local z = oldX * matrix[1][3] + oldY * matrix [2][3] + oldZ * matrix [3][3] + matrix [4][3]
 				
 				local z = getGroundPosition( x, y, z + 2 )
+				guiSetEnabled( wItems, false )
+				guiSetVisible( wWait, true )
 				triggerServerEvent("dropItem", getLocalPlayer(), itemSlot, x, y, z)
 			end
 		elseif (guiGetSelectedTab(tabPanel)==tabWeapons) then -- WEAPONS
@@ -835,6 +846,8 @@ function dropItem(button)
 					
 					local z = getGroundPosition( x, y, z + 2 )
 					
+					guiSetEnabled( wItems, false )
+					guiSetVisible( wWait, true )
 					triggerServerEvent("dropItem", getLocalPlayer(), itemID, x, y, z, itemValue)
 				end
 			end
@@ -933,3 +946,13 @@ local function updateInv()
 	end
 end
 addEventHandler("recieveItems", getRootElement(), updateInv)
+
+addEvent("finishItemDrop", true)
+addEventHandler("finishItemDrop", getLocalPlayer(),
+	function( )
+		if wItems then
+			guiSetVisible( wWait, false )
+			guiSetEnabled( wItems, true )
+		end
+	end
+)

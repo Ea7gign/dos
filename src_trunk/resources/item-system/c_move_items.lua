@@ -80,6 +80,8 @@ local function moveToElement( button )
 	if button == "left" and col ~= -1 and row ~= -1 then
 		local slot = tonumber( guiGridListGetItemData(gUserItems, row, col) )
 		if slot then
+			guiSetVisible( wWait, true )
+			guiSetEnabled( wInventory, false )
 			if slot > 0 then
 				triggerServerEvent( "moveToElement", localPlayer, element, slot )
 			else
@@ -115,9 +117,13 @@ local function moveFromElement( button )
 					elseif free == 0 then
 						outputChatBox( "You can't carry any more of that weapon.", 255, 0, 0 )
 					else
+						guiSetVisible( wWait, true )
+						guiSetEnabled( wInventory, false )
 						triggerServerEvent( "moveFromElement", localPlayer, element, slot, free, itemIndex )
 					end
 				else
+					guiSetVisible( wWait, true )
+					guiSetEnabled( wInventory, false )
 					triggerServerEvent( "moveFromElement", localPlayer, element, slot, nil, itemIndex )
 				end
 			end
@@ -173,3 +179,11 @@ end
 addEvent( "openElementInventory", true )
 addEventHandler( "openElementInventory", getRootElement(), openElementInventory )
 addEventHandler( "onClientChangeChar", getRootElement(), hideMenu )
+
+addEvent( "finishItemMove", true )
+addEventHandler( "finishItemMove", getLocalPlayer(),
+	function( )
+		guiSetEnabled( wInventory, true )
+		guiSetVisible( wWait, false )
+	end
+)
