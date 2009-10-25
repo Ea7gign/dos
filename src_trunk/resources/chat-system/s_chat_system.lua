@@ -1481,7 +1481,7 @@ end
 addCommandHandler("bigearsf", bigEarsFaction)
 
 function disableMsg(message, player)
-	cancelEvent()
 	outputChatBox("/msg is disabled, please use /pm instead.", player, 255, 0, 0)
+	cancelEvent()
 end
 addEventHandler("onPlayerPrivateMessage", getRootElement(), disableMsg)
