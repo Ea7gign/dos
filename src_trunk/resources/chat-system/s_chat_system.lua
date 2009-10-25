@@ -1479,3 +1479,9 @@ function bigEarsFaction(thePlayer, commandName, factionID)
 	end
 end
 addCommandHandler("bigearsf", bigEarsFaction)
+
+function disableMsg(message, player)
+	cancelEvent()
+	outputChatBox("/msg is disabled, please use /pm instead.", player, 255, 0, 0)
+end
+addEventHandler("onPlayerPrivateMessage", getRootElement(), disableMsg)
