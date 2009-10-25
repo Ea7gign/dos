@@ -436,10 +436,12 @@ function pmPlayer(thePlayer, commandName, who, ...)
 		message = table.concat({...}, " ")
 		
 		local targetPlayer, targetPlayerName
-		if (getElementType(who)=="player") then
-			targetPlayer = who
-			targetPlayerName = getPlayerName(who)
-			string.gsub(message, targerPlayName .. " ", "", 1)
+		if (isElement(who)) then
+			if (getElementType(who)=="player") then
+				targetPlayer = who
+				targetPlayerName = getPlayerName(who)
+				message = string.gsub(message, string.gsub(targetPlayerName, " ", "_", 1) .. " ", "", 1)
+			end
 		else
 			targetPlayer, targetPlayerName = exports.global:findPlayerByPartialNick(thePlayer, who)
 		end
