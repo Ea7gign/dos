@@ -4,17 +4,22 @@ cells =
 	createColSphere( 227.5, 114.7, 999.02, 2 ),
 	createColSphere( 223.5, 114.7, 999.02, 2 ),
 	createColSphere( 219.5, 114.7, 999.02, 2 ),
-	createColSphere( 215.5, 114.7, 999.02, 2 )
+	createColSphere( 215.5, 114.7, 999.02, 2 ),
+	
+	createColSphere( 227.5, 114.7, 999.02, 2 ),
+	createColSphere( 223.5, 114.7, 999.02, 2 ),
+	createColSphere( 219.5, 114.7, 999.02, 2 ),
+	createColSphere( 215.5, 114.7, 999.02, 2 ),	
 }
 
 for k, v in pairs( cells ) do
 	setElementInterior( v, 10 )
-	setElementDimension( v, 1 )
+	setElementDimension( v, k <= 4 and 1 or 10583 )
 end
 
 function isInArrestColshape( thePlayer )
 	for k, v in pairs( cells ) do
-		if isElementWithinColShape( thePlayer, v ) then
+		if isElementWithinColShape( thePlayer, v ) and getElementDimension( thePlayer ) == getElementDimension( v ) then
 			return k
 		end
 	end
@@ -164,7 +169,7 @@ function timerPDUnjailPlayer(jailedPlayer)
 			local query = mysql_query(handler, "UPDATE characters SET pdjail_time='0', pdjail='0', pdjail_station='0' WHERE id=" .. getElementData(jailedPlayer, "dbid"))
 			mysql_free_result(query)
 			removeElementData(jailedPlayer, "jailtimer")
-			setElementDimension(jailedPlayer, 1)
+			setElementDimension(jailedPlayer, getElementData(jailedPlayer, "pd.jailstation") <= 4 and 1 or 10583)
 			setElementInterior(jailedPlayer, 10)
 			setCameraInterior(jailedPlayer, 10)
 

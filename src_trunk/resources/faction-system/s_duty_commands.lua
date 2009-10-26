@@ -3,6 +3,11 @@ exports.pool:allocateElement(pdColShape)
 setElementDimension(pdColShape, 1)
 setElementInterior(pdColShape, 10)
 
+pdColShape2 = createColSphere(267.3125, 118.4609375, 1004.6171875, 5)
+exports.pool:allocateElement(pdColShape2)
+setElementDimension(pdColShape2, 10583)
+setElementInterior(pdColShape2, 10)
+
 esColShape = createColSphere(1581.2067871094, 1790.4083251953, 2083.3837890625, 5)
 exports.pool:allocateElement(esColShape)
 setElementInterior(esColShape, 4)
@@ -254,7 +259,7 @@ function pdarmor(thePlayer, commandName)
 	local logged = getElementData(thePlayer, "loggedin")
 
 	if (logged==1) then
-		if (isElementWithinColShape(thePlayer, pdColShape)) then
+		if (isElementWithinColShape(thePlayer, pdColShape)) or (isElementWithinColShape(thePlayer, pdColShape2)) then
 		
 			local duty = tonumber(getElementData(thePlayer, "duty"))
 			local theTeam = getPlayerTeam(thePlayer)
@@ -273,7 +278,7 @@ function swatduty(thePlayer, commandName)
 	local logged = getElementData(thePlayer, "loggedin")
 
 	if (logged==1) then
-		if (isElementWithinColShape(thePlayer, pdColShape)) then
+		if (isElementWithinColShape(thePlayer, pdColShape)) or (isElementWithinColShape(thePlayer, pdColShape2)) then
 		
 			local duty = tonumber(getElementData(thePlayer, "duty"))
 			local theTeam = getPlayerTeam(thePlayer)
@@ -362,7 +367,7 @@ function policeduty(thePlayer, commandName)
 	local logged = getElementData(thePlayer, "loggedin")
 
 	if (logged==1) then
-		if (isElementWithinColShape(thePlayer, pdColShape)) then
+		if (isElementWithinColShape(thePlayer, pdColShape)) or (isElementWithinColShape(thePlayer, pdColShape2)) then
 		
 			local duty = tonumber(getElementData(thePlayer, "duty"))
 			local theTeam = getPlayerTeam(thePlayer)
@@ -452,7 +457,7 @@ function cadetduty(thePlayer, commandName)
 	local logged = getElementData(thePlayer, "loggedin")
 	
 	if (logged==1) then
-		if (isElementWithinColShape(thePlayer, pdColShape)) then
+		if (isElementWithinColShape(thePlayer, pdColShape)) or (isElementWithinColShape(thePlayer, pdColShape2)) then
 		
 			local duty = tonumber(getElementData(thePlayer, "duty"))
 			local theTeam = getPlayerTeam(thePlayer)

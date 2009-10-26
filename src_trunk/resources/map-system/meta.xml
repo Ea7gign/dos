@@ -26,4 +26,5 @@
 	<script src="SAN Roof.lua" type="client"/>
 	<script src="FuyukiBurntTemp.lua" type="client"/><!-- added on 23/10/2009, one week -->
 	<script src="PD Interior.lua" type="client"/>
+	<script src="PD Interior2.lua" type="client"/>
 </meta>
