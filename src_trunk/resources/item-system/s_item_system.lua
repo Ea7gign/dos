@@ -509,6 +509,11 @@ function useItem(itemSlot, additional)
 			exports.global:sendLocalText(source, " *((Cards)) " .. getPlayerName(source):gsub("_", " ") .. " draws a card and gets a" .. ( number == 1 and "n" or "" ) .. " " .. cards[number] ..".", 255, 51, 102)
 		elseif (itemID==79) then -- Porn tape
 			exports.global:applyAnimation( source, "PAULNMAC", "wank_loop", -1, true, false, false)
+		elseif (itemID==83) then -- Coffee
+			giveHealth(source, 40)
+			exports.global:applyAnimation(source, "VENDING", "VEND_Drink_P", 4000, false, true, true)
+			exports.global:sendLocalMeAction(source, "drinks a cup of coffee.")
+			takeItemFromSlot(source, itemSlot)
 		else
 			outputChatBox("Error 800001 - Report on http://bugs.valhallagaming.net", source, 255, 0, 0)
 		end

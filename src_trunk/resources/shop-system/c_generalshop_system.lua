@@ -183,6 +183,8 @@ function  getShopTypeName(shop_type)
 		return "Alcohol Store"
 	elseif(shop_type == 10) then
 		return "Book Store"
+	elseif(shop_type == 11) then
+		return "Cafe"
 	else
 		return "This isn't a shop. Go Away."
 	end
@@ -211,6 +213,8 @@ function getShopTabTitles(shop_type)
 		return { "Alcohol" }
 	elseif(shop_type == 10) then
 		return { "Books" }
+	elseif(shop_type == 11) then
+		return {"Food","Drink"}
 	else
 		return "This isn't a shop. Go Away."
 	end
@@ -278,8 +282,8 @@ function getItemsForSale(shop_type, race, gender)
 			{"Haggis", "Freshly imported from Scotland", "5", 1, 1, 1, false,1},
 			
 			-- drinks
-			{"Softdrink", "A cold can of Sprunk.", "3", 9, 1, 2, false,1},
-			{"Water", "A bottle of mineral water.", "1", 15, 1, 2, false,1}
+			{"Softdrink", "A cold can of Sprunk.", "5", 9, 1, 2, false,1},
+			{"Water", "A bottle of mineral water.", "3", 15, 1, 2, false,1}
 		}
 	-- sex shop
 	elseif(shop_type == 4) then
@@ -368,6 +372,17 @@ function getItemsForSale(shop_type, race, gender)
 			{"Estonian Dictionary","A Dictionary, useful for learning lingo.", "25", 69, 25, 1, false, 2},		
 			{"Korean Dictionary","A Dictionary, useful for learning lingo.", "25", 69, 26, 1, false, 2},
 			{"Vietnamese Dictionary","A Dictionary, useful for learning lingo.", "25", 69, 27, 1, false, 2}			
+		}
+	-- coffee shop
+	elseif(shop_type == 11) then
+		item = {
+			{"Donut", "Hot sticky sugar covered donut", "3", 13, 1, 1, false,1},
+			{"Cookie", "A luxuty chocolate chip cookie", "3", 14, 1, 1, false,1},
+			
+			-- drinks
+			{"Coffee", "A small cup of coffee.", "1", 83, 2, 2, false,1},
+			{"Softdrink", "A cold can of Sprunk.", "3", 9, 3, 2, false,1},
+			{"Water", "A bottle of mineral water.", "1", 15, 2, 2, false,1}
 		}
 	end
 		
