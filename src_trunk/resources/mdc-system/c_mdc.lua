@@ -1326,7 +1326,7 @@ function useMDC(thePlayer, Command)
 	local thePlayer = getLocalPlayer()
 		
 	-- check to make sure that the player is near the MDC or in a car
-	if( isElementWithinColShape ( thePlayer , colCircle1 ) or isElementWithinColShape ( thePlayer , colCircle2 ) or
+	if ( getElementDimension(thePlayer) == 1 and getElementInterior(thePlayer) == 10 ) or
 	isPedInVehicle ( thePlayer))then
 
 		-- if the player is in a vehicle
@@ -1770,29 +1770,8 @@ end
 	toggleControl ( "next_weapon", false)
 	toggleControl ("previous_weapon", false)
  
- end
- addEventHandler( "onClientResourceStop", getResourceRootElement( getThisResource( ) ), onResourceStop )
- 
- 
- -- function creates all of the col cirlcles on resource start to use as markers for the computers in LSMPD
-function createColCircles()
-
-	local radius = 3
-	
-	colCircle1 = createColCircle ( 200.70289611816, 168.57279968262 , radius)
-	colCircle2 = createColCircle ( 238.3134765625, 71.35546875 , radius)
-
-	
-	local dimension = 1
-	
-	-- set the col cirlces into the correct dimension
-	setElementDimension(colCircle1, dimension)
-	
-	setElementDimension(colCircle2, 681)
-
 end
- addEventHandler( "onClientResourceStart", getResourceRootElement( getThisResource( ) ), createColCircles )
- 
+addEventHandler( "onClientResourceStop", getResourceRootElement( getThisResource( ) ), onResourceStop ) 
   
  -- log in window
  function createLoginWindow()

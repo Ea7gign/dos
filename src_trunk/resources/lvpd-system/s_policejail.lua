@@ -1,17 +1,25 @@
 -- cells
-cells = {}
+cells =
+{
+	createColSphere( 227.5, 114.7, 999.02, 4 ),
+	createColSphere( 223.5, 114.7, 999.02, 4 ),
+	createColSphere( 219.5, 114.7, 999.02, 4 ),
+	createColSphere( 215.5, 114.7, 999.02, 4 )
+}
 
--- cell 1
-cells[1] = {}
-cells[1][1] = 264.162109375
-cells[1][2] = 77.3525390625
-cells[1][3] = 1001.0390625
-cells[1][4] = 273.49508666992
+for k, v in pairs( cells ) do
+	setElementInterior( v, 10 )
+	setElementDimension( v, 1 )
+end
 
-arrestColShape = createColSphere(268.51953125, 77.5595703125, 1001.0390625, 4)
-exports.pool:allocateElement(arrestColShape)
-setElementInterior(arrestColShape, 6)
-setElementDimension(arrestColShape, 1)
+function isInArrestColshape( thePlayer )
+	for k, v in pairs( cells ) do
+		if isElementWithinColShape( thePlayer, v ) then
+			return k
+		end
+	end
+	return false
+end
 
 -- /arrest
 function arrestPlayer(thePlayer, commandName, targetPlayerNick, fine, jailtime, ...)
@@ -25,24 +33,20 @@ function arrestPlayer(thePlayer, commandName, targetPlayerNick, fine, jailtime, 
 			jailtime = tonumber(jailtime)
 		end
 		
-		if (factionType==2) and (isElementWithinColShape(thePlayer, arrestColShape)) then
+		local playerCol = isInArrestColshape(thePlayer)
+		if (factionType==2) and playerCol then
 			if not (targetPlayerNick) or not (fine) or not (jailtime) or not (...) or (jailtime<1) or (jailtime>180) then
 				outputChatBox("SYNTAX: /arrest [Player Partial Nick / ID] [Fine] [Jail Time (Minutes 1->180)] [Crimes Committed]", thePlayer, 255, 194, 14)
 			else
 				local targetPlayer, targetPlayerNick = exports.global:findPlayerByPartialNick(thePlayer, targetPlayerNick)
 				
 				if targetPlayer then
-					local elems = getElementsWithinColShape(arrestColShape, "player")
+					local targetCol = isInArrestColshape(targetPlayer)
 					
-					local found = false
-					for key, value in ipairs(elems) do
-						if (value==targetPlayer) then
-							found = true
-						end
-					end
-					
-					if not (found) then
+					if not targetCol then
 						outputChatBox("The player is not within range of the booking desk.", thePlayer, 255, 0, 0)
+					elseif targetCol ~= playerCol then
+						outputChatBox("The player is standing infront of another cell.", thePlayer, 255, 0, 0)
 					else
 						local jailTimer = getElementData(targetPlayer, "pd.jailtimer")
 						local username  = getPlayerName(thePlayer)
@@ -91,18 +95,15 @@ function arrestPlayer(thePlayer, commandName, targetPlayerNick, fine, jailtime, 
 							end
 							setPedWeaponSlot(targetPlayer,0)
 							
-							local station = 1
+							setElementData(targetPlayer, "pd.jailstation", targetCol)
 							
-							setElementData(targetPlayer, "pd.jailstation", station)
-							
-							local query = mysql_query(handler, "UPDATE characters SET pdjail='1', pdjail_time='" .. jailtime .. "', pdjail_station='" .. station .. "' WHERE charactername='" .. mysql_escape_string(handler, targetPlayerNick) .. "'")
+							local query = mysql_query(handler, "UPDATE characters SET pdjail='1', pdjail_time='" .. jailtime .. "', pdjail_station='" .. targetCol .. "' WHERE id = " .. getElementData( targetPlayer, "dbid" ) )
 							mysql_free_result(query)
 							outputChatBox("You jailed " .. targetPlayerNick .. " for " .. jailtime .. " Minutes.", thePlayer, 255, 0, 0)
 							
-							local cell = 1
-							
-							setElementPosition(targetPlayer, cells[cell][1], cells[cell][2], cells[cell][3])
-							setPedRotation(targetPlayer, cells[cell][4])
+							local x, y, z = getElementPosition(cells[targetCol])
+							setElementPosition(targetPlayer, x, y - 5, z)
+							setPedRotation(targetPlayer, 0)
 							
 							-- Trigger the event
 							exports.global:givePlayerAchievement(thePlayer, 7)
@@ -164,11 +165,11 @@ function timerPDUnjailPlayer(jailedPlayer)
 			mysql_free_result(query)
 			removeElementData(jailedPlayer, "jailtimer")
 			setElementDimension(jailedPlayer, 1)
-			setElementInterior(jailedPlayer, 6)
-			setCameraInterior(jailedPlayer, 6)
+			setElementInterior(jailedPlayer, 10)
+			setCameraInterior(jailedPlayer, 10)
 
-			setElementPosition(jailedPlayer, 248.5458984375, 69.7431640625, 1003.640625)
-			setPedRotation(jailedPlayer, 159.63104248047)
+			setElementPosition(jailedPlayer, 241.3583984375, 115.232421875, 1003.2257080078)
+			setPedRotation(jailedPlayer, 270)
 				
 			setElementData(jailedPlayer, "pd.jailserved", 0, false)
 			setElementData(jailedPlayer, "pd.jailtime", 0, false)
@@ -214,7 +215,7 @@ function jailRelease(thePlayer, commandName, targetPlayerNick)
 		local theTeam = getPlayerTeam(thePlayer)
 		local factionType = getElementData(theTeam, "type")
 		
-		if factionType == 2 and isElementWithinColShape(thePlayer, arrestColShape) then
+		if factionType == 2 and isInArrestColshape(thePlayer) then
 			if not (targetPlayerNick) then
 				outputChatBox("SYNTAX: /release [Player Partial Nick / ID]", thePlayer, 255, 194, 14)
 			else

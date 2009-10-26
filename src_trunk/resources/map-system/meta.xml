@@ -8,7 +8,6 @@
 	<script src="Jefferson Interior Doors.lua" type="client"/>
 	<script src="Jefferson Emerald Isle.lua" type="client"/>
 	<script src="LS Harbor.lua" type="client"/>
-	<script src="LVMPD.lua" type="client"/>
 	<script src="Main Street.lua" type="client"/>
 	<script src="Marcos Bistro Interior Fix.lua" type="client"/>
 	<script src="Recording Studio.lua" type="client"/>
@@ -26,4 +25,5 @@
 	<script src="ein-barn.lua" type="client"/>
 	<script src="SAN Roof.lua" type="client"/>
 	<script src="FuyukiBurntTemp.lua" type="client"/><!-- added on 23/10/2009, one week -->
+	<script src="PD Interior.lua" type="client"/>
 </meta>

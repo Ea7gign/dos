@@ -1468,13 +1468,13 @@ function timerPDUnjailPlayer(jailedPlayer)
 			mysql_free_result(query)
 			removeElementData(jailedPlayer, "jailtimer")
 			setElementDimension(jailedPlayer, 1)
-			setElementInterior(jailedPlayer, 6)
-			setCameraInterior(jailedPlayer, 6)
+			setElementInterior(jailedPlayer, 10)
+			setCameraInterior(jailedPlayer, 10)
 			
 			local station = getElementData(jailedPlayer, "pd.jailstation")
 			
-			setElementPosition(jailedPlayer, 248.5458984375, 69.7431640625, 1003.640625)
-			setPedRotation(jailedPlayer, 159.63104248047)
+			setElementPosition(jailedPlayer, 241.3583984375, 115.232421875, 1003.2257080078)
+			setPedRotation(jailedPlayer, 270)
 				
 			setElementData(jailedPlayer, "pd.jailserved", 0, false)
 			setElementData(jailedPlayer, "pd.jailtime", 0, false)

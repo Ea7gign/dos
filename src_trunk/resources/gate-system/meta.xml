@@ -3,8 +3,8 @@
 	
 	<script src="pd_garage_gate1.lua" type="server"/>
 	<script src="pd_garage_gate2.lua" type="server"/>
-	<script src="pd_door1.lua" type="server"/>
 	<script src="pd_impound.lua" type="server"/>
+	<script src="pd_interior.lua"/>
 	
 	<script src="tow_door1.lua" type="server"/>
 	<script src="tow_door2.lua" type="server"/>
