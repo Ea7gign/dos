@@ -130,7 +130,7 @@ function savePlayer(reason, player)
 		
 		-- LAST AREA
 		local zone = exports.global:getElementZoneName(source)
-		if zone or #zone == 0 then
+		if not zone or #zone == 0 then
 			zone = "Unknown"
 		end
 		
