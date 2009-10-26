@@ -396,12 +396,12 @@ function givePlayerBoughtItem(itemID, itemValue, theCost, isWeapon, name, supply
 					end
 				end
 				
-				query = mysql_query(handler, "UPDATE characters SET bankmoney=bankmoney + " .. tonumber(theCost) .. " WHERE id='" .. owner .. "' LIMIT 1")
-				mysql_free_result(query)
 				if (theOwner) then
 					--exports.global:givePlayerSafeMoney(theOwner, theCost)
 					local profits = getElementData(theOwner, "businessprofit")
 					setElementData(theOwner, "businessprofit", profits+theCost, false)
+				else
+					mysql_free_result( mysql_query(handler, "UPDATE characters SET bankmoney=bankmoney + " .. tonumber(theCost) .. " WHERE id = " .. owner .. " LIMIT 1") )
 				end
 				
 				if (supplies-1<10) then
