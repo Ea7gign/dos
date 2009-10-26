@@ -1,7 +1,7 @@
-pdColShape = createColSphere(255.3798828125, 77.3798828125, 1003.640625, 5)
+pdColShape = createColSphere(267.3125, 118.4609375, 1004.6171875, 5)
 exports.pool:allocateElement(pdColShape)
 setElementDimension(pdColShape, 1)
-setElementInterior(pdColShape, 6)
+setElementInterior(pdColShape, 10)
 
 esColShape = createColSphere(1581.2067871094, 1790.4083251953, 2083.3837890625, 5)
 exports.pool:allocateElement(esColShape)
