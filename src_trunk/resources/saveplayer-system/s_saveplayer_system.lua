@@ -120,8 +120,8 @@ function savePlayer(reason, player)
 		end
 		
 		-- Fix for #0000984
-		if reason == "Quit" or reason == "Timed Out" or reason == "Unknown" or reason == "Bad Connection" or reason == "Kicked" or reason == "Banned" then
-			businessprofit = 'bankmoney = bankmoney + ' .. tonumber(getElementData(source, "businessprofit")) or 0 .. ', '
+		if getElementData(source, "businessprofit") and ( reason == "Quit" or reason == "Timed Out" or reason == "Unknown" or reason == "Bad Connection" or reason == "Kicked" or reason == "Banned" ) then
+			businessprofit = 'bankmoney = bankmoney + ' .. getElementData(source, "businessprofit") .. ', '
 		else
 			businessprofit = ''
 		end
