@@ -1326,7 +1326,7 @@ function useMDC(thePlayer, Command)
 	local thePlayer = getLocalPlayer()
 		
 	-- check to make sure that the player is near the MDC or in a car
-	if ( getElementDimension(thePlayer) == 1 and getElementInterior(thePlayer) == 10 ) or
+	if ( ( getElementDimension(thePlayer) == 1 or getElementDimension(thePlayer) == 10583 ) and getElementInterior(thePlayer) == 10 ) or
 	isPedInVehicle ( thePlayer))then
 
 		-- if the player is in a vehicle
