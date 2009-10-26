@@ -1,10 +1,10 @@
 -- cells
 cells =
 {
-	createColSphere( 227.5, 114.7, 999.02, 4 ),
-	createColSphere( 223.5, 114.7, 999.02, 4 ),
-	createColSphere( 219.5, 114.7, 999.02, 4 ),
-	createColSphere( 215.5, 114.7, 999.02, 4 )
+	createColSphere( 227.5, 114.7, 999.02, 2 ),
+	createColSphere( 223.5, 114.7, 999.02, 2 ),
+	createColSphere( 219.5, 114.7, 999.02, 2 ),
+	createColSphere( 215.5, 114.7, 999.02, 2 )
 }
 
 for k, v in pairs( cells ) do
