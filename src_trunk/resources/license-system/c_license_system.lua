@@ -1,8 +1,8 @@
 wLicense, licenseList, bAcceptLicense, bCancel = nil
-local Johnson = createPed(71, 356.29598999023, 162.48677062988, 1008.3762207031)
+local Johnson = createPed(71, 253.795318, 116.915336, 1003.21875)
 setPedRotation(Johnson, 271.4609375)
-setElementDimension(Johnson, 125)
-setElementInterior(Johnson, 3)
+setElementDimension(Johnson, 1)
+setElementInterior(Johnson, 10)
 setElementData( Johnson, "talk", 1 )
 setElementData( Johnson, "name", "Officer Johnson" )
 
