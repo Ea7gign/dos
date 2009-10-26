@@ -34,7 +34,18 @@ addEventHandler( "electionWantVote", getRootElement( ),
 			elseif can == 2 then
 				outputChatBox( "The vote is currently paused, come back later.", source, 255, 0, 0 )
 			elseif id == 0 then
-				triggerClientEvent( source, "showPoll", source )
+				local result2 = mysql_query( handler, "SELECT COUNT(*) FROM characters WHERE account = " .. getElementData( source, "gameaccountid" ) .. " AND election_votedfor > 0" )
+				if result2 then
+					local num = tonumber( mysql_result( result2, 1, 1 ) ) or 1
+					if num == 0 then
+						triggerClientEvent( source, "showPoll", source )
+					else
+						outputChatBox( "You already voted on another Character.", source, 255, 0, 0 )
+					end
+					mysql_free_result( result2 )
+				else
+					outputChatBox( "Failed - Error 4.", source, 255, 0, 0 )
+				end
 			elseif candidates[ id ] then
 				outputChatBox( "You already voted for " .. candidates[ id ]:gsub("_", " ") .. ".", source, 255, 255, 0 )
 			else
