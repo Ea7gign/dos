@@ -126,18 +126,21 @@ end
 addEventHandler("onVehicleStartEnter", getRootElement(), disableEntryToTowedVehicles)
 
 local releaseColShape = createColSphere(223.42578125, 114.265625, 1010.21875, 1)
-function triggerShowImpound(element)
-	local vehElements = {}
-	local count = 1
-	for key, value in ipairs(getElementsByType("vehicle")) do
-		local dbid = getElementData(value, "dbid")
-		if (getElementData(value, "Impounded") and getElementData(value, "Impounded") > 0 and ((dbid > 0 and exports.global:hasItem(element, 3, dbid) or (getElementData(value, "faction") == getElementData(element, "faction") and getElementData(value, "owner") == getElementData(element, "dbid"))))) then
-			vehElements[count] = value
-			count = count + 1
+setElementDimension(releaseColShape, 9001)
+function triggerShowImpound(element, match)
+	if match then
+		local vehElements = {}
+		local count = 1
+		for key, value in ipairs(getElementsByType("vehicle")) do
+			local dbid = getElementData(value, "dbid")
+			if (getElementData(value, "Impounded") and getElementData(value, "Impounded") > 0 and ((dbid > 0 and exports.global:hasItem(element, 3, dbid) or (getElementData(value, "faction") == getElementData(element, "faction") and getElementData(value, "owner") == getElementData(element, "dbid"))))) then
+				vehElements[count] = value
+				count = count + 1
+			end
 		end
-	end
 
-	triggerClientEvent( element, "ShowImpound", element, vehElements)
+		triggerClientEvent( element, "ShowImpound", element, vehElements)
+	end
 end
 addEventHandler("onColShapeHit", releaseColShape, triggerShowImpound)
 
