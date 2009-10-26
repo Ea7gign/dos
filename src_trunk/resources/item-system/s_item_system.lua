@@ -188,8 +188,11 @@ function useItem(itemSlot, additional)
 				if vehicle then
 					veholdstate = getVehicleEngineState ( vehicle )		
 				end
-				setPedSkin(source, skin)
-				setElementData(source, "casualskin", skin, false)
+				setElementModel(source, skin)
+				mysql_free_result( mysql_query( handler, "UPDATE characters SET skin = " .. skin .. " WHERE id = " .. getElementData( source, "dbid" ) ) )
+				if setElementData(source, "casualskin", skin, false) then
+					mysql_free_result( mysql_query( handler, "UPDATE characters SET casualskin = " .. skin .. " WHERE id = " .. getElementData(source, "dbid") ) )
+				end
 				exports.global:sendLocalMeAction(source, "changes their clothes.")
 				if vehicle then
 					setTimer(setVehicleEngineState, 200, 1, vehicle, veholdstate)
@@ -207,18 +210,23 @@ function useItem(itemSlot, additional)
 		elseif (itemID==21) then -- BOXING
 			setPedFightingStyle(source, 5)
 			outputChatBox("You read a book on how to do Boxing.", source, 255, 194, 14)
+			mysql_free_result( mysql_query( handler, "UPDATE characters SET fightstyle = 5 WHERE id = " .. getElementData( source, "dbid" ) ) )
 		elseif (itemID==22) then -- KUNG FU
 			setPedFightingStyle(source, 6)
 			outputChatBox("You read a book on how to do Kung Fu.", source, 255, 194, 14)
+			mysql_free_result( mysql_query( handler, "UPDATE characters SET fightstyle = 6 WHERE id = " .. getElementData( source, "dbid" ) ) )
 		elseif (itemID==23) then -- KNEE HEAD
 			setPedFightingStyle(source, 7)
 			outputChatBox("You read a book on how to do Knee Head Fighting.", source, 255, 194, 14)
+			mysql_free_result( mysql_query( handler, "UPDATE characters SET fightstyle = 7 WHERE id = " .. getElementData( source, "dbid" ) ) )
 		elseif (itemID==24) then -- GRAB KICK
 			setPedFightingStyle(source, 15)
 			outputChatBox("You read a book on how to do Grab Kick Fighting.", source, 255, 194, 14)
+			mysql_free_result( mysql_query( handler, "UPDATE characters SET fightstyle = 15 WHERE id = " .. getElementData( source, "dbid" ) ) )
 		elseif (itemID==25) then -- ELBOWS
 			setPedFightingStyle(source, 16)
 			outputChatBox("You read a book on how to do Elbow Fighting.", source, 255, 194, 14)
+			mysql_free_result( mysql_query( handler, "UPDATE characters SET fightstyle = 16 WHERE id = " .. getElementData( source, "dbid" ) ) )
 		elseif (itemID==26) then -- GASMASK
 			local gasmask = getElementData(source, "gasmask")
 			
@@ -563,19 +571,20 @@ function destroyItem(itemID, isWeapon)
 				
 				if (gender==0) then -- MALE
 					if (skincolor==0) then -- BLACK
-						setPedSkin(source, 80)
+						setElementModel(source, 80)
 					elseif (skincolor==1 or skincolor==2) then -- WHITE
-						setPedSkin(source, 252)
+						setElementModel(source, 252)
 					end
 				elseif (gender==1) then -- FEMALE
 					if (skincolor==0) then -- BLACK
-						setPedSkin(source, 139)
+						setElementModel(source, 139)
 					elseif (skincolor==1) then -- WHITE
-						setPedSkin(source, 138)
+						setElementModel(source, 138)
 					elseif (skincolor==2) then -- ASIAN
-						setPedSkin(source, 140)
+						setElementModel(source, 140)
 					end
 				end
+				mysql_free_result( mysql_query( handler, "UPDATE characters SET skin = " .. getElementModel( source ) .. " WHERE id = " .. getElementData( source, "dbid" ) ) )
 				mysql_free_result(result)
 			elseif tonumber(itemID) == 64 and not exports.global:hasItem(source, 64) then
 				removeElementData(source,"PDbadge")
@@ -682,17 +691,17 @@ function dropItem(itemID, x, y, z, ammo, keepammo)
 				
 				if (gender==0) then -- MALE
 					if (skincolor==0) then -- BLACK
-						setPedSkin(source, 80)
+						setElementModel(source, 80)
 					elseif (skincolor==1 or skincolor==2) then -- WHITE
-						setPedSkin(source, 252)
+						setElementModel(source, 252)
 					end
 				elseif (gender==1) then -- FEMALE
 					if (skincolor==0) then -- BLACK
-						setPedSkin(source, 139)
+						setElementModel(source, 139)
 					elseif (skincolor==1) then -- WHITE
-						setPedSkin(source, 138)
+						setElementModel(source, 138)
 					elseif (skincolor==2) then -- ASIAN
-						setPedSkin(source, 140)
+						setElementModel(source, 140)
 					end
 				end
 				mysql_free_result(result)

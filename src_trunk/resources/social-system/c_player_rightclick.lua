@@ -216,7 +216,7 @@ function cunrestrainPlayer(button, state, x, y)
 			hidePlayerMenu()
 		else
 			local restrainedObj = getElementData(player, "restrainedObj")
-			local dbid = getElementData(getLocalPlayer(), "dbid")
+			local dbid = getElementData(player, "dbid")
 			
 			if (exports.global:hasItem(getLocalPlayer(), 47, dbid)) or (restrainedObj==46) then -- has the keys, or its a rope
 				triggerServerEvent("unrestrainPlayer", getLocalPlayer(), player, restrainedObj)

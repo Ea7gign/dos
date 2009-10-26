@@ -112,7 +112,7 @@ end
 function restrainPlayer(player, restrainedObj)
 	local username = getPlayerName(source)
 	local targetPlayerName = getPlayerName(player)
-	local dbid = getElementData(source, "dbid")
+	local dbid = getElementData( player, "dbid" )
 	
 	setTimer(toggleCuffs, 200, 1, true, player)
 	
@@ -120,11 +120,13 @@ function restrainPlayer(player, restrainedObj)
 	outputChatBox("You are restraining " .. targetPlayerName .. ".", source)
 	setElementData(player, "restrain", 1)
 	setElementData(player, "restrainedObj", restrainedObj)
-	setElementData(player, "restrainedBy", dbid, false)
-
+	setElementData(player, "restrainedBy", getElementData(source, "dbid"), false)
+	mysql_free_result( mysql_query( handler, "UPDATE characters SET cuffed = 1, restrainedby = " .. getElementData(source, "dbid") .. ", restrainedobj = " .. restrainedObj .. " WHERE id = " .. dbid ) )
+	
 	exports.global:takeItem(source, restrainedObj)
 
 	if (restrainedObj==45) then -- If handcuffs.. give the key
+		exports['item-system']:deleteAll(47, dbid)
 		exports.global:giveItem(source, 47, dbid)
 	end
 	exports.global:removeAnimation(player)
@@ -145,11 +147,12 @@ function unrestrainPlayer(player, restrainedObj)
 	removeElementData(player, "restrainedBy")
 	removeElementData(player, "restrainedObj")
 	
+	local dbid = getElementData(player, "dbid")
 	if (restrainedObj==45) then -- If handcuffs.. take the key
-		local dbid = getElementData(source, "dbid")
-		exports.global:takeItem(source, 47, dbid)
+		exports['item-system']:deleteAll(47, dbid)
 	end
 	exports.global:giveItem(source, restrainedObj, 1)
+	mysql_free_result( mysql_query( handler, "UPDATE characters SET cuffed = 0, restrainedby = 0, restrainedobj = 0 WHERE id = " .. dbid ) )
 	
 	exports.global:removeAnimation(player)
 end
@@ -166,6 +169,7 @@ function blindfoldPlayer(player)
 	
 	exports.global:takeItem(source, 66) -- take their blindfold
 	setElementData(player, "blindfold", 1)
+	mysql_free_result( mysql_query( handler, "UPDATE characters SET blindfold = 1 WHERE id = " .. getElementData( player, "dbid" ) ) )
 	fadeCamera(player, false)
 end
 addEvent("blindfoldPlayer", true)
@@ -180,6 +184,7 @@ function removeblindfoldPlayer(player)
 	
 	exports.global:giveItem(source, 66, -1) -- give the remove the blindfold
 	removeElementData(player, "blindfold")
+	mysql_free_result( mysql_query( handler, "UPDATE characters SET blindfold = 0 WHERE id = " .. getElementData( player, "dbid" ) ) )
 	fadeCamera(player, true)
 end
 addEvent("removeBlindfold", true)

@@ -84,9 +84,10 @@ function arrestPlayer(thePlayer, commandName, targetPlayerNick, fine, jailtime, 
 								removeElementData(targetPlayer, "restrainedObj")
 								if restrainedObj == 45 then -- If handcuffs.. take the key
 									local dbid = getElementData(targetPlayer, "dbid")
-									exports.global:takeItem(thePlayer, 47, dbid)
+									exports['item-system']:deleteAll(47, dbid)
 								end
 								exports.global:giveItem(thePlayer, restrainedObj, 1)
+								mysql_free_result( mysql_query( handler, "UPDATE characters SET cuffed = 0, restrainedby = 0, restrainedobj = 0 WHERE id = " .. getElementData( targetPlayer, "dbid" ) ) )
 							end
 							setPedWeaponSlot(targetPlayer,0)
 							

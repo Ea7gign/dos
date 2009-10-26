@@ -147,16 +147,21 @@ function lvesduty(thePlayer, commandName)
 						outputChatBox("You are now on Medic Duty.", thePlayer)
 						exports.global:sendLocalMeAction(thePlayer, "takes their uniform from their locker.")
 						
-						setElementData(thePlayer, "casualskin", getPedSkin(thePlayer), false)
+						
+						if setElementData(thePlayer, "casualskin", getPedSkin(thePlayer), false) then
+							mysql_free_result( mysql_query( handler, "UPDATE characters SET casualskin = " .. getPedSkin(thePlayer) .. " WHERE id = " .. getElementData(thePlayer, "dbid") ) )
+						end
 						
 						saveWeaponsOnDuty(thePlayer)
 						setElementHealth(thePlayer, 100)
 						
 						exports.global:giveWeapon(thePlayer, 41, 1500) -- Pepperspray
 						exports.global:giveItem(thePlayer, 70, 7) -- first aid kit
-						setPedSkin(thePlayer, dutyskin)
+						setElementModel(thePlayer, dutyskin)
 						
 						setElementData(thePlayer, "duty", 4, false)
+						
+						saveSkin(thePlayer)
 					end
 				elseif (duty==4) then -- ES
 					restoreWeapons(thePlayer)
@@ -165,7 +170,8 @@ function lvesduty(thePlayer, commandName)
 					setElementData(thePlayer, "duty", 0, false)
 					
 					local casualskin = getElementData(thePlayer, "casualskin")
-					setPedSkin(thePlayer, casualskin)
+					setElementModel(thePlayer, casualskin)
+					saveSkin(thePlayer)
 				elseif (duty==5) then -- FIRE ES
 					restoreWeapons(thePlayer)
 					outputChatBox("You are now off Firefighter Duty.", thePlayer)
@@ -173,7 +179,8 @@ function lvesduty(thePlayer, commandName)
 					setElementData(thePlayer, "duty", 0, false)
 					
 					local casualskin = getElementData(thePlayer, "casualskin")
-					setPedSkin(thePlayer, casualskin)
+					setElementModel(thePlayer, casualskin)
+					saveSkin(thePlayer)
 				end
 			end
 		end
@@ -202,7 +209,9 @@ function lvfdduty(thePlayer, commandName)
 						outputChatBox("You are now on Firefighter Duty.", thePlayer)
 						exports.global:sendLocalMeAction(thePlayer, "takes their firefighter gear from their locker.")
 						
-						setElementData(thePlayer, "casualskin", getPedSkin(thePlayer), false)
+						if setElementData(thePlayer, "casualskin", getPedSkin(thePlayer), false) then
+							mysql_free_result( mysql_query( handler, "UPDATE characters SET casualskin = " .. getPedSkin(thePlayer) .. " WHERE id = " .. getElementData(thePlayer, "dbid") ) )
+						end
 						
 						saveWeaponsOnDuty(thePlayer)
 						setElementHealth(thePlayer, 100)
@@ -210,9 +219,11 @@ function lvfdduty(thePlayer, commandName)
 						exports.global:giveWeapon(thePlayer, 42, 1500) -- Fire Extinguisher
 						exports.global:giveWeapon(thePlayer, 9, 1) -- Chainsaw
 						exports.global:giveItem(thePlayer, 70, 3) -- first aid kit
-						setPedSkin(thePlayer, dutyskin)
+						setElementModel(thePlayer, dutyskin)
 						
 						setElementData(thePlayer, "duty", 5, false)
+						
+						saveSkin(thePlayer)
 					end
 				elseif (duty==4) then -- ES
 					restoreWeapons(thePlayer)
@@ -221,7 +232,8 @@ function lvfdduty(thePlayer, commandName)
 					setElementData(thePlayer, "duty", 0, false)
 					
 					local casualskin = getElementData(thePlayer, "casualskin")
-					setPedSkin(thePlayer, casualskin)
+					setElementModel(thePlayer, casualskin)
+					saveSkin(thePlayer)
 				elseif (duty==5) then -- FIRE ES
 					restoreWeapons(thePlayer)
 					outputChatBox("You are now off Firefighter Duty.", thePlayer)
@@ -229,7 +241,8 @@ function lvfdduty(thePlayer, commandName)
 					setElementData(thePlayer, "duty", 0, false)
 					
 					local casualskin = getElementData(thePlayer, "casualskin")
-					setPedSkin(thePlayer, casualskin)
+					setElementModel(thePlayer, casualskin)
+					saveSkin(thePlayer)
 				end
 			end
 		end
@@ -271,7 +284,9 @@ function swatduty(thePlayer, commandName)
 					outputChatBox("You are now on SWAT Duty.", thePlayer)
 					exports.global:sendLocalMeAction(thePlayer, "takes their swat gear from their locker.")
 					
-					setElementData(thePlayer, "casualskin", getPedSkin(thePlayer), false)
+					if setElementData(thePlayer, "casualskin", getPedSkin(thePlayer), false) then
+						mysql_free_result( mysql_query( handler, "UPDATE characters SET casualskin = " .. getPedSkin(thePlayer) .. " WHERE id = " .. getElementData(thePlayer, "dbid") ) )
+					end
 					
 					saveWeaponsOnDuty(thePlayer)
 					
@@ -291,9 +306,11 @@ function swatduty(thePlayer, commandName)
 					exports.global:giveItem(thePlayer, 29, 1)
 					exports.global:giveItem(thePlayer, 45, 1)
 					
-					setPedSkin(thePlayer, 285)
+					setElementModel(thePlayer, 285)
 					
 					setElementData(thePlayer, "duty", 1, false)
+					
+					saveSkin(thePlayer)
 				elseif (duty==1) then -- SWAT
 					restoreWeapons(thePlayer)
 					outputChatBox("You are now off SWAT duty.", thePlayer)
@@ -308,7 +325,8 @@ function swatduty(thePlayer, commandName)
 					exports.global:takeItem(thePlayer, 45)
 					
 					local casualskin = getElementData(thePlayer, "casualskin")
-					setPedSkin(thePlayer, casualskin)
+					setElementModel(thePlayer, casualskin)
+					saveSkin(thePlayer)
 				elseif (duty==2) then
 					restoreWeapons(thePlayer)
 					outputChatBox("You are now off duty.", thePlayer)
@@ -319,7 +337,8 @@ function swatduty(thePlayer, commandName)
 					exports.global:takeItem(thePlayer, 45)
 					
 					local casualskin = getElementData(thePlayer, "casualskin")
-					setPedSkin(thePlayer, casualskin)
+					setElementModel(thePlayer, casualskin)
+					saveSkin(thePlayer)
 				elseif (duty==3) then -- CADET
 					restoreWeapons(thePlayer)
 					outputChatBox("You are now off duty.", thePlayer)
@@ -330,7 +349,8 @@ function swatduty(thePlayer, commandName)
 					exports.global:takeItem(thePlayer, 45)
 					
 					local casualskin = getElementData(thePlayer, "casualskin")
-					setPedSkin(thePlayer, casualskin)
+					setElementModel(thePlayer, casualskin)
+					saveSkin(thePlayer)
 				end
 			end
 		end
@@ -358,7 +378,9 @@ function policeduty(thePlayer, commandName)
 						outputChatBox("You are now on Police Duty.", thePlayer)
 						exports.global:sendLocalMeAction(thePlayer, "takes their gear from their locker.")
 						
-						setElementData(thePlayer, "casualskin", getPedSkin(thePlayer), false)
+						if setElementData(thePlayer, "casualskin", getPedSkin(thePlayer), false) then
+							mysql_free_result( mysql_query( handler, "UPDATE characters SET casualskin = " .. getPedSkin(thePlayer) .. " WHERE id = " .. getElementData(thePlayer, "dbid") ) )
+						end
 						
 						saveWeaponsOnDuty(thePlayer)
 						
@@ -373,9 +395,11 @@ function policeduty(thePlayer, commandName)
 						
 						exports.global:giveItem(thePlayer, 45, 1)
 						
-						setPedSkin(thePlayer, dutyskin)
+						setElementModel(thePlayer, dutyskin)
 						
 						setElementData(thePlayer, "duty", 2, false)
+						
+						saveSkin(thePlayer)
 					end
 				elseif (duty==1) then -- SWAT
 					restoreWeapons(thePlayer)
@@ -391,7 +415,8 @@ function policeduty(thePlayer, commandName)
 					exports.global:takeItem(thePlayer, 45)
 					
 					local casualskin = getElementData(thePlayer, "casualskin")
-					setPedSkin(thePlayer, casualskin)
+					setElementModel(thePlayer, casualskin)
+					saveSkin(thePlayer)
 				elseif (duty==2) then
 					restoreWeapons(thePlayer)
 					outputChatBox("You are now off duty.", thePlayer)
@@ -402,7 +427,8 @@ function policeduty(thePlayer, commandName)
 					exports.global:takeItem(thePlayer, 45)
 					
 					local casualskin = getElementData(thePlayer, "casualskin")
-					setPedSkin(thePlayer, casualskin)
+					setElementModel(thePlayer, casualskin)
+					saveSkin(thePlayer)
 				elseif (duty==3) then -- CADET
 					restoreWeapons(thePlayer)
 					outputChatBox("You are now off duty.", thePlayer)
@@ -413,7 +439,8 @@ function policeduty(thePlayer, commandName)
 					exports.global:takeItem(thePlayer, 45)
 					
 					local casualskin = getElementData(thePlayer, "casualskin")
-					setPedSkin(thePlayer, casualskin)
+					setElementModel(thePlayer, casualskin)
+					saveSkin(thePlayer)
 				end
 			end
 		end
@@ -441,7 +468,9 @@ function cadetduty(thePlayer, commandName)
 						outputChatBox("You are now on Cadet Duty.", thePlayer)
 						exports.global:sendLocalMeAction(thePlayer, "takes their cadet gear from their locker.")
 						
-						setElementData(thePlayer, "casualskin", getPedSkin(thePlayer), false)
+						if setElementData(thePlayer, "casualskin", getPedSkin(thePlayer), false) then
+							mysql_free_result( mysql_query( handler, "UPDATE characters SET casualskin = " .. getPedSkin(thePlayer) .. " WHERE id = " .. getElementData(thePlayer, "dbid") ) )
+						end
 						
 						saveWeaponsOnDuty(thePlayer)
 						
@@ -454,9 +483,11 @@ function cadetduty(thePlayer, commandName)
 						
 						exports.global:giveItem(thePlayer, 45, 1)
 						
-						setPedSkin(thePlayer, dutyskin)
+						setElementModel(thePlayer, dutyskin)
 						
 						setElementData(thePlayer, "duty", 3, false)
+						
+						saveSkin(thePlayer)
 					end
 				elseif (duty==1) then -- SWAT
 					restoreWeapons(thePlayer)
@@ -472,7 +503,8 @@ function cadetduty(thePlayer, commandName)
 					exports.global:takeItem(thePlayer, 45)
 					
 					local casualskin = getElementData(thePlayer, "casualskin")
-					setPedSkin(thePlayer, casualskin)
+					setElementModel(thePlayer, casualskin)
+					saveSkin(thePlayer)
 				elseif (duty==2) then -- POLICE
 					restoreWeapons(thePlayer)
 					outputChatBox("You are now off duty.", thePlayer)
@@ -483,7 +515,8 @@ function cadetduty(thePlayer, commandName)
 					exports.global:takeItem(thePlayer, 45)
 					
 					local casualskin = getElementData(thePlayer, "casualskin")
-					setPedSkin(thePlayer, casualskin)
+					setElementModel(thePlayer, casualskin)
+					saveSkin(thePlayer)
 				elseif (duty==3) then -- CADET
 					restoreWeapons(thePlayer)
 					outputChatBox("You are now off duty.", thePlayer)
@@ -494,7 +527,8 @@ function cadetduty(thePlayer, commandName)
 					exports.global:takeItem(thePlayer, 45)
 					
 					local casualskin = getElementData(thePlayer, "casualskin")
-					setPedSkin(thePlayer, casualskin)
+					setElementModel(thePlayer, casualskin)
+					saveSkin(thePlayer)
 				end
 			end
 		end
@@ -522,8 +556,9 @@ function fbiduty(thePlayer, commandName)
 						outputChatBox("You are now on FBI Duty.", thePlayer)
 						exports.global:sendLocalMeAction(thePlayer, "takes their FBI gear from their locker.")
 						
-						setElementData(thePlayer, "casualskin", getPedSkin(thePlayer), false)
-						
+						if setElementData(thePlayer, "casualskin", getPedSkin(thePlayer), false) then
+							mysql_free_result( mysql_query( handler, "UPDATE characters SET casualskin = " .. getPedSkin(thePlayer) .. " WHERE id = " .. getElementData(thePlayer, "dbid") ) )
+						end
 						saveWeaponsOnDuty(thePlayer)
 						
 						setPedArmor(thePlayer, 100)
@@ -532,9 +567,11 @@ function fbiduty(thePlayer, commandName)
 						exports.global:giveWeapon(thePlayer, 22, 200) -- Colt 45
 						exports.global:giveItem(thePlayer, 45, 1) -- Cuffs
 						
-						setPedSkin(thePlayer, dutyskin)
+						setElementModel(thePlayer, dutyskin)
 						
 						setElementData(thePlayer, "duty", 6, false)
+						
+						saveSkin(thePlayer)
 					end
 				elseif (duty==6) then -- FBI
 					restoreWeapons(thePlayer)
@@ -546,14 +583,20 @@ function fbiduty(thePlayer, commandName)
 					exports.global:takeItem(thePlayer, 45)
 					
 					local casualskin = getElementData(thePlayer, "casualskin")
-					setPedSkin(thePlayer, casualskin)
+					setElementModel(thePlayer, casualskin)
+					saveSkin(thePlayer)
 				else
 					local casualskin = getElementData(thePlayer, "casualskin")
-					setPedSkin(thePlayer, casualskin)
+					setElementModel(thePlayer, casualskin)
 					setElementData(thePlayer, "duty", 0, false)
+					saveSkin(thePlayer)
 				end
 			end
 		end
 	end
 end
 --addCommandHandler("fbi", fbiduty, false, false)
+
+function saveSkin(thePlayer)
+	mysql_free_result( mysql_query( handler, "UPDATE characters SET skin = " .. getElementModel( thePlayer ) .. ", duty = " .. ( getElementData( thePlayer, "duty" ) or 0 ) .. " WHERE id = " .. getElementData( thePlayer, "dbid" ) ) )
+end

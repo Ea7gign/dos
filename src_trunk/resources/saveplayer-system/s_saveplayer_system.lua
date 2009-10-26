@@ -60,13 +60,7 @@ local count = 1
 function syncWeapons(weapons, ammo)
 	--outputDebugString("Got weapon sync packet #" .. count .. " FROM: " .. getPlayerName(source))
 	count = count + 1
-	
-	if (tweapons[source] == nil) then
-		tweapons[source] = { }
-	end
-	
-	tweapons[source][1] = weapons
-	tweapons[source][2] = ammo
+	tweapons[source] = { weapons, ammo }
 end
 addEvent("syncWeapons", true)
 addEventHandler("syncWeapons", getRootElement(), syncWeapons)
@@ -105,16 +99,20 @@ function savePlayer(reason, player)
 			triggerEvent("onVehicleExit", vehicle, source, seat)
 		end
 		
-		local x, y, z, rot, health, armour, interior, dimension, blindfold, cuffed, skin, duty, fightstyle, casualskin, hoursplayed, timeinserver
+		local x, y, z, rot, health, armour, interior, dimension, cuffed, skin, duty, timeinserver, businessprofit
 		
-		x, y, z = getElementPosition(source)
-		rot = getPedRotation(source)
-		health = getElementHealth(source)
-		armor = getPedArmor(source)
-		interior = getElementInterior(source)
-		dimension = getElementDimension(source)
-		money = exports.global:getMoney(source) + ( getElementData(source, "stevie.money") or 0 )
-		cuffed = getElementData(source, "restrain")
+		local x, y, z = getElementPosition(source)
+		local rot = getPedRotation(source)
+		local health = getElementHealth(source)
+		local armor = getPedArmor(source)
+		local interior = getElementInterior(source)
+		local dimension = getElementDimension(source)
+		money = getElementData(source, "stevie.money")
+		if money and money > 0 then
+			money = 'money = money + ' .. money .. ', '
+		else
+			money = ''
+		end
 		skin = getElementModel(source)
 		
 		if getElementData(source, "help") then
@@ -122,63 +120,21 @@ function savePlayer(reason, player)
 		end
 		
 		-- Fix for #0000984
-		local businessprofit = tonumber(getElementData(source, "businessprofit"))
-		if (businessprofit) then
-			money = money + businessprofit
+		if reason == "Quit" or reason == "Timed Out" or reason == "Unknown" or reason == "Bad Connection" or reason == "Kicked" or reason == "Banned" then
+			businessprofit = 'bankmoney = bankmoney + ' .. tonumber(getElementData(source, "businessprofit")) or 0 .. ', '
+		else
+			businessprofit = ''
 		end
 		
-		
-		blindfold = getElementData(source, "blindfold")
-		if not (blindfold) then blindfold = 0 end
-		
-		local restrainedby = getElementData(source, "restrainedBy")
-		if not (restrainedby) then restrainedby=-1 end
-		
-		local restrainedobj = getElementData(source, "restrainedObj")
-		if not (restrainedobj) then restrainedobj=-1 end
-		
-		fightstyle = getPedFightingStyle(source)
-		local dutyskin = getElementData(source, "dutyskin")
-		
-		duty = getElementData(source, "duty")
-		
-		casualskin = getElementData(source, "casualskin")
-		
-		timeinserver = getElementData(source, "timeinserver")
-		
-		local bankmoney = getElementData(source, "bankmoney") + ( getElementData(source, "businessprofit") or 0 )
-		
-		hoursplayed = getElementData(source, "hoursplayed")
-		
-		if not (duty) then
-			duty = 0
-		end
-		
-		-- LAST LOGIN
-		--local time = getRealTime()
-		--local yearday = time.yearday
-		--local year = (1900+time.year)	
-		
-		-- LANGUAGES
-		local lang1 = getElementData(source, "languages.lang1") or 0
-		local lang1skill = getElementData(source, "languages.lang1skill") or 0
-		
-		local lang2 = getElementData(source, "languages.lang2") or 0
-		local lang2skill = getElementData(source, "languages.lang2skill") or 0
-		
-		local lang3 = getElementData(source, "languages.lang3") or 0
-		local lang3skill = getElementData(source, "languages.lang3skill") or 0
-		
-		local currentLanguage = getElementData(source, "languages.current")
-		
-		if lang1 == 0 then lang1skill = 0 end
-		if lang2 == 0 then lang2skill = 0 end
-		if lang3 == 0 then lang3skill = 0 end
+		local  timeinserver = getElementData(source, "timeinserver")
 		
 		-- LAST AREA
 		local zone = exports.global:getElementZoneName(source)
+		if zone or #zone == 0 then
+			zone = "Unknown"
+		end
 		
-		local update = mysql_query(handler, "UPDATE characters SET casualskin='" .. casualskin .. "', x='" .. x .. "', y='" .. y .. "', z='" .. z .. "', rotation='" .. rot .. "', health='" .. health .. "', armor='" .. armor .. "', skin='" .. skin .. "', dimension_id='" .. dimension .. "', interior_id='" .. interior .. "', money='" .. money .. "', cuffed='" .. cuffed .. "', duty='" .. duty .. "', fightstyle='" .. fightstyle .. "', lastlogin=NOW(), lastarea='" .. mysql_escape_string(handler, zone) .. "', bankmoney='" .. bankmoney .. "', hoursplayed='" .. hoursplayed .. "', timeinserver='" .. timeinserver .. "', restrainedobj='" .. restrainedobj .. "', restrainedby='" .. restrainedby .. "', dutyskin='" .. dutyskin .. "', blindfold='" .. blindfold .. "', lang1='" .. lang1 .. "', lang1skill='" .. lang1skill .. "', lang2='" .. lang2 .. "', lang2skill='" .. lang2skill .. "', lang3='" .. lang3 .. "', lang3skill='" .. lang3skill .. "', currLang='" .. currentLanguage .. "' WHERE id='" .. getElementData(source, "dbid") .. "'")
+		local update = mysql_query(handler, "UPDATE characters SET x='" .. x .. "', y='" .. y .. "', z='" .. z .. "', rotation='" .. rot .. "', health='" .. health .. "', armor='" .. armor .. "', dimension_id='" .. dimension .. "', interior_id='" .. interior .. "', " .. money .. businessprofit .. "lastlogin=NOW(), lastarea='" .. mysql_escape_string(handler, zone) .. "', timeinserver='" .. timeinserver .. "' WHERE id=" .. getElementData(source, "dbid"))
 		if (update) then
 			mysql_free_result(update)
 		else

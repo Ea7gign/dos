@@ -293,9 +293,13 @@ function givePlayerBoughtItem(itemID, itemValue, theCost, isWeapon, name, supply
 		else
 			if (isWeapon==nil) then
 				if exports.global:takeMoney(source, theCost) then
-					exports.global:giveItem(source, 16, tonumber(itemValue))
-					setPedSkin(source, tonumber(itemValue))
-					setElementData(source, "casualskin", tonumber(itemValue), false)
+					local skin = tonumber(itemValue) or 264
+					exports.global:giveItem(source, 16, skin)
+					setElementModel(source, skin)
+					mysql_free_result( mysql_query( handler, "UPDATE characters SET skin = " .. skin .. " WHERE id = " .. getElementData( source, "dbid" ) ) )
+					if setElementData(source, "casualskin", skin, false) then
+						mysql_free_result( mysql_query( handler, "UPDATE characters SET casualskin = " .. skin .. " WHERE id = " .. getElementData(source, "dbid") ) )
+					end
 					exports.global:givePlayerAchievement(source, 21)
 				end
 			elseif (isWeapon==false) and (itemID==68) then
@@ -330,24 +334,22 @@ function givePlayerBoughtItem(itemID, itemValue, theCost, isWeapon, name, supply
 					itemID = tonumber(itemID)
 					
 					if (itemID==4) then
-						setPedFightingStyle(source, itemID)
 						exports.global:giveItem(source, 20, 1)
 					elseif (itemID==5) then
-						setPedFightingStyle(source, itemID)
 						exports.global:giveItem(source, 21, 1)
 					elseif (itemID==6) then
-						setPedFightingStyle(source, itemID)
 						exports.global:giveItem(source, 22, 1)
 					elseif (itemID==7) then
-						setPedFightingStyle(source, itemID)
 						exports.global:giveItem(source, 23, 1)
 					elseif (itemID==15) then
-						setPedFightingStyle(source, itemID)
 						exports.global:giveItem(source, 24, 1)
 					elseif (itemID==16) then
-						setPedFightingStyle(source, itemID)
 						exports.global:giveItem(source, 25, 1)
+					else
+						return
 					end
+					setPedFightingStyle(source, itemID)
+					mysql_free_result( mysql_query( handler, "UPDATE characters SET fightstyle = " .. itemID .. " WHERE id = " .. getElementData( source, "dbid" ) ) )
 					
 					exports.global:givePlayerAchievement(source, 20)
 				end

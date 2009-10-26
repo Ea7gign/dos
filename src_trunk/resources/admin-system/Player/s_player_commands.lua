@@ -180,6 +180,8 @@ function adminUncuff(thePlayer, commandName, targetPlayer)
 						removeElementData(targetPlayer, "restrainedBy")
 						removeElementData(targetPlayer, "restrainedObj")
 						exports.global:removeAnimation(targetPlayer)
+						mysql_free_result( mysql_query( handler, "UPDATE characters SET cuffed = 0, restrainedby = 0, restrainedobj = 0 WHERE id = " .. getElementData( targetPlayer, "dbid" ) ) )
+						exports['item-system']:deleteAll(47, getElementData( targetPlayer, "dbid" ))
 					end
 				end
 			end
@@ -257,6 +259,7 @@ function adminUnblindfold(thePlayer, commandName, targetPlayer)
 						removeElementData(targetPlayer, "blindfold")
 						fadeCamera(targetPlayer, true)
 						outputChatBox("You have unblindfolded " .. targetPlayerName .. ".", thePlayer)
+						mysql_free_result( mysql_query( handler, "UPDATE characters SET blindfold = 1 WHERE id = " .. getElementData( targetPlayer, "dbid" ) ) )
 					end
 				end
 			end
@@ -748,7 +751,7 @@ function setPlayerSkinCmd(thePlayer, commandName, targetPlayer, skinID)
 					
 					setPedStat(targetPlayer, 21, 0)
 					setPedStat(targetPlayer, 23, 0)
-					local skin = setPedSkin(targetPlayer, tonumber(skinID))
+					local skin = setElementModel(targetPlayer, tonumber(skinID))
 					
 					setPedStat(targetPlayer, 21, fat)
 					setPedStat(targetPlayer, 23, muscle)
@@ -756,6 +759,7 @@ function setPlayerSkinCmd(thePlayer, commandName, targetPlayer, skinID)
 						outputChatBox("Invalid skin ID.", thePlayer, 255, 0, 0)
 					else
 						outputChatBox("Player " .. targetPlayerName .. " now has skin " .. skinID .. ".", thePlayer, 0, 255, 0)
+						mysql_free_result( mysql_query( handler, "UPDATE characters SET skin = " .. skinID .. " WHERE id = " .. getElementData( targetPlayer, "dbid" ) ) )
 					end
 				else
 					outputChatBox("Invalid skin ID.", thePlayer, 255, 0, 0)

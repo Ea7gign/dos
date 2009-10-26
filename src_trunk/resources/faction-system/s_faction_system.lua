@@ -305,7 +305,7 @@ addEventHandler("cguiUpdateMOTD", getRootElement(), callbackUpdateMOTD)
 function callbackRemovePlayer(removedPlayerName)
 	local safename = mysql_escape_string(handler, removedPlayerName)
 	
-	local query = mysql_query(handler, "UPDATE characters SET faction_id='-1', faction_leader='0', faction_rank='1' WHERE charactername='" .. safename .. "'")
+	local query = mysql_query(handler, "UPDATE characters SET faction_id='-1', faction_leader='0', faction_rank='1', dutyskin = 0, duty = 0 WHERE charactername='" .. safename .. "'")
 	
 	if (query) then
 		mysql_free_result(query)
@@ -325,7 +325,13 @@ function callbackRemovePlayer(removedPlayerName)
 				triggerClientEvent(removedPlayer, "hideFactionMenu", getRootElement())
 			end
 			outputChatBox(username .. " removed you from the faction '" .. tostring(theTeamName) .. "'", removedPlayer)
-			setPlayerTeam(removedPlayer, nil)
+			setPlayerTeam(removedPlayer, getTeamFromName("Citizen"))
+			setElementData(removedPlayer, "faction", -1, false)
+			setElementData(removedPlayer, "dutyskin", -1, false)
+			if getElementData(removedPlayer, "duty") and getElementData(removedPlayer, "duty") > 0 then
+				exports.global:takeAllWeapons(removedPlayer)
+				setElementData(removedPlayer, "duty", 0, false)
+			end
 		end
 		
 		-- Send message to everyone in the faction
@@ -464,7 +470,7 @@ function callbackQuitFaction()
 	local theTeam = getPlayerTeam(source)
 	local theTeamName = getTeamName(theTeam)
 	
-	local query = mysql_query(handler, "UPDATE characters SET faction_id='-1', faction_leader='0' WHERE charactername='" .. safename .. "'")
+	local query = mysql_query(handler, "UPDATE characters SET faction_id='-1', faction_leader='0', dutyskin = -1, duty = 0 WHERE charactername='" .. safename .. "'")
 	
 	if (query) then
 		mysql_free_result(query)
@@ -473,12 +479,19 @@ function callbackQuitFaction()
 		local newTeam = getTeamFromName("Citizen")
 		setPlayerTeam(source, newTeam)
 		setElementData(source, "faction", -1, false)
-
+		setElementData(source, "dutyskin", -1, false)
+		if getElementData(source, "duty") and getElementData(source, "duty") > 0 then
+			exports.global:takeAllWeapons(source)
+			setElementData(source, "duty", 0, false)
+		end
+		
 		-- Send message to everyone in the faction
-		local teamPlayers = getPlayersInTeam(theTeam)
-		for k, v in ipairs(teamPlayers) do
-			if (v~=thePlayer) then
-				outputChatBox(username .. " has quit the faction '" .. theTeamName .. "'.", v)
+		if theTeam ~= newTeam then
+			local teamPlayers = getPlayersInTeam(theTeam)
+			for k, v in ipairs(teamPlayers) do
+				if (v~=thePlayer) then
+					outputChatBox(username .. " has quit the faction '" .. theTeamName .. "'.", v)
+				end
 			end
 		end
 	else
@@ -494,7 +507,7 @@ function callbackInvitePlayer(invitedPlayer)
 	local invitedPlayerNick = getPlayerName(invitedPlayer)
 	local safename = mysql_escape_string(handler, invitedPlayerNick)
 	
-	local query = mysql_query(handler, "UPDATE characters SET faction_leader='0', faction_id='" .. faction .. "', faction_rank='1' WHERE charactername='" .. safename .. "'")
+	local query = mysql_query(handler, "UPDATE characters SET faction_leader = 0, faction_id = " .. faction .. ", faction_rank = 1, dutyskin = -1 WHERE charactername='" .. safename .. "'")
 	
 	if (query) then
 		mysql_free_result(query)
@@ -601,7 +614,7 @@ function adminSetPlayerFaction(thePlayer, commandName, partialNick, factionID)
 			local targetPlayer, targetPlayerNick = exports.global:findPlayerByPartialNick(thePlayer, partialNick)
 			
 			if targetPlayer then
-				local query = mysql_query(handler, "UPDATE characters SET faction_leader='0', faction_id='" .. factionID .. "', faction_rank='1' WHERE id=" .. getElementData(targetPlayer, "dbid"))
+				local query = mysql_query(handler, "UPDATE characters SET faction_leader = 0, faction_id = " .. factionID .. ", faction_rank = 1, duty = 0, dutyskin = -1 WHERE id=" .. getElementData(targetPlayer, "dbid"))
 				
 				factionID = tonumber(factionID)
 				if (query) then
@@ -621,6 +634,10 @@ function adminSetPlayerFaction(thePlayer, commandName, partialNick, factionID)
 						setElementData(targetPlayer, "faction", tonumber(factionID))
 						setElementData(targetPlayer, "factionrank", 1)
 						setElementData(targetPlayer, "dutyskin", -1, false)
+						if getElementData(targetPlayer, "duty") and getElementData(targetPlayer, "duty") > 0 then
+							exports.global:takeAllWeapons(targetPlayer)
+							setElementData(targetPlayer, "duty", 0, false)
+						end
 						
 						outputChatBox("Player " .. targetPlayerNick .. " is now a member of faction '" .. tostring(factionName) .. "' (#" .. factionID .. ").", thePlayer, 0, 255, 0)
 						
@@ -655,7 +672,7 @@ function adminSetFactionLeader(thePlayer, commandName, partialNick, factionID)
 			local targetPlayer, targetPlayerNick = exports.global:findPlayerByPartialNick(thePlayer, partialNick)
 			
 			if targetPlayer then
-				local query = mysql_query(handler, "UPDATE characters SET faction_leader='1', faction_id='" .. tonumber(factionID) .. "', faction_rank='1' WHERE id = " .. getElementData(targetPlayer, "dbid"))
+				local query = mysql_query(handler, "UPDATE characters SET faction_leader = 1, faction_id = " .. tonumber(factionID) .. ", faction_rank = 1, dutyskin = -1, duty = 0 WHERE id = " .. getElementData(targetPlayer, "dbid"))
 				
 				if (query) then
 					mysql_free_result(query)
@@ -668,6 +685,10 @@ function adminSetFactionLeader(thePlayer, commandName, partialNick, factionID)
 						setPlayerTeam(targetPlayer, theTeam)
 						setElementData(targetPlayer, "faction", tonumber(factionID), false)
 						setElementData(targetPlayer, "dutyskin", -1, false)
+						if getElementData(targetPlayer, "duty") and getElementData(targetPlayer, "duty") > 0 then
+							exports.global:takeAllWeapons(targetPlayer)
+							setElementData(targetPlayer, "duty", 0, false)
+						end
 						
 						outputChatBox("Player " .. targetPlayerNick .. " is now a leader of faction '" .. tostring(factionName) .. "' (#" .. factionID .. ").", thePlayer, 0, 255, 0)
 						
@@ -1111,6 +1132,7 @@ function payAllWages(timer)
 
 			local hoursplayed = getElementData(value, "hoursplayed") or 0
 			setElementData(value, "hoursplayed", hoursplayed+1, false)
+			mysql_free_result( mysql_query( handler, "UPDATE characters SET hoursplayed = hoursplayed + 1, bankmoney = " .. getElementData( value, "bankmoney" ) .. " WHERE id = " .. getElementData( value, "dbid" ) ) )
 		elseif (logged==1) and (timeinserver) and (timeinserver<60) then
 			outputChatBox("You have not played long enough to recieve a payday. (You require another " .. 60-timeinserver .. " Minutes of play.)", value, 255, 0, 0)
 		end
