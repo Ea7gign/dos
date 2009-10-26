@@ -1,6 +1,6 @@
 wLicense, licenseList, bAcceptLicense, bCancel = nil
 local Johnson = createPed(71, 253.795318, 116.915336, 1003.21875)
-setPedRotation(Johnson, 271.4609375)
+setPedRotation(Johnson, 91.4609375)
 setElementDimension(Johnson, 1)
 setElementInterior(Johnson, 10)
 setElementData( Johnson, "talk", 1 )
