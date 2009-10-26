@@ -452,10 +452,16 @@ function c_closePhoneGUI()
 		destroyElement ( poptionFour )
 		poptionFour = nil
 	end
-	destroyElement ( pstevieText )
-	destroyElement ( pwStevie )
-	pstevieText = nil
-	pwStevie = nil
+	
+	if pstevieText then
+		destroyElement ( pstevieText )
+		pstevieText = nil
+	end
+	
+	if pwStevie then
+		destroyElement ( pwStevie )
+		pwStevie = nil
+	end
 	
 	showCursor(false)
 	
