@@ -697,7 +697,7 @@ function sendSMS(thePlayer, commandName, number, ...)
 									end
 								end
 							end
-						end, 10000, 1, thePlayer
+						end, 3000, 1, thePlayer
 					)
 				else
 					local target = nil
@@ -715,20 +715,24 @@ function sendSMS(thePlayer, commandName, number, ...)
 						end
 					end
 					
+					local languageslot = getElementData(thePlayer, "languages.current")
+					local language = getElementData(thePlayer, "languages.lang" .. languageslot)
+					local languagename = call(getResourceFromName("language-system"), "getLanguageName", language)
+					
 					if target then
 						if target == thePlayer then
 							outputChatBox( "You can't send yourself a message.", thePlayer, 255, 0, 0 )
 						elseif getElementData(target, "phoneoff") == 1 then
-							setTimer( outputChatBox, 5000, 1, "((Automated Message)) The phone with that number is currently off.", thePlayer, 120, 255, 80 )
+							exports.global:sendLocalMeAction(thePlayer, "sends a text message.")
+							outputChatBox("[" .. languagename .. "] You [SMS to #" .. targetNumber .. "]: " .. message, thePlayer, 120, 255, 80)
+							
+							setTimer( outputChatBox, 3000, 1, "((Automated Message)) The phone with that number is currently off.", thePlayer, 120, 255, 80 )
 						else
 							local message = table.concat({...}, " ")
 							local username = getPlayerName(thePlayer):gsub("_", " ")
 							local phoneNumber = getElementData(thePlayer, "cellnumber")
 							local targetNumber = getElementData(target, "cellnumber")
 								
-							local languageslot = getElementData(thePlayer, "languages.current")
-							local language = getElementData(thePlayer, "languages.lang" .. languageslot)
-							local languagename = call(getResourceFromName("language-system"), "getLanguageName", language)
 							local message2 = call(getResourceFromName("language-system"), "applyLanguage", thePlayer, target, message, language)
 							
 							
@@ -743,7 +747,10 @@ function sendSMS(thePlayer, commandName, number, ...)
 							end
 						end
 					else
-						setTimer( outputChatBox, 5000, 1, "((Automated Message)) The recipient of the message could not be found.", thePlayer, 120, 255, 80)
+						exports.global:sendLocalMeAction(thePlayer, "sends a text message.")
+						outputChatBox("[" .. languagename .. "] You [SMS to #" .. targetNumber .. "]: " .. message, thePlayer, 120, 255, 80)
+						
+						setTimer( outputChatBox, 3000, 1, "((Automated Message)) The recipient of the message could not be found.", thePlayer, 120, 255, 80)
 					end
 				end
 			else
