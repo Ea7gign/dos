@@ -5,7 +5,7 @@ end
 addEventHandler("onResourceStart", getResourceRootElement(), anticheatStarted)
 
 function showSpeedToAdmins(velocity)
-	kph = velocity * 1.609344
+	kph = math.ceil(velocity * 1.609344)
 	exports.global:sendMessageToAdmins("[Possible Speedhack/HandlingHack] " .. getPlayerName(source) .. ": " .. velocity .. "Mph/".. kph .." Kph")
 end
 addEvent("alertAdminsOfSpeedHacks", true)
