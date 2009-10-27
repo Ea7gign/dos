@@ -1,6 +1,6 @@
 addCommandHandler( "serialkiller",
 	function( thePlayer )
-		if exports.global:isPlayerAdmin( thePlayer )
+		if exports.global:isPlayerAdmin( thePlayer ) then
 			if getElementModel( thePlayer ) > 0 then
 				setElementModel( thePlayer, 0 )
 				addPedClothes( thePlayer, "gimpleg", "gimpleg", 17 )
