@@ -718,6 +718,7 @@ function sendSMS(thePlayer, commandName, number, ...)
 					local languageslot = getElementData(thePlayer, "languages.current")
 					local language = getElementData(thePlayer, "languages.lang" .. languageslot)
 					local languagename = call(getResourceFromName("language-system"), "getLanguageName", language)
+					local message = table.concat({...}, " ")
 					
 					if target then
 						if target == thePlayer then
@@ -728,7 +729,6 @@ function sendSMS(thePlayer, commandName, number, ...)
 							
 							setTimer( outputChatBox, 3000, 1, "((Automated Message)) The phone with that number is currently off.", thePlayer, 120, 255, 80 )
 						else
-							local message = table.concat({...}, " ")
 							local username = getPlayerName(thePlayer):gsub("_", " ")
 							local phoneNumber = getElementData(thePlayer, "cellnumber")
 							local targetNumber = getElementData(target, "cellnumber")
