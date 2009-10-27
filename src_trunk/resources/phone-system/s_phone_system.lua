@@ -664,57 +664,87 @@ function sendSMS(thePlayer, commandName, number, ...)
 	if (logged==1) then
 		if (exports.global:hasItem(thePlayer, 2)) then -- 71 = Cell phone item
 			number = tonumber( number )
-			if not (...) or not number then
+			if not number or ( number ~= 999 and not (...) ) then
 				outputChatBox("SYNTAX: /" .. commandName .. " [number] [message]", thePlayer, 255, 194, 14)
 			elseif getElementData(thePlayer, "phoneoff") == 1 then
 				outputChatBox("Your phone is off.", thePlayer, 255, 0, 0)
 			elseif getElementData(thePlayer, "injuriedanimation") then
 				outputChatBox("You can't use your phone while knocked out.", thePlayer, 255, 0, 0)
 			elseif exports.global:hasMoney(thePlayer, 1) or exports.global:isPlayerSilverDonator(thePlayer) then
-				local target = nil
-				
-				for key, value in ipairs(exports.pool:getPoolElementsByType("player")) do
-					local logged = getElementData(value, "loggedin")
+				if number == 999 then
+					if not exports.global:isPlayerSilverDonator(thePlayer) then
+						exports.global:takeMoney(thePlayer, 1)
+					end
 					
-					if (logged==1) then
-						if number == tonumber(getElementData(value, "cellnumber")) then
-							if exports.global:hasItem(value, 2) then -- Check the target has a phone, if not, they weren't found
-								target = value
-								break
+					exports.global:sendLocalMeAction(thePlayer, "sends a text message.")
+					outputChatBox("You [SMS to #999]: info", thePlayer, 120, 255, 80)
+					
+					setTimer( 
+						function( thePlayer )
+							if isElement( thePlayer ) then
+								local id = getElementData( thePlayer, "dbid" )
+								if id then
+									local impounded = mysql_query(handler, "SELECT COUNT(*) FROM vehicles WHERE owner = " .. id .. " and Impounded > 0")
+									if impounded then
+										exports.global:sendLocalMeAction(thePlayer, "receives a text message.")
+										local amount = tonumber(mysql_result(impounded, 1, 1)) or 0
+										if amount > 0 then
+											outputChatBox("((Best's Towing & Recovery)) #999 [SMS]: " .. amount .. " of your vehicles are impounded. Head over to the Impound to release them.", thePlayer, 120, 255, 80)
+										else
+											outputChatBox("((Best's Towing & Recovery)) #999 [SMS]: None of your vehicles are impounded.", thePlayer, 120, 255, 80)
+										end
+										mysql_free_result(impounded)
+									end
+								end
+							end
+						end, 10000, 1, thePlayer
+					)
+				else
+					local target = nil
+					
+					for key, value in ipairs(exports.pool:getPoolElementsByType("player")) do
+						local logged = getElementData(value, "loggedin")
+						
+						if (logged==1) then
+							if number == tonumber(getElementData(value, "cellnumber")) then
+								if exports.global:hasItem(value, 2) then -- Check the target has a phone, if not, they weren't found
+									target = value
+									break
+								end
 							end
 						end
 					end
-				end
-				
-				if target then
-					if target == thePlayer then
-						outputChatBox( "You can't send yourself a message.", thePlayer, 255, 0, 0 )
-					elseif getElementData(target, "phoneoff") == 1 then
-						outputChatBox( "((Automated Message)) The phone with that number is currently off.", thePlayer, 120, 255, 80 )
-					else
-						local message = table.concat({...}, " ")
-						local username = getPlayerName(thePlayer):gsub("_", " ")
-						local phoneNumber = getElementData(thePlayer, "cellnumber")
-						local targetNumber = getElementData(target, "cellnumber")
+					
+					if target then
+						if target == thePlayer then
+							outputChatBox( "You can't send yourself a message.", thePlayer, 255, 0, 0 )
+						elseif getElementData(target, "phoneoff") == 1 then
+							setTimer( outputChatBox, 5000, 1, "((Automated Message)) The phone with that number is currently off.", thePlayer, 120, 255, 80 )
+						else
+							local message = table.concat({...}, " ")
+							local username = getPlayerName(thePlayer):gsub("_", " ")
+							local phoneNumber = getElementData(thePlayer, "cellnumber")
+							local targetNumber = getElementData(target, "cellnumber")
+								
+							local languageslot = getElementData(thePlayer, "languages.current")
+							local language = getElementData(thePlayer, "languages.lang" .. languageslot)
+							local languagename = call(getResourceFromName("language-system"), "getLanguageName", language)
+							local message2 = call(getResourceFromName("language-system"), "applyLanguage", thePlayer, target, message, language)
 							
-						local languageslot = getElementData(thePlayer, "languages.current")
-						local language = getElementData(thePlayer, "languages.lang" .. languageslot)
-						local languagename = call(getResourceFromName("language-system"), "getLanguageName", language)
-						local message2 = call(getResourceFromName("language-system"), "applyLanguage", thePlayer, target, message, language)
-						
-						
-						exports.global:sendLocalMeAction(thePlayer, "sends a text message.")
-						exports.global:sendLocalMeAction(target, "receives a text message.")
-						-- Send the message to the person on the other end of the line
-						outputChatBox("[" .. languagename .. "] ((" .. username .. ")) #" .. phoneNumber .. " [SMS]: " .. message2, target, 120, 255, 80)
-						outputChatBox("[" .. languagename .. "] You [SMS to #" .. targetNumber .. "]: " .. message, thePlayer, 120, 255, 80)
-						
-						if not exports.global:isPlayerSilverDonator(thePlayer) then
-							exports.global:takeMoney(thePlayer, 1)
+							
+							exports.global:sendLocalMeAction(thePlayer, "sends a text message.")
+							exports.global:sendLocalMeAction(target, "receives a text message.")
+							-- Send the message to the person on the other end of the line
+							outputChatBox("[" .. languagename .. "] ((" .. username .. ")) #" .. phoneNumber .. " [SMS]: " .. message2, target, 120, 255, 80)
+							outputChatBox("[" .. languagename .. "] You [SMS to #" .. targetNumber .. "]: " .. message, thePlayer, 120, 255, 80)
+							
+							if not exports.global:isPlayerSilverDonator(thePlayer) then
+								exports.global:takeMoney(thePlayer, 1)
+							end
 						end
+					else
+						setTimer( outputChatBox, 5000, 1, "((Automated Message)) The recipient of the message could not be found.", thePlayer, 120, 255, 80)
 					end
-				else
-					outputChatBox( "((Automated Message)) The recipient of the message could not be found.", thePlayer, 120, 255, 80)
 				end
 			else
 				outputChatBox("You cannot afford a SMS.", thePlayer, 255, 0, 0)
