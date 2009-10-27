@@ -107,15 +107,6 @@ function applyMods()
 	proLS = engineLoadTXD ( "lv/sunset02_law2.txd" )
 	engineImportTXD ( proLS, 6364 )
 	
-	-------------------
-	-- Rohane McLean --
-	-------------------
-	rohane = engineLoadTXD( "lv/lawnbillbrd.txd" )
-	engineImportTXD ( rohane, 5846 )
-	
-	rohane2 = engineLoadTXD( "lv/billbrd01_lan.txd" )
-	engineImportTXD ( rohane2, 4239 )
-	
 	--------------
 	-- Club 420 --
 	--------------
