@@ -725,13 +725,12 @@ function sendSMS(thePlayer, commandName, number, ...)
 							outputChatBox( "You can't send yourself a message.", thePlayer, 255, 0, 0 )
 						elseif getElementData(target, "phoneoff") == 1 then
 							exports.global:sendLocalMeAction(thePlayer, "sends a text message.")
-							outputChatBox("[" .. languagename .. "] You [SMS to #" .. targetNumber .. "]: " .. message, thePlayer, 120, 255, 80)
+							outputChatBox("[" .. languagename .. "] You [SMS to #" .. number .. "]: " .. message, thePlayer, 120, 255, 80)
 							
 							setTimer( outputChatBox, 3000, 1, "((Automated Message)) The phone with that number is currently off.", thePlayer, 120, 255, 80 )
 						else
 							local username = getPlayerName(thePlayer):gsub("_", " ")
 							local phoneNumber = getElementData(thePlayer, "cellnumber")
-							local targetNumber = getElementData(target, "cellnumber")
 								
 							local message2 = call(getResourceFromName("language-system"), "applyLanguage", thePlayer, target, message, language)
 							
@@ -740,7 +739,7 @@ function sendSMS(thePlayer, commandName, number, ...)
 							exports.global:sendLocalMeAction(target, "receives a text message.")
 							-- Send the message to the person on the other end of the line
 							outputChatBox("[" .. languagename .. "] ((" .. username .. ")) #" .. phoneNumber .. " [SMS]: " .. message2, target, 120, 255, 80)
-							outputChatBox("[" .. languagename .. "] You [SMS to #" .. targetNumber .. "]: " .. message, thePlayer, 120, 255, 80)
+							outputChatBox("[" .. languagename .. "] You [SMS to #" .. number .. "]: " .. message, thePlayer, 120, 255, 80)
 							
 							if not exports.global:isPlayerSilverDonator(thePlayer) then
 								exports.global:takeMoney(thePlayer, 1)
@@ -748,7 +747,7 @@ function sendSMS(thePlayer, commandName, number, ...)
 						end
 					else
 						exports.global:sendLocalMeAction(thePlayer, "sends a text message.")
-						outputChatBox("[" .. languagename .. "] You [SMS to #" .. targetNumber .. "]: " .. message, thePlayer, 120, 255, 80)
+						outputChatBox("[" .. languagename .. "] You [SMS to #" .. number .. "]: " .. message, thePlayer, 120, 255, 80)
 						
 						setTimer( outputChatBox, 3000, 1, "((Automated Message)) The recipient of the message could not be found.", thePlayer, 120, 255, 80)
 					end
