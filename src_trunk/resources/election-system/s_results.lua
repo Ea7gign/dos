@@ -1,7 +1,7 @@
 addCommandHandler( "pollresults",
 	function( thePlayer )
 		if exports.global:isPlayerAdmin( thePlayer ) or exports.global:isPlayerScripter( thePlayer ) or getPlayerTeam( thePlayer ) == getTeamFromName( "San Andreas Network News" ) then
-			local result = mysql_query( handler, "SELECT ( SELECT charactername FROM characters x WHERE x.id = c.election_votedfor ), COUNT(DISTINCT(id)) AS cnt FROM characters c WHERE election_canvote > 0 GROUP BY election_votedfor ORDER BY cnt DESC" )
+			local result = mysql_query( handler, "SELECT ( SELECT charactername FROM characters x WHERE x.id = c.election_votedfor ), COUNT(DISTINCT(account)) AS cnt FROM characters c WHERE election_canvote > 0 GROUP BY election_votedfor ORDER BY cnt DESC" )
 			local results = { }
 			local total = 0
 			local notvoted = 0
