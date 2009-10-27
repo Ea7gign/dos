@@ -19,5 +19,6 @@
 	<script src="ein_gate2.lua" type="server"/>
 	
 	<script src="ScottieMansion.lua" type="server"/>
+	<script src="MountMansion.lua" type="server"/>
 	<script src="airport.lua" type="server"/>
 </meta>
