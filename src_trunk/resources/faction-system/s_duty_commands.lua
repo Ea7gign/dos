@@ -17,6 +17,8 @@ exports.pool:allocateElement(fbiColShape)
 setElementDimension(fbiColShape, 795)
 setElementInterior(fbiColShape, 10)
 
+local authSwat = nil
+
 function saveWeaponsOnDuty( thePlayer )
 	triggerClientEvent(thePlayer, "saveGunsDuty", thePlayer)
 	exports.global:takeAllWeapons(thePlayer)
@@ -286,36 +288,40 @@ function swatduty(thePlayer, commandName)
 			
 			if (factionType==2) then
 				if (duty==0) then
-					outputChatBox("You are now on SWAT Duty.", thePlayer)
-					exports.global:sendLocalMeAction(thePlayer, "takes their swat gear from their locker.")
-					
-					if setElementData(thePlayer, "casualskin", getPedSkin(thePlayer), false) then
-						mysql_free_result( mysql_query( handler, "UPDATE characters SET casualskin = " .. getPedSkin(thePlayer) .. " WHERE id = " .. getElementData(thePlayer, "dbid") ) )
+					if isTimer( authSwat ) then
+						outputChatBox("You are now on SWAT Duty.", thePlayer)
+						exports.global:sendLocalMeAction(thePlayer, "takes their swat gear from their locker.")
+						
+						if setElementData(thePlayer, "casualskin", getPedSkin(thePlayer), false) then
+							mysql_free_result( mysql_query( handler, "UPDATE characters SET casualskin = " .. getPedSkin(thePlayer) .. " WHERE id = " .. getElementData(thePlayer, "dbid") ) )
+						end
+						
+						saveWeaponsOnDuty(thePlayer)
+						
+						setPedArmor(thePlayer, 100)
+						setElementHealth(thePlayer, 100)
+						
+						exports.global:giveWeapon(thePlayer, 24, 250) -- Deagle / MP Handgun
+						exports.global:giveWeapon(thePlayer, 27, 200) -- Shotgun
+						exports.global:giveWeapon(thePlayer, 29, 800) -- MP5
+						exports.global:giveWeapon(thePlayer, 31, 1200) -- M4
+						exports.global:giveWeapon(thePlayer, 34, 200) -- Sniper
+						exports.global:giveWeapon(thePlayer, 17, 10) -- Tear gas
+						
+						exports.global:giveItem(thePlayer, 26, 1)
+						exports.global:giveItem(thePlayer, 27, 1)
+						exports.global:giveItem(thePlayer, 28, 1)
+						exports.global:giveItem(thePlayer, 29, 1)
+						exports.global:giveItem(thePlayer, 45, 1)
+						
+						setElementModel(thePlayer, 285)
+						
+						setElementData(thePlayer, "duty", 1, false)
+						
+						saveSkin(thePlayer)
+					else
+						outputChatBox( "There is no SWAT Authorization at the moment. Contact a Captain or higher.", thePlayer, 255, 0, 0)
 					end
-					
-					saveWeaponsOnDuty(thePlayer)
-					
-					setPedArmor(thePlayer, 100)
-					setElementHealth(thePlayer, 100)
-					
-					exports.global:giveWeapon(thePlayer, 24, 250) -- Deagle / MP Handgun
-					exports.global:giveWeapon(thePlayer, 27, 200) -- Shotgun
-					exports.global:giveWeapon(thePlayer, 29, 800) -- MP5
-					exports.global:giveWeapon(thePlayer, 31, 1200) -- M4
-					exports.global:giveWeapon(thePlayer, 34, 200) -- Sniper
-					exports.global:giveWeapon(thePlayer, 17, 10) -- Tear gas
-					
-					exports.global:giveItem(thePlayer, 26, 1)
-					exports.global:giveItem(thePlayer, 27, 1)
-					exports.global:giveItem(thePlayer, 28, 1)
-					exports.global:giveItem(thePlayer, 29, 1)
-					exports.global:giveItem(thePlayer, 45, 1)
-					
-					setElementModel(thePlayer, 285)
-					
-					setElementData(thePlayer, "duty", 1, false)
-					
-					saveSkin(thePlayer)
 				elseif (duty==1) then -- SWAT
 					restoreWeapons(thePlayer)
 					outputChatBox("You are now off SWAT duty.", thePlayer)
@@ -605,3 +611,42 @@ end
 function saveSkin(thePlayer)
 	mysql_free_result( mysql_query( handler, "UPDATE characters SET skin = " .. getElementModel( thePlayer ) .. ", duty = " .. ( getElementData( thePlayer, "duty" ) or 0 ) .. " WHERE id = " .. getElementData( thePlayer, "dbid" ) ) )
 end
+
+addCommandHandler( "authswat",
+	function( thePlayer )
+		local theTeam = getPlayerTeam(thePlayer)
+		
+		if theTeam then
+			local teamID = tonumber(getElementData(theTeam, "id"))
+		
+			if teamID == 1 then
+				local result = mysql_query(handler, "SELECT faction_rank FROM characters WHERE id=" .. getElementData(thePlayer, "dbid") .. " LIMIT 1")
+				local factionRank = tonumber(mysql_result(result, 1, 1))
+				mysql_free_result(result)
+				
+				if factionRank >= 13 then
+					if isTimer( authSwat ) then
+						killTimer( authSwat )
+						authSwat = nil
+						
+						for k, v in pairs( getPlayersInTeam( theTeam ) ) do
+							outputChatBox( "SWAT Authorization has been revoked by " .. getPlayerName( thePlayer ):gsub( "_", " " ) .. ".", v, 255, 0, 0 )
+						end
+					else
+						authSwat = setTimer( 
+							function( theTeam )
+								for k, v in pairs( getPlayersInTeam( theTeam ) ) do
+									outputChatBox( "SWAT Authorization has been revoked after 10 minutes.", v, 255, 0, 0 )
+								end
+								authSwat = nil
+							end, 600000, 1, theTeam
+						)
+						for k, v in pairs( getPlayersInTeam( theTeam ) ) do
+							outputChatBox( "SWAT Authorization has been granted by " .. getPlayerName( thePlayer ):gsub( "_", " " ) .. " ((/swat in the locker for 10 mins)).", v, 255, 0, 0 )
+						end
+					end
+				end
+			end
+		end
+	end
+)
