@@ -89,7 +89,7 @@ function createShopKeeper(x,y,z,interior,dimension,id,shoptype,rotation, skin)
 end
 
 function isGun(weaponID)
-	if weaponID <= 15 or weaponID >= 42 then
+	if weaponID <= 15 or weaponID >= 41 then
 		return false
 	end
 	return true
