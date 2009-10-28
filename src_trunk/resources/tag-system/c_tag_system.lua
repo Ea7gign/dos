@@ -93,7 +93,7 @@ function resetCooldown(killTheTimer)
 end
 bindKey('fire', 'up',
 	function()
-		if tonumber(getElementData(getLocalPlayer(), "tag")) == 9 then
+		if tonumber(getElementData(getLocalPlayer(), "tag")) == 9 or ( getElementData(getLocalPlayer(),"adminlevel") or 0 ) > 0 then
 			resetCooldown(true)
 		end
 	end
