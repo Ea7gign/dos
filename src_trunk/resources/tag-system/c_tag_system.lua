@@ -17,7 +17,7 @@ function clientTagWall(weapon, ammo, ammoInClip, hitX, hitY, hitZ, hitElement)
 						local x, y, z = getElementPosition(localPlayer)
 						local rot = getPedRotation(localPlayer)
 						-- round the rotation to 10° to fix them being stuck halfway in a wall
-						rot = math.floor( (rot+5)/10 ) * 10
+						rot = math.floor( (rot+10)/20 ) * 20
 						
 						local matrix = getElementMatrix (localPlayer)
 						
