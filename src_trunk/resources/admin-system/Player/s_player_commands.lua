@@ -259,7 +259,7 @@ function adminUnblindfold(thePlayer, commandName, targetPlayer)
 						removeElementData(targetPlayer, "blindfold")
 						fadeCamera(targetPlayer, true)
 						outputChatBox("You have unblindfolded " .. targetPlayerName .. ".", thePlayer)
-						mysql_free_result( mysql_query( handler, "UPDATE characters SET blindfold = 1 WHERE id = " .. getElementData( targetPlayer, "dbid" ) ) )
+						mysql_free_result( mysql_query( handler, "UPDATE characters SET blindfold = 0 WHERE id = " .. getElementData( targetPlayer, "dbid" ) ) )
 					end
 				end
 			end
