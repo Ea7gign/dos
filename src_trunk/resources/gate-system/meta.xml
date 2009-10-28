@@ -21,4 +21,5 @@
 	<script src="ScottieMansion.lua" type="server"/>
 	<script src="MountMansion.lua" type="server"/>
 	<script src="airport.lua" type="server"/>
+	<script src="Rayray.lua" type="server"/>
 </meta>
