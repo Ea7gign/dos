@@ -108,7 +108,7 @@ addCommandHandler("clearnearbytag", clearNearbyTag, false, false)
 
 function loadAllTags(res)
 	-- delete old tags
-	mysql_free_result( mysql_query(handler, "DELETE FROM tags WHERE DATEDIFF(NOW(), creationdate) > 2") )
+	mysql_free_result( mysql_query(handler, "DELETE FROM tags WHERE DATEDIFF(NOW(), creationdate) > 7") )
 	local result = mysql_query(handler, "SELECT id, x, y, z, interior, dimension, rx, ry, rz, modelid FROM tags")
 	local count = 0
 	
