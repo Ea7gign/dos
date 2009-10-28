@@ -1,5 +1,6 @@
 local bans = 
 {
+	"212.92.*.*", -- Tailor Joe
 	"41.249.*.*" -- Joe Harisson
 }
 
