@@ -102,7 +102,6 @@ function clearNearbyTag(thePlayer)
 		else
 			outputChatBox("You are not near any tag.", thePlayer, 255, 0, 0)
 		end
-		destroyElement(colshape)
 	end
 end
 addCommandHandler("clearnearbytag", clearNearbyTag, false, false)
