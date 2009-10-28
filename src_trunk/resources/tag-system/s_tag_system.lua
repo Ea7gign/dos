@@ -78,6 +78,7 @@ addEventHandler("createTag", getRootElement(), makeTagObject)
 
 function clearNearbyTag(thePlayer)
 	if (exports.global:isPlayerAdmin(thePlayer)) then
+		local x, y, z = getElementPosition(thePlayer)
 		local object = nil
 		local dist = 999999
 		for key, value in ipairs(exports.global:getNearbyElements(thePlayer, "object")) do
