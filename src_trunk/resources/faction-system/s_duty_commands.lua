@@ -320,7 +320,7 @@ function swatduty(thePlayer, commandName)
 						
 						saveSkin(thePlayer)
 					else
-						outputChatBox( "There is no SWAT Authorization at the moment. Contact a Captain or higher.", thePlayer, 255, 0, 0)
+						outputChatBox( "There is no SWAT Authorization from a Lt+.", thePlayer, 255, 0, 0)
 					end
 				elseif (duty==1) then -- SWAT
 					restoreWeapons(thePlayer)
@@ -624,7 +624,7 @@ addCommandHandler( "authswat",
 				local factionRank = tonumber(mysql_result(result, 1, 1))
 				mysql_free_result(result)
 				
-				if factionRank >= 13 then
+				if factionRank >= 12 then
 					if isTimer( authSwat ) then
 						killTimer( authSwat )
 						authSwat = nil
