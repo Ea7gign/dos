@@ -91,7 +91,8 @@ g_items = {
 	{ "Generic Item", "#v", 4, 1271, 0, 0, 0, 0.285 },
 	{ "Fridge", "A fridge to store food and drinks in.", 7, 2147, 0, 0, 0, 0 },
 	{ "BT&R Identification", "This BT&R Identification has been issued to #v.", 4, 1581, 270, 270, 0, 0 },
-	{ "Coffee", "A small cup of Coffee.", 1, 2647, 0, 0, 0, 0.12 }
+	{ "Coffee", "A small cup of Coffee.", 1, 2647, 0, 0, 0, 0.12 },
+	{ "Police Radar", "Detects Police within a half mile.", 7, 330, 90, 90, 0, -0.05 }
 	--Chairs = { 1663, 1671, 1720, 1721, 1810, 1811, 2079, 2120, 2121, 2125, 2777, 2788, 1369 }
 }
 

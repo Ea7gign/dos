@@ -713,6 +713,9 @@ function useItem(button)
 			elseif (itemID==82) then
 				outputChatBox("A BT&R identification, issued to " .. itemValue .. ".", 255, 194, 14)
 				return
+			elseif (itemID==84) then
+				outputChatBox("Put it in a car or carry it to know when police is around.", 255, 194, 14)
+				return
 			end
 			
 			triggerServerEvent("useItem", getLocalPlayer(), itemSlot, additional)
