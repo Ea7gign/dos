@@ -109,11 +109,7 @@ function setTag(commandName, newTag)
 			local theTeam = getPlayerTeam(getLocalPlayer())
 			local teamName = getTeamName(theTeam)
 			
-			if (teamName~="Grove Street OGs") and (newTag==5) then -- Grove Street OGs
-				outputChatBox("You are not a member of the Grove Street OGs.", 255, 0, 0)
-			elseif (teamName~="Blood State Villains") and (newTag==6) then -- Blood State Villains
-				outputChatBox("You are not a member of the Blood State Villains.", 255, 0, 0)
-			elseif (teamName~="Los Malvados") and (newTag==8) then -- Los Malvados
+			if (teamName~="Los Malvados") and (newTag==8) then -- Los Malvados
 				outputChatBox("You are not a member of Los Malvados.", 255, 0, 0)
 			else
 				setElementData(getLocalPlayer(), "tag", newTag, true)
