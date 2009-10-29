@@ -121,6 +121,9 @@ function getItemName(id, value)
 		return "?"
 	elseif id == 3 and value then
 		return g_items[id][1] .. findVehicleName(value)
+	elseif ( id == 4 or id == 5 ) and value then
+		local pickup = exports['interior-system']:findParent( nil, value )
+		return g_items[id][1] .. ( pickup and ( " (" .. getElementData( pickup, "name" ) .. ")" ) or "" )
 	else
 		return g_items[id][1]
 	end

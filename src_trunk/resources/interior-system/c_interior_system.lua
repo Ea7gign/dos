@@ -259,3 +259,35 @@ function clickHouse(button, state, absX, absY, wx, wy, wz, e)
 	end
 end
 addEventHandler("onClientClick", getRootElement(), clickHouse, true)
+
+local cache = { }
+function findProperty(thePlayer, dimension)
+	local dbid = dimension or getElementDimension( thePlayer )
+	if dbid > 0 then
+		if cache[ dbid ] then
+			return unpack( cache[ dbid ] )
+		end
+		-- find the entrance and exit
+		local entrance, exit = nil, nil
+		for key, value in pairs(getElementsByType( "pickup", getResourceRootElement() )) do
+			if getElementData(value, "name") then
+				if getElementData(value, "dbid") == dbid then
+					entrance = value
+					break
+				end
+			end
+		end
+		
+		if entrance then
+			cache[ dbid ] = { dbid, entrance }
+			return dbid, entrance
+		end
+	end
+	cache[ dbid ] = { 0 }
+	return 0
+end
+
+function findParent( element, dimension )
+	local dbid, entrance = findProperty( element, dimension )
+	return entrance
+end

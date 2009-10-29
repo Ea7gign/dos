@@ -549,7 +549,7 @@ function setPickupElementData(pickup, id, optAngle, locked, owner, inttype, cost
 		setElementData(pickup, "owner", owner, false)
 		setElementData(pickup, "inttype", inttype, false)
 		setElementData(pickup, "cost", cost, false)
-		setElementData(pickup, "name", name, false)
+		setElementData(pickup, "name", name)
 		setElementData(pickup, "max_items", max_items, false)
 		setElementData(pickup, "tennant", tennant, false)
 		setElementData(pickup, "rent", rent, false)
@@ -897,7 +897,7 @@ function changeInteriorName( thePlayer, commandName, ...)
 				local dbid = getElementData( thePickup, "dbid" )
 				if dbid and dbid == id then
 					if getElementData( thePickup, "name" ) then
-						setElementData( thePickup, "name", name, false )
+						setElementData( thePickup, "name", name )
 						break
 					end
 				end

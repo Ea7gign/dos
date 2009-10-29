@@ -9,5 +9,7 @@
 	<export function="findParent" type="server"/>
 	
 	<script src="c_interior_system.lua" type="client" />
+	<export function="findProperty" type="client"/>
+	<export function="findParent" type="client"/>
 
 </meta>
