@@ -623,6 +623,7 @@ function givePlayerItem(thePlayer, commandName, targetPlayer, itemID, ...)
 				
 				if ( itemID == 74 or itemID == 75 ) and not exports.global:isPlayerScripter( thePlayer ) then
 					-- nuthin
+				elseif ( itemID == 84 ) and not exports.global:isPlayerLeadAdmin( thePlayer ) then
 				elseif (logged==0) then
 					outputChatBox("Player is not logged in.", thePlayer, 255, 0, 0)
 				elseif (logged==1) then
