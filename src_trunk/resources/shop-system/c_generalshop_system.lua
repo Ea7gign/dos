@@ -297,7 +297,7 @@ function getItemsForSale(shop_type, race, gender)
 	elseif(shop_type == 5) then
 		availableskins = fittingskins[gender][race]
 		for i = 1, #availableskins do
-			item[i] = {"Skin "..availableskins[i] , "MTA Skin id "..availableskins[i]..".", "50", 92, availableskins[i], 1, false, 35}
+			item[i] = {"Skin "..availableskins[i] , "MTA Skin id "..availableskins[i]..".", "50", 16, availableskins[i], 1, false, 35}
 		end
 	-- gym
 	elseif(shop_type == 6) then
