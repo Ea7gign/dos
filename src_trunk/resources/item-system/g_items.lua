@@ -103,13 +103,24 @@ function getItemRotInfo(id)
 	end
 end
 
-function getItemName(id)
+local function findVehicleName( value )
+	for _, theVehicle in pairs( getElementsByType( "vehicle" ) ) do
+		if getElementData( theVehicle, "dbid" ) == value then
+			return " (" .. getVehicleName( theVehicle ) .. ")"
+		end
+	end
+	return ""
+end
+
+function getItemName(id, value)
 	if id == -100 then
 		return "Body Armor"
 	elseif id < 0 then
 		return getWeaponNameFromID( -id )
 	elseif not g_items[id] then
 		return "?"
+	elseif id == 3 and value then
+		return g_items[id][1] .. findVehicleName(value)
 	else
 		return g_items[id][1]
 	end
