@@ -4,7 +4,7 @@ local Gate = {
 	[3] = createObject(969, 2777.1047363281, 911.95733642578, 9.8875827789307, 0, 0, 270.34057617188),
 }
 local GateName = "Gate"
-local GatePass = "anthonyjbryant"
+local GatePass = "13371249"
 local open = false
 
 
