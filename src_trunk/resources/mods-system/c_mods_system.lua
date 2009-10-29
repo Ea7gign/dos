@@ -113,7 +113,7 @@ function applyMods()
 	lautner = engineLoadTXD( "lv/billbrd01_lan.txd" )
 	engineImportTXD ( lautner, 4239 )
 	
-	--------------
+	--[[--------------
 	-- Club 420 --
 	--------------
 	club420col = createColSphere( -2658.7900390625, 1410.015625, 910.17034912109, 100 )
@@ -139,6 +139,6 @@ function applyMods()
 	)
 	club420b = engineLoadTXD( "lv/lanlacmab_lan2.txd" )
 	engineImportTXD ( club420b, 4594 )
-	
+	]]
 end
 addEventHandler("onClientResourceStart", getResourceRootElement(), applyMods)
