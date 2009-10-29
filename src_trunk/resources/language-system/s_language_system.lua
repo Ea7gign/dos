@@ -35,7 +35,7 @@ function increaseLanguageSkill(player, language)
 			if chance == 1 then
 				triggerClientEvent(player, "increaseInSkill", player, language)
 				setElementData(player, "languages.lang" .. slot .. "skill", currSkill+1, false)
-				mysql_free_result( mysql_query( handler, "UPDATE characters SET languages.lang" .. slot .. "skill = " .. currSkill + 1 .. " WHERE id = " .. getElementData( player, "dbid" ) ) )
+				mysql_free_result( mysql_query( handler, "UPDATE characters SET lang" .. slot .. "skill = " .. currSkill + 1 .. " WHERE id = " .. getElementData( player, "dbid" ) ) )
 			end
 		end
 	end
@@ -64,7 +64,7 @@ function removeLanguage(player, language)
 		-- unbindKey(player, tostring(slot), "down", "chatbox")
 		setElementData(player, "languages.lang" .. slot, 0)
 		setElementData(player, "languages.lang" .. slot .. "skill", 0)
-		mysql_free_result( mysql_query( handler, "UPDATE characters SET languages.lang" .. slot .. " = 0, languages.lang" .. slot .. "skill = 0 WHERE id = " .. getElementData( player, "dbid" ) ) )
+		mysql_free_result( mysql_query( handler, "UPDATE characters SET lang" .. slot .. " = 0, lang" .. slot .. "skill = 0 WHERE id = " .. getElementData( player, "dbid" ) ) )
 		return true
 	else
 		return false
@@ -216,7 +216,7 @@ function learnLanguage(player, lang, showmessages, skill)
 			
 			setElementData(player, "languages.lang" .. freeslot, lang, false)
 			setElementData(player, "languages.lang" .. freeslot .. "skill", skill or 0, false)
-			mysql_free_result( mysql_query( handler, "UPDATE characters SET languages.lang" .. freeslot .. " = " .. lang .. ", languages.lang" .. freeslot .. "skill = " .. ( skill or 0 ) .. " WHERE id = " .. getElementData( player, "dbid" ) ) )
+			mysql_free_result( mysql_query( handler, "UPDATE characters SET lang" .. freeslot .. " = " .. lang .. ", lang" .. freeslot .. "skill = " .. ( skill or 0 ) .. " WHERE id = " .. getElementData( player, "dbid" ) ) )
 			
 			-- bindKey(player, tostring( freeslot ), "down", "chatbox", getLanguageName( lang ))
 
@@ -248,7 +248,7 @@ function useLanguage(lang)
 	if (hasLanguage) then
 		outputChatBox("You are now using " .. languages[lang] .. " as your language.", source, 255, 194, 14)
 		setElementData(source, "languages.current", slot, false)
-		mysql_free_result( mysql_query( handler, "UPDATE characters SET languages.current = " .. slot .. " WHERE id = " .. getElementData( source, "dbid" ) ) )
+		mysql_free_result( mysql_query( handler, "UPDATE characters SET currLang = " .. slot .. " WHERE id = " .. getElementData( source, "dbid" ) ) )
 			
 		showLanguages(source)
 	end
@@ -265,7 +265,7 @@ function unlearnLanguage(lang)
 		
 		local nextSlot = getNextLanguageSlot(source)
 		setElementData(source, "languages.current", nextSlot, false)
-		mysql_free_result( mysql_query( handler, "UPDATE characters SET languages.current = " .. nextSlot .. " WHERE id = " .. getElementData( source, "dbid" ) ) )
+		mysql_free_result( mysql_query( handler, "UPDATE characters SET currLang = " .. nextSlot .. " WHERE id = " .. getElementData( source, "dbid" ) ) )
 		showLanguages(source)
 	end
 end
