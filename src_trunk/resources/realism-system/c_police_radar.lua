@@ -4,7 +4,7 @@ local enabled = false
 local counter = 0
 
 local function policeRadar( )
-	if enabled or exports.global:hasItem( getLocalPlayer( ), 84 ) then
+	if enabled then
 		local x, y, z = getElementPosition( getLocalPlayer( ) )
 		local dimension = getElementDimension( getLocalPlayer( ) )
 		
