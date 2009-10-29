@@ -694,7 +694,7 @@ function cPayDay(faction, pay, profit, interest, donatormoney, tax, incomeTax, v
 	
 	-- bank interest
 	if (interest > 0) then
-		outputChatBox("    Bank Interest: #00FF00" .. interest .. "$ (" .. ("%.1f"):format(math.min( 1, .4 + getElementData( getLocalPlayer(),"donatorlevel" ) * 0.1 )) .. ")",255, 194, 14, true)
+		outputChatBox("    Bank Interest: #00FF00" .. interest .. "$ (" .. ("%.1f"):format(math.min( 1, .4 + getElementData( getLocalPlayer(),"donatorlevel" ) * 0.1 )) .. "%)",255, 194, 14, true)
 	end
 	
 	-- donator money (nonRP)
