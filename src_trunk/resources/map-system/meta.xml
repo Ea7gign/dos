@@ -4,6 +4,7 @@
 	<script src="Church Int.lua" type="client"/>
 	<script src="DieFaust Garage.lua" type="client"/>
 	<script src="falcone map.lua" type="client"/>
+	<script src="falcone map 2.lua" type="client"/>
 	<script src="Hospital Int.lua" type="client"/>
 	<script src="Jefferson Interior Doors.lua" type="client"/>
 	<script src="Jefferson Emerald Isle.lua" type="client"/>
