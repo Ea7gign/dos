@@ -79,7 +79,7 @@ function loadAllElevators(res)
 	for k, thePlayer in ipairs(players) do
 		removeElementData(thePlayer, "UsedElevator")
 	end
-	local result = mysql_query(handler, "SELECT id, x, y, z, tpx, tpy, tpz, dimensionwithin, interiorwithin, dimension, interior, car FROM elevators")
+	local result = mysql_query(handler, "SELECT id, x, y, z, tpx, tpy, tpz, dimensionwithin, interiorwithin, dimension, interior, car, disabled FROM elevators")
 	local counter = 0
 	
 	if (result) then
@@ -99,10 +99,11 @@ function loadAllElevators(res)
 			local dimension = tonumber(row[10])
 			local interior = tonumber(row[11])
 			local car = tonumber(row[12])
+			local disabled = tonumber(row[13])
 			
-			local pickup = createPickup(x, y, z, 3, 1318)
+			local pickup = createPickup(x, y, z, 3, disabled == 1 and 1314 or 1318)
 			exports.pool:allocateElement(pickup)
-			local intpickup = createPickup(ix, iy, iz, 3, 1318)
+			local intpickup = createPickup(ix, iy, iz, 3, disabled == 1 and 1314 or 1318)
 			exports.pool:allocateElement(intpickup)
 			
 			setElementData(pickup, "dbid", id, false)
@@ -236,10 +237,16 @@ function enterElevator(player, pickup)
 		outputChatBox("You try the door handle, but it seems to be locked.", player, 255, 0,0, true)
 		return
 	end
+	
 	vehicle = getPedOccupiedVehicle( player )
 	if isInPickup ( player, pickup ) and not getElementData(player, "UsedElevator") and ( ( vehicle and cartp ~= 0 and getVehicleOccupant( vehicle ) == player ) or not vehicle ) then
 		if not vehicle and cartp == 2 then
 			outputChatBox( "This entrance is for vehicles only.", player, 255, 0, 0 )
+			return
+		end
+		
+		if getElementModel( pickup ) == 1314 then
+			outputChatBox( "This interior is currently disabled.", player, 255, 0, 0 )
 			return
 		end
 		
@@ -533,3 +540,52 @@ addEventHandler( "toggleCarTeleportMode", getRootElement(),
 		end
 	end
 )
+
+function toggleElevator( thePlayer, commandName, id )
+	if exports.global:isPlayerLeadAdmin( thePlayer ) then
+		id = tonumber( id )
+		if not id then
+			outputChatBox( "SYNTAX: /" .. commandName .. " [ID]", thePlayer, 255, 194, 14 )
+		else
+			local pickup = nil
+			for k, thePickup in ipairs(getElementsByType("pickup", getResourceRootElement())) do
+				local dbid = getElementData(thePickup, "dbid")
+				if dbid == id then
+					pickup = thePickup
+					break
+				end
+			end
+			
+			if pickup then
+				if getElementModel( pickup ) == 1314 then
+					mysql_free_result( mysql_query( handler, "UPDATE elevators SET disabled = 0 WHERE id = " .. dbid ) )
+					
+					setPickupType( pickup, 3, 1318 )
+					setPickupType( getElementData( pickup, "other" ), 3, 1318 )
+					
+					outputChatBox( "Elevator #" .. dbid .. " enabled.", thePlayer, 0, 255, 0 )
+				else
+					mysql_free_result( mysql_query( handler, "UPDATE elevators SET disabled = 1 WHERE id = " .. dbid ) )
+					
+					setPickupType( pickup, 3, 1314 )
+					setPickupType( getElementData( pickup, "other" ), 3, 1314 )
+					
+					outputChatBox( "Elevator #" .. dbid .. " disabled.", thePlayer, 255, 0, 0 )
+				end
+			end
+		end
+	end
+end
+addCommandHandler( "toggleelevator", toggleElevator )
+
+function enableAllElevators( thePlayer )
+	if exports.global:isPlayerLeadAdmin( thePlayer ) then
+		mysql_free_result( mysql_query( handler, "UPDATE elevators SET disabled = 0 WHERE disabled = 1" ) )
+		for k, thePickup in ipairs(getElementsByType("pickup", getResourceRootElement())) do
+			if getElementModel( thePickup ) == 1314 then
+				setPickupType( pickup, 3, 1318 )
+			end
+		end
+	end
+end
+addCommandHandler( "enableallelevators", enableAllElevators )
