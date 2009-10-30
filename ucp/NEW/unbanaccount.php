@@ -20,6 +20,11 @@
 	$username = mysql_result($result, 0, 0);
 	$admin = mysql_result($result, 0, 1);
 	
+	if ($admin < 1)
+	{
+		header('Location: main.php');
+		exit;
+	}
 ?>
 
 
