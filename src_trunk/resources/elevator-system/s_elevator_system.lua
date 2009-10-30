@@ -583,7 +583,7 @@ function enableAllElevators( thePlayer )
 		mysql_free_result( mysql_query( handler, "UPDATE elevators SET disabled = 0 WHERE disabled = 1" ) )
 		for k, thePickup in ipairs(getElementsByType("pickup", getResourceRootElement())) do
 			if getElementModel( thePickup ) == 1314 then
-				setPickupType( pickup, 3, 1318 )
+				setPickupType( thePickup, 3, 1318 )
 			end
 		end
 	end
