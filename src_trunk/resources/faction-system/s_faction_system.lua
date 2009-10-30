@@ -608,30 +608,37 @@ addCommandHandler("renamefaction", adminRenameFaction, false, false)
 
 function adminSetPlayerFaction(thePlayer, commandName, partialNick, factionID)
 	if (exports.global:isPlayerAdmin(thePlayer)) then
+		factionID = tonumber(factionID)
 		if not (partialNick) or not (factionID) then
 			outputChatBox("SYNTAX: /" .. commandName .. " [Player Partial Name/ID] [Faction ID (-1 for none)]", thePlayer, 255, 194, 14)
 		else
 			local targetPlayer, targetPlayerNick = exports.global:findPlayerByPartialNick(thePlayer, partialNick)
 			
 			if targetPlayer then
+				local theTeam = nil
+				if factionID ~= -1 then
+					for key, value in ipairs(exports.pool:getPoolElementsByType("team")) do
+						local id = getElementData(value, "id")
+						
+						if id == factionID then
+							theTeam = value
+						end
+					end
+				
+					if not theTeam then
+						outputChatBox("Invalid Faction ID.", thePlayer, 255, 0, 0)
+						return
+					end
+				end
+
 				local query = mysql_query(handler, "UPDATE characters SET faction_leader = 0, faction_id = " .. factionID .. ", faction_rank = 1, duty = 0, dutyskin = -1 WHERE id=" .. getElementData(targetPlayer, "dbid"))
 				
-				factionID = tonumber(factionID)
 				if (query) then
 					mysql_free_result(query)
-				end
-				if (query) and (factionID>0) then
-					
-					local safeid = mysql_escape_string(handler, factionID)
-					
-					query = mysql_query(handler, "SELECT name FROM factions WHERE id='" .. tonumber(safeid) .. "' LIMIT 1")
-					
-					if (query) then
-						local factionName = mysql_result(query, 1, 1)
-						mysql_free_result(query)
-						local theTeam = getTeamFromName(tostring(factionName))
+				
+					if factionID > 0 then
 						setPlayerTeam(targetPlayer, theTeam)
-						setElementData(targetPlayer, "faction", tonumber(factionID))
+						setElementData(targetPlayer, "faction", factionID)
 						setElementData(targetPlayer, "factionrank", 1)
 						setElementData(targetPlayer, "dutyskin", -1, false)
 						if getElementData(targetPlayer, "duty") and getElementData(targetPlayer, "duty") > 0 then
@@ -639,24 +646,24 @@ function adminSetPlayerFaction(thePlayer, commandName, partialNick, factionID)
 							setElementData(targetPlayer, "duty", 0, false)
 						end
 						
-						outputChatBox("Player " .. targetPlayerNick .. " is now a member of faction '" .. tostring(factionName) .. "' (#" .. factionID .. ").", thePlayer, 0, 255, 0)
+						outputChatBox("Player " .. targetPlayerNick .. " is now a member of faction '" .. getTeamName(theTeam) .. "' (#" .. factionID .. ").", thePlayer, 0, 255, 0)
 						
-						if	(targetPlayer) then
-							triggerEvent("onPlayerJoinFaction", targetPlayer, theTeam)
-							outputChatBox("You were set to Faction '" .. tostring(factionName) .. ".", targetPlayer, 255, 194, 14)
-						end
+						triggerEvent("onPlayerJoinFaction", targetPlayer, theTeam)
+						outputChatBox("You were set to Faction '" .. getTeamName(theTeam) .. ".", targetPlayer, 255, 194, 14)
 					else
-						outputChatBox("Invalid Faction ID, Ensure you entered a number!", thePlayer, 255, 0, 0)
+						local theTeam = getTeamFromName("Citizen")
+						setPlayerTeam(targetPlayer, theTeam)
+						setElementData(targetPlayer, "faction", -1)
+						setElementData(targetPlayer, "factionrank", 1)
+						setElementData(targetPlayer, "dutyskin", -1, false)
+						if getElementData(targetPlayer, "duty") and getElementData(targetPlayer, "duty") > 0 then
+							exports.global:takeAllWeapons(targetPlayer)
+							setElementData(targetPlayer, "duty", 0, false)
+						end
+						
+						outputChatBox("Player " .. targetPlayerNick .. " was set to no faction.", thePlayer, 0, 255, 0)
+						outputChatBox("You were removed from your faction.", targetPlayer, 255, 0, 0)
 					end
-				elseif (query) and (factionID==-1) then
-					local theTeam = getTeamFromName("Citizen")
-					setPlayerTeam(targetPlayer, theTeam)
-					setElementData(targetPlayer, "faction", -1)
-					
-					outputChatBox("Player " .. targetPlayerNick .. " was set to no faction.", thePlayer, 0, 255, 0)
-					outputChatBox("You were removed from your faction.", targetPlayer, 255, 0, 0)
-				else
-					outputChatBox("Invalid Faction ID, Ensure you entered a number!", thePlayer, 255, 0, 0)
 				end
 			end
 		end
@@ -666,40 +673,48 @@ addCommandHandler("setfaction", adminSetPlayerFaction, false, false)
 
 function adminSetFactionLeader(thePlayer, commandName, partialNick, factionID)
 	if (exports.global:isPlayerLeadAdmin(thePlayer)) then
+		factionID = tonumber(factionID)
 		if not (partialNick) or not (factionID)  then
 			outputChatBox("SYNTAX: /" .. commandName .. " [Player Partial Name] [Faction ID]", thePlayer, 255, 194, 14)
 		else
 			local targetPlayer, targetPlayerNick = exports.global:findPlayerByPartialNick(thePlayer, partialNick)
 			
 			if targetPlayer then
+				local theTeam = nil
+				if factionID ~= -1 then
+					for key, value in ipairs(exports.pool:getPoolElementsByType("team")) do
+						local id = getElementData(value, "id")
+						
+						if id == factionID then
+							theTeam = value
+						end
+					end
+				
+					if not theTeam then
+						outputChatBox("Invalid Faction ID.", thePlayer, 255, 0, 0)
+						return
+					end
+				end
+				
 				local query = mysql_query(handler, "UPDATE characters SET faction_leader = 1, faction_id = " .. tonumber(factionID) .. ", faction_rank = 1, dutyskin = -1, duty = 0 WHERE id = " .. getElementData(targetPlayer, "dbid"))
 				
 				if (query) then
 					mysql_free_result(query)
-					query = mysql_query(handler, "SELECT name FROM factions WHERE id='" .. tonumber(factionID) .. "' LIMIT 1")
-					
-					if (query) then
-						local factionName = mysql_result(query, 1, 1)
-						mysql_free_result(query)
-						local theTeam = getTeamFromName(tostring(factionName))
-						setPlayerTeam(targetPlayer, theTeam)
-						setElementData(targetPlayer, "faction", tonumber(factionID), false)
-						setElementData(targetPlayer, "dutyskin", -1, false)
-						if getElementData(targetPlayer, "duty") and getElementData(targetPlayer, "duty") > 0 then
-							exports.global:takeAllWeapons(targetPlayer)
-							setElementData(targetPlayer, "duty", 0, false)
-						end
-						
-						outputChatBox("Player " .. targetPlayerNick .. " is now a leader of faction '" .. tostring(factionName) .. "' (#" .. factionID .. ").", thePlayer, 0, 255, 0)
-						
-						if	(targetPlayer) then
-							triggerEvent("onPlayerJoinFaction", targetPlayer, theTeam)
-							setElementData(targetPlayer, "factionrank", 1)
-							outputChatBox("You were set to the leader of Faction '" .. tostring(factionName) .. ".", targetPlayer, 255, 194, 14)
-						end
-					else
-						outputChatBox("Invalid Faction ID, Ensure you entered a number!", thePlayer, 255, 0, 0)
+					setPlayerTeam(targetPlayer, theTeam)
+					setElementData(targetPlayer, "faction", 1, false)
+					setElementData(targetPlayer, "factionrank", 1)
+					setElementData(targetPlayer, "dutyskin", -1, false)
+					if getElementData(targetPlayer, "duty") and getElementData(targetPlayer, "duty") > 0 then
+						exports.global:takeAllWeapons(targetPlayer)
+						setElementData(targetPlayer, "duty", 0, false)
 					end
+					
+					outputChatBox("Player " .. targetPlayerNick .. " is now a leader of faction '" .. getTeamName(theTeam) .. "' (#" .. factionID .. ").", thePlayer, 0, 255, 0)
+						
+					triggerEvent("onPlayerJoinFaction", targetPlayer, theTeam)
+					outputChatBox("You were set to the leader of Faction '" .. getTeamName(theTeam) .. ".", targetPlayer, 255, 194, 14)
+				else
+					outputChatBox("Invalid Faction ID.", thePlayer, 255, 0, 0)
 				end
 			end
 		end
