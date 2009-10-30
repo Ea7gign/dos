@@ -377,7 +377,7 @@ function reloadOneInterior(id, hasCoroutine, displayircmessage)
 	if displayircmessage == nil then
 		displayircmessage = false
 	end
-	local result = mysql_query(handler, "SELECT id, x, y, z , interiorx, interiory, interiorz, type, owner, locked, cost, name, interior, dimensionwithin, interiorwithin, angle, angleexit, max_items, rentable, tennant, rent, money, safepositionX, safepositionY, safepositionZ, safepositionRZ, fee FROM interiors WHERE id='" .. id .. "'")
+	local result = mysql_query(handler, "SELECT id, x, y, z , interiorx, interiory, interiorz, type, owner, locked, cost, name, interior, dimensionwithin, interiorwithin, angle, angleexit, max_items, rentable, tennant, rent, money, safepositionX, safepositionY, safepositionZ, safepositionRZ, fee, disabled FROM interiors WHERE id='" .. id .. "'")
 	
 	if (hasCoroutine) then
 		coroutine.yield()
@@ -424,6 +424,7 @@ function reloadOneInterior(id, hasCoroutine, displayircmessage)
 			
 			local safeX, safeY, safeZ, safeRZ = row[23], row[24], row[25], row[26]
 			local fee = 0
+			local disabled = tonumber(row[28])
 			
 			local intpickup, pickup
 			-- If the is a house
@@ -486,6 +487,10 @@ function reloadOneInterior(id, hasCoroutine, displayircmessage)
 			else
 				outputDebugString("Invalid Interior: " .. tostring( id ))
 				return -- dun dun dunno!
+			end
+			
+			if disabled == 1 then
+				setPickupType( pickup, 3, 1314 )
 			end
 			
 			setElementData( pickup, "other", intpickup, false )
@@ -736,6 +741,12 @@ function enterInterior( thePlayer, thePickup )
 			
 			-- if the pickup collided with is an interior
 			if getElementData(thePickup, "name") then
+				-- might be disabled, so you cant enter (but still leave)
+				if getElementModel(thePickup) == 1314 then
+					outputChatBox("This interior is currently disabled.", thePlayer, 255, 0, 0)
+					return
+				end
+				
 				local owner = getElementData(thePickup, "owner")
 				local cost = getElementData(thePickup, "cost")
                 
@@ -1224,3 +1235,60 @@ function getInteriorID( thePlayer, commandName )
 	end
 end
 addCommandHandler( "getinteriorid", getInteriorID )
+
+function toggleInterior( thePlayer, commandName, id )
+	if exports.global:isPlayerLeadAdmin( thePlayer ) then
+		id = tonumber( id )
+		if not id then
+			outputChatBox( "SYNTAX: /" .. commandName .. " [ID]", thePlayer, 255, 194, 14 )
+		else
+			local dbid, entrance, exit, inttype = findProperty( thePlayer, id )
+			if entrance then
+				if getElementModel( entrance ) == 1314 then
+					mysql_free_result( mysql_query( handler, "UPDATE interiors SET disabled = 0 WHERE id = " .. dbid ) )
+					if inttype == 2 or getElementData( entrance, "owner" ) > 0 then
+						setPickupType( entrance, 3, 1318 )
+					elseif inttype == 0 or inttype == 3 then
+						setPickupType( entrance, 3, 1272 )
+					else
+						setPickupType( entrance, 3, 1273 )
+					end
+					
+					outputChatBox( "House #" .. dbid .. " enabled.", thePlayer, 0, 255, 0 )
+				else
+					mysql_free_result( mysql_query( handler, "UPDATE interiors SET disabled = 1 WHERE id = " .. dbid ) )
+					
+					setPickupType( entrance, 3, 1314 )
+					
+					outputChatBox( "House #" .. dbid .. " disabled.", thePlayer, 255, 0, 0 )
+				end
+			end
+		end
+	end
+end
+addCommandHandler( "toggleinterior", toggleInterior )
+
+function enableAllInteriors( thePlayer )
+	if exports.global:isPlayerLeadAdmin( thePlayer ) then
+		local result = mysql_query(handler, "SELECT id FROM interiors WHERE disabled = 1")
+		if result then
+			for result, row in mysql_rows(result) do
+				local dbid, entrance, exit, inttype = findProperty( thePlayer, tonumber( row[1] ) )
+				if entrance then
+					if getElementModel( entrance ) == 1314 then
+						if inttype == 2 or getElementData( entrance, "owner" ) > 0 then
+							setPickupType( entrance, 3, 1318 )
+						elseif inttype == 0 or inttype == 3 then
+							setPickupType( entrance, 3, 1272 )
+						else
+							setPickupType( entrance, 3, 1273 )
+						end
+					end
+				end
+			end
+			mysql_free_result(result)
+			mysql_free_result( mysql_query( handler, "UPDATE interiors SET disabled = 0 WHERE disabled = 1" ) )
+		end
+	end
+end
+addCommandHandler( "enableallinteriors", enableAllInteriors )
