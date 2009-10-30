@@ -499,6 +499,11 @@ function reloadOneInterior(id, hasCoroutine, displayircmessage)
 			setPickupElementData(pickup, id, optAngle, locked, owner, inttype, cost, name, max_items, tennant, rent, interiorwithin, dimension, money, fee)
 			setIntPickupElementData(intpickup, id, rot, locked, owner, inttype, interior)
 			
+			if safeTable[id] then
+				destroyElement( safeTable[id] )
+				safeTable[id] = nil
+			end
+			
 			if safeX ~= mysql_null() and safeY ~= mysql_null() and safeZ ~= mysql_null() and safeRZ ~= mysql_null() then
 				local tempobject = createObject(2332, tonumber(safeX), tonumber(safeY), tonumber(safeZ), 0, 0, tonumber(safeRZ))
 				setElementInterior(tempobject, interior)
