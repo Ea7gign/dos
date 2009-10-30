@@ -385,7 +385,7 @@ function forceApplication(thePlayer, commandName, targetPlayer, ...)
 					local reason = table.concat({...}, " ")
 					local id = getElementData(targetPlayer, "gameaccountid")
 					local username = getElementData(thePlayer, "gameaccountusername")
-					mysql_query(handler, "UPDATE accounts SET appstate = 2, apphandler='" .. username .. "', appreason='" .. mysql_escape_string(handler, reason) .. "' WHERE id='" .. id .. "'")
+					mysql_query(handler, "UPDATE accounts SET appstate = 2, apphandler='" .. username .. "', appreason='" .. mysql_escape_string(handler, reason) .. "', appdatetime = NOW() + INTERVAL 1 DAY WHERE id='" .. id .. "'")
 					outputChatBox(targetPlayerName .. " was forced to re-write their application.", thePlayer, 255, 194, 14)
 					
 					local port = getServerPort()

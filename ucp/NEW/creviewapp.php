@@ -203,7 +203,7 @@
 									$conn = mysql_pconnect($mysql_host, $mysql_user, $mysql_pass);
 									$reason = mysql_real_escape_string($reason, $conn);
 									
-									mysql_query("UPDATE accounts SET appstate=2, appreason='" . $reason . "', apphandler='" . $username . "'  WHERE id='" . $id . "' limit 1", $conn);
+									mysql_query("UPDATE accounts SET appstate=2, appreason='" . $reason . "', apphandler='" . $username . "', appdatetime=NOW() + INTERVAL 1 DAY WHERE id='" . $id . "' limit 1", $conn);
 									echo "You have now declined <strong>" . $targetusername . "'s</strong> Application.";
 								}
 

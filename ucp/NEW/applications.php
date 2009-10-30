@@ -199,7 +199,7 @@
 								elseif ( $_GET["show"] == 2 ) // show declined applications
 								{
 									echo "<h2>Declined Applications</h2>";
-									$query = mysql_query("SELECT id, username, appdatetime, DATEDIFF(NOW(), appdatetime), apphandler FROM accounts WHERE appstate=2 ORDER BY appdatetime ASC", $conn);
+									$query = mysql_query("SELECT id, username, appdatetime, DATEDIFF(NOW(), appdatetime)+1, apphandler FROM accounts WHERE appstate=2 ORDER BY appdatetime ASC", $conn);
 									
 									echo "<h4>Username - Date Submitted - Application Handler - Action</h4>";
 									

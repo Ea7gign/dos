@@ -1,3 +1,6 @@
+<?php
+ob_start();
+?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 
 <?php
@@ -15,7 +18,7 @@
 	$userid = mysql_real_escape_string($_COOKIE["uid"], $conn);
 	
 	mysql_select_db("mta", $conn);
-	$result = mysql_query("SELECT username, admin, donator, appstate, appgamingexperience, appcountry, applanguage, apphow, appwhy, appexpectations, appdefinitions, appfirstcharacter, appclarifications FROM accounts WHERE id='" . $userid . "' LIMIT 1", $conn);
+	$result = mysql_query("SELECT username, admin, donator, appstate, appgamingexperience, appcountry, applanguage, apphow, appwhy, appexpectations, appdefinitions, appfirstcharacter, appclarifications, appdatetime < NOW(), HOUR(TIMEDIFF(NOW(), appdatetime)), MINUTE(TIMEDIFF(NOW(), appdatetime)) FROM accounts WHERE id='" . $userid . "' LIMIT 1", $conn);
 
 	if (!$result || mysql_num_rows($result)==0)
 	{
@@ -39,6 +42,9 @@
 	$definitions = mysql_result($result, 0, 10);
 	$firstcharacter = mysql_result($result, 0, 11);
 	$clarifications = mysql_result($result, 0, 12);
+	$canapply = mysql_result($result, 0, 13);
+	$timehour = mysql_result($result, 0, 14);
+	$timeminute = mysql_result($result, 0, 15);
 	
 	if ($appstate == 1 || $appstate == 3)
 	{
@@ -186,6 +192,16 @@
 					<div class="content-box">
 						<div class="content-holder">
 							<h2>Application</h2>
+<?php
+						if( $canapply == 0 )
+						{
+?>
+							<p>You need to wait <?= (($timehour > 0)?($timehour . ' hours and '):('')) . $timeminute ?> minutes before applying again.</p>
+<?php
+						}
+						else
+						{
+?>
 							<script type="text/javascript" src="js/prototype/prototype.js"></script>
 							<script type="text/javascript" src="js/bramus/jsProgressBarHandler.js"></script>
 							<script type="text/javascript">
@@ -293,7 +309,9 @@
 								<p>Your registration will be reviewed by a member of our administration team. Once your application has been accepted you will be able to login to the server and play.</p>
 								<input type="submit" name="submit" id="submit" value="Submit" style="color:#FFF;">
 							</form>
-							
+<?php
+						}
+?>
 						</div>
 					</div>
 				</div>
