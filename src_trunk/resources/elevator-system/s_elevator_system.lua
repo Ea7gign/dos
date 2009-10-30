@@ -558,19 +558,19 @@ function toggleElevator( thePlayer, commandName, id )
 			
 			if pickup then
 				if getElementModel( pickup ) == 1314 then
-					mysql_free_result( mysql_query( handler, "UPDATE elevators SET disabled = 0 WHERE id = " .. dbid ) )
+					mysql_free_result( mysql_query( handler, "UPDATE elevators SET disabled = 0 WHERE id = " .. id ) )
 					
 					setPickupType( pickup, 3, 1318 )
 					setPickupType( getElementData( pickup, "other" ), 3, 1318 )
 					
-					outputChatBox( "Elevator #" .. dbid .. " enabled.", thePlayer, 0, 255, 0 )
+					outputChatBox( "Elevator #" .. id .. " enabled.", thePlayer, 0, 255, 0 )
 				else
-					mysql_free_result( mysql_query( handler, "UPDATE elevators SET disabled = 1 WHERE id = " .. dbid ) )
+					mysql_free_result( mysql_query( handler, "UPDATE elevators SET disabled = 1 WHERE id = " .. id ) )
 					
 					setPickupType( pickup, 3, 1314 )
 					setPickupType( getElementData( pickup, "other" ), 3, 1314 )
 					
-					outputChatBox( "Elevator #" .. dbid .. " disabled.", thePlayer, 255, 0, 0 )
+					outputChatBox( "Elevator #" .. id .. " disabled.", thePlayer, 255, 0, 0 )
 				end
 			end
 		end
