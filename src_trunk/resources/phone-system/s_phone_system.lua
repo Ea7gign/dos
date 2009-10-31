@@ -370,7 +370,9 @@ function hangupPhone(thePlayer, commandName)
 						end
 					end
 					removeElementData(calling, "calling")
-					outputChatBox("They hung up.", target)
+					if (isElement(target)) then
+						outputChatBox("They hung up.", target)
+					end
 					removeElementData(calling, "caller")
 					removeElementData(calling, "call.col")
 					setElementData(calling, "phonestate", 0, false)
