@@ -10,11 +10,9 @@
 		header('Location: main.php');
 		exit;
 	}
-?>
-
-<?php include("config.php"); ?>
-
-<?php 
+	
+	include("config.php");
+ 
 	$conn = mysql_pconnect($mysql_host, $mysql_user, $mysql_pass);
 	$userid = mysql_real_escape_string($_COOKIE["uid"], $conn);
 	

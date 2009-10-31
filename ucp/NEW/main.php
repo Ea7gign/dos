@@ -5,16 +5,14 @@
 		header('Location: index.php');
 		exit;
 	}
-?>
-
-<?php include("config.php"); ?>
-
-<?php 
+	
+	include("config.php");
+	
 	$conn = mysql_pconnect($mysql_host, $mysql_user, $mysql_pass);
 	$userid = mysql_real_escape_string($_COOKIE["uid"], $conn);
 	
 	mysql_select_db("mta", $conn);
-	$result = mysql_query("SELECT username, admin, donator, appstate, apphandler, appreason, banned, securitykey, appdatetime < NOW(), HOUR(TIMEDIFF(NOW(), appdatetime)), MINUTE(TIMEDIFF(NOW(), appdatetime)) FROM accounts WHERE id='" . $userid . "' LIMIT 1", $conn);
+	$result = mysql_query("SELECT username, admin, donator, appstate, apphandler, appreason, banned, securitykey, appdatetime < NOW(), HOUR(TIMEDIFF(NOW(), appdatetime)), MINUTE(TIMEDIFF(NOW(), appdatetime)), overseer FROM accounts WHERE id='" . $userid . "' LIMIT 1", $conn);
 
 	if (!$result || mysql_num_rows($result)==0)
 	{
@@ -35,6 +33,7 @@
 	$canapply = mysql_result($result, 0, 8);
 	$timehour = mysql_result($result, 0, 9);
 	$timeminute = mysql_result($result, 0, 10);
+	$overseer = mysql_result($result, 0, 11);
 ?>
 
 <?php 
@@ -226,6 +225,7 @@
 								?>
 								
 								<li>Administrator: <?php echo getAdminTitleFromIndex($admin) ?></li>
+								<?php echo ( ( $overseer == 1 ) ? '<li>Overseer: Yes</li>' : '' ); ?> 
 								<li>Donator: <?php echo getDonatorTitleFromIndex($donator) ?></li>
 								<li>Account Standing: <?php echo getStandingFromIndex($banned) ?></li>
 								<li>Security Key: <?php echo $securitykey; ?></li>
@@ -240,36 +240,39 @@
 						<div class="side-content-holder">
 							<div style="margin-left:-30px;padding-top:10px;"><img src="images/admin-title.png"/></div>
 							 <?php
-								if ($admin > 0)
+								if ($admin > 0 || $overseer > 0)
 								{
 									// new applications
 									$result = mysql_query("SELECT COUNT(*) FROM accounts WHERE appstate=1");
 									$num = mysql_result($result, 0, 0);
 									echo "<a href='applications.php?show=1'>New Applications (" . $num . ")</a><br>";
 									
-									// accepted
-									$result = mysql_query("SELECT COUNT(*) FROM accounts WHERE appstate=3");
-									$num = mysql_result($result, 0, 0);
-									echo "<a href='applications.php?show=4'>Accepted Applications (" . $num . ")</a><br>";
-									
-									// declined
-									$result = mysql_query("SELECT COUNT(*) FROM accounts WHERE appstate=2");
-									$num = mysql_result($result, 0, 0);
-									echo "<a href='applications.php?show=2'>Declined Applications (" . $num . ")</a><br>";
-									
-									// accounts without applications
-									$result = mysql_query("SELECT COUNT(*) FROM accounts WHERE appstate=0");
-									$num = mysql_result($result, 0, 0);
-									echo "<a href='applications.php?show=3'>Application-less Accounts (" . $num . ")</a><br>";
-									
-									// bans
-									$result = mysql_query("SELECT COUNT(*) FROM accounts WHERE banned>0");
-									$num = mysql_result($result, 0, 0);
-									echo "<a href='applications.php?show=5'>Banned Accounts (" . $num . ")</a><br>";
-									
-									// friends
-									$result = mysql_query("SELECT COUNT(*) FROM friends WHERE friend = " . $userid);
-									echo "<a href='friends.php'>Your Friends (" . mysql_result($result, 0, 0) . ")</a><br>";
+									if($admin > 0)
+									{
+										// accepted
+										$result = mysql_query("SELECT COUNT(*) FROM accounts WHERE appstate=3");
+										$num = mysql_result($result, 0, 0);
+										echo "<a href='applications.php?show=4'>Accepted Applications (" . $num . ")</a><br>";
+										
+										// declined
+										$result = mysql_query("SELECT COUNT(*) FROM accounts WHERE appstate=2");
+										$num = mysql_result($result, 0, 0);
+										echo "<a href='applications.php?show=2'>Declined Applications (" . $num . ")</a><br>";
+										
+										// accounts without applications
+										$result = mysql_query("SELECT COUNT(*) FROM accounts WHERE appstate=0");
+										$num = mysql_result($result, 0, 0);
+										echo "<a href='applications.php?show=3'>Application-less Accounts (" . $num . ")</a><br>";
+										
+										// bans
+										$result = mysql_query("SELECT COUNT(*) FROM accounts WHERE banned>0");
+										$num = mysql_result($result, 0, 0);
+										echo "<a href='applications.php?show=5'>Banned Accounts (" . $num . ")</a><br>";
+										
+										// friends
+										$result = mysql_query("SELECT COUNT(*) FROM friends WHERE friend = " . $userid);
+										echo "<a href='friends.php'>Your Friends (" . mysql_result($result, 0, 0) . ")</a><br>";
+									}
 								}
 								else
 								{

@@ -4,16 +4,14 @@
 		header('Location: index.php');
 		exit;
 	}
-?>
+	
+	include("config.php");
 
-<?php include("config.php"); ?>
-
-<?php 
 	$conn = mysql_pconnect($mysql_host, $mysql_user, $mysql_pass);
 	$userid = mysql_real_escape_string($_COOKIE["uid"], $conn);
 	
 	mysql_select_db("mta", $conn);
-	$result = mysql_query("SELECT username, admin FROM accounts WHERE id='" . $userid . "' LIMIT 1", $conn);
+	$result = mysql_query("SELECT username, admin, overseer FROM accounts WHERE id='" . $userid . "' LIMIT 1", $conn);
 
 	if (!$result || mysql_num_rows($result)==0)
 	{
@@ -25,15 +23,16 @@
 	}
 	$username = mysql_result($result, 0, 0);
 	$admin = mysql_result($result, 0, 1);
+	$overseer = mysql_result($result, 0, 2);
 	
-	if ($admin < 1)
+	if ($admin < 1 && $overseer < 1)
 	{
 		header('Location: main.php');
 		exit;
 	}
 	
-	$userid = $_GET["id"];
-	$result = mysql_query("SELECT username, appgamingexperience, appcountry, applanguage, apphow, appwhy, appexpectations, appdefinitions, appfirstcharacter, appclarifications, appreason FROM accounts WHERE id='" . $userid . "' limit 1", $conn);
+	$tuserid = mysql_real_escape_string($_GET["id"], $conn);
+	$result = mysql_query("SELECT username, appgamingexperience, appcountry, applanguage, apphow, appwhy, appexpectations, appdefinitions, appfirstcharacter, appclarifications, appreason, appstate FROM accounts WHERE id='" . $tuserid . "' limit 1", $conn);
 	
 	$targetusername = mysql_result($result, 0, 0);
 	$gamingexperience = mysql_result($result, 0, 1);
@@ -46,6 +45,14 @@
 	$firstcharacter = mysql_result($result, 0, 8);
 	$clarifications = mysql_result($result, 0, 9);
 	$adminreason = mysql_result($result, 0, 10);
+	$appstate = mysql_result($result, 0, 11);
+	
+	if ($appstate != 1 && $admin < 1)
+	{
+		header('Location: main.php');
+		exit;
+	}
+	
 	if (strlen($adminreason) == 0)
 	{
 		$adminreason = "Write the reason why the person is denied here. This does not have any effect if you are accepting the application.";
@@ -236,7 +243,7 @@
 								<input name="targetusername" type="text" id="targetusername" value="<?php echo $targetusername ?>" readonly="readonly"><br />
 								<br />
 								<label for="targetid" style="color:#FFF;">Account ID:</label>
-								<input name="targetid" type="text" id="targetid" value="<?php echo $userid ?>" readonly="readonly">								
+								<input name="targetid" type="text" id="targetid" value="<?php echo $tuserid ?>" readonly="readonly">								
 								<p>Tell us about your gaming Experience:</p>
 								<textarea name="gamingexperience" id="gamingexperience" readonly="readonly" style="width:580px;height:150px"><?php echo $gamingexperience; ?></textarea>
 								<br />
@@ -274,6 +281,56 @@
 						</div>
 					</div>
 				</div>
+				
+				<!-- Column -->
+				<div id="content-left">
+					<div class="content-box">
+						<div class="side-content-holder">
+							<div style="margin-left:-30px;padding-top:10px;"><img src="images/admin-title.png"/></div>
+							 <?php
+								if ($admin > 0 || $overseer > 0)
+								{
+									// new applications
+									$result = mysql_query("SELECT COUNT(*) FROM accounts WHERE appstate=1");
+									$num = mysql_result($result, 0, 0);
+									echo "<a href='applications.php?show=1'>New Applications (" . $num . ")</a><br>";
+									
+									if($admin > 0)
+									{
+										// accepted
+										$result = mysql_query("SELECT COUNT(*) FROM accounts WHERE appstate=3");
+										$num = mysql_result($result, 0, 0);
+										echo "<a href='applications.php?show=4'>Accepted Applications (" . $num . ")</a><br>";
+										
+										// declined
+										$result = mysql_query("SELECT COUNT(*) FROM accounts WHERE appstate=2");
+										$num = mysql_result($result, 0, 0);
+										echo "<a href='applications.php?show=2'>Declined Applications (" . $num . ")</a><br>";
+										
+										// accounts without applications
+										$result = mysql_query("SELECT COUNT(*) FROM accounts WHERE appstate=0");
+										$num = mysql_result($result, 0, 0);
+										echo "<a href='applications.php?show=3'>Application-less Accounts (" . $num . ")</a><br>";
+										
+										// bans
+										$result = mysql_query("SELECT COUNT(*) FROM accounts WHERE banned>0");
+										$num = mysql_result($result, 0, 0);
+										echo "<a href='applications.php?show=5'>Banned Accounts (" . $num . ")</a><br>";
+										
+										// friends
+										$result = mysql_query("SELECT COUNT(*) FROM friends WHERE friend = " . $userid);
+										echo "<a href='friends.php'>Your Friends (" . mysql_result($result, 0, 0) . ")</a><br>";
+									}
+								}
+								else
+								{
+									echo "<p>You are not an admin.</p>";
+								}
+							?>
+						</div>
+					</div>
+				</div>
+				<!-- End of column -->
 				
 				<div id="break"></div>
 			</div>

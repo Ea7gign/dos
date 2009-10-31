@@ -6,14 +6,18 @@
 	}
 		
 	if (!$_GET["show"] || $_GET["show"] < 1 || !$_GET["show"] > 3)
+	{
 		header('Location: main.php');
+		exit;
+	}
 
-?><?php include("config.php"); ?><?php 
+	include("config.php");
+	
 	$conn = mysql_pconnect($mysql_host, $mysql_user, $mysql_pass);
 	$userid = mysql_real_escape_string($_COOKIE["uid"], $conn);
 	
 	mysql_select_db("mta", $conn);
-	$result = mysql_query("SELECT username, admin FROM accounts WHERE id='" . $userid . "' LIMIT 1", $conn);
+	$result = mysql_query("SELECT username, admin, overseer FROM accounts WHERE id='" . $userid . "' LIMIT 1", $conn);
 
 	if (!$result || mysql_num_rows($result)==0)
 	{
@@ -24,9 +28,13 @@
 	}
 	$username = mysql_result($result, 0, 0);
 	$admin = mysql_result($result, 0, 1);
+	$overseer = mysql_result($result, 0, 2);
 	
-	if ($admin < 1)
+	if ($admin < 1 && ( $overseer == 0 || ( $overseer == 1 and $_GET['show'] != 1 ) ) )
+	{
 		header('Location: main.php');
+		exit;
+	}
 ?>
 
 <html xmlns="http://www.w3.org/1999/xhtml">
@@ -328,36 +336,39 @@
 						<div class="side-content-holder">
 							<div style="margin-left:-30px;padding-top:10px;"><img src="images/admin-title.png"/></div>
 							 <?php
-								if ($admin > 0)
+								if ($admin > 0 || $overseer > 0)
 								{
 									// new applications
 									$result = mysql_query("SELECT COUNT(*) FROM accounts WHERE appstate=1");
 									$num = mysql_result($result, 0, 0);
 									echo "<a href='applications.php?show=1'>New Applications (" . $num . ")</a><br>";
 									
-									// accepted
-									$result = mysql_query("SELECT COUNT(*) FROM accounts WHERE appstate=3");
-									$num = mysql_result($result, 0, 0);
-									echo "<a href='applications.php?show=4'>Accepted Applications (" . $num . ")</a><br>";
-									
-									// declined
-									$result = mysql_query("SELECT COUNT(*) FROM accounts WHERE appstate=2");
-									$num = mysql_result($result, 0, 0);
-									echo "<a href='applications.php?show=2'>Declined Applications (" . $num . ")</a><br>";
-									
-									// accounts without applications
-									$result = mysql_query("SELECT COUNT(*) FROM accounts WHERE appstate=0");
-									$num = mysql_result($result, 0, 0);
-									echo "<a href='applications.php?show=3'>Application-less Accounts (" . $num . ")</a><br>";
-									
-									// bans
-									$result = mysql_query("SELECT COUNT(*) FROM accounts WHERE banned>0");
-									$num = mysql_result($result, 0, 0);
-									echo "<a href='applications.php?show=5'>Banned Accounts (" . $num . ")</a><br>";
-									
-									// friends
-									$result = mysql_query("SELECT COUNT(*) FROM friends WHERE friend = " . $userid);
-									echo "<a href='friends.php'>Your Friends (" . mysql_result($result, 0, 0) . ")</a><br>";
+									if($admin > 0)
+									{
+										// accepted
+										$result = mysql_query("SELECT COUNT(*) FROM accounts WHERE appstate=3");
+										$num = mysql_result($result, 0, 0);
+										echo "<a href='applications.php?show=4'>Accepted Applications (" . $num . ")</a><br>";
+										
+										// declined
+										$result = mysql_query("SELECT COUNT(*) FROM accounts WHERE appstate=2");
+										$num = mysql_result($result, 0, 0);
+										echo "<a href='applications.php?show=2'>Declined Applications (" . $num . ")</a><br>";
+										
+										// accounts without applications
+										$result = mysql_query("SELECT COUNT(*) FROM accounts WHERE appstate=0");
+										$num = mysql_result($result, 0, 0);
+										echo "<a href='applications.php?show=3'>Application-less Accounts (" . $num . ")</a><br>";
+										
+										// bans
+										$result = mysql_query("SELECT COUNT(*) FROM accounts WHERE banned>0");
+										$num = mysql_result($result, 0, 0);
+										echo "<a href='applications.php?show=5'>Banned Accounts (" . $num . ")</a><br>";
+										
+										// friends
+										$result = mysql_query("SELECT COUNT(*) FROM friends WHERE friend = " . $userid);
+										echo "<a href='friends.php'>Your Friends (" . mysql_result($result, 0, 0) . ")</a><br>";
+									}
 								}
 								else
 								{
