@@ -286,10 +286,7 @@ function spawnCharacter(charname, version)
 		-- Check his name isn't in use by a squatter
 		local playerWithNick = getPlayerFromName(tostring(charname))
 		if isElement(playerWithNick) and (playerWithNick~=source) then
-			local newname = "Temp_" .. tostring(math.random(10000, 99999))
-			setElementData(playerWithNick, "legitnamechange", 1)
-			setPlayerName(playerWithNick, tostring(newname))
-			setElementData(playerWithNick, "legitnamechange", 0)
+			kickPlayer(playerWithNick, getRootElement(), "Duplicate Session.")
 		end
 		
 		-- casual skin
