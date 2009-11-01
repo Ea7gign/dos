@@ -291,14 +291,14 @@ function callSomeone(thePlayer, commandName, phoneNumber, ...)
 								exports.global:sendLocalMeAction(foundElement, "'s Phone start's to ring.")
 								
 								local secret = getElementData(thePlayer, "cellphone.secret")
-								local ph = nil
+								local cellphone = getElementData(value, "cellnumber")
 								if (secret == 1 or publicphone) then
-									ph = 000000
+									outputChatBox("Your phone is ringing. The display shows #000000 (( /pickup to answer ))", foundElement, 255, 194, 14)
 								else
-									ph = getElementData(value, "cellnumber")
+									outputChatBox("Your phone is ringing. The display shows #".. cellphone .. " (( /pickup to answer ))", foundElement, 255, 194, 14)
 								end
 								
-								outputChatBox("Your phone is ringing. The display shows #".. ph .. " (( /pickup to answer ))", foundElement, 255, 194, 14)
+								
 								
 								exports.global:givePlayerAchievement(thePlayer, 16) -- On the Blower
 								
