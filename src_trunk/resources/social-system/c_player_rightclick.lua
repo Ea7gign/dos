@@ -242,9 +242,10 @@ function cfriskPlayer(button, state, x, y)
 		wRightClick = nil
 		
 		local restrained = getElementData(player, "restrain")
+		local injured = getElementData(player, "injuriedanimation")
 		
-		if (restrained~=1) then
-			outputChatBox("This player is not restrained.", 255, 0, 0)
+		if restrained ~= 1 and not injured then
+			outputChatBox("This player is not restrained or injured.", 255, 0, 0)
 			hidePlayerMenu()
 		elseif getElementHealth(getLocalPlayer()) < 50 then
 			outputChatBox("You need at least half health to frisk someone.", 255, 0, 0)
