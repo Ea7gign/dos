@@ -37,6 +37,12 @@ addEventHandler( "onClientPlayerVehicleEnter", getLocalPlayer( ),
 	end
 )
 
+addEventHandler( "onClientPlayerVehicleExit", getLocalPlayer( ),
+	function( )
+		enabled = false
+	end
+)
+
 addEventHandler( "onClientResourceStart", getResourceRootElement(), 
 	function( )
 		radarTimer = setTimer( policeRadar, 500, 0 )
