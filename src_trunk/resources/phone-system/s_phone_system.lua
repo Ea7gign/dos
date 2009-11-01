@@ -291,7 +291,7 @@ function callSomeone(thePlayer, commandName, phoneNumber, ...)
 								exports.global:sendLocalMeAction(foundElement, "'s Phone start's to ring.")
 								
 								local secret = getElementData(thePlayer, "cellphone.secret")
-								local cellphone = getElementData(value, "cellnumber")
+								local cellphone = getElementData(thePlayer, "cellnumber")
 								if (secret == 1 or publicphone) then
 									outputChatBox("Your phone is ringing. The display shows #000000 (( /pickup to answer ))", foundElement, 255, 194, 14)
 								else
