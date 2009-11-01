@@ -701,7 +701,7 @@ function adminSetFactionLeader(thePlayer, commandName, partialNick, factionID)
 				if (query) then
 					mysql_free_result(query)
 					setPlayerTeam(targetPlayer, theTeam)
-					setElementData(targetPlayer, "faction", 1, false)
+					setElementData(targetPlayer, "faction", factionID, false)
 					setElementData(targetPlayer, "factionrank", 1)
 					setElementData(targetPlayer, "dutyskin", -1, false)
 					if getElementData(targetPlayer, "duty") and getElementData(targetPlayer, "duty") > 0 then
