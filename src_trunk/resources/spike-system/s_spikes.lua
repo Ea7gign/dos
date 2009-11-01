@@ -41,7 +41,7 @@ function ThrowSpikes(sourcePlayer, command)
 	local theTeam = getPlayerTeam(sourcePlayer)
 	local teamType = getElementData(theTeam, "type")
 	
-	--if (teamType==2) then
+	if (teamType==2) then
 		local x1,y1,z1 = getElementPosition(sourcePlayer)		
 		local rotz = getPedRotation(sourcePlayer)
 			if(TotalSpikes == nil or TotalSpikes < SpikeLimit) then
@@ -93,7 +93,7 @@ function ThrowSpikes(sourcePlayer, command)
 		else
 			outputChatBox("Too many spikes are already spawned.", sourcePlayer, 255, 194, 14)
 		end
-	--end
+	end
 end
 addCommandHandler("throwspikes", ThrowSpikes)
 
