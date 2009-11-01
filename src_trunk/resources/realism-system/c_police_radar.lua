@@ -2,6 +2,7 @@ local lawVehicles = { [416]=true, [433]=true, [427]=true, [490]=true, [528]=true
 local enabled = false
 
 local counter = 0
+local radarTimer = nil
 
 local function policeRadar( )
 	if enabled then
@@ -38,7 +39,7 @@ addEventHandler( "onClientPlayerVehicleEnter", getLocalPlayer( ),
 
 addEventHandler( "onClientResourceStart", getResourceRootElement(), 
 	function( )
-		setTimer( policeRadar, 500, 0 )
+		radarTimer = setTimer( policeRadar, 500, 0 )
 	end
 )
 
@@ -46,5 +47,20 @@ addEvent( "enablePoliceRadar", true )
 addEventHandler( "enablePoliceRadar", getLocalPlayer( ),
 	function( )
 		enabled = true
+	end
+)
+
+addCommandHandler( "togglecradar",
+	function( )
+		if enabled then
+			if isTimer( radarTimer ) then
+				killTimer( radarTimer )
+				radarTimer = nil
+				outputChatBox( "You've turned your Escort 9500ci Radar Detector off!", 255, 0, 0 )
+			else
+				radarTimer = setTimer( policeRadar, 500, 0 )
+				outputChatBox( "You've turned your Escort 9500ci Radar Detector on!", 255, 0, 0 )
+			end
+		end
 	end
 )
