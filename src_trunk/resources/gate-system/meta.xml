@@ -11,8 +11,6 @@
 	<script src="tow_door2.lua" type="server"/>
 	<script src="tow_door3.lua" type="server"/>
 	
-	<script src="san_garage1.lua" type="server"/>
-	<script src="san_garage2.lua" type="server"/>
 	<script src="san_door1.lua" type="server"/>
 	
 	<script src="ein_gate1.lua" type="server"/>
