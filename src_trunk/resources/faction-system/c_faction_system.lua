@@ -669,7 +669,7 @@ function btRespawnVehicles(button, state)
 	end
 end
 
-function cPayDay(faction, pay, profit, interest, donatormoney, tax, incomeTax, vtax, rent, grossincome)
+function cPayDay(faction, pay, profit, interest, donatormoney, tax, incomeTax, vtax, ptax, rent, grossincome)
 	local sound = playSound("mission_accomplished.mp3")
 	setSoundVolume(sound, 0.5)
 	
@@ -712,6 +712,10 @@ function cPayDay(faction, pay, profit, interest, donatormoney, tax, incomeTax, v
 	
 	if (vtax > 0) then
 		outputChatBox("    Vehicle Tax: #FF0000" .. vtax .. "$", 255, 194, 14, true)
+	end
+	
+	if (ptax > 0) then
+		outputChatBox("    Property Costs: #FF0000" .. ptax .. "$", 255, 194, 14, true )
 	end
 	
 	if (rent > 0) then

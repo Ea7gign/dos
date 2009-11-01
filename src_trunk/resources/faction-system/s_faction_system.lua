@@ -925,6 +925,7 @@ local governmentIncome = 0
 
 local taxVehicles = {}
 local vehicleCount = {}
+local taxHouses = {}
 
 local rc = 10
 local bike = 15
@@ -1044,12 +1045,21 @@ function payWage(player, pay, faction, tax)
 	
 	local vtax = taxVehicles[ getElementData(player, "dbid") ] or 0
 	if vtax > 0 then
-		bankmoney = math.max(0, bankmoney - vtax)
+		vtax = math.min( vtax, bankmoney )
+		bankmoney = bankmoney - vtax
+		
 		if vtax > pay+profit+interest+donatormoney then
 			exports.global:givePlayerAchievement(player, 19)
 		end
 		
 		governmentIncome = governmentIncome + vtax
+	end
+	
+	local ptax = taxHouses[ getElementData(player, "dbid") ] or 0
+	if ptax > 0 then
+		ptax = math.min( ptax, bankmoney )
+		bankmoney = bankmoney - ptax
+		governmentIncome = governmentIncome + ptax
 	end
 	
 	if (rent > 0) then
@@ -1066,13 +1076,13 @@ function payWage(player, pay, faction, tax)
 	-- save the bankmoney
 	setElementData(player, "bankmoney", bankmoney)
 	
-	local grossincome = pay+profit+interest+donatormoney-rent-vtax
+	local grossincome = pay+profit+interest+donatormoney-rent-vtax-ptax
 		
 	-- let the client tell them the (bad) news
-	triggerClientEvent(player, "cPayDay", player, faction, pay, profit, interest, donatormoney, tax, incomeTax, vtax, rent, grossincome)
+	triggerClientEvent(player, "cPayDay", player, faction, pay, profit, interest, donatormoney, tax, incomeTax, vtax, ptax, rent, grossincome)
 	
 	-- Insert in Transactions
-	mysql_free_result( mysql_query( handler, "INSERT INTO wiretransfers (`from`, `to`, `amount`, `reason`, `type`) VALUES (0, " .. getElementData(player, "dbid") .. ", " .. profit+interest+donatormoney-rent .. ", '', 7)" ) )
+	mysql_free_result( mysql_query( handler, "INSERT INTO wiretransfers (`from`, `to`, `amount`, `reason`, `type`) VALUES (0, " .. getElementData(player, "dbid") .. ", " .. grossincome .. ", '', 7)" ) )
 	return governmentIncome
 end
 
@@ -1096,6 +1106,14 @@ function payAllWages(timer)
 					taxVehicles[owner] = taxVehicles[owner] + 50
 				end
 			end
+		end
+	end
+	
+	-- count all player props
+	taxHouses = { }
+	for _, property in pairs( getElementsByType( "pickup", getResourceRootElement( getResourceFromName( "interior-system" ) ) ) ) do
+		if getElementData( property, "cost" ) and getElementData( property, "owner" ) > 0 and getElementData( property, "inttype" ) < 2  then -- owned, not rented houses
+			taxHouses[ getElementData( property, "owner" ) ] = ( taxHouses[ getElementData( property, "owner" ) ] or 0 ) + 0.005 * getElementData( property, "cost" )
 		end
 	end
 	
