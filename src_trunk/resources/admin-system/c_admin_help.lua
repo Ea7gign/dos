@@ -25,7 +25,11 @@ function adminhelp (sourcePlayer, commandName)
 				-- level 1: Trial Admin
 				{
 					-- player/*
+					{ "/adminlounge", "/adminlounge", "Chill out in the lounge" },
+					{ "/forceapp", "/forceapp [player]", "forced the player to reapply at the UCP" },
 					{ "/check", "/check [player]", "retrieves specified player's information" },
+					{ "/stats", "/stats [player]", "shows players vehicle id's, languages etc" },
+					{ "/history", "/history [player]", "checks the admin history of the player" },
 					{ "/auncuff", "/auncuff [player]", "uncuffs the player" },
 					{ "/mute", "/mute [player]", "mutes the player" },
 					{ "/disarm", "/disarm [player]", "takes all weapon from the player" },
@@ -38,6 +42,7 @@ function adminhelp (sourcePlayer, commandName)
 					{ "/slap", "/slap [player]", "drops the player from a height of 15" },
 					{ "/hugeslap", "/hugeslap [player]", "drops the player from a height of 50" },
 					{ "/recon", "/recon [player]", "spectate a player" },
+					{ "/fuckrecon", "/stoprecon", "forces recon to stop" },
 					{ "/pkick", "/pkick [player] [reason]", "kicks the player from the server" },
 					{ "/pban", "/pban [player] [hours] [reason]", "bans the player for the given time, specify 0 as hours for permanent ban" },
 					{ "/unban", "/unban [full char name]", "unbans the player with the given character name" },
@@ -63,11 +68,12 @@ function adminhelp (sourcePlayer, commandName)
 					{ "/findalts", "/findalts [player]", "shows all characters the player has" },
 					{ "/setlanguage", "/setlanguage [player] [language] [skill]", "adjusts the skill of a player's language, or learns it to him" },
 					{ "/dellanguage", "/dellanguage [player] [language]", "deletes a language from the player's knowledge" },
-					
+					{ "/aunblindfold", "/aunblindfold [player]", "unblindfold the player" },
+					{ "/givelicense", "/givelicense [player] [type]", "gives the player a license" },
 					-- vehicle/*
+					{ "/carlist", "/carlist", "Shows an list with vehicle id's and colors" },
 					{ "/unflip", "/unflip", "unflips the car" },
 					{ "/unlockcivcars", "/unlockcivcars", "unlocks all civilian vehicles" },
-					{ "/veh", "/veh [model] [color 1] [color 2]", "spawns a temporary vehicle" },
 					{ "/oldcar", "/oldcar", "retrieves the id of the last car you drove" },
 					{ "/thiscar", "/thiscar", "retrieves the id of your current car" },
 					{ "/gotocar", "/gotocar [id]", "teleports you to the car with that id" },
@@ -87,7 +93,6 @@ function adminhelp (sourcePlayer, commandName)
 					{ "/fuelveh", "/fuelveh [player]", "refills a players vehicle" },
 					{ "/fuelvehs", "/fuelvehs", "refills all vehicles" },
 					{ "/setcolor", "/setcolor [player] [color 1] [color 2]", "changes the players vehicle colors" },
-					{ "/delveh", "/delveh [id]", "removes the temporary vehicle with that id" },
 
 					-- interior/*
 					{ "/getpos", "/getpos", "outputs your current position, interior and dimension" },
@@ -95,17 +100,96 @@ function adminhelp (sourcePlayer, commandName)
 					{ "/y", "/z [value]", "increases your y-coordinate by the given value" },
 					{ "/z", "/y [value]", "increases your z-coordinate by the given value" },
 					{ "/set*", "/set[any combination of xyz] [coordinates]", "sets your coordinates - available combinations: x, y, z, xyz, xy, xz, yz" },
+					{ "/setinteriorexit", "/setinteriorexit  [Interior ID] [TYPE] [Cost] [Name]","adds an interior" },
+					{ "/reloadinterior", "/reloadinterior [id]","reloads an interior from the database" },
+					{ "/nearbyinteriors", "/nearbyinteriors","shows nearby interiors" },
+					{ "/setinteriorname", "/setinteriorname [newname]","changes an interior name" },
+					{ "/setfee", "/setfee [amount]","sets an fee on entering the interior" },
+					{ "/getinteriorid", "/getinteriorid","Gets the interior id"},
 					
+					-- election/*
+					{ "/addcandidate", "/addcandidate", "add's player to election vote list" },
+					{ "/delcandidate", "/delcandidate", "deletes a player to election vote list" },
+					{ "/showresults", "/showresults", "shows the results of the election" },
+					
+					-- factions/*
+					{ "/makefaction", "/makefaction [type] [name]", "creates a faction" },
+					{ "/renamefaction", "/renamefaction [id] [new name]", "renames a faction" },
+					{ "/setfaction", "/setfaction [id] [factionid]", "puts an player into a faction" },
+					{ "/delfaction", "/delfaction [id]", "deletes a faction" },
+					{ "/showfactions", "/showfactions", "shows a list with factions" },
+
+					{ "/resetbackup", "/resetbackup", "Resets PD's backup system" },
+					{ "/resettowbackup", "/resettowbackup", "Resets towing backup system" },
+					{ "/aremovespikes", "/aremovespikes", "Removes all the PD spikes" },
+					{ "/clearnearbytag", "/clearnearbytag", "Clears nearby tag" },
+		
+					{ "/changelock", "/changelock", "changes the lock from the vehicle/interior" },		
 					{ "/restartgatekeepers", "/restartgatekeepers", "restarts the gatekeepers resource" }
 				},
 				-- level 2: Admin
 				{
+					{ "/superman", "/superman", "activates superman" },
+					{ "/gotohouse", "/gotohouse [id]", "teleports to the house" },
+					-- vehicles
+					{ "/veh", "/veh [model] [color 1] [color 2]", "spawns a temporary vehicle" },
+					{ "/delveh", "/delveh [id]", "removes the temporary vehicle with that id" },
+					{ "/delthisveh", "/delthisveh", "removes the temporary vehicle" },
+					
 				},
 				-- level 3: Super Admin
 				{
+					{ "/setweather", "/setweather", "change the weather" }
 				},
 				-- level 4: Lead Admins
 				{
+					{ "/delveh", "/delveh [id]", "removes the (temporary) vehicle with that id" },
+					{ "/delthisveh", "/delthisveh", "removes the (temporary) vehicle" },
+					{ "/addatm", "/addatm", "adds an ATM at this spot" },
+					{ "/delatm", "/delatm [id]", "deletes an ATM with the id" },
+					{ "/nearbyatms", "/nearbyatms", "shows the nearby ATMs" },
+					{ "/bigears", "/bigears [player]", "hook yourself between someone's chats" },
+					{ "/bigearsf", "/bigearsf [factionid]", "hook yourself between faction chats" },
+					{ "/nearbyatms", "/nearbyatms", "shows the nearby ATMs" },
+					
+					-- objects/*
+					{ "/addobject", "/addelevator [objectid]", "creates an object" },
+					{ "/nearbyobjects", "/nearbyobjects", "shows nearby objects" },
+					{ "/delobject", "/delobject [id]", "deletes an object" },
+					
+					-- paynspray/*
+					{ "/addpaynspray", "/addpaynspray", "creates an pay n spray" },
+					{ "/nearbypaynsprays", "/nearbypaynsprays", "shows nearby pay n sprays" },
+					{ "/delpaynspray", "/delpaynspray [id]", "deletes an pay n spray" },
+					
+					-- phone/*
+					{ "/addphone", "/addphone", "creates a public phone" },
+					{ "/nearbyphones", "/nearbyphones", "shows nearby public phone" },
+					{ "/delphone", "/delphone [id]", "deletes a public phone" },
+					
+					-- interiors/*
+					{ "/addelevator", "/addelevator [interior] [dimension] [x] [y] [z]", "creates an elevator" },
+					{ "/delelevator", "/delelevator [id]", "deletes an elevator" },
+					{ "/nearbyelevators", "/nearbyelevators", "shows nearby elevators" },
+					{ "/toggleelevator", "/toggleelevator [id]", "enables/disables an elevator" },
+					{ "/enableallelevators", "/enableallelevators", "enables all elevators" },
+					
+					{ "/addinterior", "/addinterior  [Interior ID] [TYPE] [Cost] [Name]","adds an interior" },
+					{ "/sellproperty", "/sellproperty","sells an interior" },
+					{ "/delinterior", "/delproperty","deletes an interior" },
+					{ "/setinteriorid", "/setinteriorid [id]","changes the interior" },
+					{ "/setinteriorprice", "/setinteriorid [price]","changes the interiors price" },
+					{ "/toggleinterior", "/toggleinterior [id]","sets the interior enabled or disabled" },
+					{ "/enableallinteriors", "/enableallinteriors","enables all the interiors" },
+					
+					-- factions/*
+					{ "/setfactionleader", "/setfactionleader [id] [factionid]", "puts a player into a faction and makes the player leader" },
+					
+					-- fuelpoints/*
+					{ "/addfuelpoint", "/addfuelpoint", "creates a new fuelpoint" },
+					{ "/nearbyfuelpoints", "/nearbyfuelpoints", "shows nearby fuelpoints" },
+					{ "/delfuelpoint", "/delfuelpoint [id]", "deletes a fuelpoint" },
+					
 					-- player/*
 					{ "/reskick", "/reskick [amount]", "kicks the given amount of players from the server" },
 					{ "/ck", "/ck [player]", "permanently kills the character; spawns a corpse at the location the player is at" },
@@ -125,6 +209,11 @@ function adminhelp (sourcePlayer, commandName)
 					{ "/ho", "/ho [text]", "send global ooc as hidden admin" },
 					{ "/hw", "/hw [player] [text]", "send a pm as hidden admin" },
 					{ "/makeadmin", "/makeadmin [player] [rank]", "gives the player an admin rank" },
+					
+					-- election/*
+					{ "/resetpoll", "/resetpoll", "resets the election poll" },
+					{ "/openpoll", "/openpoll", "opens the election poll" },
+					{ "/closepoll", "/closepoll", "closes the election poll" },
 					
 					-- resource/*
 					{ "/startres", "/startres [resource name]", "starts the resource" },
