@@ -4,6 +4,9 @@
 	<script src="s_headlights.lua" type="server"/>
 	<script src="c_headlights.lua" type="client"/>
 	
+	<script src="c_sirens.lua" type="client"/>
+	<file src="siren.wav"/>
+	
 	<script src="s_policecommands.lua" type="server"/>
 	<script src="s_policejail.lua" type="server"/>
 	
