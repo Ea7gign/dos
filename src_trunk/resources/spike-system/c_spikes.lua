@@ -1,6 +1,5 @@
 
 function SpikesOnGround(theElement, matchingDimension)
-	outputChatBox("HIT")
 	if(getElementType(theElement) == "vehicle") and (getVehicleController(theElement)==getLocalPlayer()) then
 		local shapetype = getElementData(source, "type")
 		
