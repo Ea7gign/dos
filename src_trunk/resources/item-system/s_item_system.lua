@@ -1112,3 +1112,37 @@ function writeNote(thePlayer, commandName, ...)
 	end
 end
 addCommandHandler("writenote", writeNote, false, false)
+
+function changeLock(thePlayer)
+	if exports.global:isPlayerAdmin(thePlayer) then
+		local theVehicle = getPedOccupiedVehicle(thePlayer)
+		if theVehicle then
+			local dbid = getElementData( theVehicle, "dbid" )
+			if dbid > 0 then
+				exports.logs:logMessage( "[VEHICLE] " .. getPlayerName( thePlayer ) .. " changed the lock for Vehicle #" .. dbid .. " (" .. getVehicleName( theVehicle ) .. ")", 16) 
+				deleteAll( 3, dbid )
+				giveItem( thePlayer, 3, dbid )
+				outputChatBox( "Locks for this vehicle have been changed.", thePlayer, 0, 255,0  )
+			else
+				outputChatBox( "This is only a temporary vehicle.", thePlayer, 255, 0, 0 )
+			end
+		else
+			local dbid, entrance, exit, interiortype = exports['interior-system']:findProperty( thePlayer )
+			if dbid > 0 then
+				if interiortype == 2 then
+					outputChatBox( "This is a government property.", thePlayer, 255, 0, 0 )
+				else
+					local itemid = interiortype == 1 and 5 or 4
+					exports.logs:logMessage( "[HOUSE] " .. getPlayerName( thePlayer ) .. " changed the lock for House #" .. dbid .. " (" .. getElementData( entrance, "name" ) .. ")", 16) 
+					deleteAll( 3, dbid )
+					deleteAll( 4, dbid )
+					giveItem( thePlayer, itemid, dbid )
+					outputChatBox( "Locks for this house have been changed.", thePlayer, 0, 255,0  )
+				end
+			else
+				outputChatBox( "You need to be in an interior or a vehicle to change locks.", thePlayer, 255, 0, 0 )
+			end
+		end
+	end
+end
+addCommandHandler("changelock", changeLock, false, false)

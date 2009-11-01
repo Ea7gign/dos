@@ -13,7 +13,8 @@ enumTypes = {
 	"anticheat",
 	"itemspawn",
 	"tow",
-	"setfaction"
+	"setfaction",
+	"changelock"
 }
 
 
