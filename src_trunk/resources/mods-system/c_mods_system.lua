@@ -70,8 +70,8 @@ function applyMods()
 	tag2 = engineLoadTXD("tags/tags_lakilo.txd") -- MTA 
 	engineImportTXD(tag2, 1525)
 
-	tag3 = engineLoadTXD ( "tags/tags_larifa.txd" )
-	engineImportTXD ( tag3, 1526 )
+	-- tag3 = engineLoadTXD ( "tags/tags_larifa.txd" )
+	-- engineImportTXD ( tag3, 1526 )
 
 	-- tag4 = engineLoadTXD ( "tags/tags_larollin.txd" )
 	-- engineImportTXD ( tag4, 1527 )
@@ -104,14 +104,14 @@ function applyMods()
 	------------
 	-- PRO LS --
 	------------
-	proLS = engineLoadTXD ( "lv/sunset02_law2.txd" )
-	engineImportTXD ( proLS, 6364 )
+	-- proLS = engineLoadTXD ( "lv/sunset02_law2.txd" )
+	-- engineImportTXD ( proLS, 6364 )
 	
 	-----------------
 	-- Joe Lautner --
 	-----------------
-	lautner = engineLoadTXD( "lv/billbrd01_lan.txd" )
-	engineImportTXD ( lautner, 4239 )
+	-- lautner = engineLoadTXD( "lv/billbrd01_lan.txd" )
+	-- engineImportTXD ( lautner, 4239 )
 	
 	--[[--------------
 	-- Club 420 --
