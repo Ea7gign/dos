@@ -12,12 +12,15 @@ function doCheck(sourcePlayer, command, ...)
 				
 				-- get admin note
 				local note = ""
-				local result = mysql_query( handler, "SELECT adminnote FROM accounts WHERE id = " .. tostring(getElementData(noob, "gameaccountid")) )
+				local warns = "?"
+				local result = mysql_query( handler, "SELECT adminnote, warns FROM accounts WHERE id = " .. tostring(getElementData(noob, "gameaccountid")) )
 				if result then
 					local text = mysql_result( result, 1, 1 )
 					if text ~= mysql_null() then
 						note = text
 					end
+					
+					warns = tonumber( mysql_result( result, 1, 2 ) ) or "?"
 					mysql_free_result( result )
 				else
 					outputDebugString( "Check Error: " .. mysql_error( handler ) )
@@ -33,7 +36,7 @@ function doCheck(sourcePlayer, command, ...)
 					outputDebugString( "Check2 Error: " .. mysql_error( handler ) )
 				end
 				
-				triggerClientEvent( sourcePlayer, "onCheck", noob, ip, adminreports, donatorlevel, note, history)
+				triggerClientEvent( sourcePlayer, "onCheck", noob, ip, adminreports, donatorlevel, note, history, warns)
 			end
 		end
 	end

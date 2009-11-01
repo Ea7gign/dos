@@ -10,7 +10,7 @@ function CreateCheckWindow()
 	Button[3] = guiCreateButton(0.85,0.86,0.12, 0.125,"Close",true,Window)
 	addEventHandler( "onClientGUIClick", Button[3], CloseCheck )
 	Label = {
-		guiCreateLabel(0.03,0.07,0.66,0.0887,"Name: N/A",true,Window),
+		guiCreateLabel(0.03,0.07,0.95,0.0887,"Name: N/A",true,Window),
 		guiCreateLabel(0.03,0.12,0.66,0.0887,"IP: N/A",true,Window),
 		guiCreateLabel(0.03,0.34,0.66,0.0887,"Money: N/A",true,Window),
 		guiCreateLabel(0.03,0.39,0.17,0.0806,"Health: N/A",true,Window),
@@ -20,7 +20,7 @@ function CreateCheckWindow()
 		guiCreateLabel(0.03,0.49,0.66,0.0806,"Faction: N/A",true,Window),
 		guiCreateLabel(0.03,0.27,0.66,0.0806,"Ping: N/A",true,Window),
 		guiCreateLabel(0.03,0.56,0.66,0.0806,"Vehicle: N/A",true,Window),
-		false,
+		guiCreateLabel(0.03,0.63,0.66,0.0806,"Warns: N/A",true,Window),
 		guiCreateLabel(0.6,0.41,0.4031,0.0766,"Location: N/A",true,Window),
 		guiCreateLabel(0.6,0.12,0.4031,0.0766,"X:",true,Window),
 		guiCreateLabel(0.6,0.17,0.4031,0.0766,"Y: N/A",true,Window),
@@ -62,12 +62,13 @@ addEventHandler("onClientResourceStart", getResourceRootElement(getThisResource(
 )
 
 local levels = { "Trial Admin", "Admin", "Super Admin", "Lead Admin", "Head Admin", "Owner" }
-function OpenCheck( ip, adminreports, donatorlevel, note, history )
+function OpenCheck( ip, adminreports, donatorlevel, note, history, warns )
 	player = source
 
 	guiSetText ( Label[2], "IP: " .. ip )
 	guiSetText ( Label[18], "Admin Level: " .. ( levels[getElementData(player, "adminlevel") or 0] or "Player" ) .. " (" .. adminreports .. " Reports)" )
 	guiSetText ( Label[19], "Donator Level: " .. donatorlevel )
+	guiSetText ( Label[11], "Warns: " .. warns )
 	guiSetText ( Button[5], "History: " .. history )
 	guiSetText ( memo, note )
 
