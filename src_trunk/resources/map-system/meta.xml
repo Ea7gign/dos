@@ -26,6 +26,7 @@
 	<script src="swimming_pool.lua" type="client"/>
 	<script src="ein-barn.lua" type="client"/>
 	<script src="SAN Roof.lua" type="client"/>
+	<script src="SAN Recording.lua" type="client"/>
 	<script src="PD Interior.lua" type="client"/>
 	<script src="PD Interior2.lua" type="client"/>
 	<script src="mount_mansion.lua" type="client"/>
