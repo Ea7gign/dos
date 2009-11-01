@@ -45,10 +45,10 @@ function stopMonitorSpeed(element, matchingDimension)
 end
 
 function checkSpeed(vehicle, player, colshape)
-	speed = math.floor(exports.global:getVehicleVelocity(vehicle) - exports.global:relateVelocity(5))
+	speed = math.floor(exports.global:getVehicleVelocity(vehicle))
 	
 	if (colshape==stripCamera1Col) then -- strip camera 1
-		if (speed>exports.global:relateVelocity(stripCamera1Speed)) then
+		if (speed-exports.global:relateVelocity(5)>exports.global:relateVelocity(stripCamera1Speed)) then
 			local x, y, z = getElementPosition(player)
 			local timer = getElementData(player, "cameratimer")
 			if timer then
