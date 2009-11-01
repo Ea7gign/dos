@@ -650,6 +650,8 @@ function adminSetPlayerFaction(thePlayer, commandName, partialNick, factionID)
 						
 						triggerEvent("onPlayerJoinFaction", targetPlayer, theTeam)
 						outputChatBox("You were set to Faction '" .. getTeamName(theTeam) .. ".", targetPlayer, 255, 194, 14)
+						
+						exports.logs:logMessage("[FACTION] " .. getPlayerName( thePlayer ) .. " set " .. getPlayerName( targetPlayer ) .. " to faction " .. getTeamName(theTeam) .. " (#" .. factionID .. ")", 15)
 					else
 						local theTeam = getTeamFromName("Citizen")
 						setPlayerTeam(targetPlayer, theTeam)
@@ -663,6 +665,8 @@ function adminSetPlayerFaction(thePlayer, commandName, partialNick, factionID)
 						
 						outputChatBox("Player " .. targetPlayerNick .. " was set to no faction.", thePlayer, 0, 255, 0)
 						outputChatBox("You were removed from your faction.", targetPlayer, 255, 0, 0)
+						
+						exports.logs:logMessage("[FACTION] " .. getPlayerName( thePlayer ) .. " set " .. getPlayerName( targetPlayer ) .. " to no faction", 15)
 					end
 				end
 			end
@@ -713,6 +717,8 @@ function adminSetFactionLeader(thePlayer, commandName, partialNick, factionID)
 						
 					triggerEvent("onPlayerJoinFaction", targetPlayer, theTeam)
 					outputChatBox("You were set to the leader of Faction '" .. getTeamName(theTeam) .. ".", targetPlayer, 255, 194, 14)
+					
+					exports.logs:logMessage("[FACTIONLEADER] " .. getPlayerName( thePlayer ) .. " set " .. getPlayerName( targetPlayer ) .. " to factionleader of " .. getTeamName(theTeam) .. " (#" .. factionID .. ")", 15)
 				else
 					outputChatBox("Invalid Faction ID.", thePlayer, 255, 0, 0)
 				end

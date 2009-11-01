@@ -12,7 +12,8 @@ enumTypes = {
 	"kills",
 	"anticheat",
 	"itemspawn",
-	"tow"
+	"tow",
+	"setfaction"
 }
 
 
