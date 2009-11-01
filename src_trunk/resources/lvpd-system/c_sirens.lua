@@ -30,7 +30,7 @@ function toggleSirens()
 end
 
 function streamIn()
-	if getElementType( source ) == "vehicle" and getElementData( source, "siren" ) then
+	if getElementType( source ) == "vehicle" and getElementData( source, "siren" ) and not sounds[ source ] then
 		sounds[source] = playSound3D("siren.wav", 0, 0, 0, true)
 		attachElements( sounds[source], source )
 		setSoundVolume(sounds[source], 0.6)
