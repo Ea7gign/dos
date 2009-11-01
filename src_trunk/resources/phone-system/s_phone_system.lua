@@ -595,18 +595,10 @@ function talkPhone(thePlayer, commandName, ...)
 					message = call( getResourceFromName( "chat-system" ), "trunklateText", thePlayer, call( getResourceFromName( "chat-system" ), "trunklateText", target, message ) )
 					local message2 = call(getResourceFromName("language-system"), "applyLanguage", thePlayer, target, message, language)
 					
-					-- secret number
-					local secret = getElementData(thePlayer, "cellphone.secret")
-					local publicphone = getElementData(thePlayer,"call.col")
-					local ph = nil
-					if (secret == 1 or publicphone) then
-						ph = 000000
-					else
-						ph = getElementData(value, "cellnumber")
-					end
+					outputChatBox("[" .. languagename .. "] ((" .. username .. " [Cellphone]: " .. message2, target)
 					
 					-- Send the message to the person on the other end of the line
-					outputChatBox("[" .. languagename .. "] ((" .. username .. ")) #" .. ph .. " [Cellphone]: " .. message2, target)
+					
 					outputChatBox("[" .. languagename .. "] You [Cellphone]: " ..message, thePlayer)
 					
 					-- Send it to nearby players of the speaker
