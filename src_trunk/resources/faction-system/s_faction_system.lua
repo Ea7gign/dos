@@ -1045,6 +1045,7 @@ function payWage(player, pay, faction, tax)
 	
 	local vtax = taxVehicles[ getElementData(player, "dbid") ] or 0
 	if vtax > 0 then
+		vtax = math.floor( vtax * 0.3 )
 		vtax = math.min( vtax, bankmoney )
 		bankmoney = bankmoney - vtax
 		
@@ -1057,6 +1058,7 @@ function payWage(player, pay, faction, tax)
 	
 	local ptax = taxHouses[ getElementData(player, "dbid") ] or 0
 	if ptax > 0 then
+		ptax = math.floor( ptax * 0.3 )
 		ptax = math.min( ptax, bankmoney )
 		bankmoney = bankmoney - ptax
 		governmentIncome = governmentIncome + ptax
