@@ -102,6 +102,11 @@ function doFlashes()
 			
 			setVehicleLightState(veh, 0, state2)
 			setVehicleLightState(veh, 1, state1)
+		else
+			setVehicleHeadLightColor(veh, 255, 255, 255)
+			setVehicleLightState(veh, 0, 0)
+			setVehicleLightState(veh, 1, 0)
+			policevehicles[veh] = nil
 		end
 	end
 end
