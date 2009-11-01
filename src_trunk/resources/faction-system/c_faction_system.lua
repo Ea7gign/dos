@@ -715,7 +715,7 @@ function cPayDay(faction, pay, profit, interest, donatormoney, tax, incomeTax, v
 	end
 	
 	if (ptax > 0) then
-		outputChatBox("    Property Costs: #FF0000" .. ptax .. "$", 255, 194, 14, true )
+		outputChatBox("    Property Expenses: #FF0000" .. ptax .. "$", 255, 194, 14, true )
 	end
 	
 	if (rent > 0) then
