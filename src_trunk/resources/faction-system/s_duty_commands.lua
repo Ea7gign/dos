@@ -17,6 +17,12 @@ exports.pool:allocateElement(fbiColShape)
 setElementDimension(fbiColShape, 795)
 setElementInterior(fbiColShape, 10)
 
+fdColShape = createColSphere(2229.9931640625, -1168.9091796875, 928.99603271484,10)
+exports.pool:allocateElement(fdColShape)
+setElementDimension(fdColShape, 10631)
+setElementInterior(fdColShape, 3)
+
+
 local authSwat = nil
 
 function saveWeaponsOnDuty( thePlayer )
@@ -179,15 +185,6 @@ function lvesduty(thePlayer, commandName)
 					local casualskin = getElementData(thePlayer, "casualskin")
 					setElementModel(thePlayer, casualskin)
 					saveSkin(thePlayer)
-				elseif (duty==5) then -- FIRE ES
-					restoreWeapons(thePlayer)
-					outputChatBox("You are now off Firefighter Duty.", thePlayer)
-					exports.global:sendLocalMeAction(thePlayer, "puts their firefighter gear into their locker.")
-					setElementData(thePlayer, "duty", 0, false)
-					
-					local casualskin = getElementData(thePlayer, "casualskin")
-					setElementModel(thePlayer, casualskin)
-					saveSkin(thePlayer)
 				end
 			end
 		end
@@ -200,7 +197,7 @@ function lvfdduty(thePlayer, commandName)
 	local logged = getElementData(thePlayer, "loggedin")
 
 	if (logged==1) then
-		if (isElementWithinColShape(thePlayer, esColShape)) then
+		if (isElementWithinColShape(thePlayer, fdColShape)) then
 		
 			local duty = tonumber(getElementData(thePlayer, "duty"))
 			local theTeam = getPlayerTeam(thePlayer)
@@ -232,15 +229,6 @@ function lvfdduty(thePlayer, commandName)
 						
 						saveSkin(thePlayer)
 					end
-				elseif (duty==4) then -- ES
-					restoreWeapons(thePlayer)
-					outputChatBox("You are now off Medic Duty.", thePlayer)
-					exports.global:sendLocalMeAction(thePlayer, "puts their uniform into their locker.")
-					setElementData(thePlayer, "duty", 0, false)
-					
-					local casualskin = getElementData(thePlayer, "casualskin")
-					setElementModel(thePlayer, casualskin)
-					saveSkin(thePlayer)
 				elseif (duty==5) then -- FIRE ES
 					restoreWeapons(thePlayer)
 					outputChatBox("You are now off Firefighter Duty.", thePlayer)
