@@ -26,17 +26,19 @@ addEventHandler("onResourceStop", getResourceRootElement(getThisResource()), clo
 -- //			MYSQL END			 //
 -- ////////////////////////////////////
 
-function addCharacterKillBody( x, y, z, rotation, skin, id, name )
+function addCharacterKillBody( x, y, z, rotation, skin, id, name, interior, dimension )
 	local ped = createPed(skin, x, y, z)
 	setPedRotation(ped, rotation)
 	setElementData(ped, "ckid", id, false)
 	setElementData(ped, "name", name:gsub("_", " "), false)
+	setElementInterior(ped, interior)
+	setElementDimension(ped, dimension)
 	--setTimer(setPedAnimation, 100, 1, ped, "WUZI", "CS_Dead_Guy", -1, false, false, false)
 	killPed(ped)
 end
 
 function loadAllCorpses(res)
-	local result = mysql_query(handler, "SELECT x, y, z, skin, rotation, id, charactername FROM characters WHERE cked = 1")
+	local result = mysql_query(handler, "SELECT x, y, z, skin, rotation, id, charactername, interior, dimension FROM characters WHERE cked = 1")
 	
 	local counter = 0
 	local rowc = 1
@@ -53,8 +55,10 @@ function loadAllCorpses(res)
 			if name == mysql_null() then
 				name = ""
 			end
+			local interior = tonumber(row[8])
+			local dimension = tonumber(row[9])
 			
-			addCharacterKillBody(x, y, z, rotation, skin, id, name)
+			addCharacterKillBody(x, y, z, rotation, skin, id, name, interior, dimension)
 		end
 		mysql_free_result(result)
 	end

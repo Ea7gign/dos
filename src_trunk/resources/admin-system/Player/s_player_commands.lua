@@ -429,7 +429,7 @@ function ckPlayer(thePlayer, commandName, targetPlayer)
 					local skin = getPedSkin(targetPlayer)
 					local rotation = getPedRotation(targetPlayer)
 					
-					call( getResourceFromName( "realism-system" ), "addCharacterKillBody", x, y, z, rotation, skin, getElementData(targetPlayer, "dbid"), targetPlayerName )
+					call( getResourceFromName( "realism-system" ), "addCharacterKillBody", x, y, z, rotation, skin, getElementData(targetPlayer, "dbid"), targetPlayerName, getElementInterior(targetPlayer), getElementDimension(targetPlayer) )
 					
 					-- send back to change char screen
 					local id = getElementData(targetPlayer, "gameaccountid")
