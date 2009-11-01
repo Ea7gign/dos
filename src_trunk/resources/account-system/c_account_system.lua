@@ -11,12 +11,10 @@ end
 addEventHandler("onClientPlayerChangeNick", getRootElement(), stopNameChange)
 
 function onPlayerSpawn()
-	if (source==getLocalPlayer()) then
-		showCursor(false)
-		
-		local interior = getElementInterior(source)
-		setCameraInterior(interior)
-	end
+	showCursor(false)
+	
+	local interior = getElementInterior(source)
+	setCameraInterior(interior)
 end
 addEventHandler("onClientPlayerSpawn", getLocalPlayer(), onPlayerSpawn)
 

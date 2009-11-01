@@ -494,6 +494,11 @@ end
 addCommandHandler("togglecursor", toggleCursor)
 bindKey("m", "down", "togglecursor")
 
+function onPlayerSpawn()
+	showCursor(false)
+end
+addEventHandler("onClientPlayerSpawn", getLocalPlayer(), onPlayerSpawn)
+
 function cursorHide()
 	showCursor(false)
 end
