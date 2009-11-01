@@ -1056,6 +1056,45 @@ function reconPlayer(thePlayer, commandName, targetPlayer)
 end
 addCommandHandler("recon", reconPlayer, false, false)
 
+function fuckRecon(thePlayer, commandName, targetPlayer)
+	if (exports.global:isPlayerAdmin(thePlayer)) then
+		local rx = getElementData(thePlayer, "reconx")
+		local ry = getElementData(thePlayer, "recony")
+		local rz = getElementData(thePlayer, "reconz")
+		local reconrot = getElementData(thePlayer, "reconrot")
+		local recondimension = getElementData(thePlayer, "recondimension")
+		local reconinterior = getElementData(thePlayer, "reconinterior")
+		
+		detachElements(thePlayer)
+		setCameraTarget(thePlayer, thePlayer)
+		setElementAlpha(thePlayer, 255)
+		
+		if rx and ry and rz then
+			setElementPosition(thePlayer, rx, ry, rz)
+			if reconrot then
+				setPedRotation(thePlayer, reconrot)
+			end
+			
+			if recondimension then
+				setElementDimension(thePlayer, recondimension)
+			end
+			
+			if reconinterior then
+					setElementInterior(thePlayer, reconinterior)
+					setCameraInterior(thePlayer, reconinterior)
+			end
+		end
+		
+		removeElementData(thePlayer, "reconx")
+		removeElementData(thePlayer, "recony")
+		removeElementData(thePlayer, "reconz")
+		removeElementData(thePlayer, "reconrot")
+		outputChatBox("Recon turned off.", thePlayer, 255, 194, 14)
+	end
+end
+addCommandHandler("fuckrecon", fuckRecon, false, false)
+addCommandHandler("stoprecon", fuckRecon, false, false)
+
 -- Kick
 function kickAPlayer(thePlayer, commandName, targetPlayer, ...)
 	if (exports.global:isPlayerAdmin(thePlayer)) then
