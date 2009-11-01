@@ -199,6 +199,24 @@ function callSomeone(thePlayer, commandName, phoneNumber, ...)
 						exports.global:applyAnimation(thePlayer, "ped", "phone_in", 3000, false)
 						setTimer(toggleAllControls, 150, 1, thePlayer, true, true, true)
 						setTimer(startPhoneAnim, 3050, 1, thePlayer)
+					elseif phoneNumber == "1501" then
+						if (publicphone) then
+							outputChatBox("Computer voice: This service is not available on this phone.", thePlayer)
+						else
+							exports.global:sendLocalMeAction(thePlayer, msg)
+							outputChatBox("Computer voice: You are now calling with a secret number.", thePlayer)
+							setElementData(thePlayer,"cellphone.secret",1, false)
+							exports.global:sendLocalMeAction(thePlayer, "hangs up their phone.")
+						end
+					elseif phoneNumber == "1502" then
+						if (publicphone) then
+							outputChatBox("Computer voice: This service is not available on this phone.", thePlayer)
+						else
+							exports.global:sendLocalMeAction(thePlayer, msg)
+							outputChatBox("Computer voice: You are now calling with a normal number.", thePlayer)
+							setElementData(thePlayer,"cellphone.secret",0, false)
+							exports.global:sendLocalMeAction(thePlayer, "hangs up their phone.")
+						end
 					elseif phoneNumber == "8294" then
 						exports.global:sendLocalMeAction(thePlayer, msg)
 						outputChatBox("Taxi Operator says: Los Santos Cabs here. Please state your location.", thePlayer)
@@ -271,7 +289,16 @@ function callSomeone(thePlayer, commandName, phoneNumber, ...)
 								
 								-- target player
 								exports.global:sendLocalMeAction(foundElement, "'s Phone start's to ring.")
-								outputChatBox("Your phone is ringing. (( /pickup to answer ))", foundElement, 255, 194, 14)
+								
+								local secret = getElementData(thePlayer, "cellphone.secret")
+								local ph = nil
+								if (secret == 1 or publicphone)
+									ph = 000000
+								else
+									ph = getElementData(value, "cellnumber")
+								end
+								
+								outputChatBox("Your phone is ringing. The display shows #".. ph .. " (( /pickup to answer ))", foundElement, 255, 194, 14)
 								
 								exports.global:givePlayerAchievement(thePlayer, 16) -- On the Blower
 								
@@ -568,8 +595,18 @@ function talkPhone(thePlayer, commandName, ...)
 					message = call( getResourceFromName( "chat-system" ), "trunklateText", thePlayer, call( getResourceFromName( "chat-system" ), "trunklateText", target, message ) )
 					local message2 = call(getResourceFromName("language-system"), "applyLanguage", thePlayer, target, message, language)
 					
-					-- Send the message to the person on the other end of the line
-					outputChatBox("[" .. languagename .. "] ((" .. username .. ")) #" .. phoneNumber .. " [Cellphone]: " .. message2, target)
+					-- secret number
+					local secret = getElementData(thePlayer, "cellphone.secret")
+					local publicphone = getElementData(thePlayer,"call.col")
+					local ph = nil
+					if (secret == 1 or publicphone)
+						ph = 000000
+					else
+						ph = getElementData(value, "cellnumber")
+					end
+					
+					- Send the message to the person on the other end of the line
+					outputChatBox("[" .. languagename .. "] ((" .. username .. ")) #" .. ph .. " [Cellphone]: " .. message2, target)
 					outputChatBox("[" .. languagename .. "] You [Cellphone]: " ..message, thePlayer)
 					
 					-- Send it to nearby players of the speaker

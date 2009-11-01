@@ -157,7 +157,7 @@ function spawnCharacter(charname, version)
 	
 	local safecharname = mysql_escape_string(handler, charname)
 	
-	local result = mysql_query(handler, "SELECT id, x, y, z, rotation, interior_id, dimension_id, health, armor, skin, money, faction_id, cuffed, radiochannel, masked, duty, cellnumber, fightstyle, pdjail, pdjail_time, job, casualskin, weapons, ammo, items, itemvalues, car_license, gun_license, bankmoney, fingerprint, tag, hoursplayed, pdjail_station, timeinserver, restrainedobj, restrainedby, faction_rank, dutyskin, phoneoff, blindfold, lang1, lang1skill, lang2, lang2skill, lang3, lang3skill, currLang, gender FROM characters WHERE charactername='" .. safecharname .. "' AND account='" .. id .. "'")
+	local result = mysql_query(handler, "SELECT id, x, y, z, rotation, interior_id, dimension_id, health, armor, skin, money, faction_id, cuffed, radiochannel, masked, duty, cellnumber, fightstyle, pdjail, pdjail_time, job, casualskin, weapons, ammo, items, itemvalues, car_license, gun_license, bankmoney, fingerprint, tag, hoursplayed, pdjail_station, timeinserver, restrainedobj, restrainedby, faction_rank, dutyskin, phoneoff, blindfold, lang1, lang1skill, lang2, lang2skill, lang3, lang3skill, currLang, gender, cellphonesecret FROM characters WHERE charactername='" .. safecharname .. "' AND account='" .. id .. "'")
 	
 	if (result) then
 		local id = mysql_result(result, 1, 1)
@@ -227,6 +227,8 @@ function spawnCharacter(charname, version)
 		setElementData(source, "languages.current", currentLanguage, false)
 		
 		local gender = tonumber(mysql_result(result, 1, 48))
+		
+		local cellphonesecret = tonumber(mysql_result(result, 1, 49))
 		
 		if lang1 == 0 then
 			lang1skill = 0
@@ -517,6 +519,7 @@ function spawnCharacter(charname, version)
 		setElementData(source, "restrain", cuffed)
 		setElementData(source, "tazed", 0, false)
 		setElementData(source, "cellnumber", cellnumber, false)
+		setElementData(source, "cellphone.secret", cellphonesecret, false)
 		setElementData(source, "calling", nil, false)
 		setElementData(source, "calltimer", nil, false)
 		setElementData(source, "phonestate", 0, false)
