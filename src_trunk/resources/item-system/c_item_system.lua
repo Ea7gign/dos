@@ -716,6 +716,9 @@ function useItem(button)
 			elseif (itemID==84) then
 				outputChatBox("Put it in a car or carry it to know when police is around.", 255, 194, 14)
 				return
+			elseif (itemID==85) then -- Emergency Light Becon
+				outputChatBox("Put it in your car inventory and press 'N' to toggle it.", 255, 194, 14)
+				return
 			end
 			
 			triggerServerEvent("useItem", getLocalPlayer(), itemSlot, additional)
