@@ -1079,10 +1079,13 @@ function localWhisper(thePlayer, commandName, targetPlayerNick, ...)
 				
 				if (getDistanceBetweenPoints3D(x, y, z, tx, ty, tz)<3) then
 					local message = table.concat({...}, " ")
+					message = trunklateText( thePlayer, message )
 					
 					local languageslot = getElementData(thePlayer, "languages.current")
 					local language = getElementData(thePlayer, "languages.lang" .. languageslot)
 					local languagename = call(getResourceFromName("language-system"), "getLanguageName", language)
+					
+					message2 = trunklateText( targetPlayer, message2 )
 					local message2 = call(getResourceFromName("language-system"), "applyLanguage", thePlayer, targetPlayer, message, language)
 					
 					local name = getPlayerName(thePlayer)
@@ -1108,6 +1111,7 @@ function localClose(thePlayer, commandName, ...)
 			outputChatBox("SYNTAX: /" .. commandName .. " [Message]", thePlayer, 255, 194, 14)
 		else
 			local message = table.concat({...}, " ")
+			message = trunklateText( thePlayer, message )
 			local name = getPlayerName(thePlayer)
 			
 			local languageslot = getElementData(thePlayer, "languages.current")
@@ -1119,6 +1123,7 @@ function localClose(thePlayer, commandName, ...)
 					local message2 = message
 					if targetPlayers ~= thePlayer then
 						message2 = call(getResourceFromName("language-system"), "applyLanguage", thePlayer, targetPlayers, message, language)
+						message2 = trunklateText( targetPlayers, message2 )
 					end
 					outputChatBox( " [" .. languagename .. "] " .. name .. " whispers: " .. message2, targetPlayers, 255, 255, 255)
 				end
@@ -1153,6 +1158,7 @@ function localCarWhisper(thePlayer, commandName, ...)
 					local languagename = call(getResourceFromName("language-system"), "getLanguageName", language)
 					
 					message = table.concat({...}, " ")
+					message = trunklateText( thePlayer, message )
 					local name = getPlayerName(thePlayer)
 					
 					for i = 0, getVehicleMaxPassengers(vehicle) do
@@ -1160,6 +1166,7 @@ function localCarWhisper(thePlayer, commandName, ...)
 						
 						if (player) and (player~=thePlayer) then
 							local message2 = call(getResourceFromName("language-system"), "applyLanguage", thePlayer, player, message, language)
+							message2 = trunklateText( player, message2 )
 							outputChatBox("[" .. languagename .. "] ((In Car)) " .. name .. " whispers: " .. message2, player, 255, 255, 255)
 						elseif (player) then
 							outputChatBox("[" .. languagename .. "] ((In Car)) " .. name .. " whispers: " .. message, player, 255, 255, 255)
