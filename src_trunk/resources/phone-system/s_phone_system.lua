@@ -605,7 +605,7 @@ function talkPhone(thePlayer, commandName, ...)
 						ph = getElementData(value, "cellnumber")
 					end
 					
-					- Send the message to the person on the other end of the line
+					-- Send the message to the person on the other end of the line
 					outputChatBox("[" .. languagename .. "] ((" .. username .. ")) #" .. ph .. " [Cellphone]: " .. message2, target)
 					outputChatBox("[" .. languagename .. "] You [Cellphone]: " ..message, thePlayer)
 					
