@@ -292,7 +292,7 @@ function callSomeone(thePlayer, commandName, phoneNumber, ...)
 								
 								local secret = getElementData(thePlayer, "cellphone.secret")
 								local ph = nil
-								if (secret == 1 or publicphone)
+								if (secret == 1 or publicphone) then
 									ph = 000000
 								else
 									ph = getElementData(value, "cellnumber")
@@ -599,7 +599,7 @@ function talkPhone(thePlayer, commandName, ...)
 					local secret = getElementData(thePlayer, "cellphone.secret")
 					local publicphone = getElementData(thePlayer,"call.col")
 					local ph = nil
-					if (secret == 1 or publicphone)
+					if (secret == 1 or publicphone) then
 						ph = 000000
 					else
 						ph = getElementData(value, "cellnumber")
