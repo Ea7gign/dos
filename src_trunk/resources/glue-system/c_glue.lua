@@ -1,22 +1,10 @@
 function glue()
 	local player = getLocalPlayer()
 	local myVehicle = getPedOccupiedVehicle(player)
-	if getElementAttachedTo(player) then
-		if not myVehicle then
-			triggerServerEvent("ungluePlayer", player)
-		else
-			local vtype = getElementModel(myVehicle)
-			if vtype == (487 or 548 or 425 or 417 or 488 or 497 or 563 or 447 or 469) then
-				local attached = getAttachedElements(myVehicle)
-				for k,v in ipairs(attached) do
-					if getElementType(v) == "vehicle" then
-						myVehicle = v
-						break
-					end
-				end
-			end
-			triggerServerEvent("unglueVehicle", myVehicle)
-		end
+	if myVehicle and getElementAttachedTo(myVehicle) then
+		triggerServerEvent("unglueVehicle", myVehicle)
+	elseif not myVehicle and getElementAttachedTo(player) then
+		triggerServerEvent("ungluePlayer", player)
 	else
 		if not myVehicle then
 			local vehicle = getPedContactElement(player)
