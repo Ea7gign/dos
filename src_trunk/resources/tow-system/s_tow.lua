@@ -74,7 +74,7 @@ function UnlockVehicle(element, matchingdimension)
 						setElementData(temp, "enginebroke", 0, false)
 						setVehicleDamageProof(temp, false)
 						setVehicleEngineState(temp, false)
-						outputChatBox("((Please remember to /park your vehicle in our car park.))", getVehicleOccupant(element), 255, 194, 14)
+						outputChatBox("((Please remember to /park and /handbrake your vehicle in our car park.))", getVehicleOccupant(element), 255, 194, 14)
 					else
 						if (getElementData(temp, "faction") ~= 30) then
 							if (impounded == 0) then
@@ -83,7 +83,7 @@ function UnlockVehicle(element, matchingdimension)
 								setVehicleLocked(temp, false)
 								setElementData(temp, "enginebroke", 1, false)
 								setVehicleEngineState(temp, false)
-								outputChatBox("((Please remember to /park your vehicle in our car park.))", getVehicleOccupant(element), 255, 194, 14)
+								outputChatBox("((Please remember to /park and /handbrake your vehicle in our car park.))", getVehicleOccupant(element), 255, 194, 14)
 							end
 						end
 					end
@@ -182,6 +182,13 @@ function updateTowingVehicle(theTruck)
 				outputChatBox("(( This " .. carName .. " belongs to the " .. ownerName .. " faction. ))", thePlayer, 255, 195, 14)
 			end
 			mysql_free_result(query)
+		end
+		
+		-- fix for handbraked vehicles
+		local handbrake = getElementData(source, "handbrake")
+		if (handbrake == 1) then
+			setElementData(source, "handbrake",0,false)
+			setVehicleFrozen(source, false)
 		end
 	end
 	if thePlayer then

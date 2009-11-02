@@ -57,6 +57,8 @@ function giveLicense(license, cost)
 		removePedFromVehicle(source)
 		respawnVehicle(theVehicle)
 		setElementData(source, "license.car", 1)
+		setElementData(theVehicle, "handbrake", 1, false)
+		setVehicleFrozen(theVehicle, true)
 		local query = mysql_query(handler, "UPDATE characters SET car_license='1' WHERE charactername='" .. mysql_escape_string(handler, getPlayerName(source)) .. "' LIMIT 1")
 		mysql_free_result(query)
 		outputChatBox("Congratulations, you've passed the second part of your driving examination.", source, 255, 194, 14)
@@ -139,7 +141,7 @@ function checkDMVCars(player)
 	-- aka civilian previons
 	if getElementData(source, "owner") == -2 and getElementData(source, "faction") == -1 and getElementModel(source) == 436 then
 		if getElementData(player,"license.car") == 3 then
-			outputChatBox("You can use 'J' to start the engine.", player, 0, 255, 0)
+			outputChatBox("(( You can use 'J' to start the engine ))", player, 0, 255, 0)
 		else
 			outputChatBox("This DMV Car is for the Driving Test only.", player, 255, 0, 0)
 			cancelEvent()

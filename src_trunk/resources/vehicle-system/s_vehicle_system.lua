@@ -130,6 +130,7 @@ function createPermVehicle(thePlayer, commandName, ...)
 					exports.pool:allocateElement(veh)
 					setElementData(veh, "fuel", 100)
 					setElementData(veh, "Impounded", 0)
+					setElementData(veh, "handbrake", 0, false)
 						
 					local rx, ry, rz = getVehicleRotation(veh)
 					setVehicleRespawnPosition(veh, x, y, z, rx, ry, rz)
@@ -248,6 +249,7 @@ function createCivilianPermVehicle(thePlayer, commandName, ...)
 			else
 				exports.pool:allocateElement(veh)
 				setElementData(veh, "fuel", 100)
+				setElementData(veh, "handbrake", 0, false)
 					
 				if (job>0) then
 					toggleVehicleRespawn(veh, true)
@@ -314,7 +316,7 @@ function loadAllVehicles(res)
 		setElementData(value, "realinvehicle", 0, false)
 	end
 	
-	local result = mysql_query(handler, "SELECT currx, curry, currz, currrx, currry, currrz, x, y, z, rotx, roty, rotz, id, model, upgrade0, upgrade1, upgrade2, upgrade3, upgrade4, upgrade5, upgrade6, upgrade7, upgrade8, upgrade9, upgrade10, upgrade11, upgrade12, upgrade13, upgrade14, upgrade15, upgrade16, Impounded FROM vehicles")
+	local result = mysql_query(handler, "SELECT currx, curry, currz, currrx, currry, currrz, x, y, z, rotx, roty, rotz, id, model, upgrade0, upgrade1, upgrade2, upgrade3, upgrade4, upgrade5, upgrade6, upgrade7, upgrade8, upgrade9, upgrade10, upgrade11, upgrade12, upgrade13, upgrade14, upgrade15, upgrade16, Impounded, handbrake FROM vehicles")
 	local resultext = mysql_query(handler, "SELECT fuel, engine, locked, lights, sirens, paintjob, wheel1, wheel2, wheel3, wheel4, panel0, panel1, panel2, panel3, panel4, panel5, panel6, door1, door2, door3, door4, door5, door6, hp, color1, color2, plate, faction, owner, job, dimension, interior, currdimension, currinterior FROM vehicles")
 	
 	local counter = 0
@@ -360,6 +362,7 @@ function loadAllVehicles(res)
 			local upgrade15 = row[30]
 			local upgrade16 = row[31]
 			local Impounded = row[32]
+			local handbrake = row[33]
 			
 			local fuel = tonumber(mysql_result(resultext, rowc, 1))
 			local engine = tonumber(mysql_result(resultext, rowc, 2))
@@ -536,6 +539,12 @@ function loadAllVehicles(res)
 			counter = counter + 1
 			rowc = rowc + 1
 			
+			-- Handbrake
+			setElementData(veh, "handbrake", tonumber(handbrake), false)
+			if tonumber(handbrake) > 0 then
+				setVehicleFrozen(veh, true)
+			end
+			
 			-- broken engine
 			if (hp<=350) then
 				setElementHealth(veh, 300)
@@ -570,6 +579,8 @@ function vehicleRespawn(exploded)
 		toggleVehicleRespawn(source, true)
 		setVehicleRespawnDelay(source, 60000)
 		setVehicleIdleRespawnDelay(source, 180000)
+		setVehicleFrozen(source, true)
+		setElementData(source, "handbrake", 1, false)
 	end
 	
 	-- Set the vehicle armored if it is armored
@@ -616,6 +627,8 @@ function vehicleRespawn(exploded)
 	-- unlock civ vehicles
 	if owner == -2 then
 		setVehicleLocked(source, false)
+		setVehicleFrozen(source, true)
+		setElementData(veh, "handbrake", 1, false)
 	end
 end
 addEventHandler("onVehicleRespawn", getRootElement(), vehicleRespawn)
@@ -864,6 +877,9 @@ function setRealInVehicle(thePlayer)
 				if (getElementData(source, "Impounded") > 0) then
 					local output = getRealTime().yearday-getElementData(source, "Impounded")
 					outputChatBox("(( This " .. carName .. " has been Impounded for: " .. output .. (output == 1 and " Day." or " Days.") .. " ))", thePlayer, 255, 195, 14)
+				end
+				if (getElementData(source, "handbrake") == 1) then
+					outputChatBox("(( /handbrake to release the handbrake ))", thePlayer, 255, 195, 14)
 				end
 			end
 		end
