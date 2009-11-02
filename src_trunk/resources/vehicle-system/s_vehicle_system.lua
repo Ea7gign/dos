@@ -1298,6 +1298,8 @@ function quitPlayer ( quitReason )
 										setVehicleEngineState(theVehicle, false)
 										setElementData(theVehicle, "engine", 0, false)
 									end
+									setElementData(theVehicle, "handbrake", 1, false)
+									setVehicleFrozen(theVehicle, true)
 								end
 							end
 						end
