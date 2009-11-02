@@ -628,7 +628,7 @@ function vehicleRespawn(exploded)
 	if owner == -2 then
 		setVehicleLocked(source, false)
 		setVehicleFrozen(source, true)
-		setElementData(veh, "handbrake", 1, false)
+		setElementData(source, "handbrake", 1, false)
 	end
 end
 addEventHandler("onVehicleRespawn", getRootElement(), vehicleRespawn)
