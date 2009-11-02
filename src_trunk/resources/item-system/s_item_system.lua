@@ -616,8 +616,8 @@ function destroyItem(itemID, isWeapon)
 			itemName = getWeaponNameFromID( itemID )
 		end
 	end
-	outputChatBox("You destroyed a " .. itemName .. ".", source, 255, 194, 14)
 	exports.global:sendLocalMeAction(source, "destroyed a " .. itemName .. ".")
+	triggerClientEvent(source, "updateHudClock", source)
 end
 addEvent("destroyItem", true)
 addEventHandler("destroyItem", getRootElement(), destroyItem)
@@ -637,10 +637,7 @@ function dropItem(itemID, x, y, z, ammo, keepammo)
 		local insert = mysql_query(handler, "INSERT INTO worlditems SET itemid='" .. itemID .. "', itemvalue='" .. mysql_escape_string(handler, itemValue) .. "', creationdate = NOW(), x = " .. x .. ", y = " .. y .. ", z= " .. z .. ", dimension = " .. dimension .. ", interior = " .. interior .. ", rz = " .. rz2)
 		if insert then
 			local id = mysql_insert_id(handler)
-			mysql_free_result(insert)
-			
-			outputChatBox("You dropped a " .. ( itemID == 80 and itemValue or getItemName( itemID ) ) .. ".", source, 255, 194, 14)
-			
+			mysql_free_result(insert)	
 			-- Animation
 			exports.global:applyAnimation(source, "CARRY", "putdwn", 500, false, false, true)
 			toggleAllControls( source, true, true, true )
@@ -735,9 +732,7 @@ function dropItem(itemID, x, y, z, ammo, keepammo)
 			if ammo <= 0 then
 				return
 			end
-			
-			outputChatBox("You dropped a " .. ( getWeaponNameFromID( itemID ) or "Body Armor" ) .. ".", source, 255, 194, 14)
-			
+
 			-- Animation
 			exports.global:applyAnimation(source, "CARRY", "putdwn", 500, false, false, true)
 			toggleAllControls( source, true, true, true )
@@ -787,6 +782,7 @@ function dropItem(itemID, x, y, z, ammo, keepammo)
 		end
 	end
 	triggerClientEvent( source, "finishItemDrop", source )
+	triggerClientEvent(source, "updateHudClock", source)
 end
 addEvent("dropItem", true)
 addEventHandler("dropItem", getRootElement(), dropItem)
@@ -909,8 +905,8 @@ function pickupItem(object, leftammo)
 			exports.global:giveWeapon(source, -itemID, itemValue, true)
 			triggerClientEvent(source, "saveGuns", source)
 		end
-		outputChatBox("You picked up a " .. ( itemID == 80 and itemValue or getItemName( itemID ) ) .. ".", source, 255, 194, 14)
 		exports.global:sendLocalMeAction(source, "bends over and picks up a " .. ( itemID == 80 and itemValue or getItemName( itemID ) ) .. ".")
+		triggerClientEvent(source, "updateHudClock", source)
 	else
 		outputDebugString("Distance between Player and Pickup too large")
 	end
