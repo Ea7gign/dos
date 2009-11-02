@@ -2,15 +2,19 @@ function cmdHandbrake(sourcePlayer)
 	if isPlayerInVehicle ( sourcePlayer ) then
 		local playerVehicle = getPlayerOccupiedVehicle ( sourcePlayer )
 		if (getVehicleOccupant(playerVehicle, 0) == sourcePlayer) then
-			local handbrake = getElementData(playerVehicle, "handbrake")
-			if (handbrake == 0) then
-				setElementData(playerVehicle, "handbrake", 1, false)
-				setVehicleFrozen(playerVehicle, true)
-				outputChatBox("Handbrake has been applied.", sourcePlayer)
+			if (isVehicleOnGround(playerVehicle)) then
+				local handbrake = getElementData(playerVehicle, "handbrake")
+				if (handbrake == 0) then
+					setElementData(playerVehicle, "handbrake", 1, false)
+					setVehicleFrozen(playerVehicle, true)
+					outputChatBox("Handbrake has been applied.", sourcePlayer)
+				else
+					setElementData(playerVehicle, "handbrake", 0, false)
+					setVehicleFrozen(playerVehicle, false) 
+					outputChatBox("Handbrake has been released.", sourcePlayer)
+				end
 			else
-				setElementData(playerVehicle, "handbrake", 0, false)
-				setVehicleFrozen(playerVehicle, false) 
-				outputChatBox("Handbrake has been released.", sourcePlayer)
+			 outputChatBox("You cannot apply your handbrake in air, smartass...", sourcePlayer, 255, 0, 0)
 			end
 		else
 			outputChatBox("You need to be an driver to control the handbrake...", sourcePlayer, 255, 0, 0)
