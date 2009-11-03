@@ -179,7 +179,12 @@ function showHouseMenu( )
 end
 
 function lockUnlockHouse( )
-	triggerServerEvent( "lockUnlockHouseID", getLocalPlayer( ), houseID )
+	local px, py, pz = getElementPosition(getLocalPlayer())
+	local x, y, z = getElementPosition(house)
+	if getDistanceBetweenPoints3D(x, y, z, px, py, pz) < 5 then
+		triggerServerEvent( "lockUnlockHouseID", getLocalPlayer( ), houseID )
+	end
+	hideHouseMenu()
 end
 
 function hideHouseMenu( )

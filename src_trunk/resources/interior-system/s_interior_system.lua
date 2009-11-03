@@ -969,15 +969,16 @@ end
 addCommandHandler("movesafe", moveSafe)
 
 local function hasKey( source, key )
-	return exports.global:isPlayerScripter(source) or exports.global:hasItem(source, 4, key) or exports.global:hasItem(source, 5,key)
+	return  getElementData(source, "adminduty") == 1 or exports.global:hasItem(source, 4, key) or exports.global:hasItem(source, 5,key)
 end
 addEvent( "lockUnlockHouse",false )
 addEventHandler( "lockUnlockHouse", getRootElement(),
 	function( )
 		local itemValue = nil
 		local found = nil
+		local nearbyPickups = exports.global:getNearbyElements(source, "pickup", 5)
 		local elevatorres = getResourceRootElement(getResourceFromName("elevator-system"))
-		for key, value in ipairs(exports.pool:getPoolElementsByType("pickup")) do
+		for key, value in ipairs(nearbyPickups) do
 			if isElement( value ) then
 				local vx, vy, vz = getElementPosition(value)
 				local x, y, z = getElementPosition(source)
