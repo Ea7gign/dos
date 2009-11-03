@@ -78,28 +78,41 @@ function lvesHeal(thePlayer, commandName, targetPartialNick, price)
 						if (getDistanceBetweenPoints3D(x, y, z, tx, ty, tz)>5) then -- Are they standing next to each other?
 							outputChatBox("You are too far away to heal '".. targetPlayerName .."'.", thePlayer, 255, 0, 0)
 						else
-							local money = exports.global:getMoney(targetPlayer)
-							local bankmoney = getElementData(targetPlayer, "bankmoney")
-							
-							if money + bankmoney < price then
-								outputChatBox("The player cannot afford the heal.", thePlayer, 255, 0, 0)
-							else
-								local takeFromCash = math.min( money, price )
-								local takeFromBank = price - takeFromCash
-								exports.global:takeMoney(targetPlayer, takeFromCash)
-								if takeFromBank > 0 then
-									setElementData(targetPlayer, "bankmoney", bankmoney - takeFromBank)
+							local foundkit, slot, itemValue = exports.global:hasItem(source, 70)
+							if (foundkit) then
+								local money = exports.global:getMoney(targetPlayer)
+								local bankmoney = getElementData(targetPlayer, "bankmoney")
+								
+								if money + bankmoney < price then
+									outputChatBox("The player cannot afford the heal.", thePlayer, 255, 0, 0)
+								else
+									local takeFromCash = math.min( money, price )
+									local takeFromBank = price - takeFromCash
+									exports.global:takeMoney(targetPlayer, takeFromCash)
+									if takeFromBank > 0 then
+										setElementData(targetPlayer, "bankmoney", bankmoney - takeFromBank)
+									end
+									
+									local tax = exports.global:getTaxAmount()
+									
+									exports.global:giveMoney( getTeamFromName("Los Santos Emergency Services"), math.ceil((1-tax)*price) )
+									exports.global:giveMoney( getTeamFromName("Government of Los Santos"), math.ceil(tax*price) )
+									
+									setElementHealth(targetPlayer, 100)
+									triggerEvent("onPlayerHeal", targetPlayer, true)
+									outputChatBox("You healed '" ..targetPlayerName.. "'.", thePlayer, 0, 255, 0)
+									outputChatBox("You have been healed by '" ..getPlayerName(thePlayer).. "' for $" .. price .. ".", targetPlayer, 0, 255, 0)
+									
+									exports.global:takeItem(source, 70, itemValue)
+									itemValue = itemValue - 1
+									if itemValue > 0 then
+										exports.global:giveItem(source, 70, itemValue)
+									else
+											outputChatBox("Warning, you're out of first aid kits. re /duty to get new ones.", thePlayer, 255, 0, 0)
+									end
 								end
-								
-								local tax = exports.global:getTaxAmount()
-								
-								exports.global:giveMoney( getTeamFromName("Los Santos Emergency Services"), math.ceil((1-tax)*price) )
-								exports.global:giveMoney( getTeamFromName("Government of Los Santos"), math.ceil(tax*price) )
-								
-								setElementHealth(targetPlayer, 100)
-								triggerEvent("onPlayerHeal", targetPlayer, true)
-								outputChatBox("You healed '" ..targetPlayerName.. "'.", thePlayer, 0, 255, 0)
-								outputChatBox("You have been healed by '" ..getPlayerName(thePlayer).. "' for $" .. price .. ".", targetPlayer, 0, 255, 0)
+							else
+								outputChatBox("You need a first aid kit to heal people.", thePlayer, 255, 0, 0)
 							end
 						end
 					end
