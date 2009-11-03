@@ -209,6 +209,7 @@ function clickHouse(button, state, absX, absY, wx, wy, wz, e)
 		local element, id = nil, nil
 		local px, py, pz = getElementPosition(getLocalPlayer())
 		local x, y, z = nil
+		local interiorres = getResourceRootElement(getResourceFromName("interior-system"))
 		local elevatorres = getResourceRootElement(getResourceFromName("elevator-system"))
 		for key, value in ipairs(getElementsByType("pickup")) do
 			if isElementStreamedIn(value) then
@@ -226,7 +227,7 @@ function clickHouse(button, state, absX, absY, wx, wy, wz, e)
 				
 				if (wx >= minx and wx <=maxx) and (wy >= miny and wy <=maxy) and (wz >= minz and wz <=maxz) then
 					local dbid = getElementData(value, "dbid")
-					if hasKey(dbid)then -- house found
+					if hasKey(dbid) and getElementParent( getElementParent( value ) ) == interiorres then -- house found
 						element = value
 						id = dbid
 						break
