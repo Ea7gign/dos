@@ -1277,6 +1277,62 @@ end
 addCommandHandler("vehpos", setVehiclePosition, false, false)
 addCommandHandler("park", setVehiclePosition, false, false)
 
+function setVehiclePosition2(thePlayer, commandName, vehicleID)
+	if exports.global:isPlayerAdmin( thePlayer ) then
+		local vehicleID = tonumber(vehicleID)
+		if not vehicleID or vehicleID < 0 then
+			outputChatBox( "SYNTAX: /" .. commandName .. " [vehicle id]", thePlayer, 255, 194, 14 )
+		else
+			local veh = nil
+			for k, v in ipairs( getElementsByType( "vehicle" ) ) do
+				if getElementData( v, "dbid" ) == vehicleID then
+					veh = v
+					break
+				end
+			end
+			
+			if veh then
+				removeElementData(veh, "requires.vehpos")
+				local x, y, z = getElementPosition(veh)
+				local rx, ry, rz = getVehicleRotation(veh)
+				
+				local interior = getElementInterior(thePlayer)
+				local dimension = getElementDimension(thePlayer)
+				
+				local query = mysql_query(handler, "UPDATE vehicles SET x='" .. x .. "', y='" .. y .."', z='" .. z .. "', rotx='" .. rx .. "', roty='" .. ry .. "', rotz='" .. rz .. "', currx='" .. x .. "', curry='" .. y .. "', currz='" .. z .. "', currrx='" .. rx .. "', currry='" .. ry .. "', currrz='" .. rz .. "', interior='" .. interior .. "', currinterior='" .. interior .. "', dimension='" .. dimension .. "', currdimension='" .. dimension .. "' WHERE id='" .. vehicleID .. "'")
+				mysql_free_result(query)
+				setVehicleRespawnPosition(veh, x, y, z, rx, ry, rz)
+				setElementData(veh, "respawnposition", {x, y, z, rx, ry, rz}, false)
+				setElementData(veh, "interior", interior)
+				setElementData(veh, "dimension", dimension)
+				outputChatBox("Vehicle spawn position for #" .. vehicleID .. " set.", thePlayer)
+				
+				for key, value in ipairs(destroyTimers) do
+					if (tonumber(destroyTimers[key][2]) == vehicleID) then
+						local timer = destroyTimers[key][1]
+						
+						if (isTimer(timer)) then
+							killTimer(timer)
+							table.remove(destroyTimers, key)
+						end
+					end
+				end
+				
+				if ( getElementData(veh, "Impounded") or 0 ) > 0 then
+					local owner = getPlayerFromName( getCharacterName( getElementData( veh, "owner" ) ) )
+					if isElement( owner ) and exports.global:hasItem( owner, 2 ) then
+						outputChatBox("((Best's Towing & Recovery)) #999 [SMS]: Your " .. getVehicleName(veh) .. " has been impounded. Head over to the Impound to release it.", owner, 120, 255, 80)
+					end
+				end
+			else
+				outputChatBox( "Vehicle not found.", thePlayer, 255, 0, 0 )
+			end
+		end
+	end
+end
+addCommandHandler("avehpos", setVehiclePosition2, false, false)
+addCommandHandler("apark", setVehiclePosition2, false, false)
+
 function quitPlayer ( quitReason )
 	if (quitReason == "Timed out") then -- if timed out
 		if (isPedInVehicle(source)) then -- if in vehicle
