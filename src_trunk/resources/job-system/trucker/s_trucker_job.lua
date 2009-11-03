@@ -1,6 +1,8 @@
 local lockTimer = nil
 local truckruns = { }
 local truckwage = { }
+local truckroute = { }
+local truck = { [414] = true }
 
 function giveTruckingMoney(vehicle)
 	outputChatBox("You earned $" .. ( truckwage[vehicle] or 0 ) .. " on your trucking runs.", source, 255, 194, 15)
@@ -20,10 +22,10 @@ end
 addEvent("giveTruckingMoney", true)
 addEventHandler("giveTruckingMoney", getRootElement(), giveTruckingMoney)
 
-local truck = { [414] = true }
+
 function checkTruckingEnterVehicle(thePlayer, seat)
 	if getElementData(source, "owner") == -2 and getElementData(source, "faction") == -1 and seat == 0 and truck[getElementModel(source)] and getElementData(source,"job") == 1 and getElementData(thePlayer,"job") == 1 then
-		triggerClientEvent(thePlayer, "startTruckJob", thePlayer)
+		triggerClientEvent(thePlayer, "startTruckJob", thePlayer, truckroute[source] or -1)
 		if (truckruns[vehicle] ~= nil) and (truckwage[vehicle] > 0) then
 			triggerClientEvent(thePlayer, "spawnFinishMarkerTruckJob", thePlayer)
 		end
@@ -66,6 +68,12 @@ function saveDeliveryProgress(vehicle, earned)
 end
 addEvent("saveDeliveryProgress", true)
 addEventHandler("saveDeliveryProgress", getRootElement(), saveDeliveryProgress)
+
+function updateNextCheckpoint(vehicle, pointid)
+	truckroute[vehicle] = pointid
+end
+addEvent("updateNextCheckpoint", true)
+addEventHandler("updateNextCheckpoint", getRootElement(), updateNextCheckpoint)
 
 function restoreTruckingJob()
 	if getElementData(source, "job") == 1 then

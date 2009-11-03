@@ -107,7 +107,7 @@ addEvent("restoreTruckerJob", true)
 addEventHandler("restoreTruckerJob", getRootElement(), function() displayTruckerJob(true) end )
 
 
-function startTruckerJob()
+function startTruckerJob(routeid)
 	if (jobstate==1) then
 		local vehicle = getPedOccupiedVehicle(localPlayer)
 		if vehicle and getVehicleController(vehicle) == localPlayer and truck[getElementModel(vehicle)] then
@@ -118,6 +118,12 @@ function startTruckerJob()
 			destroyElement(blip)
 			
 			local rand = math.random(1, #routes)
+			
+			if not (routeid == -1) then
+				rand = routeid
+			else
+				
+			end	
 			route = routes[rand]
 			local x, y, z = route[1], route[2], route[3]
 			blip = createBlip(x, y, z, 0, 2, 255, 200, 0)
@@ -126,6 +132,9 @@ function startTruckerJob()
 							
 			jobstate = 2
 			oldroute = rand
+			if (routeid == -1) then
+				triggerServerEvent("updateNextCheckpoint", localPlayer, vehicle, rand)	
+			end
 		else
 			outputChatBox("You must be in the van to start this job.", 255, 0, 0)
 		end
@@ -218,6 +227,7 @@ function loadNewCheckpointTruckJob()
 	blip = createBlip(x, y, z, 0, 2, 255, 200, 0)
 	marker = createMarker(x, y, z, "checkpoint", 4, 255, 200, 0, 150)
 	addEventHandler("onClientMarkerHit", marker, waitAtDelivery)
+	triggerServerEvent("updateNextCheckpoint", localPlayer, vehicle, rand)	
 end
 
 addEvent("loadNewCheckpointTruckJob", true)
