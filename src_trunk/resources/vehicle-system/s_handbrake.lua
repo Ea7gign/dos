@@ -1,6 +1,6 @@
 function cmdHandbrake(sourcePlayer)
-	if isPlayerInVehicle ( sourcePlayer ) then
-		local playerVehicle = getPlayerOccupiedVehicle ( sourcePlayer )
+	if isPedInVehicle ( sourcePlayer ) then
+		local playerVehicle = getPedOccupiedVehicle ( sourcePlayer )
 		if (getVehicleOccupant(playerVehicle, 0) == sourcePlayer) then
 			if (isVehicleOnGround(playerVehicle)) then
 				local handbrake = getElementData(playerVehicle, "handbrake")
