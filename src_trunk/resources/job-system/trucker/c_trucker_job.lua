@@ -114,7 +114,7 @@ function startTruckerJob()
 			outputChatBox("#FF9933Drive to the #FFFF00blip#FF9933 to complete your first delivery.", 255, 194, 15, true)
 			outputChatBox("#FF9933Remember to #FFFF00follow the street rules#FF9933.", 255, 194, 15, true)
 			outputChatBox("#FF9933If your truck is #FFFF00damaged#FF9933, the customers may pay less or refuse to accept the goods.", 255, 194, 15, true)
-			outputChatBox("#FF9933Your wage is bound to this truck, #FFFF00don't loose it#FF9933!", 255, 194, 15, true)
+			outputChatBox("#FF9933Your wage is bound to this truck, #FFFF00don't lose it#FF9933!", 255, 194, 15, true)
 			destroyElement(blip)
 			
 			local rand = math.random(1, #routes)
