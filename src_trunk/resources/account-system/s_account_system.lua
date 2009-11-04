@@ -1470,7 +1470,6 @@ function timerPDUnjailPlayer(jailedPlayer)
 			fadeCamera(jailedPlayer, false)
 			local query = mysql_query(handler, "UPDATE characters SET pdjail_time='0', pdjail='0', pdjail_station='0' WHERE charactername='" .. mysql_escape_string(handler, username) .. "'")
 			mysql_free_result(query)
-			removeElementData(jailedPlayer, "jailtimer")
 			local station = getElementData(jailedPlayer, "pd.jailstation")
 			setElementDimension(jailedPlayer, station <= 4 and 1 or 10583)
 			setElementInterior(jailedPlayer, 10)
@@ -1491,7 +1490,7 @@ function timerPDUnjailPlayer(jailedPlayer)
 			mysql_free_result(query)
 		end
 	else
-		local theTimer = getElementData(jailedPlayer, "jailtimer")
+		local theTimer = getElementData(jailedPlayer, "pd.jailtimer")
 		killTimer(theTimer)
 	end
 end

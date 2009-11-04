@@ -1641,6 +1641,9 @@ function jailedPlayers(thePlayer, commandName)
 				outputChatBox("[JAIL] " .. getPlayerName(value) .. ", jailed by " .. tostring(getElementData(value, "jailadmin")) .. ", served " .. tostring(getElementData(value, "jailserved")) .. " minutes, " .. tostring(getElementData(value,"jailtime")) .. " minutes left", thePlayer, 255, 194, 15)
 				outputChatBox("[JAIL] Reason: " .. tostring(getElementData(value, "jailreason")), thePlayer, 255, 194, 15)
 				count = count + 1
+			elseif getElementData(value, "pd.jailtimer") then
+				outputChatBox("[ARREST] " .. getPlayerName(value) .. ", served " .. tostring(getElementData(value, "pd.jailserved")) .. " minutes, " .. tostring(getElementData(value, "pd.jailtime")) .. " minutes left", thePlayer, 0, 102, 255)
+				count = count + 1
 			end
 		end
 		
