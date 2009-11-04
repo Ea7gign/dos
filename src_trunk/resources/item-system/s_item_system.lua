@@ -21,7 +21,7 @@ function useItem(itemSlot, additional)
 	local itemID = items[itemSlot][1]
 	local itemValue = items[itemSlot][2]
 	local itemName = getItemName( itemID )
-	if isPedDead(source) then return end
+	if isPedDead(source) or getElementData(source, "injuriedanimation") then return end
 	if itemID then
 		if (itemID==1) then -- haggis
 			setElementHealth(source, 100)
@@ -549,7 +549,7 @@ function destroyGlowStick(marker)
 end
 
 function destroyItem(itemID, isWeapon)
-	if isPedDead(source) then return end
+	if isPedDead(source) or getElementData(source, "injuriedanimation") then return end
 	local itemName = ""
 	
 	if not isWeapon then
@@ -627,7 +627,7 @@ addEventHandler("destroyItem", getRootElement(), destroyItem)
 weaponmodels = { [1]=331, [2]=333, [3]=326, [4]=335, [5]=336, [6]=337, [7]=338, [8]=339, [9]=341, [15]=326, [22]=346, [23]=347, [24]=348, [25]=349, [26]=350, [27]=351, [28]=352, [29]=353, [32]=372, [30]=355, [31]=356, [33]=357, [34]=358, [35]=359, [36]=360, [37]=361, [38]=362, [16]=342, [17]=343, [18]=344, [39]=363, [41]=365, [42]=366, [43]=367, [10]=321, [11]=322, [12]=323, [14]=325, [44]=368, [45]=369, [46]=371, [40]=364, [100]=373 }
 
 function dropItem(itemID, x, y, z, ammo, keepammo)
-	if isPedDead(source) then return end
+	if isPedDead(source) or getElementData(source, "injuriedanimation") then return end
 	
 	local interior = getElementInterior(source)
 	local dimension = getElementDimension(source)
@@ -857,7 +857,7 @@ end
 addEventHandler("onResourceStart", getResourceRootElement(), loadWorldItems)
 
 function showItem(itemName)
-	if isPedDead(source) then return end
+	if isPedDead(source) or getElementData(source, "injuriedanimation") then return end
 	exports.global:sendLocalMeAction(source, "shows everyone a " .. itemName .. ".")
 end
 addEvent("showItem", true)
