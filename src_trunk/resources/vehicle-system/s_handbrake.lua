@@ -5,9 +5,13 @@ function cmdHandbrake(sourcePlayer)
 			if (isVehicleOnGround(playerVehicle)) then
 				local handbrake = getElementData(playerVehicle, "handbrake")
 				if (handbrake == 0) then
-					setElementData(playerVehicle, "handbrake", 1, false)
-					setVehicleFrozen(playerVehicle, true)
-					outputChatBox("Handbrake has been applied.", sourcePlayer)
+					if isVehicleOnGround(playerVehicle) then
+						setElementData(playerVehicle, "handbrake", 1, false)
+						setVehicleFrozen(playerVehicle, true)
+						outputChatBox("Handbrake has been applied.", sourcePlayer)
+					else
+						outputChatBox("You can only apply the handbrake when your vehicle is on the ground.", sourcePlayer)
+					end
 				else
 					setElementData(playerVehicle, "handbrake", 0, false)
 					setVehicleFrozen(playerVehicle, false) 
