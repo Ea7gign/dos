@@ -21,4 +21,6 @@
 	<script src="MountMansion.lua" type="server"/>
 	<script src="airport.lua" type="server"/>
 	<script src="Rayray.lua" type="server"/>
+	
+	<script src="fd_interior.lua"/>
 </meta>
