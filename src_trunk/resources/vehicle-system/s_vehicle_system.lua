@@ -276,7 +276,7 @@ function createCivilianPermVehicle(thePlayer, commandName, ...)
 				setElementData(veh, "interior", interior, false)
 				setElementData(veh, "currdimension", dimension, false)
 				setElementData(veh, "currinterior", interior, false)
-				setElementData(veh, "job", job, false)
+				setElementData(veh, "job", job, job ~= 0)
 				
 				-- Set the vehicle armored if it is armored
 				if (armoredCars[id]) then
@@ -297,7 +297,7 @@ function createCivilianPermVehicle(thePlayer, commandName, ...)
 					setElementData(veh, "oldz", z, false)
 					setElementData(veh, "faction", -1)
 					setElementData(veh, "owner", -2, false)
-					setElementData(veh, "job", job, false)
+					setElementData(veh, "job", job, job ~= 0)
 					outputChatBox(getVehicleName(veh) .. " (Civilian) spawned with ID #" .. insertid .. ".", thePlayer, 255, 194, 14)
 					triggerEvent("onVehicleSpawn", veh)
 					
@@ -505,7 +505,7 @@ function loadAllVehicles(res)
 			setElementData(veh, "oldz", z, false)
 			setElementData(veh, "faction", faction)
 			setElementData(veh, "owner", owner, false)
-			setElementData(veh, "job", tonumber(job), false)
+			setElementData(veh, "job", tonumber(job), tonumber(job) ~= 0)
 
 			-- Impounded
 			setElementData(veh, "Impounded", tonumber(Impounded))
