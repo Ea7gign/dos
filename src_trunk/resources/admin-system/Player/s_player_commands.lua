@@ -2422,7 +2422,7 @@ function findAltChars(thePlayer, commandName, ...)
 			local targetPlayerName = table.concat({...}, "_")
 			local targetPlayer = exports.global:findPlayerByPartialNick(nil, targetPlayerName)
 			
-			if not targetPlayer then
+			if not targetPlayer or getElementData( targetPlayer, "loggedin" ) ~= 1 then
 				-- select by character name
 				local result = mysql_query( handler, "SELECT account FROM characters WHERE charactername = '" .. mysql_escape_string( handler, targetPlayerName ) .. "'" )
 				if result then
