@@ -331,7 +331,14 @@ function fillCan(thePlayer, commandName)
 		end
 		
 		if (colShape) then
-			local hasItem, slot, currFuel = exports.global:hasItem(thePlayer, 57)
+			currFuel = 25
+			local items = exports['item-system']:getItems(thePlayer)
+			for k, v in pairs( items ) do
+				if v[1] == 57 and v[2] < 25 then
+					currFuel = v[2]
+					break
+				end
+			end
 
 			if (math.ceil(currFuel)==25) then
 				outputChatBox("This fuel can is already full.", thePlayer)
