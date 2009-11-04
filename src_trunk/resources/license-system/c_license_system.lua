@@ -646,4 +646,16 @@ function EndTest(element)
     	end
     end
 end
- 
+
+bindKey( "accelerate", "down",
+	function( )
+		local veh = getPedOccupiedVehicle( getLocalPlayer( ) )
+		if veh then
+			if isVehicleFrozen( veh ) and getVehicleEngineState( veh ) then
+				outputChatBox( "(( Your handbrake is applied. Use /handbrake to release it. ))", 255, 194, 14 )
+			elseif not getVehicleEngineState( veh ) then
+				outputChatBox( "(( Your engine is off. Press 'J' to turn it on. ))", 255, 194, 14 )
+			end
+		end
+	end
+)
