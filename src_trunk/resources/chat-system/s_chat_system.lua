@@ -746,6 +746,7 @@ function toggleRadio(thePlayer, commandName)
 			exports.global:sendLocalMeAction(thePlayer, "turns " .. genderm .. " radio off.")
 		end
 		setElementData(thePlayer, "radiochannel", channel, false)
+		mysql_free_result( mysql_query( handler, "UPDATE characters SET radiochannel=" .. channel .. " WHERE id = " .. getElementData(thePlayer, "dbid") ) )
 	else
 		outputChatBox("You do not have a radio!", thePlayer, 255, 0, 0)
 	end
