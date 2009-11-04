@@ -600,6 +600,7 @@ function resetUpgrades(thePlayer, commandName, target)
 						removeVehicleUpgrade(theVehicle, value)
 					end
 					setVehiclePaintjob(theVehicle, 3)
+					outputChatBox("Removed all upgrades from " .. targetPlayerName .. "'s vehicles.", thePlayer, 0, 255, 0)
 				end
 			end
 		end
