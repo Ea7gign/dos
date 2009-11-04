@@ -60,9 +60,11 @@ function mechanicWindow(vehicle)
 				end
 				
 				-- Recolour
-				bMechanicFour = guiCreateButton( 0.05, y, 0.9, 0.1, "Repaint Vehicle - $100", true, wMechanic )
-				addEventHandler( "onClientGUIClick", bMechanicFour, paintWindow, false)
-				y = y + 0.1
+				if not getElementData(vehicle, "job") and ( getElementData(vehicle, "faction") == -1 or getElementData(vehicle, "faction") == getElementData(getLocalPlayer(), "faction") ) then
+					bMechanicFour = guiCreateButton( 0.05, y, 0.9, 0.1, "Repaint Vehicle - $100", true, wMechanic )
+					addEventHandler( "onClientGUIClick", bMechanicFour, paintWindow, false)
+					y = y + 0.1
+				end
 				
 				-- Upgrades
 				if not noUpgrades[getVehicleType(vehicle)] and #getVehicleCompatibleUpgrades(vehicle) > 0 then
@@ -783,7 +785,9 @@ function closeMechanicWindow()
 	if bMechanicThree then
 		destroyElement(bMechanicThree)
 	end
-	destroyElement(bMechanicFour)
+	if bMechanicFour then
+		destroyElement(bMechanicFour)
+	end
 	if bMechanicFive then
 		destroyElement(bMechanicFive)
 	end
