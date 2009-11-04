@@ -32,6 +32,16 @@ addEventHandler("onResourceStop", getResourceRootElement(getThisResource()), clo
 -- //			MYSQL END			 //
 -- ////////////////////////////////////
 
+function SmallestID( ) -- finds the smallest ID in the SQL instead of auto increment
+	local result = mysql_query(handler, "SELECT MIN(e1.id+1) AS nextID FROM interiors AS e1 LEFT JOIN interiors AS e2 ON e1.id +1 = e2.id WHERE e2.id IS NULL")
+	if result then
+		local id = tonumber(mysql_result(result, 1, 1)) or 1
+		mysql_free_result(result)
+		return id
+	end
+	return false
+end
+
 function createInterior(thePlayer, commandName, interiorId, inttype, cost, ...)
 	if (exports.global:isPlayerLeadAdmin(thePlayer)) then
 		local cost = tonumber(cost)
@@ -72,10 +82,10 @@ function createInterior(thePlayer, commandName, interiorId, inttype, cost, ...)
 				local max_items = interior[6]
 				
 				local rot = getPedRotation(thePlayer)
-				local query = mysql_query(handler, "INSERT INTO interiors SET x='" .. x .. "', y='" .. y .."', z='" .. z .."', type='" .. inttype .. "', owner='" .. owner .. "', locked='" .. locked .. "', cost='" .. cost .. "', name='" .. mysql_escape_string(handler, name) .. "', interior='" .. interiorw .. "', interiorx='" .. ix .. "', interiory='" .. iy .. "', interiorz='" .. iz .. "', dimensionwithin='" .. dimension .. "', interiorwithin='" .. interiorwithin .. "', angle='" .. optAngle .. "', angleexit='" .. rot .. "', max_items='" .. max_items .. "', fee=0")
+				local id = SmallestID()
+				local query = mysql_query(handler, "INSERT INTO interiors SET id=" .. id .. ",x='" .. x .. "', y='" .. y .."', z='" .. z .."', type='" .. inttype .. "', owner='" .. owner .. "', locked='" .. locked .. "', cost='" .. cost .. "', name='" .. mysql_escape_string(handler, name) .. "', interior='" .. interiorw .. "', interiorx='" .. ix .. "', interiory='" .. iy .. "', interiorz='" .. iz .. "', dimensionwithin='" .. dimension .. "', interiorwithin='" .. interiorwithin .. "', angle='" .. optAngle .. "', angleexit='" .. rot .. "', max_items='" .. max_items .. "', fee=0")
 				
 				if (query) then
-					local id = mysql_insert_id(handler) -- Get the ID of the latest insert
 					mysql_free_result(query)
 					reloadOneInterior(id, false, false)
 				else
