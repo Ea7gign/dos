@@ -31,4 +31,5 @@
 	<script src="PD Interior2.lua" type="client"/>
 	<script src="mount_mansion.lua" type="client"/>
 	<script src="FD Interior.lua" type="client"/>
+	<script src="Glen Park.lua" type="client"/>
 </meta>
