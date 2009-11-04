@@ -121,6 +121,7 @@ function createTempVehicle(thePlayer, commandName, ...)
 					setElementData(veh, "faction", -1)
 					setElementData(veh, "owner", -1, false)
 					setElementData(veh, "job", 0, false)
+					setElementData(veh, "handbrake", 0, false)
 					outputChatBox(getVehicleName(veh) .. " spawned with TEMP ID " .. dbid .. ".", thePlayer, 255, 194, 14)
 				end
 			else
