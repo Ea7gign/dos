@@ -115,7 +115,7 @@ function ticketPlayer(thePlayer, commandName, targetPlayerNick, amount, ...)
 end
 addCommandHandler("ticket", ticketPlayer, false, false)
 
-function takeLicense(thePlayer, commandName, targetPartialNick, licenseType)
+function takeLicense(thePlayer, commandName, targetPartialNick, licenseType, hours)
 
 	local username = getPlayerName(thePlayer)
 	local logged = getElementData(thePlayer, "loggedin")
@@ -127,10 +127,11 @@ function takeLicense(thePlayer, commandName, targetPartialNick, licenseType)
 	
 		if (ftype==2) then
 			if not (targetPartialNick) then
-				outputChatBox("SYNTAX: /" .. commandName .. " [Player Partial Nick][license Type 1:Driving 2:Weapon]", thePlayer)
+				outputChatBox("SYNTAX: /" .. commandName .. " [Player Partial Nick][license Type 1:Driving 2:Weapon] [Hours]", thePlayer)
 			else
-				if not (licenseType) then
-					outputChatBox("SYNTAX: /" .. commandName .. " [Player Partial Nick][license Type 1:Driving 2:Weapon]", thePlayer)
+				hours = tonumber(hours)
+				if not (licenseType) or not (hours) or hours < 0 then
+					outputChatBox("SYNTAX: /" .. commandName .. " [Player Partial Nick][license Type 1:Driving 2:Weapon] [Hours]", thePlayer)
 				else
 					local targetPlayer, targetPlayerName = exports.global:findPlayerByPartialNick(thePlayer, targetPartialNick)
 					if targetPlayer then
@@ -138,21 +139,21 @@ function takeLicense(thePlayer, commandName, targetPartialNick, licenseType)
 						
 						if (tonumber(licenseType)==1) then
 							if(tonumber(getElementData(targetPlayer, "license.car")) == 1) then
-								local query = mysql_query(handler, "UPDATE characters SET car_license='0' WHERE id=" .. getElementData(targetPlayer, "dbid") .. " LIMIT 1")
+								local query = mysql_query(handler, "UPDATE characters SET car_license='" .. -hours .. "' WHERE id=" .. getElementData(targetPlayer, "dbid") .. " LIMIT 1")
 								mysql_free_result(query)
 								outputChatBox(name.." has revoked your driving license.", targetPlayer, 255, 194, 14)
 								outputChatBox("You have revoked " .. targetPlayerName .. "'s driving license.", thePlayer, 255, 194, 14)
-								setElementData(targetPlayer, "license.car", 0)
+								setElementData(targetPlayer, "license.car", -hours)
 							else
 								outputChatBox(targetPlayerName .. " does not have a driving license.", thePlayer, 255, 0, 0)
 							end
 						elseif (tonumber(licenseType)==2) then
 							if(tonumber(getElementData(targetPlayer, "license.gun")) == 1) then
-								local query = mysql_query(handler, "UPDATE characters SET gun_license='0' WHERE id=" .. getElementData(targetPlayer, "dbid") .. " LIMIT 1")
+								local query = mysql_query(handler, "UPDATE characters SET gun_license='" .. -hours .. "' WHERE id=" .. getElementData(targetPlayer, "dbid") .. " LIMIT 1")
 								mysql_free_result(query)
 								outputChatBox(name.." has revoked your weapon license.", targetPlayer, 255, 194, 14)
 								outputChatBox("You have revoked " .. targetPlayerName .. "'s weapon license.", thePlayer, 255, 194, 14)
-								setElementData(targetPlayer, "license.gun", 0)
+								setElementData(targetPlayer, "license.gun", -hours)
 							else
 								outputChatBox(targetPlayerName .. " does not have a weapon license.", thePlayer, 255, 0, 0)
 							end

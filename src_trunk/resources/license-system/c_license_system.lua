@@ -31,7 +31,7 @@ function showLicenseWindow()
 		guiGridListSetItemText(licenseList, row, column2, "450", true, false)
 	end
 			
-	if (weaponlicense==0) then
+	if (weaponlicense~=1) then
 		local row2 = guiGridListAddRow(licenseList)
 		guiGridListSetItemText(licenseList, row2, column, "Weapon License", false, false)
 		guiGridListSetItemText(licenseList, row2, column2, "4000", true, false)
@@ -70,7 +70,9 @@ function acceptLicense(button, state)
 					outputChatBox("You cannot afford this license.", 255, 0, 0)
 				else
 					if (license == 1) then
-						if (getElementData(getLocalPlayer(),"license.car")==0) then
+						if getElementData(getLocalPlayer(), "license.car") < 0 then
+							outputChatBox( "You need to wait another " .. -getElementData(getLocalPlayer(), "license.car") .. " hours before being able to obtain a " .. licensetext .. ".", 255, 0, 0 )
+						elseif (getElementData(getLocalPlayer(),"license.car")==0) then
 							triggerServerEvent("payFee", getLocalPlayer(), 100)
 							createlicenseTestIntroWindow() -- take the drivers theory test.
 							destroyElement(licenseList)
@@ -83,13 +85,17 @@ function acceptLicense(button, state)
 							initiateDrivingTest()
 						end
 					else
-						triggerServerEvent("acceptLicense", getLocalPlayer(), license, licensecost) -- give them the weapons license.
-						destroyElement(licenseList)
-						destroyElement(bAcceptLicense)
-						destroyElement(bCancel)
-						destroyElement(wLicense)
-						wLicense, licenseList, bAcceptLicense, bCancel = nil, nil, nil, nil
-						showCursor(false)
+						if getElementData(getLocalPlayer(), "license.gun") < 0 then
+							outputChatBox( "You need to wait another " .. -getElementData(getLocalPlayer(), "license.gun") .. " hours before being able to obtain a " .. licensetext .. ".", 255, 0, 0 )
+						else
+							triggerServerEvent("acceptLicense", getLocalPlayer(), license, licensecost) -- give them the weapons license.
+							destroyElement(licenseList)
+							destroyElement(bAcceptLicense)
+							destroyElement(bCancel)
+							destroyElement(wLicense)
+							wLicense, licenseList, bAcceptLicense, bCancel = nil, nil, nil, nil
+							showCursor(false)
+						end
 					end
 				end
 			end

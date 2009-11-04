@@ -112,13 +112,13 @@ function showLicenses(thePlayer, commandName, targetPlayer)
 					
 					local guns, cars
 					
-					if (gunlicense==0) then
+					if (gunlicense<=0) then
 						guns = "No"
 					else
 						guns = "Yes"
 					end
 					
-					if (carlicense==0) then
+					if (carlicense<=0) then
 						cars = "No"
 					elseif (carlicense==3)then
 						cars = "Theory test passed"

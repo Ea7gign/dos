@@ -18,6 +18,8 @@ function showStats(thePlayer, commandName, targetPlayerName)
 	
 	if (carlicense==1) then
 		carlicense = "Yes"
+	elseif (carlicense==3) then
+		carlicense = "Theory test passed"
 	else
 		carlicense = "No"
 	end

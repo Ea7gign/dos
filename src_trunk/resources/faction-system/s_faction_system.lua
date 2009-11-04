@@ -1129,6 +1129,14 @@ function payAllWages(timer)
 		
 		if (logged==1) and (timeinserver>=60) then
 			mysql_free_result( mysql_query( handler, "UPDATE characters SET jobcontract = jobcontract - 1 WHERE id = " .. getElementData( value, "dbid" ) .. " AND jobcontract > 0" ) )
+			if getElementData(value, "license.car") and getElementData(value, "license.car") < 0 then
+				setElementData(value, "license.car", getElementData(value, "license.car") + 1)
+				mysql_free_result( mysql_query( handler, "UPDATE characters SET car_license = car_license + 1 WHERE id = " .. getElementData( value, "dbid" ) ) )
+			end
+			if getElementData(value, "license.gun") and getElementData(value, "license.gun") < 0 then
+				setElementData(value, "license.gun", getElementData(value, "license.gun") + 1)
+				mysql_free_result( mysql_query( handler, "UPDATE characters SET gun_license = gun_license + 1 WHERE id = " .. getElementData( value, "dbid" ) ) )
+			end
 			local playerFaction = getElementData(value, "faction")
 			if (playerFaction~=-1) then -- In a faction
 				local theTeam = getPlayerTeam(value)
