@@ -884,6 +884,18 @@ end
 addCommandHandler("h", headAdminChat, false, false)
 
 -- Misc
+local function sortTable( a, b )
+	if b[2] < a[2] then
+		return true
+	end
+	
+	if b[2] == a[2] and b[4] > a[4] then
+		return true
+	end
+	
+	return false
+end
+
 function showAdmins(thePlayer, commandName)
 	local logged = getElementData(thePlayer, "loggedin")
 	
@@ -891,6 +903,7 @@ function showAdmins(thePlayer, commandName)
 		local players = exports.global:getAdmins()
 		local counter = 0
 		
+		admins = {}
 		outputChatBox("ADMINS:", thePlayer)
 		for k, arrayPlayer in ipairs(players) do
 			local hiddenAdmin = getElementData(arrayPlayer, "hiddenadmin")
@@ -898,25 +911,29 @@ function showAdmins(thePlayer, commandName)
 			
 			if logged == 1 then
 				if hiddenAdmin == 0 or exports.global:isPlayerAdmin(thePlayer) or exports.global:isPlayerScripter(thePlayer) then
-					local username = string.gsub(getPlayerName(arrayPlayer), "_", " ")
-					local adminTitle = exports.global:getPlayerAdminTitle(arrayPlayer)
-					local duty = getElementData(arrayPlayer, "adminduty")
-					
-					if exports.global:isPlayerAdmin(thePlayer) or exports.global:isPlayerScripter(thePlayer) then
-						username = username .. " (" .. tostring(getElementData(arrayPlayer, "gameaccountusername")) .. ")"
-					end
-					
-					if(duty==1)then
-						outputChatBox("    " .. tostring(adminTitle) .. " " .. username.." - On Duty", thePlayer, 255, 194, 14)
-					else
-						outputChatBox("    " .. tostring(adminTitle) .. " " .. username, thePlayer)
-					end
-					counter = counter + 1
+					admins[ #admins + 1 ] = { arrayPlayer, getElementData( arrayPlayer, "adminlevel" ), getElementData( arrayPlayer, "adminduty" ), getPlayerName( arrayPlayer ) }
 				end
 			end
 		end
 		
-		if (counter==0) then
+		table.sort( admins, sortTable )
+		
+		for k, v in ipairs(admins) do
+			arrayPlayer = v[1]
+			local adminTitle = exports.global:getPlayerAdminTitle(arrayPlayer)
+			
+			if exports.global:isPlayerAdmin(thePlayer) or exports.global:isPlayerScripter(thePlayer) then
+				v[4] = v[4] .. " (" .. tostring(getElementData(arrayPlayer, "gameaccountusername")) .. ")"
+			end
+			
+			if(v[3]==1)then
+				outputChatBox("    " .. tostring(adminTitle) .. " " .. v[4].." - On Duty", thePlayer, 255, 194, 14)
+			else
+				outputChatBox("    " .. tostring(adminTitle) .. " " .. v[4], thePlayer)
+			end
+		end
+		
+		if #admins == 0 then
 			outputChatBox("     Currently no admins online.", thePlayer)
 		end
 	end
