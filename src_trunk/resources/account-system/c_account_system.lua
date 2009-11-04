@@ -1643,7 +1643,6 @@ function dcselectedCharacter(button, state)
 					showPlayerHudComponent("breath", true)
 					showPlayerHudComponent("radar", true)
 					showPlayerHudComponent("area_name", true)
-					triggerEvent("updateHudClock", getLocalPlayer())
 				else
 					triggering = false
 					setTimer(playSoundFrontEnd, 500, 3, 20)

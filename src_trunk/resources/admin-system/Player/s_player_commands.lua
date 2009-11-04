@@ -634,6 +634,10 @@ function givePlayerItem(thePlayer, commandName, targetPlayer, itemID, ...)
 						if success then
 							outputChatBox("Player " .. targetPlayerName .. " now has a " .. name .. " with value " .. itemValue .. ".", thePlayer, 0, 255, 0)
 							exports.logs:logMessage(getPlayerName(thePlayer):gsub("_", " ") .. " gave " .. targetPlayerName .. " a " .. name .. " with value " .. itemValue, 13)
+							
+							if itemID == 2 or itemID == 17 then
+								triggerClientEvent(targetPlayer, "updateHudClock", targetPlayer)
+							end
 						else
 							outputChatBox("Couldn't give " .. targetPlayerName .. " a " .. name .. ": " .. tostring(reason), thePlayer, 255, 0, 0)
 						end
@@ -668,6 +672,10 @@ function takePlayerItem(thePlayer, commandName, targetPlayer, itemID, ...)
 					if exports.global:hasItem(targetPlayer, itemID, itemValue) then
 						outputChatBox("You took that Item " .. itemID .. " from " .. targetPlayerName .. ".", thePlayer, 0, 255, 0)
 						exports.global:takeItem(targetPlayer, itemID, itemValue)
+						
+						if itemID == 2 or itemID == 17 then
+							triggerClientEvent(targetPlayer, "updateHudClock", targetPlayer)
+						end
 					else
 						outputChatBox("Player doesn't have that item", thePlayer, 255, 0, 0)
 					end

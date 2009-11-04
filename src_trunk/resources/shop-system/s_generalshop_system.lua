@@ -318,6 +318,9 @@ function givePlayerBoughtItem(itemID, itemValue, theCost, isWeapon, name, supply
 							outputChatBox("You bought a " .. name .. ".", source, 255, 194, 14)
 							outputChatBox("You have $"..exports.global:getMoney(source).." left in your wallet.", source, 255, 194, 14)
 							exports.global:givePlayerAchievement(source, 22)
+							if itemID == 2 or itemID == 17 then
+								triggerClientEvent(source, "updateHudClock", source)
+							end
 						else
 							outputChatBox("You stole some " .. name .. ".", source, 255, 194, 14)
 						end

@@ -641,11 +641,15 @@ function spawnCharacter(charname, version)
 		mysql_free_result(result)
 		
 		-- 2 years achievement
+		--[[
 		local realtime = getRealTime()
 		
 		if (realtime.yearday == 296 and realtime.year+1900 == 2009) then -- october 24th 2009
 			setTimer(giveBirthdayAchievement, 5000, 1, source)
 		end
+		]]
+		
+		triggerClientEvent(source, "updateHudClock", source)
 	else
 		outputDebugString( "Spawning Char failed: " .. mysql_error( handler ) )
 	end

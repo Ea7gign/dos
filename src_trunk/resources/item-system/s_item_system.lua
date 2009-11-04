@@ -569,7 +569,9 @@ function destroyItem(itemID, isWeapon)
 			itemName = getItemName( itemID )
 			takeItemFromSlot(source, itemSlot)
 			
-			if tonumber(itemID) == 16 and tonumber(itemValue) == getPedSkin(source) and not exports.global:hasItem(source, 16, tonumber(itemValue)) then
+			if itemID == 2 or itemID == 17 then
+				triggerClientEvent(source, "updateHudClock", source)
+			elseif tonumber(itemID) == 16 and tonumber(itemValue) == getPedSkin(source) and not exports.global:hasItem(source, 16, tonumber(itemValue)) then
 				local result = mysql_query(handler, "SELECT skincolor, gender FROM characters WHERE id='" .. getElementData(source, "dbid") .. "' LIMIT 1")
 				local skincolor = tonumber(mysql_result(result, 1, 1))
 				local gender = tonumber(mysql_result(result, 1, 2))
@@ -616,8 +618,8 @@ function destroyItem(itemID, isWeapon)
 			itemName = getWeaponNameFromID( itemID )
 		end
 	end
+	outputChatBox("You destroyed a " .. itemName .. ".", source, 255, 194, 14)
 	exports.global:sendLocalMeAction(source, "destroyed a " .. itemName .. ".")
-	triggerClientEvent(source, "updateHudClock", source)
 end
 addEvent("destroyItem", true)
 addEventHandler("destroyItem", getRootElement(), destroyItem)
@@ -637,7 +639,10 @@ function dropItem(itemID, x, y, z, ammo, keepammo)
 		local insert = mysql_query(handler, "INSERT INTO worlditems SET itemid='" .. itemID .. "', itemvalue='" .. mysql_escape_string(handler, itemValue) .. "', creationdate = NOW(), x = " .. x .. ", y = " .. y .. ", z= " .. z .. ", dimension = " .. dimension .. ", interior = " .. interior .. ", rz = " .. rz2)
 		if insert then
 			local id = mysql_insert_id(handler)
-			mysql_free_result(insert)	
+			mysql_free_result(insert)
+			
+			outputChatBox("You dropped a " .. ( itemID == 80 and itemValue or getItemName( itemID ) ) .. ".", source, 255, 194, 14)
+			
 			-- Animation
 			exports.global:applyAnimation(source, "CARRY", "putdwn", 500, false, false, true)
 			toggleAllControls( source, true, true, true )
@@ -685,8 +690,10 @@ function dropItem(itemID, x, y, z, ammo, keepammo)
 				end
 			end
 			
+			if itemID == 2 or itemID == 17 then
+				triggerClientEvent(source, "updateHudClock", source)
 			-- Check if he drops his current clothes
-			if itemID == 16 and itemValue == getPedSkin(source) and not hasItem(source, 16, itemValue) then
+			elseif itemID == 16 and itemValue == getPedSkin(source) and not hasItem(source, 16, itemValue) then
 				local result = mysql_query(handler, "SELECT skincolor, gender FROM characters WHERE id='" .. getElementData(source, "dbid") .. "' LIMIT 1")
 				local skincolor = tonumber(mysql_result(result, 1, 1))
 				local gender = tonumber(mysql_result(result, 1, 2))
@@ -732,7 +739,9 @@ function dropItem(itemID, x, y, z, ammo, keepammo)
 			if ammo <= 0 then
 				return
 			end
-
+			
+			outputChatBox("You dropped a " .. ( getWeaponNameFromID( itemID ) or "Body Armor" ) .. ".", source, 255, 194, 14)
+			
 			-- Animation
 			exports.global:applyAnimation(source, "CARRY", "putdwn", 500, false, false, true)
 			toggleAllControls( source, true, true, true )
@@ -782,7 +791,6 @@ function dropItem(itemID, x, y, z, ammo, keepammo)
 		end
 	end
 	triggerClientEvent( source, "finishItemDrop", source )
-	triggerClientEvent(source, "updateHudClock", source)
 end
 addEvent("dropItem", true)
 addEventHandler("dropItem", getRootElement(), dropItem)
@@ -905,8 +913,11 @@ function pickupItem(object, leftammo)
 			exports.global:giveWeapon(source, -itemID, itemValue, true)
 			triggerClientEvent(source, "saveGuns", source)
 		end
+		outputChatBox("You picked up a " .. ( itemID == 80 and itemValue or getItemName( itemID ) ) .. ".", source, 255, 194, 14)
 		exports.global:sendLocalMeAction(source, "bends over and picks up a " .. ( itemID == 80 and itemValue or getItemName( itemID ) ) .. ".")
-		triggerClientEvent(source, "updateHudClock", source)
+		if itemID == 2 or itemID == 17 then
+			triggerClientEvent(source, "updateHudClock", source)
+		end
 	else
 		outputDebugString("Distance between Player and Pickup too large")
 	end
