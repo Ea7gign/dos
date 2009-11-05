@@ -937,7 +937,7 @@ addCommandHandler("setinteriorname", changeInteriorName, false, false) -- the co
 function addSafeAtPosition( thePlayer, x, y, z, rotz )
 	local dbid = getElementDimension( thePlayer )
 	local interior = getElementInterior( thePlayer )
-	if dbid == 0 then
+	if dbid == 0 or dbid > 19000 then -- vehicle interiors are 20k + dbid, so 19000 = temp -1000
 		return 2
 	elseif safeTable[dbid] then
 		outputChatBox("There is already a safe in this property. Type movesafe to move it.", thePlayer, 255, 0, 0)

@@ -97,6 +97,13 @@ function showVehicleMenu()
 		y = y + 0.14
 	end
 	
+	local entrance = getElementData( vehicle, "entrance" )
+	if entrance and not isPedInVehicle( localPlayer ) then
+		bEnter = guiCreateButton(0.05, y, 0.87, 0.1, "Enter Interior", true, wRightClick)
+		addEventHandler("onClientGUIClick", bEnter, enterInterior, false)
+		y = y + 0.14
+	end
+	
 	bCloseMenu = guiCreateButton(0.05, y, 0.87, 0.1, "Close Menu", true, wRightClick)
 	addEventHandler("onClientGUIClick", bCloseMenu, hideVehicleMenu, false)
 end
@@ -163,4 +170,9 @@ function hideVehicleMenu()
 
 	showCursor(false)
 	triggerEvent("cursorHide", getLocalPlayer())
+end
+
+function enterInterior()
+	triggerServerEvent( "enterVehicleInterior", getLocalPlayer(), vehicle )
+	hideVehicleMenu()
 end

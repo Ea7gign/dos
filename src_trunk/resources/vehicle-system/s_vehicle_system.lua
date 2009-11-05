@@ -191,6 +191,8 @@ function createPermVehicle(thePlayer, commandName, ...)
 						end
 						
 						exports.logs:logMessage("[MAKEVEH] " .. getPlayerName( thePlayer ) .. " created car #" .. insertid .. " (" .. getVehicleNameFromModel( id ) .. ") - " .. owner, 9)
+						
+						exports['vehicle-interiors']:add( veh )
 					end
 				end
 			end
@@ -304,6 +306,8 @@ function createCivilianPermVehicle(thePlayer, commandName, ...)
 					triggerEvent("onVehicleSpawn", veh)
 					
 					exports.logs:logMessage("[MAKECIVVEH] " .. getPlayerName( thePlayer ) .. " created car #" .. insertid .. " (" .. getVehicleNameFromModel( id ) .. ") - " .. owner, 9)
+					
+					exports['vehicle-interiors']:add( veh )
 				end
 			end
 		end
@@ -554,6 +558,8 @@ function loadAllVehicles(res)
 				setVehicleEngineState(veh, false)
 				setElementData(veh, "enginebroke", 1, false)
 			end
+			
+			exports['vehicle-interiors']:add( veh )
 		end
 	end
 	mysql_free_result(result)
@@ -1188,6 +1194,8 @@ function createShopVehicle(dbid, ...)
 	setElementData(veh, "requires.vehpos", 1, false)
 	local timer = setTimer(checkVehpos, 3600000, 1, veh, dbid)
 	table.insert(destroyTimers, {timer, dbid})
+	
+	exports['vehicle-interiors']:add( veh )
 	
 	return veh
 end

@@ -123,6 +123,8 @@ function createTempVehicle(thePlayer, commandName, ...)
 					setElementData(veh, "job", 0, false)
 					setElementData(veh, "handbrake", 0, false)
 					outputChatBox(getVehicleName(veh) .. " spawned with TEMP ID " .. dbid .. ".", thePlayer, 255, 194, 14)
+					
+					exports['vehicle-interiors']:add( veh )
 				end
 			else
 				outputChatBox("Invalid Vehicle ID.", thePlayer, 255, 0, 0)
