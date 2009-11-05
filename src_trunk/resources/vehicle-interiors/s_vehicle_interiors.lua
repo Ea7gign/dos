@@ -43,9 +43,13 @@ end
 function add( vehicle )
 	if getElementModel( vehicle ) == 519 then -- Shamal
 		addInterior( vehicle, 3.8, 23.1, 1199.6, 1 )
-		return true
+	elseif getElementModel( vehicle ) == 508 then
+		addInterior( vehicle, 1.9, -3.2, 999.4, 2 )
+	else
+		return false
 	end
-	return false
+	
+	return true
 end
 
 -- enter over right click menu
@@ -54,10 +58,10 @@ function teleportTo( player, x, y, z, dimension, interior, freeze )
 	
 	setTimer(
 		function( player )
-			setElementPosition( player, x, y, z )
 			setElementDimension( player, dimension )
 			setElementInterior( player, interior )
 			setCameraInterior( player, interior )
+			setElementPosition( player, x, y, z )
 			
 			triggerEvent( "onPlayerInteriorChange", player )
 			

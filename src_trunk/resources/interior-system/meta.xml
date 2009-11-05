@@ -12,4 +12,8 @@
 	<export function="findProperty" type="client"/>
 	<export function="findParent" type="client"/>
 
+	<!-- Custom interiors -->
+	<script src="custom/createObject.lua" type="client"/>
+	<script src="custom/trailer.lua" type="client"/>
+	<script src="custom/smallwarehouse.lua" type="client"/>
 </meta>
