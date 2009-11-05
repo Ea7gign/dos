@@ -102,7 +102,7 @@ function arrestPlayer(thePlayer, commandName, targetPlayerNick, fine, jailtime, 
 							
 							setElementData(targetPlayer, "pd.jailstation", targetCol)
 							
-							local query = mysql_query(handler, "UPDATE characters SET pdjail='1', pdjail_time='" .. jailtime .. "', pdjail_station='" .. targetCol .. "' WHERE id = " .. getElementData( targetPlayer, "dbid" ) )
+							local query = mysql_query(handler, "UPDATE characters SET pdjail='1', pdjail_time='" .. jailtime .. "', pdjail_station='" .. targetCol .. "', cuffed = 0, restrainedby = 0, restrainedobj = 0 WHERE id = " .. getElementData( targetPlayer, "dbid" ) )
 							mysql_free_result(query)
 							outputChatBox("You jailed " .. targetPlayerNick .. " for " .. jailtime .. " Minutes.", thePlayer, 255, 0, 0)
 							
