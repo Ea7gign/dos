@@ -78,7 +78,7 @@ function lvesHeal(thePlayer, commandName, targetPartialNick, price)
 						if (getDistanceBetweenPoints3D(x, y, z, tx, ty, tz)>5) then -- Are they standing next to each other?
 							outputChatBox("You are too far away to heal '".. targetPlayerName .."'.", thePlayer, 255, 0, 0)
 						else
-							local foundkit, slot, itemValue = exports.global:hasItem(source, 70)
+							local foundkit, slot, itemValue = exports.global:hasItem(thePlayer, 70)
 							if (foundkit) then
 								local money = exports.global:getMoney(targetPlayer)
 								local bankmoney = getElementData(targetPlayer, "bankmoney")
@@ -103,10 +103,10 @@ function lvesHeal(thePlayer, commandName, targetPartialNick, price)
 									outputChatBox("You healed '" ..targetPlayerName.. "'.", thePlayer, 0, 255, 0)
 									outputChatBox("You have been healed by '" ..getPlayerName(thePlayer).. "' for $" .. price .. ".", targetPlayer, 0, 255, 0)
 									
-									exports.global:takeItem(source, 70, itemValue)
+									exports.global:takeItem(thePlayer, 70, itemValue)
 									itemValue = itemValue - 1
 									if itemValue > 0 then
-										exports.global:giveItem(source, 70, itemValue)
+										exports.global:giveItem(thePlayer, 70, itemValue)
 									else
 											outputChatBox("Warning, you're out of first aid kits. re /duty to get new ones.", thePlayer, 255, 0, 0)
 									end
