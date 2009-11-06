@@ -888,9 +888,6 @@ function setRealInVehicle(thePlayer)
 					local output = getRealTime().yearday-getElementData(source, "Impounded")
 					outputChatBox("(( This " .. carName .. " has been Impounded for: " .. output .. (output == 1 and " Day." or " Days.") .. " ))", thePlayer, 255, 195, 14)
 				end
-				if (getElementData(source, "handbrake") == 1) then
-					outputChatBox("(( /handbrake to release the handbrake ))", thePlayer, 255, 195, 14)
-				end
 			end
 		end
 	end
