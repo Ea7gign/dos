@@ -16,7 +16,7 @@ ob_start();
 	$userid = mysql_real_escape_string($_COOKIE["uid"], $conn);
 	
 	mysql_select_db("mta", $conn);
-	$result = mysql_query("SELECT username, admin, donator, appstate, appgamingexperience, appcountry, applanguage, apphow, appwhy, appexpectations, appdefinitions, appfirstcharacter, appclarifications, appdatetime < NOW(), HOUR(TIMEDIFF(NOW(), appdatetime)), MINUTE(TIMEDIFF(NOW(), appdatetime)) FROM accounts WHERE id='" . $userid . "' LIMIT 1", $conn);
+	$result = mysql_query("SELECT username, admin, donator, appstate, appgamingexperience, appcountry, applanguage, apphow, appwhy, appexpectations, appdefinitions, appfirstcharacter, appclarifications, appdatetime > NOW(), HOUR(TIMEDIFF(NOW(), appdatetime)), MINUTE(TIMEDIFF(NOW(), appdatetime)) FROM accounts WHERE id='" . $userid . "' LIMIT 1", $conn);
 
 	if (!$result || mysql_num_rows($result)==0)
 	{
@@ -40,7 +40,7 @@ ob_start();
 	$definitions = mysql_result($result, 0, 10);
 	$firstcharacter = mysql_result($result, 0, 11);
 	$clarifications = mysql_result($result, 0, 12);
-	$canapply = mysql_result($result, 0, 13);
+	$noapply = mysql_result($result, 0, 13);
 	$timehour = mysql_result($result, 0, 14);
 	$timeminute = mysql_result($result, 0, 15);
 	
@@ -191,7 +191,7 @@ ob_start();
 						<div class="content-holder">
 							<h2>Application</h2>
 <?php
-						if( $canapply == 0 )
+						if( $noapply == 1 )
 						{
 ?>
 							<p>You need to wait <?= (($timehour > 0)?($timehour . ' hours and '):('')) . $timeminute ?> minutes before applying again.</p>

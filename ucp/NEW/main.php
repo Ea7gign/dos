@@ -12,7 +12,7 @@
 	$userid = mysql_real_escape_string($_COOKIE["uid"], $conn);
 	
 	mysql_select_db("mta", $conn);
-	$result = mysql_query("SELECT username, admin, donator, appstate, apphandler, appreason, banned, securitykey, appdatetime < NOW(), HOUR(TIMEDIFF(NOW(), appdatetime)), MINUTE(TIMEDIFF(NOW(), appdatetime)), overseer FROM accounts WHERE id='" . $userid . "' LIMIT 1", $conn);
+	$result = mysql_query("SELECT username, admin, donator, appstate, apphandler, appreason, banned, securitykey, appdatetime > NOW(), HOUR(TIMEDIFF(NOW(), appdatetime)), MINUTE(TIMEDIFF(NOW(), appdatetime)), overseer FROM accounts WHERE id='" . $userid . "' LIMIT 1", $conn);
 
 	if (!$result || mysql_num_rows($result)==0)
 	{
@@ -30,7 +30,7 @@
 	$appreason = mysql_result($result, 0, 5);
 	$banned = mysql_result($result, 0, 6);
 	$securitykey = mysql_result($result, 0, 7);
-	$canapply = mysql_result($result, 0, 8);
+	$noapply = mysql_result($result, 0, 8);
 	$timehour = mysql_result($result, 0, 9);
 	$timeminute = mysql_result($result, 0, 10);
 	$overseer = mysql_result($result, 0, 11);
@@ -216,7 +216,7 @@
 									elseif ($appstate == 1)
 										echo "<font color='#FF9900' align='left'>Pending Review</font></li>";
 									elseif ($appstate == 2)
-										if( $canapply == 0 )
+										if( $noapply == 1 )
 											echo "<font color='#FF0000'>Denied - You need to wait " . (($timehour > 0)?($timehour . ' hours and '):('')) . $timeminute . " minutes before applying again.</font></a></li>";
 										else
 											echo "<a href='writeapplication.php'><font color='#FF0000'>Denied - Click here to write a new application.</font></a></li>";

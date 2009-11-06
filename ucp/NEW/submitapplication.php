@@ -17,7 +17,7 @@
 	$userid = mysql_real_escape_string($_COOKIE["uid"], $conn);
 	
 	mysql_select_db("mta", $conn);
-	$result = mysql_query("SELECT username, appdatetime < NOW() FROM accounts WHERE id='" . $userid . "' LIMIT 1", $conn);
+	$result = mysql_query("SELECT username, appdatetime > NOW() FROM accounts WHERE id='" . $userid . "' LIMIT 1", $conn);
 
 	if (!$result || mysql_num_rows($result)==0)
 	{
@@ -28,7 +28,7 @@
 		exit;
 	}
 	$username = mysql_result($result, 0, 0);
-	if(mysql_result($result, 0, 1) == 0)
+	if(mysql_result($result, 0, 1) == 1)
 	{
 		header('Location: main.php');
 		exit;
