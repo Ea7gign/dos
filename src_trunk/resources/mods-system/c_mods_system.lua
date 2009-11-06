@@ -70,8 +70,8 @@ function applyMods()
 	tag2 = engineLoadTXD("tags/tags_lakilo.txd") -- MTA 
 	engineImportTXD(tag2, 1525)
 
-	-- tag3 = engineLoadTXD ( "tags/tags_larifa.txd" )
-	-- engineImportTXD ( tag3, 1526 )
+	tag3 = engineLoadTXD ( "tags/tags_larifa.txd" )
+	engineImportTXD ( tag3, 1526 )
 
 	-- tag4 = engineLoadTXD ( "tags/tags_larollin.txd" )
 	-- engineImportTXD ( tag4, 1527 )
