@@ -4,9 +4,13 @@ gezn = getElementZoneName
 local hospitalcol = createColCuboid( 1520, 1750, 2070, 100, 80, 30 )
 setElementInterior( hospitalcol, 4 )
 
+local bankcol = createColSphere( 2347, 2369, 2022, 100 )
+setElementInterior( bankcol, 3 )
+
 local custommaps =
 { 
-	[ hospitalcol ] = { 'All Saints General Hospital', 'Los Santos' }
+	[ hospitalcol ] = { 'All Saints General Hospital', 'Los Santos' },
+	[ bankcol ] = { 'Bank of Los Santos', 'Los Santos' }
 }
 
 -- caching to improve efficiency
