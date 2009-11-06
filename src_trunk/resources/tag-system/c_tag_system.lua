@@ -111,8 +111,8 @@ function setTag(commandName, newTag)
 			
 			if (teamName~="Los Malvados") and (newTag==8) then -- Los Malvados
 				outputChatBox("You are not a member of Los Malvados.", 255, 0, 0)
-			elseif (teamName~="Die Faust") and (newTag==3) then -- Los Malvados
-				outputChatBox("You are not a member of Los Malvados.", 255, 0, 0)
+			elseif (teamName~="Die Faust") and (newTag==3) then -- Die Faust
+				outputChatBox("You are not a member of Die Faust.", 255, 0, 0)
 			else
 				setElementData(getLocalPlayer(), "tag", newTag, true)
 				outputChatBox("Tag changed to #" .. newTag .. ".", 0, 255, 0)
