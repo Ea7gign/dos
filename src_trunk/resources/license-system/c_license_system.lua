@@ -650,7 +650,7 @@ end
 bindKey( "accelerate", "down",
 	function( )
 		local veh = getPedOccupiedVehicle( getLocalPlayer( ) )
-		if veh then
+		if veh and getVehicleOccupant( veh ) == getLocalPlayer( ) then
 			if isVehicleFrozen( veh ) and getVehicleEngineState( veh ) then
 				outputChatBox( "(( Your handbrake is applied. Use /handbrake to release it. ))", 255, 194, 14 )
 			elseif not getVehicleEngineState( veh ) then
