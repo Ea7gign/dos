@@ -17,7 +17,6 @@
 	<script src="Strip Club Back Room.lua" type="client"/>
 	<script src="Idlewood Gas.lua" type="client"/>
 	<script src="seville.lua" type="client"/>
-	<script src="sevilleTEMP.lua" type="client"/><!-- until 06/11/2009 -->
 	<script src="Busstops_LS_LineAB.lua" type="client"/>
 	<script src="Prison Int Cells.lua" type="client"/>
 	<script src="Prison Int Rec.lua" type="client"/>
