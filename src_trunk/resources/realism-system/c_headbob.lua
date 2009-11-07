@@ -2,7 +2,7 @@
 function bobHead()
 	local logged = getElementData(getLocalPlayer(), "loggedin")
 	
-	if (logged==1) then
+	if (logged==1 and not isPedOnFire(getLocalPlayer())) then
         local scrWidth, scrHeight = guiGetScreenSize()
         local sx = scrWidth/2
         local sy = scrHeight/2
