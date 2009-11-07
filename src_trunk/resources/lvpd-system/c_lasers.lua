@@ -29,3 +29,76 @@ function showLaser()
 	end
 end
 addEventHandler("onClientRender", getRootElement(), showLaser)
+
+local tracers = { }
+local id = 1
+local tracersEnabled = false
+
+function toggleTracers()
+	if ( getTeamName(getPlayerTeam(getLocalPlayer())) == "Los Santos Police Department") then
+		if (tracersEnabled) then
+			outputChatBox("Tracers are now disabled", 255, 0, 0)
+			tracersEnabled = false
+		else
+			outputChatBox("Tracers are now enabled", 0, 255, 0)
+			tracersEnabled = true
+		end
+	end
+end
+addCommandHandler("togtracers", toggleTracers)
+
+function sendTracerRound(weapon, ammo, clipammo, hx, hy, hz)
+	local player = source
+	
+	local x, y, z = getElementPosition(player)
+	local zone = getZoneName(x, y, z)
+
+	if (tracersEnabled) then
+		local mx, my, mz = getPedWeaponMuzzlePosition(player)
+		storeTracer(mx, my, mz, hx, hy, hz)
+	end
+end
+addEventHandler("onClientPlayerWeaponFire", getRootElement(), sendTracerRound)
+
+function resetTracers()
+	tracers = { }
+	id = 1
+end
+setTimer(resetTracers, 300000, 0)
+
+function storeTracer(mx, my, mz, hx, hy, hz)
+	tracers[id] = { }
+	tracers[id][1] = mx
+	tracers[id][2] = my
+	tracers[id][3] = mz
+	tracers[id][4] = hx
+	tracers[id][5] = hy
+	tracers[id][6] = hz
+	
+	math.randomseed(getRealTime().second)
+	
+	tracers[id][7] = math.ceil(math.random(0, 255))
+	tracers[id][8] = math.ceil(math.random(0, 255))
+	tracers[id][9] = math.ceil(math.random(0, 255))
+	
+	id = id + 1
+end
+addEvent("storeTracer", true)
+addEventHandler("storeTracer", getRootElement(), storeTracer)
+
+function displayTracers()
+	for key, value in ipairs(tracers) do
+		local mx = tracers[key][1]
+		local my = tracers[key][2]
+		local mz = tracers[key][3]
+		local hx = tracers[key][4]
+		local hy = tracers[key][5]
+		local hz = tracers[key][6]
+		local r = tracers[key][7]
+		local g = tracers[key][8]
+		local b = tracers[key][9]
+		
+		dxDrawLine3D(mx, my, mz, hx, hy, hz, tocolor(r, g,b, 175), 3)
+	end
+end
+addEventHandler("onClientRender", getRootElement(), displayTracers)
