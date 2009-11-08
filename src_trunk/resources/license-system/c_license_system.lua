@@ -34,7 +34,7 @@ function showLicenseWindow()
 	if (weaponlicense~=1) then
 		local row2 = guiGridListAddRow(licenseList)
 		guiGridListSetItemText(licenseList, row2, column, "Weapon License", false, false)
-		guiGridListSetItemText(licenseList, row2, column2, "4000", true, false)
+		guiGridListSetItemText(licenseList, row2, column2, "15000", true, false)
 	end
 	
 	bAcceptLicense = guiCreateButton(0.05, 0.85, 0.45, 0.1, "Buy License", true, wLicense)
@@ -87,6 +87,8 @@ function acceptLicense(button, state)
 					else
 						if getElementData(getLocalPlayer(), "license.gun") < 0 then
 							outputChatBox( "You need to wait another " .. -getElementData(getLocalPlayer(), "license.gun") .. " hours before being able to obtain a " .. licensetext .. ".", 255, 0, 0 )
+						elseif getElementData(getLocalPlayer(), "hoursplayed") < 16 then
+							outputChatBox( "You need to play at least 16 hours on this character to get a weapon license.", 255, 0, 0 )
 						else
 							triggerServerEvent("acceptLicense", getLocalPlayer(), license, licensecost) -- give them the weapons license.
 							destroyElement(licenseList)

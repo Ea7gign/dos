@@ -371,6 +371,7 @@ function givePlayerBoughtItem(itemID, itemValue, theCost, isWeapon, name, supply
 							outputChatBox("You have $".. exports.global:getMoney(source).." left in your wallet.", source, 255, 194, 14)
 							exports.global:giveWeapon(source, tonumber(itemID), tonumber(itemValue), true)
 							triggerClientEvent(source, "saveGuns", source)
+							exports.global:giveMoney(getTeamFromName("Government of Los Santos"), math.floor(theCost/2))
 						end
 					else
 						outputChatBox("You do not have a weapons license - You can buy this license at City Hall.", source, 255, 194, 14)
@@ -382,6 +383,7 @@ function givePlayerBoughtItem(itemID, itemValue, theCost, isWeapon, name, supply
 						exports.global:giveWeapon(source, tonumber(itemID), tonumber(itemValue), true)
 						exports.global:givePlayerAchievement(source, 22)
 						triggerClientEvent(source, "saveGuns", source)
+						exports.global:giveMoney(getTeamFromName("Government of Los Santos"), math.floor(theCost/2))
 					end
 				end
 			end
