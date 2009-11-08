@@ -6,6 +6,8 @@ setElementDimension(objDoor1, 9902)
 local open = false
 
 function useSANDoor(thePlayer)
+	if getElementDimension( thePlayer ) ~= getElementDimension( objDoor1 ) then return end
+
 	local team = getPlayerTeam(thePlayer)
 	
 	if (team==getTeamFromName("San Andreas Network News")) then

@@ -13,6 +13,8 @@ setElementData( guard, "talk", 1 )
 setElementData( guard, "name", "Guard Jenkins" )
 
 function useImpoundDoorb(thePlayer)
+	if getElementDimension( thePlayer ) ~= getElementDimension( objGateb ) then return end
+	
 	local gender = getElementData(thePlayer, "gender")
 	local genderm = "Mister"
 	if (gender == 1) then
