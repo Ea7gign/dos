@@ -103,14 +103,3 @@ addCommandHandler( "history",
 		end
 	end
 )
-
-function deleteall()
-	for key, value in ipairs(getElementChildren(getRootElement())) do
-		local element = getElementType(value)
-		
-		if (element=="pickup" or element=="ped" or element=="vehicle" or element=="marker" or element=="colshape") then
-			destroyElement(value)
-		end
-	end
-end
-addCommandHandler("deleteall", deleteall)

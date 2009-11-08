@@ -81,7 +81,7 @@ function checkWeapons()
 		end
 	end
 end
-addCommandHandler("fwc", checkWeapons)
+-- addCommandHandler("fwc", checkWeapons)
 
 function giveSafeWeapon(weapon, ammo)
 	resetWeaponTimer()
