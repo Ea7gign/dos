@@ -8,6 +8,7 @@
 	<script src="Hospital Int.lua" type="client"/>
 	<script src="Jefferson Interior Doors.lua" type="client"/>
 	<script src="Jefferson Emerald Isle.lua" type="client"/>
+	<script src="Jefferson Outside.lua" type="client"/>
 	<script src="LS Harbor.lua" type="client"/>
 	<script src="Main Street.lua" type="client"/>
 	<script src="Marcos Bistro Interior Fix.lua" type="client"/>
