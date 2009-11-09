@@ -1336,6 +1336,8 @@ function interviewChat(thePlayer, commandName, ...)
 						end
 					end
 				end
+				
+				exports.global:giveMoney(getTeamFromName"San Andreas Network News", 200)
 			end
 		end
 	end
