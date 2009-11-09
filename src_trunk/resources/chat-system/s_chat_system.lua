@@ -306,6 +306,8 @@ function govAnnouncement(thePlayer, commandName, ...)
 				end
 				mysql_free_result(titleresult)
 				
+				exports.logs:logMessage("[IC: Government Message] " .. factionRankTitle .. " " .. getPlayerName(thePlayer) .. ": " .. message, 6)
+				
 				for key, value in ipairs(exports.pool:getPoolElementsByType("player")) do
 					local logged = getElementData(value, "loggedin")
 					
@@ -326,13 +328,16 @@ function departmentradio(thePlayer, commandName, ...)
 	if (theTeam) then
 		local teamID = tonumber(getElementData(theTeam, "id"))
 
-		if (teamID==1 or teamID==2 or teamID==4 or teamID == 30) then
+		if (teamID==1 or teamID==2 or teamID==3 or teamID == 30) then
 			if (...) then
 				local message = trunklateText( thePlayer, table.concat({...}, " ") )
 				local PDFaction = getPlayersInTeam(getTeamFromName("Los Santos Police Department"))
 				local ESFaction = getPlayersInTeam(getTeamFromName("Los Santos Emergency Services"))
 				local TowFaction = getPlayersInTeam(getTeamFromName("Best's Towing and Recovery"))
+				local GovFaction = getPlayersInTeam(getTeamFromName("Government of Los Santos"))
 				local playerName = getPlayerName(thePlayer)
+				
+				exports.logs:logMessage("[IC: Department Radio] " .. playerName .. ": " .. message, 6)
 				
 				for key, value in ipairs(PDFaction) do
 					outputChatBox("[DEPARTMENT RADIO] " .. playerName .. " says: " .. message, value, 0, 102, 255)
@@ -343,6 +348,10 @@ function departmentradio(thePlayer, commandName, ...)
 				end
 				
 				for key, value in ipairs(TowFaction) do
+					outputChatBox("[DEPARTMENT RADIO] " .. playerName .. " says: " .. message, value, 0, 102, 255)
+				end
+				
+				for key, value in ipairs(GovFaction) do
 					outputChatBox("[DEPARTMENT RADIO] " .. playerName .. " says: " .. message, value, 0, 102, 255)
 				end
 			else
@@ -1213,8 +1222,11 @@ function newsMessage(thePlayer, commandName, ...)
 			if not(...)then
 				outputChatBox("SYNTAX: /" .. commandName .. " [Message]", thePlayer, 255, 194, 14)
 			else
-				message = table.concat({...}, " ")
+				local message = table.concat({...}, " ")
 				local name = getPlayerName(thePlayer)
+				
+				exports.logs:logMessage("[IC: News] " .. name .. ": " .. message, 6)
+				
 				for key, value in ipairs(exports.pool:getPoolElementsByType("player")) do
 						
 					if (getElementData(value, "loggedin")==1) then
@@ -1327,8 +1339,11 @@ function interviewChat(thePlayer, commandName, ...)
 			if not(...)then
 				outputChatBox("SYNTAX: /" .. commandName .. "[Message]", thePlayer, 255, 194, 14)
 			else
-				message = table.concat({...}, " ")
+				local message = table.concat({...}, " ")
 				local name = getPlayerName(thePlayer)
+				
+				exports.logs:logMessage("[IC: Interview Guest] " .. name .. ": " .. message, 6)
+				
 				for key, value in ipairs(exports.pool:getPoolElementsByType("player")) do
 					if (getElementData(value, "loggedin")==1) then
 						if not (getElementData(value, "tognews")==1) then
