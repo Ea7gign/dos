@@ -25,7 +25,7 @@ function streamOutEmitter()
 		local id = #emitters + 1
 		local x, y, z = getElementPosition(source)
 			
-		if (model >= 849 and model <= 851) then -- is an emitter
+		if (model >= 849 and model <= 850) then -- is an emitter
 			destroyElement(emitters[source])
 		end
 	end
