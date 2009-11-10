@@ -268,8 +268,8 @@
 								<textarea name="clarifications" id="clarifications" readonly="readonly" style="width:580px;height:150px"><?php echo $clarifications; ?></textarea>
 								<br />
 								<br />
-								<input type="radio" name="accept" id="accept" value="accept"onClick="doCheck2(this)">Accept<br />
-								<input type="radio" name="deny" id="deny" value="deny" onClick="doCheck(this)">Deny<br />
+								<input type="radio" name="decision" id="accept" value="accept"onClick="doCheck2(this)">Accept<br />
+								<input type="radio" name="decision" id="deny" value="deny" onClick="doCheck(this)">Deny<br />
 								<br />
 								<label for="reason" style="color:#FFF;">Reason</label>
 								<br />
