@@ -24,3 +24,43 @@ function createEmitter(thePlayer, commandName, type)
 	end
 end
 addCommandHandler("createemitter", createEmitter, false, false)
+
+function nearbyEmitters(thePlayer)
+	if (exports.global:isPlayerAdmin(thePlayer)) then
+		local count = 0
+		outputChatBox("Nearby Emitters: "
+		local px, py, pz = getElementPosition(thePlayer)
+		for key, value in ipairs(emitters) do
+			local x = emitters[key][1]
+			local y = emitters[key][2]
+			local z = emitters[key][3]
+			local type = emitters[key][4]
+			
+			if ( getDistanceBetweenPoints3D(x, y, z, px, py, pz) < 50) then
+				outputChatBox("Emitter with ID " .. key .. " and type " .. type .. ".", thePlayer, 255, 194, 15)
+			end
+		end
+		
+		if ( count == 0 ) then
+			outputChatBox("None.", thePlayer, 255, 194, 15)
+		end
+	end
+end
+addCommandHandler("nearbyemitters", nearbyEmitters)
+
+function delEmitter(thePlayer, commandName, id)
+	if (exports.global:isPlayerAdmin(thePlayer)) then
+		if not (id) then
+			outputChatBox("SYNTAX: /" .. commandName .. " [Emitter ID]", thePlayer, 255, 194, 14)
+		else
+			if ( emitter[id] == nil ) then
+				outputChatBox("Invalid Emitter ID.", thePlayer, 255, 0, 0)
+			else
+				local obj = emitters[key][5]
+				destroyElement(obj)
+				outputChatBox("Emitter with ID " .. id .. " was deleted.", thePlayer, 0, 255, 0)
+			end
+		end
+	end
+end
+addCommandHandler("delemitter", delEmitter)
