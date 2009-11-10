@@ -37,6 +37,7 @@ function nearbyEmitters(thePlayer)
 			local type = emitters[key][4]
 			
 			if ( getDistanceBetweenPoints3D(x, y, z, px, py, pz) < 50) then
+				count = count + 1
 				outputChatBox("Emitter with ID " .. key .. " and type " .. type .. ".", thePlayer, 255, 194, 15)
 			end
 		end
@@ -53,7 +54,7 @@ function delEmitter(thePlayer, commandName, id)
 		if not (id) then
 			outputChatBox("SYNTAX: /" .. commandName .. " [Emitter ID]", thePlayer, 255, 194, 14)
 		else
-			if ( emitter[id] == nil ) then
+			if ( emitters[id] == nil ) then
 				outputChatBox("Invalid Emitter ID.", thePlayer, 255, 0, 0)
 			else
 				local obj = emitters[key][5]
