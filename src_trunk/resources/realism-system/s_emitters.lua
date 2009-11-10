@@ -28,7 +28,7 @@ addCommandHandler("createemitter", createEmitter, false, false)
 function nearbyEmitters(thePlayer)
 	if (exports.global:isPlayerAdmin(thePlayer)) then
 		local count = 0
-		outputChatBox("Nearby Emitters: "
+		outputChatBox("Nearby Emitters: ", thePlayer, 255, 194, 15)
 		local px, py, pz = getElementPosition(thePlayer)
 		for key, value in ipairs(emitters) do
 			local x = emitters[key][1]
