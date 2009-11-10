@@ -25,7 +25,8 @@ local noUpgrades = { Boat = true, Helicopter = true, Plane = true, Train = true,
 
 function mechanicWindow(vehicle)
 	local job = getElementData(getLocalPlayer(), "job")
-	if (job==5)then
+	local faction = getElementData(getLocalPlayer(), "faction")
+	if (job==5) or (faction==30)then
 		if not vehicle then
 			outputChatBox("You must select a vehicle.", 255, 0, 0)
 		else
@@ -60,7 +61,7 @@ function mechanicWindow(vehicle)
 				end
 				
 				-- Recolour
-				if not getElementData(vehicle, "job") and ( getElementData(vehicle, "faction") == -1 or getElementData(vehicle, "faction") == getElementData(getLocalPlayer(), "faction") ) then
+				if faction == 30 or not getElementData(vehicle, "job") and ( getElementData(vehicle, "faction") == -1 or getElementData(vehicle, "faction") == faction ) then
 					bMechanicFour = guiCreateButton( 0.05, y, 0.9, 0.1, "Repaint Vehicle - $100", true, wMechanic )
 					addEventHandler( "onClientGUIClick", bMechanicFour, paintWindow, false)
 					y = y + 0.1
@@ -80,6 +81,14 @@ function mechanicWindow(vehicle)
 					y = y + 0.1
 				end
 				
+				-- remove NOS for BTR
+				if getVehicleUpgradeOnSlot(vehicle, 8) ~= 0 and faction == 30 then
+					bMechanicSeven = guiCreateButton( 0.05, y, 0.9, 0.1, "Remove NOS", true, wMechanic )
+					addEventHandler( "onClientGUIClick", bMechanicSeven, removeNosFromVehicle, false)
+					y = y + 0.1
+				end
+				
+				
 				-- Close
 				bMechanicClose = guiCreateButton( 0.05, 0.85, 0.9, 0.1, "Close", true, wMechanic )
 				addEventHandler( "onClientGUIClick", bMechanicClose, closeMechanicWindow, false )
@@ -92,6 +101,11 @@ end
 addEvent("openMechanicFixWindow")
 addEventHandler("openMechanicFixWindow", getRootElement(), mechanicWindow)
 -- addCommandHandler("fix", mechanicWindow, false, false)
+
+function removeNosFromVehicle()
+	triggerServerEvent( "removeNOS", getLocalPlayer(), currentVehicle )
+	closeMechanicWindow()
+end
 
 function tyreWindow()
 	-- Window variables

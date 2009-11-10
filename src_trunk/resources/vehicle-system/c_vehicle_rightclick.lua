@@ -68,7 +68,7 @@ function showVehicleMenu()
 			y = y + 0.14
 		end
 		
-		if getElementData(localPlayer, "job") == 5 then -- Mechanic
+		if getElementData(localPlayer, "job") == 5 or getElementData(localPlayer, "faction") == 30 then -- Mechanic or BTR
 			bFix = guiCreateButton(0.05, y, 0.87, 0.1, "Fix/Upgrade", true, wRightClick)
 			addEventHandler("onClientGUIClick", bFix, openMechanicWindow, false)
 			y = y + 0.14

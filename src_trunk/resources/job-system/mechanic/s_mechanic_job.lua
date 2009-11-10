@@ -3,7 +3,11 @@ armoredCars = { [427]=true, [528]=true, [432]=true, [601]=true, [428]=true, [597
 -- Bodywork repair
 function bodyworkRepair(veh)
 	if (veh) then
-		if not exports.global:takeMoney(source, 50) then
+		local mechcost = 50
+		if (getElementData(source,"faction")==30) then
+			mechcost = mechcost / 2
+		end
+		if not exports.global:takeMoney(source, mechcost) then
 			outputChatBox("You can't afford the parts to repair this vehicle's bodywork.", source, 255, 0, 0)
 		else
 			local health = getElementHealth(veh)
@@ -21,7 +25,11 @@ addEventHandler("repairBody", getRootElement(), bodyworkRepair)
 -- Full Service
 function serviceVehicle(veh)
 	if (veh) then
-		if not exports.global:takeMoney(source, 100) then
+		local mechcost = 100
+		if (getElementData(source,"faction")==30) then
+			mechcost = mechcost / 2
+		end
+		if not exports.global:takeMoney(source, mechcost) then
 			outputChatBox("You can't afford the parts to service this vehicle.", source, 255, 0, 0)
 		else
 			fixVehicle(veh)
@@ -44,7 +52,11 @@ addEventHandler("serviceVehicle", getRootElement(), serviceVehicle)
 
 function changeTyre( veh, wheelNumber )
 	if (veh) then
-		if not exports.global:takeMoney(source, 10) then
+		local mechcost = 10
+		if (getElementData(source,"faction")==30) then
+			mechcost = mechcost / 2
+		end
+		if not exports.global:takeMoney(source, mechcost) then
 			outputChatBox("You can't afford the parts to change this vehicle's tyres.", source, 255, 0, 0)
 		else
 			local wheel1, wheel2, wheel3, wheel4 = getVehicleWheelStates( veh )
@@ -71,7 +83,11 @@ addEventHandler("tyreChange", getRootElement(), changeTyre)
 
 function changePaintjob( veh, paintjob )
 	if (veh) then
-		if not exports.global:takeMoney(source, 7500) then
+		local mechcost = 7500
+		if (getElementData(source,"faction")==30) then
+			mechcost = mechcost / 2
+		end
+		if not exports.global:takeMoney(source, mechcost) then
 			outputChatBox("You can't afford to repaint this vehicle.", source, 255, 0, 0)
 		else
 			triggerEvent( "paintjobEndPreview", source, veh )
@@ -92,7 +108,11 @@ addEventHandler("paintjobChange", getRootElement(), changePaintjob)
 
 function changeVehicleUpgrade( veh, upgrade, name, cost )
 	if (veh) then
-		if not exports.global:hasMoney( source, cost ) then
+		local mechcost = cost
+		if (getElementData(source,"faction")==30) then
+			mechcost = mechcost / 2
+		end
+		if not exports.global:hasMoney( source, mechcost ) then
 			outputChatBox("You can't afford to add " .. name .. " to this vehicle.", source, 255, 0, 0)
 		else
 			for i = 0, 16 do
@@ -115,7 +135,11 @@ addEventHandler("changeVehicleUpgrade", getRootElement(), changeVehicleUpgrade)
 
 function changeVehicleColour(veh, col1, col2, col3, col4)
 	if (veh) then
-		if not exports.global:takeMoney(source, 100) then
+		local mechcost = 100
+		if (getElementData(source,"faction")==30) then
+			mechcost = mechcost / 2
+		end
+		if not exports.global:takeMoney(source, mechcost) then
 			outputChatBox("You can't afford to repaint this vehicle.", source, 255, 0, 0)
 		else			
 			exCol1, exCol2, exCol3, exCol4 = getVehicleColor ( veh )
