@@ -32,14 +32,14 @@ local towSphere = createColPolygon(2789.131835, -1468.5177, 2789.131835, -1468.5
 local towSphere2 = createColPolygon(1540.209594, -1602.937377, 1540.209594, -1602.937377, 1590.368408, -1602.958251, 1583.952514, -1617.322265625, 1540.34082, -1617.087524)
 
 function cannotVehpos(thePlayer)
-	return isElementWithinColShape(thePlayer, towSphere) and getTeamName(getPlayerTeam(thePlayer)) ~= "Best's Towing and Recovery"
+	return isElementWithinColShape(thePlayer, towSphere) and getElementData(thePlayer,"faction") ~= 30
 end
 
 -- generic function to check if a guy is in the col polygon and the right team
 function CanTowTruckDriverVehPos(thePlayer, commandName)
 	local ret = 0
 	if (isElementWithinColShape(thePlayer, towSphere) or isElementWithinColShape(thePlayer,towSphere2)) then
-		if (getTeamName(getPlayerTeam(thePlayer)) == "Best's Towing and Recovery") then
+		if (getElementData(thePlayer,"faction") == 30) then
 			ret = 2
 		else
 			ret = 1
@@ -50,14 +50,14 @@ end
 --Auto Pay for PD
 function CanTowTruckDriverGetPaid(thePlayer, commandName)
 	if (isElementWithinColShape(thePlayer,towSphere2)) then
-		if (getTeamName(getPlayerTeam(thePlayer)) == "Best's Towing and Recovery") then
+		if (getElementData(thePlayer,"faction") == 30) then
 			return true
 		end
 	end
 	return false
 end
-function UnlockVehicle(element, matchingdimension)
-	if (getElementType(element) == "vehicle" and getVehicleOccupant(element) and getTeamName(getPlayerTeam(getVehicleOccupant(element))) == "Best's Towing and Recovery" and getElementModel(element) == 525 and getVehicleTowedByVehicle(element)) then
+function UnlockVehicle(element, matchingdimension) 
+	if (getElementType(element) == "vehicle" and getVehicleOccupant(element) and getElementData(getVehicleOccupant(element),"faction") == 30 and getElementModel(element) == 525 and getVehicleTowedByVehicle(element)) then
 		local temp = element
 		while (getVehicleTowedByVehicle(temp)) do
 			temp = getVehicleTowedByVehicle(temp)
@@ -100,7 +100,9 @@ addEventHandler("onColShapeHit", towSphere2, UnlockVehicle)
 
 function payRelease(vehID)
 	if exports.global:takeMoney(source, 95) then
-		exports.global:giveMoney(getTeamFromName("Best's Towing and Recovery"), 95)
+		exports.global:giveMoney(getFactionByID(30), 95)
+		setVehicleFrozen(vehID, false)
+		setElemetnData(vehID, "handbrake", 0, false)
 		setElementData(vehID, "Impounded", 0)
 		setElementPosition(vehID, 2743.0905761719, -1462.744750, 32.453125)
 		setVehicleLocked(vehID, true)
@@ -108,6 +110,7 @@ function payRelease(vehID)
 		setVehicleDamageProof(vehID, false)
 		setVehicleEngineState(vehID, false)
 		updateVehPos(vehID)
+		
 		outputChatBox("Your vehicle has been released. (( Please remember to /park your vehicle so it does not respawn in our carpark. ))", source, 255, 194, 14)
 	else
 		outputChatBox("Insufficient Funds.", source, 255, 0, 0)
@@ -159,7 +162,7 @@ end
 
 function updateTowingVehicle(theTruck)
 	local thePlayer = getVehicleOccupant(theTruck)
-	if (getTeamName(getPlayerTeam(thePlayer)) == "Best's Towing and Recovery") then
+	if (getElementData(thePlayer,"faction") == 30) then
 		local owner = getElementData(source, "owner")
 		local faction = getElementData(source, "faction")
 		local carName = getVehicleName(source)
@@ -205,7 +208,7 @@ function updateCivilianVehicles(theTruck)
 		local dbid = getElementData(source, "dbid")
 
 		if (dbid >= 0 and faction == -1 and owner < 0) then
-			exports.global:giveMoney(getTeamFromName("Best's Towing and Recovery"), 95)
+			exports.global:giveMoney(getFactionByID(30), 95)
 			outputChatBox("The state has un-impounded the vehicle you where towing.", getVehicleOccupant(theTruck), 255, 194, 14)
 			respawnVehicle(source)
 		end
@@ -215,5 +218,17 @@ function updateCivilianVehicles(theTruck)
 		exports.logs:logMessage("[TOW STOP] " .. getPlayerName( getVehicleOccupant(theTruck) ) .. " stopped towing vehicle #" .. getElementData(source, "dbid") .. ", owned by " .. tostring(exports['vehicle-system']:getCharacterName(getElementData(source,"owner"))) .. ", in " .. table.concat({exports.global:getElementZoneName(source)}, ", ") .. " (pos = " .. table.concat({getElementPosition(source)}, ", ") .. ", rot = ".. table.concat({getVehicleRotation(source)}, ", ") .. ", health = " .. getElementHealth(source) .. ")", 14)
 	end
 end
-
 addEventHandler("onTrailerDetach", getRootElement(), updateCivilianVehicles)
+
+local factionCache = { }
+function getFactionByID( id )
+	if not factionCache[ id ] then
+		for _, team in pairs( getElementsByType( "team" ) ) do
+			if getElementData( team, "id" ) == id then
+				factionCache[ id ] = getTeamName( team )
+				break
+			end
+		end
+	end
+	return factionCache[ id ] or "Unknown Faction"
+end

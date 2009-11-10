@@ -36,7 +36,7 @@ function showImpoundUI(vehElementsret)
 		end
 		guiGridListSetSelectedItem(gCars, 0, 1)
 		
-		lCost = guiCreateLabel(0.3, 0.85, 0.2, 0.1, "Cost: 75$", true, wImpound)
+		lCost = guiCreateLabel(0.3, 0.85, 0.2, 0.1, "Cost: 95$", true, wImpound)
 		guiSetFont(lCost, "default-bold-small")
 		
 		updateCar()
