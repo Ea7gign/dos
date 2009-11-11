@@ -61,7 +61,7 @@ function mechanicWindow(vehicle)
 				end
 				
 				-- Recolour
-				if faction == 30 or not getElementData(vehicle, "job") and ( getElementData(vehicle, "faction") == -1 or getElementData(vehicle, "faction") == faction ) then
+				if faction == 30 or ( tonumber( getElementData(vehicle, "job") or 0 ) == 0 and ( getElementData(vehicle, "faction") == -1 or getElementData(vehicle, "faction") == faction ) ) then
 					bMechanicFour = guiCreateButton( 0.05, y, 0.9, 0.1, "Repaint Vehicle - $100", true, wMechanic )
 					addEventHandler( "onClientGUIClick", bMechanicFour, paintWindow, false)
 					y = y + 0.1
