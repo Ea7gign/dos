@@ -1410,10 +1410,12 @@ function newsHotline(thePlayer, commandName, ...)
 			
 			for key, value in ipairs(teamMembers) do
 				if(exports.global:hasItem(value,2))then
-					for _,nearbyPlayer in ipairs(exports.global:getNearbyElements(value, "player")) do
-						triggerClientEvent(nearbyPlayer, "startRinging", value, 2)
+					if getElementData( value, "phoneoff" ) ~= 1 then
+						for _,nearbyPlayer in ipairs(exports.global:getNearbyElements(value, "player")) do
+							triggerClientEvent(nearbyPlayer, "startRinging", value, 2)
+						end
+						exports.global:sendLocalMeAction(value,"receives a text message.")
 					end
-					exports.global:sendLocalMeAction(value,"receives a text message.")
 					outputChatBox("SMS From: News Desk - '".. message.."' Ph:".. playerNumber .." (("..getPlayerName(thePlayer) .."))", value)
 				end
 			end			
