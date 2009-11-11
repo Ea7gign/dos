@@ -180,12 +180,12 @@
 							<?php
 								$id = $_POST["targetid"];
 								$reason = $_POST["reason"];
-								$accept = $_POST["accept"];
+								$accept = $_POST["decision"];
 								$deny = $_POST["deny"];
 								$targetusername = $_POST["targetusername"];
 								$accepted = false;
 								
-								if ($accept!=null)
+								if ($accept=='accept')
 									$accepted = true;
 								else
 									$accepted = false;
