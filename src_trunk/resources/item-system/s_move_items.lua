@@ -18,6 +18,8 @@ addEventHandler( "closeFreakinInventory", getRootElement(), closeInventory )
 --
 
 local function moveToElement( element, slot, ammo )
+	local name = getElementModel( element ) == 2147 and "Fridge" or ( getElementType( element ) == "vehicle" and "Vehicle" or "Safe" )
+			
 	if not ammo then
 		local item = getItems( source )[ slot ]
 		if item then
@@ -36,6 +38,8 @@ local function moveToElement( element, slot, ammo )
 				local success, reason = moveItem( source, element, slot )
 				if not success then
 					outputChatBox( "Moving failed: " .. tostring( reason ), source, 255, 0, 0 )
+				else
+					exports.logs:logMessage( getPlayerName( source ) .. "->" .. name .. " #" .. getElementID(element) .. " - " .. getItemName( item[1] ) .. " - " .. item[2], 17)
 				end
 			end
 		end
@@ -43,8 +47,6 @@ local function moveToElement( element, slot, ammo )
 		if not hasSpaceForItem( element, -slot ) then
 			outputChatBox( "The Inventory is full.", source, 255, 0, 0 )
 		else
-			local name = getElementModel( element ) == 2147 and "Fridge" or ( getElementType( element ) == "vehicle" and "Vehicle" or "Safe" )
-			
 			if tonumber(getElementData(source, "duty")) > 0 then
 				outputChatBox("You can't put your weapons in a " .. name .. " while being on duty.", source, 255, 0, 0)
 			elseif tonumber(getElementData(source, "job")) == 4 and slot == 41 then
@@ -53,6 +55,7 @@ local function moveToElement( element, slot, ammo )
 				exports.global:takeWeapon( source, slot )
 				if ammo > 0 then
 					giveItem( element, -slot, ammo )
+					exports.logs:logMessage( getPlayerName( source ) .. "->" .. name .. " #" .. getElementID(element) .. " - " .. getItemName( slot ) .. " - " .. ammo, 17)
 				end
 			end
 		end
@@ -64,6 +67,8 @@ addEvent( "moveToElement", true )
 addEventHandler( "moveToElement", getRootElement(), moveToElement )
 
 local function moveFromElement( element, slot, ammo, index )
+	local name = getElementModel( element ) == 2147 and "Fridge" or ( getElementType( element ) == "vehicle" and "Vehicle" or "Safe" )
+	
 	local item = getItems( element )[slot]
 	if item and item[3] == index then
 		if item[1] > 0 then
@@ -76,6 +81,7 @@ local function moveFromElement( element, slot, ammo, index )
 			else
 				exports.global:giveWeapon( source, -item[1], item[2] )
 			end
+			exports.logs:logMessage( name .. " #" .. getElementID(element) .. "->" .. getPlayerName( source ) .. " - " .. getItemName( item[1] ) .. " - " .. item[2], 17)
 			triggerClientEvent( source, "forceElementMoveUpdate", source )
 		end
 	elseif item then

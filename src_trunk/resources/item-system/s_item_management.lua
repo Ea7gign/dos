@@ -124,6 +124,10 @@ local function getID(element)
 	end
 end
 
+function getElementID(element)
+	return getID(element)
+end
+
 -- returns the 'type' column content
 local function getType(element)
 	if getElementType(element) == "player" then -- Player

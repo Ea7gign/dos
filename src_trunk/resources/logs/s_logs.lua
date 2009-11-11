@@ -14,7 +14,8 @@ enumTypes = {
 	"itemspawn",
 	"tow",
 	"setfaction",
-	"changelock"
+	"changelock",
+	"moveitems"
 }
 
 
