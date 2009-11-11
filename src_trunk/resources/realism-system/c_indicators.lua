@@ -178,7 +178,7 @@ function doFlashes()
 			end
 		end
 		
-		-- left indicator
+		-- indicators
 		if (isElement(veh)) then
 			local x1, y1, z1, x2, y2, z2 = getElementBoundingBox(veh)
 			
@@ -225,34 +225,6 @@ function doFlashes()
 				vehicles[key][5] = nil
 			end
 		end
-		
-		-- right indicator
-		--[[
-		if (isElement(veh)) then
-			if (getElementData(veh, "rightindicator")) then
-				if (vehicles[key][4]==nil) then
-					local x1, y1, z1, x2, y2, z2 = getElementBoundingBox(veh)
-				
-					vehicles[key][4] = createMarker(x1, y1, z1, "corona", 1, 255, 194, 14, 200)
-					attachElements(vehicles[key][4], veh, x2-0.3, y1+0.4, z1+0.7)
-				
-					vehicles[key][5] = createMarker(x1, y1, z1, "corona", 1, 255, 194, 14, 200)
-					attachElements(vehicles[key][5], veh, x2-0.3, y2-0.1, z1+0.7)
-				else
-					destroyElement(vehicles[key][4])
-					destroyElement(vehicles[key][5])
-					vehicles[key][4] = nil
-					vehicles[key][5] = nil
-				end
-			elseif (vehicles[key][4]~=nil) then
-				destroyElement(vehicles[key][4])
-				destroyElement(vehicles[key][5])
-				vehicles[key][4] = nil
-				vehicles[key][5] = nil
-			end
-		end
-		]]--
-
 	end
 end
 setTimer(doFlashes, 500, 0)
