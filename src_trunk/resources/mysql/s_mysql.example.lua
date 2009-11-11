@@ -1,5 +1,5 @@
-username = "mta_dev"
-password = "asd0f7a7s9f3*6R^#"
+username = "root"
+password = ""
 db = "mta"
 host = "localhost"
 port = 3306
