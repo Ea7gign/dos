@@ -55,7 +55,7 @@ local function moveToElement( element, slot, ammo )
 				exports.global:takeWeapon( source, slot )
 				if ammo > 0 then
 					giveItem( element, -slot, ammo )
-					exports.logs:logMessage( getPlayerName( source ) .. "->" .. name .. " #" .. getElementID(element) .. " - " .. getItemName( slot ) .. " - " .. ammo, 17)
+					exports.logs:logMessage( getPlayerName( source ) .. "->" .. name .. " #" .. getElementID(element) .. " - " .. getItemName( -slot ) .. " - " .. ammo, 17)
 				end
 			end
 		end
@@ -73,15 +73,17 @@ local function moveFromElement( element, slot, ammo, index )
 	if item and item[3] == index then
 		if item[1] > 0 then
 			moveItem( element, source, slot )
+			exports.logs:logMessage( name .. " #" .. getElementID(element) .. "->" .. getPlayerName( source ) .. " - " .. getItemName( item[1] ) .. " - " .. item[2], 17)
 		else
 			takeItemFromSlot( element, slot )
 			if ammo < item[2] then
 				exports.global:giveWeapon( source, -item[1], ammo )
 				giveItem( element, item[1], item[2] - ammo )
+				exports.logs:logMessage( name .. " #" .. getElementID(element) .. "->" .. getPlayerName( source ) .. " - " .. getItemName( item[1] ) .. " - " .. ( item[2] - ammo ), 17)
 			else
 				exports.global:giveWeapon( source, -item[1], item[2] )
+				exports.logs:logMessage( name .. " #" .. getElementID(element) .. "->" .. getPlayerName( source ) .. " - " .. getItemName( item[1] ) .. " - " .. item[2], 17)
 			end
-			exports.logs:logMessage( name .. " #" .. getElementID(element) .. "->" .. getPlayerName( source ) .. " - " .. getItemName( item[1] ) .. " - " .. item[2], 17)
 			triggerClientEvent( source, "forceElementMoveUpdate", source )
 		end
 	elseif item then
