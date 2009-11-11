@@ -293,7 +293,7 @@ function callSomeone(thePlayer, commandName, phoneNumber, ...)
 								local secret = getElementData(thePlayer, "cellphone.secret")
 								local cellphone = getElementData(thePlayer, "cellnumber")
 								if (secret == 1 or publicphone) then
-									outputChatBox("Your phone is ringing. The display shows #000000 (( /pickup to answer ))", foundElement, 255, 194, 14)
+									outputChatBox("Your phone is ringing. The display shows Unknown Number (( /pickup to answer ))", foundElement, 255, 194, 14)
 								else
 									outputChatBox("Your phone is ringing. The display shows #".. cellphone .. " (( /pickup to answer ))", foundElement, 255, 194, 14)
 								end
