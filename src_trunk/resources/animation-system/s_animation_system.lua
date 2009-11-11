@@ -200,7 +200,7 @@ function pedCarFix(thePlayer)
 	local logged = getElementData(thePlayer, "loggedin")
 	
 	if (logged==1) then
-		exports.global:applyAnimation( thePlayer, "CAR", "Fixn_Car_loop", 8000, true, false, false)
+		exports.global:applyAnimation( thePlayer, "CAR", "Fixn_Car_loop", -1, true, false, false)
 	end
 end
 addCommandHandler ( "fixcar", pedCarFix, false, false )
