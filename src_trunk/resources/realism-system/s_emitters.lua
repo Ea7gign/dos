@@ -57,7 +57,7 @@ function delEmitter(thePlayer, commandName, id)
 			if ( emitters[tonumber(id)] == nil ) then
 				outputChatBox("Invalid Emitter ID.", thePlayer, 255, 0, 0)
 			else
-				local obj = emitters[id][5]
+				local obj = emitters[tonumber(id)][5]
 				destroyElement(obj)
 				outputChatBox("Emitter with ID " .. id .. " was deleted.", thePlayer, 0, 255, 0)
 			end
