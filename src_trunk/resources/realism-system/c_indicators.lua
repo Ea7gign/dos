@@ -33,16 +33,6 @@ function toggleLeftIndicators()
 					destroyElement(vehicles[key][3])
 					vehicles[key][3] = nil
 				end
-				
-				if (vehicles[key][4]) then
-					destroyElement(vehicles[key][4])
-					vehicles[key][4] = nil
-				end
-				
-				if (vehicles[key][5]) then
-					destroyElement(vehicles[key][5])
-					vehicles[key][5] = nil
-				end
 			end
 		end
 	end
@@ -53,31 +43,23 @@ function checkLeftAngle(veh)
 	
 	if (rz) then
 		if (rz>=rotation+70) then
-			if (leftTimer) then
+			if (isTimer(leftTimer)) then
 				killTimer(leftTimer)
 			end
 			
 			setElementData(veh, "leftindicator", nil, true)
 			local key = vehicleids[veh]
-					
-			if (vehicles[key][2]) then
-				destroyElement(vehicles[key][2])
-				vehicles[key][2] = nil
-			end
-					
-			if (vehicles[key][3]) then
-				destroyElement(vehicles[key][3])
-				vehicles[key][3] = nil
-			end
-					
-			if (vehicles[key][4]) then
-				destroyElement(vehicles[key][4])
-				vehicles[key][4] = nil
-			end
-					
-			if (vehicles[key][5]) then
-				destroyElement(vehicles[key][5])
-				vehicles[key][5] = nil
+			
+			if ( key ~= nil ) then
+				if (vehicles[key][2]) then
+					destroyElement(vehicles[key][2])
+					vehicles[key][2] = nil
+				end
+						
+				if (vehicles[key][3]) then
+					destroyElement(vehicles[key][3])
+					vehicles[key][3] = nil
+				end
 			end
 		end
 	end
@@ -88,30 +70,20 @@ function checkRightAngle(veh)
 
 	if (rz) then
 		if (rz<=rotation-70) then
-			if (rightTimer) then
+			if (isTimer(rightTimer)) then
 				killTimer(rightTimer)
 			end
 			setElementData(veh, "rightindicator", nil, true)
 			local key = vehicleids[veh]
 					
-			if (vehicles[key][6]) then
-				destroyElement(vehicles[key][6])
-				vehicles[key][6] = nil
+			if (vehicles[key][4]) then
+				destroyElement(vehicles[key][4])
+				vehicles[key][4] = nil
 			end
 					
-			if (vehicles[key][7]) then
-				destroyElement(vehicles[key][7])
-				vehicles[key][7] = nil
-			end
-					
-			if (vehicles[key][8]) then
-				destroyElement(vehicles[key][8])
-				vehicles[key][8] = nil
-			end
-					
-			if (vehicles[key][9]) then
-				destroyElement(vehicles[key][9])
-				vehicles[key][9] = nil
+			if (vehicles[key][5]) then
+				destroyElement(vehicles[key][5])
+				vehicles[key][5] = nil
 			end
 		end
 	end
@@ -133,24 +105,14 @@ function toggleRightIndicators()
 				setElementData(veh, "rightindicator", nil, true)
 				local key = vehicleids[veh]
 				
-				if (vehicles[key][6]) then
-					destroyElement(vehicles[key][6])
-					vehicles[key][6] = nil
+				if (vehicles[key][4]) then
+					destroyElement(vehicles[key][4])
+					vehicles[key][4] = nil
 				end
 				
-				if (vehicles[key][7]) then
-					destroyElement(vehicles[key][7])
-					vehicles[key][7] = nil
-				end
-				
-				if (vehicles[key][8]) then
-					destroyElement(vehicles[key][8])
-					vehicles[key][8] = nil
-				end
-				
-				if (vehicles[key][9]) then
-					destroyElement(vehicles[key][9])
-					vehicles[key][9] = nil
+				if (vehicles[key][5]) then
+					destroyElement(vehicles[key][5])
+					vehicles[key][5] = nil
 				end
 			end
 		end
@@ -204,7 +166,7 @@ function doFlashes()
 				destroyElement(vehicles[key][3])
 				vehicles[key][3] = nil
 			end
-				
+			
 			if (vehicles[key][4]) then
 				destroyElement(vehicles[key][4])
 				vehicles[key][4] = nil
@@ -214,106 +176,82 @@ function doFlashes()
 				destroyElement(vehicles[key][5])
 				vehicles[key][5] = nil
 			end
-			
-			if (vehicles[key][6]) then
-					destroyElement(vehicles[key][6])
-					vehicles[key][6] = nil
-				end
-				
-				if (vehicles[key][7]) then
-					destroyElement(vehicles[key][7])
-					vehicles[key][7] = nil
-				end
-				
-				if (vehicles[key][8]) then
-					destroyElement(vehicles[key][8])
-					vehicles[key][8] = nil
-				end
-				
-				if (vehicles[key][9]) then
-					destroyElement(vehicles[key][9])
-					vehicles[key][9] = nil
-				end
 		end
 		
 		-- left indicator
 		if (isElement(veh)) then
+			local x1, y1, z1, x2, y2, z2 = getElementBoundingBox(veh)
+			
 			if (getElementData(veh, "leftindicator")) then
 				if (vehicles[key][2]==nil) then
-					local x1, y1, z1, x2, y2, z2 = getElementBoundingBox(veh)
+					
 				
-					vehicles[key][2] = createObject(1489, x1, y1, z1)
-					vehicles[key][3] = createMarker(x1, y1, z1, "corona", 1, 255, 194, 14, 200)
+					vehicles[key][2] = createMarker(x1, y1, z1, "corona", 1, 255, 194, 14, 200)
 					attachElements(vehicles[key][2], veh, x1+0.1, y1+0.5, z1+0.7)
-					attachElements(vehicles[key][3], vehicles[key][2], 0, 0, 0)
-					setElementAlpha(vehicles[key][2], 0)
 				
-					vehicles[key][4] = createObject(1489, x1, y1, z1)
-					vehicles[key][5] = createMarker(x1, y1, z1, "corona", 1, 255, 194, 14, 200)
-					attachElements(vehicles[key][4], veh, x1+0.1, y2, z1+0.7)
-					attachElements(vehicles[key][5], vehicles[key][4], 0, 0, 0)
-					setElementAlpha(vehicles[key][4], 0)
+					vehicles[key][3] = createMarker(x1, y1, z1, "corona", 1, 255, 194, 14, 200)
+					attachElements(vehicles[key][3], veh, x1+0.1, y2, z1+0.7)
 				else
 					
 					destroyElement(vehicles[key][2])
 					destroyElement(vehicles[key][3])
-					destroyElement(vehicles[key][4])
-					destroyElement(vehicles[key][5])
 					vehicles[key][2] = nil
 					vehicles[key][3] = nil
-					vehicles[key][4] = nil
-					vehicles[key][5] = nil
 				end
 			elseif (vehicles[key][2]~=nil) then
 				destroyElement(vehicles[key][2])
 				destroyElement(vehicles[key][3])
-				destroyElement(vehicles[key][4])
-				destroyElement(vehicles[key][5])
 				vehicles[key][2] = nil
 				vehicles[key][3] = nil
+			end
+			
+			if (getElementData(veh, "rightindicator")) then
+				if (vehicles[key][4]==nil) then
+					vehicles[key][4] = createMarker(x1, y1, z1, "corona", 1, 255, 194, 14, 200)
+					attachElements(vehicles[key][4], veh, x2-0.3, y1+0.4, z1+0.7)
+				
+					vehicles[key][5] = createMarker(x1, y1, z1, "corona", 1, 255, 194, 14, 200)
+					attachElements(vehicles[key][5], veh, x2-0.3, y2-0.1, z1+0.7)
+				else
+					destroyElement(vehicles[key][4])
+					destroyElement(vehicles[key][5])
+					vehicles[key][4] = nil
+					vehicles[key][5] = nil
+				end
+			elseif (vehicles[key][4]~=nil) then
+				destroyElement(vehicles[key][4])
+				destroyElement(vehicles[key][5])
 				vehicles[key][4] = nil
 				vehicles[key][5] = nil
 			end
 		end
 		
 		-- right indicator
+		--[[
 		if (isElement(veh)) then
 			if (getElementData(veh, "rightindicator")) then
-				if (vehicles[key][6]==nil) then
+				if (vehicles[key][4]==nil) then
 					local x1, y1, z1, x2, y2, z2 = getElementBoundingBox(veh)
 				
-					vehicles[key][6] = createObject(1489, x1, y1, z1)
-					vehicles[key][7] = createMarker(x1, y1, z1, "corona", 1, 255, 194, 14, 200)
-					attachElements(vehicles[key][6], veh, x2-0.3, y1+0.4, z1+0.7)
-					attachElements(vehicles[key][7], vehicles[key][6], 0, 0, 0)
-					setElementAlpha(vehicles[key][6], 0)
+					vehicles[key][4] = createMarker(x1, y1, z1, "corona", 1, 255, 194, 14, 200)
+					attachElements(vehicles[key][4], veh, x2-0.3, y1+0.4, z1+0.7)
 				
-					vehicles[key][8] = createObject(1489, x1, y1, z1)
-					vehicles[key][9] = createMarker(x1, y1, z1, "corona", 1, 255, 194, 14, 200)
-					attachElements(vehicles[key][8], veh, x2-0.3, y2-0.1, z1+0.7)
-					attachElements(vehicles[key][9], vehicles[key][8], 0, 0, 0)
-					setElementAlpha(vehicles[key][8], 0)
+					vehicles[key][5] = createMarker(x1, y1, z1, "corona", 1, 255, 194, 14, 200)
+					attachElements(vehicles[key][5], veh, x2-0.3, y2-0.1, z1+0.7)
 				else
-					destroyElement(vehicles[key][6])
-					destroyElement(vehicles[key][7])
-					destroyElement(vehicles[key][8])
-					destroyElement(vehicles[key][9])
-					vehicles[key][6] = nil
-					vehicles[key][7] = nil
-					vehicles[key][8] = nil
-					vehicles[key][9] = nil
+					destroyElement(vehicles[key][4])
+					destroyElement(vehicles[key][5])
+					vehicles[key][4] = nil
+					vehicles[key][5] = nil
 				end
-			elseif (vehicles[key][6]~=nil) then
-				destroyElement(vehicles[key][6])
-				destroyElement(vehicles[key][7])
-				destroyElement(vehicles[key][8])
-				destroyElement(vehicles[key][9])
-				vehicles[key][6] = nil
-				vehicles[key][7] = nil
-				vehicles[key][8] = nil
-				vehicles[key][9] = nil
+			elseif (vehicles[key][4]~=nil) then
+				destroyElement(vehicles[key][4])
+				destroyElement(vehicles[key][5])
+				vehicles[key][4] = nil
+				vehicles[key][5] = nil
 			end
 		end
+		]]--
 
 	end
 end
