@@ -48,11 +48,13 @@ function disableCooldownX()
 end
 addEventHandler("onClientPlayerWeaponSwitch", getRootElement(), disableCooldownX)
 
-function weaponFireX(weapon, ammo, ammoInClip)
+function weaponFireX(weapon, ammo, ammoInClip, hitX, hitY, hitZ, hitElement)
 	if (weapon==25) then -- shotgun
 		local mode = getElementData(localPlayer, "shotgunmode")
 		if (mode==0) then -- bean bag mode
 			enableCooldown()
+			playSoundFrontEnd(38)
+			triggerServerEvent("beanbagFired", localPlayer, hitX, hitY, hitZ, hitElement) 
 		end
 	end
 end
