@@ -91,6 +91,7 @@ function resetTruckerJob()
 		deliveryStopTimer = nil
 	end
 end
+addEventHandler("onClientChangeChar", getRootElement(), resetTruckerJob)
 
 function displayTruckerJob(notext)
 	if (jobstate==0) then
