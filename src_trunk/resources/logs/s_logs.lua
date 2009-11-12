@@ -15,7 +15,8 @@ enumTypes = {
 	"tow",
 	"setfaction",
 	"changelock",
-	"moveitems"
+	"moveitems",
+	"news"
 }
 
 

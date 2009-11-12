@@ -1225,7 +1225,7 @@ function newsMessage(thePlayer, commandName, ...)
 				local message = table.concat({...}, " ")
 				local name = getPlayerName(thePlayer)
 				
-				exports.logs:logMessage("[IC: News] " .. name .. ": " .. message, 6)
+				exports.logs:logMessage("[IC: News] " .. name .. ": " .. message, 18)
 				
 				for key, value in ipairs(exports.pool:getPoolElementsByType("player")) do
 						
@@ -1342,7 +1342,7 @@ function interviewChat(thePlayer, commandName, ...)
 				local message = table.concat({...}, " ")
 				local name = getPlayerName(thePlayer)
 				
-				exports.logs:logMessage("[IC: Interview Guest] " .. name .. ": " .. message, 6)
+				exports.logs:logMessage("[IC: Interview Guest] " .. name .. ": " .. message, 18)
 				
 				for key, value in ipairs(exports.pool:getPoolElementsByType("player")) do
 					if (getElementData(value, "loggedin")==1) then
