@@ -574,6 +574,7 @@ function localDo(thePlayer, commandName, ...)
 		else
 			local message = table.concat({...}, " ")
 			exports.irc:sendMessage("[IC: Local Do] * " .. message .. " *      ((" .. getPlayerName(thePlayer) .. "))")
+			exports.logs:logMessage("[IC: Local Do] * " .. message .. " *      ((" .. getPlayerName(thePlayer) .. "))", 19)
 			exports.global:sendLocalDoAction(thePlayer, message)
 		end
 	end
