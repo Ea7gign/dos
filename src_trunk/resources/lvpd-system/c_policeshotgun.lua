@@ -17,9 +17,7 @@ function switchModex()
 			outputChatBox( "You switched your shotgun mode to Beanbag mode", 0, 255, 0 )
 			setElementData(localPlayer, "shotgunmode", 0, true)
 		end
-		elseif isPD() then
-			triggerServerEvent("sendLocalMeAction", localPlayer, localPlayer, "switches the mode on their shotgun")
-		end
+		triggerServerEvent("sendLocalMeAction", localPlayer, localPlayer, "switches the mode on their shotgun")
 	end
 end
 
