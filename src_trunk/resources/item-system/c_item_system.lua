@@ -32,6 +32,10 @@ function clickItem(button, state, absX, absY, x, y, z, element)
 		end
 		
 		local px, py, pz = getElementPosition(getLocalPlayer())
+		if getElementParent(getElementParent(element)) == getResourceRootElement(getResourceFromName("map-system")) then
+			element = nil
+		end
+		
 		if not element then
 			local wx, wy, wz = x, y, z
 			local x, y, z = nil
