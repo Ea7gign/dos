@@ -8,16 +8,18 @@ function isPD()
 end
 
 function switchModex()
-	if (getPedWeapon(localPlayer)==25) and (getPedTotalAmmo(localPlayer)>0) then -- has an un-empty Shotgun
+	if isPD() and (getPedWeapon(localPlayer)==25) and (getPedTotalAmmo(localPlayer)>0) then -- has an un-empty Shotgun
 		local mode = getElementData(localPlayer, "shotgunmode")
 		if mode == 0 then -- bean bag
 			setElementData(localPlayer, "shotgunmode", 1, true)
 			outputChatBox( "You switched your shotgun mode to Lethal mode", 0, 255, 0 )
-		elseif mode == 1 and isPD() then -- lethal gun mode
+		elseif mode == 1 then -- lethal gun mode
 			outputChatBox( "You switched your shotgun mode to Beanbag mode", 0, 255, 0 )
 			setElementData(localPlayer, "shotgunmode", 0, true)
 		end
-		triggerServerEvent("sendLocalMeAction", localPlayer, localPlayer, "switches the mode on their shotgun")
+		elseif isPD() then
+			triggerServerEvent("sendLocalMeAction", localPlayer, localPlayer, "switches the mode on their shotgun")
+		end
 	end
 end
 
