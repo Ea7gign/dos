@@ -31,4 +31,5 @@
 	<script src="FD Interior.lua" type="client"/>
 	<script src="Glen Park.lua" type="client"/>
 	<script src="CityHall.lua" type="client"/>
+	<script src="ANG.lua" type="client"/>
 </meta>
