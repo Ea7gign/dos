@@ -124,7 +124,7 @@ local function useBoatDoor(thePlayer, commandName, ...)
 			moveObject(Gate[6], 5000, -1468.901,501.333,12,0,0,0)
 			liftOpen = true
 		end
-	elseif (distance<=50) and (listOpen==true) then
+	elseif (distance<=50) and (liftOpen==true) then
 		if getPlayerTeam(thePlayer) == getTeamFromName("Air National Guard") then
 			outputChatBox("The Carrier Door is now going down...", thePlayer, 255, 0, 0)
 			moveObject(Gate[6], 5000, -1466.03,501.091,2,0,0,0)
