@@ -1,6 +1,5 @@
 local bans = 
 {
-	"24.77.*.*", -- Azume_Xiaolian
 	"212.92.*.*", -- Tailor Joe
 	"41.249.*.*" -- Joe Harisson
 }
