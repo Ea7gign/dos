@@ -217,6 +217,7 @@ addEvent("spawnFinishMarkerTruckJob", true)
 addEventHandler("spawnFinishMarkerTruckJob", getRootElement(), spawnFinishMarkerTruckJob)
 
 function loadNewCheckpointTruckJob()
+	local vehicle = getPedOccupiedVehicle(localPlayer)
 	-- next drop off
 	local rand = -1
 	repeat
