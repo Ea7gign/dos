@@ -102,7 +102,7 @@ function payRelease(vehID)
 	if exports.global:takeMoney(source, 95) then
 		exports.global:giveMoney(getFactionByID(30), 95)
 		setVehicleFrozen(vehID, false)
-		setElemetnData(vehID, "handbrake", 0, false)
+		setElementData(vehID, "handbrake", 0, false)
 		setElementData(vehID, "Impounded", 0)
 		setElementPosition(vehID, 2743.0905761719, -1462.744750, 32.453125)
 		setVehicleLocked(vehID, true)
