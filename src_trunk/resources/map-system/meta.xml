@@ -33,4 +33,5 @@
 	<script src="CityHall.lua" type="client"/>
 	<script src="ANG.lua" type="client"/>
 	<script src="ANG_HQ.lua" type="client"/>
+	<script src="ES.lua" type="client"/>
 </meta>
