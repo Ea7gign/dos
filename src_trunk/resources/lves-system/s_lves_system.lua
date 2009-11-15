@@ -87,7 +87,7 @@ function respawnPlayer(thePlayer)
 		setPedStat(thePlayer, 21, fat)
 		setPedStat(thePlayer, 23, muscle)
 
-		spawnPlayer(thePlayer,  2025.167480 -1403.565146 17.209043, 180.0, theSkin, 0, 0, theTeam)
+		spawnPlayer(thePlayer,  2025.167480, -1403.565146, 17.209043, 180.0, theSkin, 0, 0, theTeam)
 		
 		fadeCamera(thePlayer, true, 2)
 	end
