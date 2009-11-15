@@ -155,11 +155,11 @@ addCommandHandler("arrest", arrestPlayer)
 
 function timerPDUnjailPlayer(jailedPlayer)
 	if(isElement(jailedPlayer)) then
-		local timeServed = getElementData(jailedPlayer, "pd.jailserved")
+		local timeServed = tonumber(getElementData(jailedPlayer, "pd.jailserved"))
 		local timeLeft = getElementData(jailedPlayer, "pd.jailtime")
 		local theMagicTimer = getElementData(jailedPlayer, "pd.jailtimer") -- 0001290: PD /release bug
 		local username = getPlayerName(jailedPlayer)
-		setElementData(jailedPlayer, "pd.jailserved", timeServed+1, false)
+		setElementData(jailedPlayer, "pd.jailserved", tonumber(timeServed)+1, false)
 		local timeLeft = timeLeft - 1
 		setElementData(jailedPlayer, "pd.jailtime", timeLeft, false)
 
