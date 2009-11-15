@@ -32,4 +32,5 @@
 	<script src="Glen Park.lua" type="client"/>
 	<script src="CityHall.lua" type="client"/>
 	<script src="ANG.lua" type="client"/>
+	<script src="ANG_HQ.lua" type="client"/>
 </meta>
