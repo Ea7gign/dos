@@ -90,7 +90,7 @@ function onTargetPDPedx(element)
 		end
 	end
 end
-addEventHandler("onClientPlayerTarget", getLocalPlayer(), onTargetPDPed)
+addEventHandler("onClientPlayerTarget", getLocalPlayer(), onTargetPDPedx)
 
 function makeCopFireOnPlayerX()
 	if (underfire) and (fireelement) then
