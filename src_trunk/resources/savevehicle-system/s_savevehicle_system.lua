@@ -110,9 +110,9 @@ function saveVehicleOnExit(thePlayer, seat, vehicle)
 			local upgrade15 = getElementData( source, "oldupgrade" .. 15 ) or getVehicleUpgradeOnSlot(source, 15)
 			local upgrade16 = getElementData( source, "oldupgrade" .. 16 ) or getVehicleUpgradeOnSlot(source, 16)
 
-			local Impounded = getElementData(source, "Impounded")
+			local Impounded = getElementData(source, "Impounded") or 0
 
-			local handbrake = getElementData(source, "handbrake")
+			local handbrake = getElementData(source, "handbrake") or 0
 			
 			local health = getElementHealth(source)
 			
