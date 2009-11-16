@@ -1,13 +1,13 @@
 local angGate = createObject(3089, 372.7575,166.7212,1008.582,0,0,180)
 exports.pool:allocateElement(angGate)
 setElementInterior(angGate, 3)
-setElementDimension(angGate, 63)
+setElementDimension(angGate, 79)
 local open = false
 -- 
 -- Gate code
 
 local angGuard = createPed( 287, 370.7433166, 167.1261444, 1008.3828125 )
-setElementDimension( angGuard, 63 )
+setElementDimension( angGuard, 79 )
 setElementInterior( angGuard , 3 )
 setElementData( angGuard, "talk", 1 )
 setElementData( angGuard, "name", "Airman Connor" )
