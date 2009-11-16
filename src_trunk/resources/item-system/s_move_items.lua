@@ -1,6 +1,33 @@
+local function canAccessElement( player, element )
+	if getElementType( element ) == "vehicle" then
+		if not isVehicleLocked( element ) then
+			return true
+		else
+			local veh = getPedOccupiedVehicle( player )
+			local inVehicle = getElementData( player, "realinvehicle" )
+			
+			if veh == element and inVehicle == 1 then
+				return true
+			elseif veh == element and inVehicle == 0 then
+				outputDebugString( "canAcccessElement failed (hack?): " .. getPlayerName( player ) .. " on Vehicle " .. getElementData( element, "dbid" ) )
+				return false
+			else
+				outputDebugString( "canAcccessElement failed (locked): " .. getPlayerName( player ) .. " on Vehicle " .. getElementData( element, "dbid" ) )
+				return false
+			end
+		end
+	else
+		return true
+	end
+end
+
+--
+
 local function openInventory( element, ax, ay )
-	triggerEvent( "subscribeToInventoryChanges", source, element )
-	triggerClientEvent( source, "openElementInventory", element, ax, ay )
+	if canAccessElement( source, element ) then
+		triggerEvent( "subscribeToInventoryChanges", source, element )
+		triggerClientEvent( source, "openElementInventory", element, ax, ay )
+	end
 end
 
 addEvent( "openFreakinInventory", true )
@@ -18,6 +45,10 @@ addEventHandler( "closeFreakinInventory", getRootElement(), closeInventory )
 --
 
 local function moveToElement( element, slot, ammo )
+	if not canAccessElement( source, element ) then
+		return
+	end
+	
 	local name = getElementModel( element ) == 2147 and "Fridge" or ( getElementType( element ) == "vehicle" and "Vehicle" or "Safe" )
 			
 	if not ammo then
@@ -67,6 +98,10 @@ addEvent( "moveToElement", true )
 addEventHandler( "moveToElement", getRootElement(), moveToElement )
 
 local function moveFromElement( element, slot, ammo, index )
+	if not canAccessElement( source, element ) then
+		return
+	end
+	
 	local name = getElementModel( element ) == 2147 and "Fridge" or ( getElementType( element ) == "vehicle" and "Vehicle" or "Safe" )
 	
 	local item = getItems( element )[slot]
