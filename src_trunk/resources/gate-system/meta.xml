@@ -25,5 +25,6 @@
 	<script src="fd_interior.lua"/>
 	<script src="CharlieMansion.lua"/>
 	
-	<script src="ANG_gates.lua" title="server"/>
+	<script src="ang_base.lua" type="server"/>
+	
 </meta>
