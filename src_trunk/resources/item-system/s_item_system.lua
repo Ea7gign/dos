@@ -1013,6 +1013,33 @@ function delItem(thePlayer, commandName, targetID)
 end
 addCommandHandler("delitem", delItem, false, false)
 
+function getNearbyItems(thePlayer, commandName)
+	if (exports.global:isPlayerAdmin(thePlayer)) then
+		local posX, posY, posZ = getElementPosition(thePlayer)
+		outputChatBox("Nearby Items:", thePlayer, 255, 126, 0)
+		local count = 0
+		
+		for k, theObject in ipairs(getElementsByType("object", getResourceRootElement())) do
+			local dbid = getElementData(theObject, "id")
+			
+			if dbid then
+				local x, y, z = getElementPosition(theObject)
+				local distance = getDistanceBetweenPoints3D(posX, posY, posZ, x, y, z)
+				
+				if distance <= 10 and getElementDimension(theObject) == getElementDimension(thePlayer) and getElementInterior(theObject) == getElementInterior(thePlayer) then
+					local id = getElementData(theObject, "id")
+					mysql_free_result( mysql_query(handler, "DELETE FROM worlditems WHERE id='" .. id .. "'") )
+					destroyElement(theObject)
+					count = count + 1
+				end
+			end
+		end
+		
+		outputChatBox( count .. " Items deleted.", thePlayer, 255, 126, 0)
+	end
+end
+addCommandHandler("delnearbyitems", getNearbyItems, false, false)
+
 function showInventoryRemote(thePlayer, commandName, targetPlayer)
 	if exports.global:isPlayerAdmin(thePlayer) then
 		if not (targetPlayer) then
