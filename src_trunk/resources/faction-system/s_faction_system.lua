@@ -975,11 +975,11 @@ function payWage(player, pay, faction, tax)
 		donatormoney = donatormoney + 25
 		interestrate = interestrate + 0.001
 	elseif (donator==2) then
-		donatormoney = donatormoney + 25
+		donatormoney = donatormoney + 50
 		interestrate = interestrate + 0.002
 	elseif (donator==3) then
 		donatormoney = donatormoney + 75
-		interestrate = interestrate + 0.004
+		interestrate = interestrate + 0.003
 	elseif (donator==4) then
 		donatormoney = donatormoney + 100
 		interestrate = interestrate + 0.004
