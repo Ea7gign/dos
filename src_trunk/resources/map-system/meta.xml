@@ -26,6 +26,7 @@
 	<script src="ein-barn.lua" type="client"/>
 	<script src="SAN Roof.lua" type="client"/>
 	<script src="SAN Interior.lua" type="client"/>
+	<script src="SAN Printworks.lua" type="client"/>
 	<script src="PD Interior.lua" type="client"/>
 	<script src="PD Interior2.lua" type="client"/>
 	<script src="daniels_mansion.lua" type="client"/>
