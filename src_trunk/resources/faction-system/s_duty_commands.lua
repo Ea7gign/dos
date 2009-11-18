@@ -657,7 +657,7 @@ addCommandHandler( "authswat",
 function duty(thePlayer)
 	if getElementDimension(thePlayer) == 9902 and getTeamName(getPlayerTeam(thePlayer)) == "San Andreas Network News" then
 		exports.global:takeItem(thePlayer, 71)
-		exports.global:giveItem(thePlayer, 71, 10)
+		exports.global:giveItem(thePlayer, 71, 20)
 		exports.global:takeWeapon(thePlayer, 43)
 		exports.global:giveWeapon(thePlayer, 43, 200, true)
 	end
