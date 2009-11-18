@@ -28,4 +28,6 @@
 	<script src="ang_base.lua" type="server"/>
 	<script src="ANG_gates.lua" type="server"/>
 	
+	<script src="MountMansion.lua" type="server"/>
+	<script src="c_doors.lua" type="client"/>
 </meta>
