@@ -651,3 +651,14 @@ addCommandHandler( "authswat",
 		end
 	end
 )
+
+-- SAN /duty
+
+function duty(thePlayer)
+	if getElementDimension(thePlayer) == 9902 and getTeamName(getPlayerTeam(thePlayer)) == "San Andreas Network News" then
+		exports.global:giveItem(thePlayer, 71, 10)
+		exports.global:takeWeapon(thePlayer, 43)
+		exports.global:giveWeapon(thePlayer, 43, 200, true)
+	end
+end
+addCommandHandler("duty", duty)
