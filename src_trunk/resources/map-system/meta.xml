@@ -27,7 +27,7 @@
 	<script src="SAN Recording.lua" type="client"/>
 	<script src="PD Interior.lua" type="client"/>
 	<script src="PD Interior2.lua" type="client"/>
-	<script src="mount_mansion.lua" type="client"/>
+	<script src="daniels_mansion.lua" type="client"/>
 	<script src="FD Interior.lua" type="client"/>
 	<script src="Glen Park.lua" type="client"/>
 	<script src="CityHall.lua" type="client"/>
