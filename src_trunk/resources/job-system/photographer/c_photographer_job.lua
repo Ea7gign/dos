@@ -9,8 +9,8 @@ local collectionValue = 0
 local localPlayer = getLocalPlayer()
 
 -- Ped at submission desk just for the aesthetics.
-local victoria = createPed(141, 359.7, 173.57419128418, 1008.3893432617)
-setPedRotation(victoria, 270)
+local victoria = createPed(141, 305.490234375, -1614.5791015625, 5095.177734375)
+setPedRotation(victoria, 0)
 setElementDimension(victoria, 9902)
 setElementInterior(victoria, 3)
 setPedAnimation ( victoria, "INT_OFFICE", "OFF_Sit_Idle_Loop", -1, true, false, false )
