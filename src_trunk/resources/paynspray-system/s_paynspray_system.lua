@@ -153,10 +153,10 @@ function shapeHit(element, matchingDimension)
 				free = true
 			end
 			
-			if not exports.global:hasMoney(thePlayer, 250) and not free then
+			if not exports.global:hasMoney(thePlayer, 125) and not free then
 				outputChatBox("You cannot afford to have your car worked on.", thePlayer, 255, 0, 0)
 			else
-				outputChatBox("Welcome to Pay 'n' Spray. Please wait while we work on your " .. getVehicleName(element) .. ".", thePlayer, 255, 194, 14)
+				outputChatBox("Welcome to the BT&R Spray. Please wait while we work on your " .. getVehicleName(element) .. ".", thePlayer, 255, 194, 14)
 				setTimer(spraySoundEffect, 2000, 5, thePlayer, source)
 				setTimer(sprayEffect, 10000, 1, element, thePlayer, source, free)
 			end
@@ -174,14 +174,17 @@ end
 function sprayEffect(vehicle, thePlayer, shape, free)
 	if (isElementWithinColShape(thePlayer, shape)) then
 		outputChatBox(" ", thePlayer)
-		outputChatBox("Thank you for visting Pay 'n' Spray garage. Have a safe journey.", thePlayer, 255, 194, 14)
+		outputChatBox(" ", thePlayer)
+		outputChatBox("Thank you for visting the BT&R Spray garage. Have a safe journey.", thePlayer, 255, 194, 14)
 		
 		if not free then
-			exports.global:takeMoney(thePlayer, 250, true)
-			outputChatBox("BILL: Car Repair - 250$", thePlayer, 255, 194, 14)
+			exports.global:takeMoney(thePlayer, 125, true)
+			outputChatBox("BILL: Car Repair - 125$", thePlayer, 255, 194, 14)
 		else
 			outputChatBox("BILL: Car Repair - 0$", thePlayer, 255, 194, 14)
 		end
+		
+		exports.global:giveMoney(getFactionByID(30), 125)
 		
 		fixVehicle(vehicle)
 		if armoredCars[ getElementModel( vehicle ) ] then
@@ -207,3 +210,16 @@ function pnsOnEnter(player, seat)
 	end
 end
 addEventHandler("onVehicleEnter", getRootElement(), pnsOnEnter)
+
+local factionCache = { }
+function getFactionByID( id )
+	if not factionCache[ id ] then
+		for _, team in pairs( getElementsByType( "team" ) ) do
+			if getElementData( team, "id" ) == id then
+				factionCache[ id ] = getTeamName( team )
+				break
+			end
+		end
+	end
+	return factionCache[ id ] or "Unknown Faction"
+end
