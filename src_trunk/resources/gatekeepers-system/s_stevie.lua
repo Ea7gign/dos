@@ -359,11 +359,11 @@ addEventHandler( "declineSteviePhoneDeal", getRootElement(), declineDeal_S )
 
 -- The item spawn locations. Stack the items 3 high to give 15 items in total.
 locations = {
-	{ 1685.32, -2434.40, 12.54 },
-	{ 2076.93, -2046.77, 12.54 },
-	{ 1892.95, -2243.80, 12.54 },
-	{ 2160.79, -2180.71, 12.54 },
-	{ 1889.20, -2639.80, 12.54 }
+	{ 2781.3776, -2531.0056, 13.3160 },
+	{ 2269.4335, -2535.6457, 8.3108 },
+	{ -159.9091, -290.0009, 3.5817 },
+	{ -2258.0092, 2383.6354, 4.6420 },
+	{ -1815.1345, -75.5974, 14.7400  }
 }
 
 function acceptDeal_S( dealNumber )
