@@ -170,6 +170,22 @@ for i = 1, 3 do
 	)
 end
 
+function meEmote(source, cmd, ...)
+	local logged = getElementData(source, "loggedin")
+	if not(isPedDead(source) and (logged == 1)) then
+		local message = table.concat({...}, " ")
+		if not (...) then
+			outputChatBox("SYNTAX: /me [Action]", source, 255, 194, 14)
+		else
+			exports.global:sendLocalMeAction(source, message)
+			exports.irc:sendMessage("[IC OOC: ME ACTION] *" .. getPlayerName(source) .. " " .. message)
+			exports.logs:logMessage("[IC OOC: ME ACTION] *" .. getPlayerName(source) .. " " .. message, 7)
+		end
+	end
+end
+addCommandHandler("ME", meEmote, false, true)
+addCommandHandler("Me", meEmote, false, true)
+
 function chatMain(message, messageType)
 	local logged = getElementData(source, "loggedin")
 	
