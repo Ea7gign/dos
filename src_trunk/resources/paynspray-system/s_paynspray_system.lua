@@ -184,7 +184,7 @@ function sprayEffect(vehicle, thePlayer, shape, free)
 			outputChatBox("BILL: Car Repair - 0$", thePlayer, 255, 194, 14)
 		end
 		
-		exports.global:giveMoney(getFactionByID(30), 125)
+		exports.global:giveMoney(getTeamFromName("Best's Towing and Recovery"), 125)
 		
 		fixVehicle(vehicle)
 		if armoredCars[ getElementModel( vehicle ) ] then
@@ -210,16 +210,3 @@ function pnsOnEnter(player, seat)
 	end
 end
 addEventHandler("onVehicleEnter", getRootElement(), pnsOnEnter)
-
-local factionCache = { }
-function getFactionByID( id )
-	if not factionCache[ id ] then
-		for _, team in pairs( getElementsByType( "team" ) ) do
-			if getElementData( team, "id" ) == id then
-				factionCache[ id ] = getTeamName( team )
-				break
-			end
-		end
-	end
-	return factionCache[ id ] or "Unknown Faction"
-end
