@@ -27,8 +27,13 @@ function useImpoundDoorb(thePlayer)
 		local distance = getDistanceBetweenPoints3D(372.7575,166.7212,1008.582, x, y, z)
 
 		if (distance<=3) and (open==false) then
+			
+			if (y <= 167) then
+				exports.global:sendLocalText(thePlayer, "Guard Jenkins says: Hello " .. genderm .. " " .. getPlayerName(thePlayer):gsub("_", " ") .. ". Have a good day.", nil, nil, nil, 10)
+			else
+				exports.global:sendLocalText(thePlayer, "Guard Jenkins says: Hello " .. genderm .. " " .. getPlayerName(thePlayer):gsub("_", " ") .. ". You can walk inside.", nil, nil, nil, 10)
+			end
 			exports.global:sendLocalText(thePlayer, " *Guard Jenkins opens the door.", 255, 51, 102)
-			exports.global:sendLocalText(thePlayer, "Guard Jenkins says: Hello " .. genderm .. " " .. getPlayerName(thePlayer):gsub("_", " ") .. ". You can walk inside/outside.", nil, nil, nil, 10)
 			open = true
 			moveObject(objGateb, 1000, 372.7575,166.7212,1008.582,0,0,90)
 			setTimer(closeImpoundDoorba, 5000, 1, thePlayer)
