@@ -723,6 +723,9 @@ function useItem(button)
 			elseif (itemID==85) then -- Emergency Light Becon
 				outputChatBox("Put it in your car inventory and press 'N' to toggle it.", 255, 194, 14)
 				return
+			elseif (itemID==86) then
+				outputChatBox("A SAN identification, issued to " .. itemValue .. ".", 255, 194, 14)
+				return
 			end
 			
 			triggerServerEvent("useItem", getLocalPlayer(), itemSlot, additional)
@@ -886,6 +889,8 @@ function showItem(button)
 			if itemName == "Porn Tape" then
 				itemName = itemName .. ", " .. guiGridListGetItemText(guiGetSelectedTab(tabPanel) == tabKeys and gKeys or gItems, row, 3)
 			elseif itemName == "BT&R Identification" then
+				itemName = itemName .. ", issued to " .. guiGridListGetItemText(guiGetSelectedTab(tabPanel) == tabKeys and gKeys or gItems, row, 3)
+			elseif itemName == "SAN Identifcation" then
 				itemName = itemName .. ", issued to " .. guiGridListGetItemText(guiGetSelectedTab(tabPanel) == tabKeys and gKeys or gItems, row, 3)
 			end
 			triggerServerEvent("showItem", getLocalPlayer(), itemName)
