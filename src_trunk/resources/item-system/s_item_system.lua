@@ -1098,7 +1098,7 @@ end
 addCommandHandler("issuebadge", givePlayerBadge, false, false)
 
 function issuePilotCertificate(thePlayer, commandName, targetPlayer)
-	if getElementData(thePlayer, "dbid") == 8408 then -- for Mr. I have a flight school, Charlie Baggett.
+	if exports.global:isPlayerAdmin(thePlayer) then
 		if not (targetPlayer) then
 			outputChatBox("SYNTAX: /" .. commandName .. " [player]", thePlayer, 255, 194, 14)
 		else
@@ -1108,14 +1108,7 @@ function issuePilotCertificate(thePlayer, commandName, targetPlayer)
 				if (logged==0) then -- Are they logged in?
 					outputChatBox("Player is not logged in.", thePlayer, 255, 0, 0)
 				else
-					local x, y, z = getElementPosition(thePlayer)
-					local tx, ty, tz = getElementPosition(targetPlayer)
-					if (getDistanceBetweenPoints3D(x, y, z, tx, ty, tz)>4) then -- Are they standing next to each other?
-						outputChatBox("You are too far away to issue this player a pilot certificate.", thePlayer, 255, 0, 0)
-					else -- If the player is a ES leader
-						exports.global:giveItem(targetPlayer, 78, targetPlayerName) -- Give the player the badge.
-						exports.global:sendLocalMeAction(thePlayer, "issues "..targetPlayerName.." a San Andreas Pilot Certificate.")
-					end
+					exports.global:giveItem(targetPlayer, 78, targetPlayerName) -- Give the player the certificate.
 				end
 			end
 		end
