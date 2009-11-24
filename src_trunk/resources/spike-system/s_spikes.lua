@@ -145,7 +145,7 @@ function AdminRemovingSpikes(sourcePlayer, command)
 				Spike[id] = nil
 				destroyElement(Shape1[id])
 				Shape1[id] = nil
-				if (isElement(Shape2[id]) then
+				if isElement(Shape2[id]) then
 					destroyElement(Shape2[id])
 					Shape2[id] = nil
 				end
