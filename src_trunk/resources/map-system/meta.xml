@@ -38,4 +38,5 @@
 	<script src="ANG_HQ.lua" type="client"/>
 	<script src="ES.lua" type="client"/>
 	<script src="court.lua" type="client"/>
+	<script src="karko_house.lua" type="client"/>
 </meta>
