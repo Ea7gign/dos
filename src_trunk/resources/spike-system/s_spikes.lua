@@ -118,7 +118,7 @@ function RemovingSpikes(sourcePlayer, command, ID)
 					Spike[message] = nil
 					destroyElement(Shape1[message])
 					Shape1[message] = nil
-					if (isElement(Shape2[message]) then
+					if isElement(Shape2[message]) then
 						destroyElement(Shape2[message])
 						Shape2[message] = nil
 					end
