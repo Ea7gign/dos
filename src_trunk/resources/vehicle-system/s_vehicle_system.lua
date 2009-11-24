@@ -151,7 +151,7 @@ function createPermVehicle(thePlayer, commandName, ...)
 						
 					local dimension = getElementDimension(thePlayer)
 					local interior = getElementInterior(thePlayer)
-					local query = mysql_query(handler, "INSERT INTO vehicles SET model='" .. id .. "', x='" .. x .. "', y='" .. y .. "', z='" .. z .. "', rotx='" .. rx .. "', roty='" .. ry .. "', rotz='" .. rz .. "', color1='" .. col1 .. "', color2='" .. col2 .. "', faction='" .. factionVehicle .. "', owner='" .. dbid .. "', plate='" .. plate .. "', currx='" .. x .. "', curry='" .. y .. "', currz='" .. z .. "', currrx='0', currry='0', currrz='" .. r .. "', locked=1, interior='" .. interior .. "', currinterior='" .. interior .. "', dimension='" .. dimension .. "', currdimension='" .. dimension .. "'")
+					local query = mysql_query(handler, "INSERT INTO vehicles SET model='" .. id .. "', x='" .. x .. "', y='" .. y .. "', z='" .. z .. "', rotx='" .. rx .. "', roty='" .. ry .. "', rotz='" .. rz .. "', color1='" .. col1 .. "', color2='" .. col2 .. "', faction='" .. factionVehicle .. "', owner='" .. ( factionVehicle == -1 and dbid or -1 ) .. "', plate='" .. plate .. "', currx='" .. x .. "', curry='" .. y .. "', currz='" .. z .. "', currrx='0', currry='0', currrz='" .. r .. "', locked=1, interior='" .. interior .. "', currinterior='" .. interior .. "', dimension='" .. dimension .. "', currdimension='" .. dimension .. "'")
 
 					if (query) then
 						local insertid = mysql_insert_id( handler )
@@ -168,7 +168,7 @@ function createPermVehicle(thePlayer, commandName, ...)
 						setElementData(veh, "oldy", y, false)
 						setElementData(veh, "oldz", z, false)
 						setElementData(veh, "faction", factionVehicle)
-						setElementData(veh, "owner", dbid, false)
+						setElementData(veh, "owner", factionVehicle == -1 and dbid or -1, false)
 						setElementData(veh, "job", 0, false)
 						
 						setElementData(veh, "dimension", dimension, false)
