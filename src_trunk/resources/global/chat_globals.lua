@@ -93,6 +93,8 @@ function getNearbyElements(root, type, distance)
 	local x, y, z = getElementPosition(root)
 	local elements = {}
 	
+	if getElementType(root) == "player" and exports['freecam-tv']:isPlayerFreecamEnabled(root) then return elements end
+	
 	for index, nearbyElement in ipairs(getElementsByType(type)) do
 		if isElement(nearbyElement) and getDistanceBetweenPoints3D(x, y, z, getElementPosition(nearbyElement)) < ( distance or 20 ) then
 			if getElementDimension(root) == getElementDimension(nearbyElement) then
@@ -106,6 +108,8 @@ end
 function sendLocalText(root, message, r, g, b, distance, exclude)
 	exclude = exclude or {}
 	local x, y, z = getElementPosition(root)
+	
+	if getElementType(root) == "player" and exports['freecam-tv']:isPlayerFreecamEnabled(root) then return end
 	
 	for index, nearbyPlayer in ipairs(getElementsByType("player")) do
 		if isElement(nearbyPlayer) and getDistanceBetweenPoints3D(x, y, z, getElementPosition(nearbyPlayer)) < ( distance or 20 ) then

@@ -110,6 +110,8 @@ addCommandHandler("ad", advertMessage, false, false)
 					
 -- Main chat: Local IC, Me Actions & Faction IC Radio
 function localIC(source, message, language)
+	if exports['freecam-tv']:isPlayerFreecamEnabled(source) then return end
+	
 	local x, y, z = getElementPosition(source)
 	local playerName = getPlayerName(source)
 	
@@ -127,7 +129,7 @@ function localIC(source, message, language)
 	
 	for key, nearbyPlayer in ipairs(getElementsByType( "player" )) do
 		local dist = getElementDistance( source, nearbyPlayer )
-
+		
 		if dist < 20 then
 			local nearbyPlayerDimension = getElementDimension(nearbyPlayer)
 			local nearbyPlayerInterior = getElementInterior(nearbyPlayer)
@@ -187,6 +189,8 @@ addCommandHandler("ME", meEmote, false, true)
 addCommandHandler("Me", meEmote, false, true)
 
 function chatMain(message, messageType)
+	if exports['freecam-tv']:isPlayerFreecamEnabled(source) then cancelEvent() return end
+	
 	local logged = getElementData(source, "loggedin")
 	
 	if not (isPedDead(source)) and (logged==1) and not (messageType==2) then -- Player cannot chat while dead or not logged in, unless its OOC
@@ -535,6 +539,8 @@ end
 addCommandHandler("pm", pmPlayer, false, false)
 
 function localOOC(thePlayer, commandName, ...)
+	if exports['freecam-tv']:isPlayerFreecamEnabled(thePlayer) then return end
+	
 	local logged = getElementData(thePlayer, "loggedin")
 	local dimension = getElementDimension(thePlayer)
 	local interior = getElementInterior(thePlayer)
@@ -555,10 +561,12 @@ addCommandHandler("b", localOOC, false, false)
 addCommandHandler("LocalOOC", localOOC)
 
 function districtIC(thePlayer, commandName, ...)
+	if exports['freecam-tv']:isPlayerFreecamEnabled(thePlayer) then return end
+	
 	local logged = getElementData(thePlayer, "loggedin")
 	local dimension = getElementDimension(thePlayer)
 	local interior = getElementInterior(thePlayer)
-		
+	
 	if (logged==1) and not (isPedDead(thePlayer)) then
 		if not (...) then
 			outputChatBox("SYNTAX: /" .. commandName .. " [Message]", thePlayer, 255, 194, 14)
@@ -585,6 +593,8 @@ end
 addCommandHandler("district", districtIC, false, false)
 
 function localDo(thePlayer, commandName, ...)
+	if exports['freecam-tv']:isPlayerFreecamEnabled(thePlayer) then return end
+	
 	local logged = getElementData(thePlayer, "loggedin")
 	local dimension = getElementDimension(thePlayer)
 	local interior = getElementInterior(thePlayer)
@@ -604,6 +614,8 @@ addCommandHandler("do", localDo, false, false)
 
 
 function localShout(thePlayer, commandName, ...)
+	if exports['freecam-tv']:isPlayerFreecamEnabled(thePlayer) then return end
+	
 	local logged = getElementData(thePlayer, "loggedin")
 	local dimension = getElementDimension(thePlayer)
 	local interior = getElementInterior(thePlayer)
@@ -649,6 +661,8 @@ end
 addCommandHandler("s", localShout, false, false)
 
 function megaphoneShout(thePlayer, commandName, ...)
+	if exports['freecam-tv']:isPlayerFreecamEnabled(thePlayer) then return end
+	
 	local logged = getElementData(thePlayer, "loggedin")
 	local dimension = getElementDimension(thePlayer)
 	local interior = getElementInterior(thePlayer)
@@ -1050,6 +1064,8 @@ addCommandHandler("togpm", togglePM)
 
 -- /pay
 function payPlayer(thePlayer, commandName, targetPlayerNick, amount)
+	if exports['freecam-tv']:isPlayerFreecamEnabled(thePlayer) then return end
+	
 	local logged = getElementData(thePlayer, "loggedin")
 	
 	if (logged==1) then
@@ -1114,6 +1130,8 @@ end
 
 -- /w(hisper)
 function localWhisper(thePlayer, commandName, targetPlayerNick, ...)
+	if exports['freecam-tv']:isPlayerFreecamEnabled(thePlayer) then return end
+	
 	local logged = tonumber(getElementData(thePlayer, "loggedin"))
 	 
 	if (logged==1) then
@@ -1153,6 +1171,8 @@ addCommandHandler("w", localWhisper, false, false)
 
 -- /c(lose)
 function localClose(thePlayer, commandName, ...)
+	if exports['freecam-tv']:isPlayerFreecamEnabled(thePlayer) then return end
+	
 	local logged = tonumber(getElementData(thePlayer, "loggedin"))
 	 
 	if (logged==1) then
@@ -1186,6 +1206,8 @@ bike = { [581]=true, [509]=true, [481]=true, [462]=true, [521]=true, [463]=true,
 
 -- /cw(car whisper)
 function localCarWhisper(thePlayer, commandName, ...)
+	if exports['freecam-tv']:isPlayerFreecamEnabled(thePlayer) then return end
+	
 	local logged = tonumber(getElementData(thePlayer, "loggedin"))
 	 
 	if (logged==1) then
