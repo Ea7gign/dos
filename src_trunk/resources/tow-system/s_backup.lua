@@ -38,7 +38,7 @@ function backup(thePlayer, commandName)
 
 			addEventHandler("onPlayerQuit", thePlayer, destroyBlip)
 			addEventHandler("savePlayer", thePlayer, destroyBlip)
-			
+			outputChatBox("You enabled your GPS Beacon for BT&R.", thePlayer, 0, 255, 0)
 		elseif (backupBlip == true) and (backupPlayer==thePlayer) then -- in use by this player
 			for key, v in ipairs(getPlayersInTeam(getTeamFromName("Best's Towing and Recovery"))) do
 				triggerClientEvent(v, "destroyBackupBlip", getRootElement())
@@ -49,6 +49,7 @@ function backup(thePlayer, commandName)
 			removeEventHandler("savePlayer", thePlayer, destroyBlip)
 			backupPlayer = nil
 			backupBlip = false
+			outputChatBox("You disabled your GPS Beacon for BT&R.", thePlayer, 255, 0, 0)
 		end
 	--end
 end
