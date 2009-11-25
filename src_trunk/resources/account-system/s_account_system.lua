@@ -313,6 +313,12 @@ function spawnCharacter(charname, version)
 		local muted = getElementData(source, "muted")
 		local donator = getElementData(source, "donator")
 		
+		-- remove all custom badges
+		removeElementData(source, "PDbadge")
+		removeElementData(source, "ESbadge")
+		removeElementData(source, "GOVbadge")
+		removeElementData(source, "SANbadge")
+		
 		exports.global:updateNametagColor(source)
 		setPlayerNametagShowing(source, false)
 		
