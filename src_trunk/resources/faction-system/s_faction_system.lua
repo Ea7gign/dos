@@ -143,7 +143,7 @@ function showFactionMenu(source)
 			local factionID = getElementData(source, "faction")
 			
 			if (factionID~=-1) then
-				local query = mysql_query(handler, "SELECT charactername, faction_rank, faction_leader, DATEDIFF(NOW(), lastlogin) FROM characters WHERE faction_ID='" .. factionID .. "'")
+				local query = mysql_query(handler, "SELECT charactername, faction_rank, faction_leader, DATEDIFF(NOW(), lastlogin) FROM characters WHERE faction_ID='" .. factionID .. "' ORDER BY faction_rank DESC, charactername ASC")
 				local query2 = mysql_query(handler, "SELECT rank_1, rank_2, rank_3, rank_4, rank_5, rank_6, rank_7, rank_8, rank_9, rank_10, rank_11, rank_12, rank_13, rank_14, rank_15 FROM factions WHERE id='" .. factionID .. "' LIMIT 1")
 				local query3 = mysql_query(handler, "SELECT wage_1, wage_2, wage_3, wage_4, wage_5, wage_6, wage_7, wage_8, wage_9, wage_10, wage_11, wage_12, wage_13, wage_14, wage_15, motd FROM factions WHERE id='" .. factionID .. "' LIMIT 1")
 				
