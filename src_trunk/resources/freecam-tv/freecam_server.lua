@@ -13,6 +13,10 @@ function setPlayerFreecamEnabled(player)
 	end
 end
 
+local marker = createMarker( 1309.3671875, -1393.1240234375, 1022.1019897461, 'corona', 1, 255, 127, 0, 127)
+setElementInterior(marker, 3)
+setElementDimension(marker, 126)
+
 function setPlayerFreecamDisabled(player)
 	if isPlayerFreecamEnabled(player) then
 		setElementDimension(player, getElementData(player, "tv:dim"))
@@ -38,12 +42,41 @@ addCommandHandler("tv",
 	function(player)
 		if isPlayerFreecamEnabled(player) then
 			setPlayerFreecamDisabled(player)
-		else
+		elseif getElementDimension(marker) == 127 then
 			setPlayerFreecamEnabled(player)
+		else
+			outputChatBox("There's no TV Show running.", player, 255, 194, 14)
 		end
 	end
 )
 
-local marker = createMarker( 1309.3671875, -1393.1240234375, 1022.1019897461, 'corona', 1, 255, 127, 0, 127)
-setElementInterior(marker, 3)
-setElementDimension(marker, 127)
+addCommandHandler("starttv",
+	function(player)
+		if getElementData(player, "faction") == 20 then
+			if setElementDimension(marker, 127) then
+				outputChatBox("[TV] " .. getPlayerName(player):gsub("_", " ") .. " started a TV Show. (( /tv to watch ))", getRootElement( ), 200, 100, 200)
+			else
+				outputChatBox("The TV Show is already running.", player, 255, 0, 0)
+			end
+		end
+	end
+)
+
+addCommandHandler("endtv",
+	function(player)
+		if getElementData(player, "faction") == 20 then
+			if setElementDimension(marker, 126) then
+				outputChatBox("[TV] " .. getPlayerName(player):gsub("_", " ") .. " ended the TV Show.", getRootElement( ), 200, 100, 200)
+				
+				for k, v in ipairs( getElementsByType( "player" ) ) do
+					if isPlayerFreecamEnabled(v) then
+						setPlayerFreecamDisabled(v)
+					end
+				end
+			else
+				outputChatBox("There's no TV Show running.", player, 255, 0, 0)
+			end
+		end
+	end
+)
+
