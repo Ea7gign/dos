@@ -302,7 +302,7 @@ function govAnnouncement(thePlayer, commandName, ...)
 	if (theTeam) then
 		local teamID = tonumber(getElementData(theTeam, "id"))
 	
-		if (teamID==1 or teamID==2 or teamID==3 or teamID==35) then
+		if (teamID==1 or teamID==2 --[[or teamID==3]] or teamID==35) then
 			local message = table.concat({...}, " ")
 			
 			local result = mysql_query(handler, "SELECT faction_id, faction_rank FROM characters WHERE id=" .. getElementData(thePlayer, "dbid") .. " LIMIT 1")
