@@ -17,6 +17,7 @@
 	<script src="city_hall.lua" type="server"/>
 	<script src="ScottieMansion.lua" type="server"/>
 	<script src="DanielsMansion.lua" type="server"/>
+	<script src="KarkoMansion.lua" type="server"/>
 	<script src="airport.lua" type="server"/>
 	<script src="Rayray.lua" type="server"/>
 	
