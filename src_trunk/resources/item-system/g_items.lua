@@ -94,7 +94,8 @@ g_items = {
 	{ "Coffee", "A small cup of Coffee.", 1, 2647, 0, 0, 0, 0.12 },
 	{ "Escort 9500ci Radar Detector", "Detects Police within a half mile.", 7, 330, 90, 90, 0, -0.05 },
 	{ "Emergency Siren", "An emergency siren to put in your car.", 7, 330, 90, 90, 0, -0.05 },
-	{ "SAN Identifcation", "An SAN Identification issued to #v.", 7, 330, 90, 90, 0, -0.05 }
+	{ "SAN Identifcation", "An SAN Identification issued to #v.", 7, 330, 90, 90, 0, -0.05 },
+	{ "LS Government Badge", "A Los Santos Government Badge.", 4, 1581, 270, 270, 0, 0 }
 	--Chairs = { 1663, 1671, 1720, 1721, 1810, 1811, 2079, 2120, 2121, 2125, 2777, 2788, 1369 }
 }
 

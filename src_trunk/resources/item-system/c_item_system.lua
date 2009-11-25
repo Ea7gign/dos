@@ -723,9 +723,6 @@ function useItem(button)
 			elseif (itemID==85) then -- Emergency Light Becon
 				outputChatBox("Put it in your car inventory and press 'N' to toggle it.", 255, 194, 14)
 				return
-			elseif (itemID==86) then
-				outputChatBox("A SAN identification, issued to " .. itemValue .. ".", 255, 194, 14)
-				return
 			end
 			
 			triggerServerEvent("useItem", getLocalPlayer(), itemSlot, additional)

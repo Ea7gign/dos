@@ -5,9 +5,17 @@ function updateNametagColor(thePlayer)
 		setPlayerNametagColor(thePlayer, 0, 100, 255)
 	elseif (getElementData(thePlayer,"ESbadge")==1) then -- ES Badge
 		setPlayerNametagColor(thePlayer, 175, 50, 50)
-	elseif isPlayerBronzeDonator(thePlayer) then -- Donor
+	elseif (getElementData(thePlayer,"GOVbadge")==1) then -- GOV Badge
+		setPlayerNametagColor(thePlayer, 50, 150, 50)
+	elseif (getElementData(thePlayer,"SANbadge")==1) then -- SAN Badge
+		setPlayerNametagColor(thePlayer, 175, 100, 100)
+	elseif isPlayerBronzeDonator(thePlayer) then -- Donator
 		setPlayerNametagColor(thePlayer, 167, 133, 63)
 	else
 		setPlayerNametagColor(thePlayer, 255, 255, 255)
 	end
+end
+
+for key, value in ipairs( getElementsByType( "player" ) ) do
+	updateNametagColor( value )
 end

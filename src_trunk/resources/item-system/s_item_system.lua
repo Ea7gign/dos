@@ -420,6 +420,14 @@ function useItem(itemSlot, additional)
 					removeElementData(source,"ESbadge")
 					exports.global:sendLocalMeAction(source, "removes an Emergency Services ID.")
 				end
+				if(getElementData(source,"GOVbadge")==1)then
+					removeElementData(source,"GOVbadge")
+					exports.global:sendLocalMeAction(source, "removes a Government Badge.")
+				end
+				if(getElementData(source,"SANbadge")==1)then
+					removeElementData(source,"SANbadge")
+					exports.global:sendLocalMeAction(source, "removes a SAN ID.")
+				end
 				setElementData(source,"PDbadge", 1, false)
 				exports.global:sendLocalMeAction(source, "puts on a Police Badge.")
 			end
@@ -432,6 +440,14 @@ function useItem(itemSlot, additional)
 				if(getElementData(source,"PDbadge")==1)then
 					removeElementData(source,"PDbadge")
 					exports.global:sendLocalMeAction(source, "removes a Police Badge.")
+				end
+				if(getElementData(source,"GOVbadge")==1)then
+					removeElementData(source,"GOVbadge")
+					exports.global:sendLocalMeAction(source, "removes a Government Badge.")
+				end
+				if(getElementData(source,"SANbadge")==1)then
+					removeElementData(source,"SANbadge")
+					exports.global:sendLocalMeAction(source, "removes a SAN ID.")
 				end
 				setElementData(source,"ESbadge", 1, false)
 				exports.global:sendLocalMeAction(source, "puts on an Emergency Services ID.")
@@ -514,6 +530,48 @@ function useItem(itemSlot, additional)
 			exports.global:applyAnimation(source, "VENDING", "VEND_Drink_P", 4000, false, true, true)
 			exports.global:sendLocalMeAction(source, "drinks a cup of coffee.")
 			takeItemFromSlot(source, itemSlot)
+		elseif (itemID==86) then -- SAN ID
+			if(getElementData(source,"SANbadge")==1)then
+				removeElementData(source,"SANbadge")
+				exports.global:sendLocalMeAction(source, "removes a SAN ID.")			
+			else
+				if(getElementData(source,"PDbadge")==1)then
+					removeElementData(source,"PDbadge")
+					exports.global:sendLocalMeAction(source, "removes a Police Badge.")
+				end
+				if(getElementData(source,"ESbadge")==1)then
+					removeElementData(source,"ESbadge")
+					exports.global:sendLocalMeAction(source, "removes an Emergency Services ID.")
+				end
+				if(getElementData(source,"GOVbadge")==1)then
+					removeElementData(source,"GOVbadge")
+					exports.global:sendLocalMeAction(source, "removes a Government Badge.")
+				end
+				setElementData(source,"SANbadge", 1, false)
+				exports.global:sendLocalMeAction(source, "puts on a SAN ID.")
+			end
+			exports.global:updateNametagColor(source)
+		elseif (itemID==87) then -- Gov badge
+			if(getElementData(source,"GOVbadge")==1)then
+				removeElementData(source,"GOVbadge")
+				exports.global:sendLocalMeAction(source, "removes a Government Badge.")			
+			else
+				if(getElementData(source,"PDbadge")==1)then
+					removeElementData(source,"PDbadge")
+					exports.global:sendLocalMeAction(source, "removes a Police Badge.")
+				end
+				if(getElementData(source,"ESbadge")==1)then
+					removeElementData(source,"ESbadge")
+					exports.global:sendLocalMeAction(source, "removes an Emergency Services ID.")
+				end
+				if(getElementData(source,"SANbadge")==1)then
+					removeElementData(source,"SANbadge")
+					exports.global:sendLocalMeAction(source, "removes a SAN ID.")
+				end
+				setElementData(source,"GOVbadge", 1, false)
+				exports.global:sendLocalMeAction(source, "puts on a Government Badge.")
+			end
+			exports.global:updateNametagColor(source)
 		else
 			outputChatBox("Error 800001 - Report on http://bugs.valhallagaming.net", source, 255, 0, 0)
 		end
@@ -1060,15 +1118,15 @@ function givePlayerBadge(thePlayer, commandName, targetPlayer, badgeNumber )
 	local theTeam = getPlayerTeam(thePlayer)
 	local teamName = getTeamName(theTeam)
 	
-	if (teamName=="Los Santos Police Department") or (teamName=="Los Santos Emergency Services") then -- Are they in the PD or ES?
+	if (teamName=="Los Santos Police Department") or (teamName=="Los Santos Emergency Services") or (teamName=="Government of Los Santos") or (teamName=="San Andreas Network News") then -- Are they in the PD or ES or Gov?
 		local query = mysql_query(handler, "SELECT faction_leader FROM characters WHERE id='" .. getElementData(thePlayer, "dbid") .. "'")
 		local leader = tonumber(mysql_result(query, 1, 1))
 		mysql_free_result(query)
 		
 		if not (tonumber(leader)==1) then -- If the player is not the leader
-			outputChatBox("You must be a government faction leader to issue badges.", thePlayer, 255, 0, 0) -- If they aren't PD or ES leader they can't give out badges.
+			outputChatBox("You must be a faction leader to issue badges.", thePlayer, 255, 0, 0) -- If they aren't leader they can't give out badges.
 		else	
-			if not (targetPlayer) or not (badgeNumber) then
+			if not (targetPlayer) or ( not (badgeNumber) and teamName~="San Andreas Network News" ) then
 				outputChatBox("SYNTAX: /" .. commandName .. " [Player Partial Nick / ID][Badge Number]", thePlayer, 255, 194, 14)
 			else
 				local targetPlayer, targetPlayerName = exports.global:findPlayerByPartialNick(thePlayer, targetPlayer)
@@ -1085,9 +1143,15 @@ function givePlayerBadge(thePlayer, commandName, targetPlayer, badgeNumber )
 						elseif (teamName=="Los Santos Police Department") then -- If the player is a PD leader
 							exports.global:giveItem(targetPlayer, 64, badgeNumber) -- Give the player the badge.
 							exports.global:sendLocalMeAction(thePlayer, "issues "..targetPlayerName.." a police badge with number "..badgeNumber..".")
-						else -- If the player is a ES leader
+						elseif (teamName=="Los Santos Emergency Services") then -- If the player is a ES leader
 							exports.global:giveItem(targetPlayer, 65, badgeNumber) -- Give the player the badge.
 							exports.global:sendLocalMeAction(thePlayer, "issues "..targetPlayerName.." a Los Santos Emergency Service ID badge with number "..badgeNumber..".")
+						elseif (teamName=="San Andreas Network News") then -- If the player is a GOV leader
+							exports.global:giveItem(targetPlayer, 86, getPlayerName(targetPlayer):gsub("_", " ")) -- Give the player the badge.
+							exports.global:sendLocalMeAction(thePlayer, "issues "..targetPlayerName.." a SAN ID.")
+						elseif (teamName=="Government of Los Santos") then -- If the player is a GOV leader
+							exports.global:giveItem(targetPlayer, 87, badgeNumber) -- Give the player the badge.
+							exports.global:sendLocalMeAction(thePlayer, "issues "..targetPlayerName.." a Los Santos Government badge with number "..badgeNumber..".")
 						end
 					end
 				end
