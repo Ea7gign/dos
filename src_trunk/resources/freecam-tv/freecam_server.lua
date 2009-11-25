@@ -3,9 +3,10 @@ function setPlayerFreecamEnabled(player)
 		setElementData(player, "tv:dim", getElementDimension(player), false)
 		setElementData(player, "tv:int", getElementInterior(player), false)
 		
-		setElementDimension(player, 9902)
+		setElementDimension(player, 127)
 		setElementInterior(player, 3)
 		setElementAlpha(player, 0)
+		setElementData(player, "reconx", true)
 		return triggerClientEvent(player,"doSetFreecamEnabledTV", getRootElement(), 1309.3671875, -1393.1240234375, 1022.1019897461, false)
 	else
 		return false
@@ -17,6 +18,7 @@ function setPlayerFreecamDisabled(player)
 		setElementDimension(player, getElementData(player, "tv:dim"))
 		setElementInterior(player, getElementData(player, "tv:int"))
 		setElementAlpha(player, 255)
+		removeElementData(player, "reconx", true)
 		
 		return triggerClientEvent(player,"doSetFreecamDisabledTV", getRootElement(), false)
 	else
@@ -41,3 +43,7 @@ addCommandHandler("tv",
 		end
 	end
 )
+
+local marker = createMarker( 1309.3671875, -1393.1240234375, 1022.1019897461, 'corona', 1, 255, 127, 0, 127)
+setElementInterior(marker, 3)
+setElementDimension(marker, 127)
