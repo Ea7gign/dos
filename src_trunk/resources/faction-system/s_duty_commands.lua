@@ -22,10 +22,16 @@ exports.pool:allocateElement(fdColShape)
 setElementDimension(fdColShape, 10631)
 setElementInterior(fdColShape, 3)
 
-govColShape = createColSphere(347.1923828125, 161.8642578125, 1014.1875, 10)
+govColShape = createColSphere(347.1923828125, 161.8642578125, 1014.1875, 8)
 exports.pool:allocateElement(govColShape)
 setElementDimension(govColShape, 125)
 setElementInterior(govColShape, 3)
+
+angColShape = createColSphere(347.693359375, 162.5078125, 1014.1875, 7)
+exports.pool:allocateElement(angColShape)
+setElementDimension(angColShape, 79)
+setElementInterior(angColShape, 3)
+
 
 local authSwat = nil
 
@@ -56,6 +62,7 @@ end
 -- 5 = FIRE ES
 -- 6 = FBI
 -- 7 = Gov
+-- 8 = Air National Guard
 
 -- ES
 function lvesHeal(thePlayer, commandName, targetPartialNick, price)
@@ -209,6 +216,62 @@ function lvesduty(thePlayer, commandName)
 	end
 end
 addCommandHandler("duty", lvesduty, false, false)
+
+function angduty(thePlayer, commandName)	
+	local logged = getElementData(thePlayer, "loggedin")
+
+	if (logged==1) then
+		if (isElementWithinColShape(thePlayer, esColShape)) then
+		
+			local duty = tonumber(getElementData(thePlayer, "duty"))
+			local faction = getElementData(thePlayer, "faction")
+			
+			if (faction==35) then
+				if (duty==0) then
+					local dutyskin = getElementData(thePlayer, "dutyskin")
+					
+					if (dutyskin==-1) then
+						outputChatBox("You have not picked a uniform yet, press F4 to pick a uniform.", thePlayer, 255, 0, 0)
+					else
+						if setElementData(thePlayer, "casualskin", getPedSkin(thePlayer), false) then
+							mysql_free_result( mysql_query( handler, "UPDATE characters SET casualskin = " .. getPedSkin(thePlayer) .. " WHERE id = " .. getElementData(thePlayer, "dbid") ) )
+						end
+						saveWeaponsOnDuty(thePlayer)
+							
+						exports.global:sendLocalMeAction(thePlayer, "takes their uniform from their locker.")
+						
+						setElementHealth(thePlayer, 100)
+						setPedArmor(thePlayer,100)
+						exports.global:giveWeapon(thePlayer, 4, 1) -- Knife
+						exports.global:giveWeapon(thePlayer, 22, 50) -- Colt
+					
+						if (commandName=="combatduty") then
+							exports.global:giveWeapon(thePlayer, 29, 800) -- MP5
+							exports.global:giveWeapon(thePlayer, 31, 400) -- M4
+							exports.global:giveWeapon(thePlayer, 34, 30) -- Sniper
+							outputChatBox("You are now on combat duty.", thePlayer)
+						else
+							outputChatBox("You are now on duty.", thePlayer)
+						end
+						setElementData(thePlayer, "duty", 8, false)
+						saveSkin(thePlayer)
+					end
+				elseif (duty==8) then -- ANG
+					restoreWeapons(thePlayer)
+					outputChatBox("You are now off duty.", thePlayer)
+					exports.global:sendLocalMeAction(thePlayer, "puts their uniform into their locker.")
+					setElementData(thePlayer, "duty", 0, false)
+					
+					local casualskin = getElementData(thePlayer, "casualskin")
+					setElementModel(thePlayer, casualskin)
+					saveSkin(thePlayer)
+				end
+			end
+		end
+	end
+end
+addCommandHandler("duty", angduty, false, false)
+addCommandHandler("combatduty", angduty, false, false)
 
 -- gov duty
 function govduty(thePlayer, commandName)	
