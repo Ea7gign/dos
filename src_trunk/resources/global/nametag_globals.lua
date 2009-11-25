@@ -8,7 +8,7 @@ function updateNametagColor(thePlayer)
 	elseif (getElementData(thePlayer,"GOVbadge")==1) then -- GOV Badge
 		setPlayerNametagColor(thePlayer, 50, 150, 50)
 	elseif (getElementData(thePlayer,"SANbadge")==1) then -- SAN Badge
-		setPlayerNametagColor(thePlayer, 175, 100, 100)
+		setPlayerNametagColor(thePlayer, 150, 150, 255)
 	elseif isPlayerBronzeDonator(thePlayer) then -- Donator
 		setPlayerNametagColor(thePlayer, 167, 133, 63)
 	else
