@@ -182,7 +182,7 @@ function removeblindfoldPlayer(player)
 	outputChatBox("You have had your blindfold removed by " .. username .. ".", player)
 	outputChatBox("You removed " .. targetPlayerName .. "'s blindfold.", source)
 	
-	exports.global:giveItem(source, 66, -1) -- give the remove the blindfold
+	exports.global:giveItem(source, 66, 1) -- give the remove the blindfold
 	removeElementData(player, "blindfold")
 	mysql_free_result( mysql_query( handler, "UPDATE characters SET blindfold = 0 WHERE id = " .. getElementData( player, "dbid" ) ) )
 	fadeCamera(player, true)
