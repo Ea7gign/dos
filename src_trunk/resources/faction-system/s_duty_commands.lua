@@ -221,7 +221,7 @@ function angduty(thePlayer, commandName)
 	local logged = getElementData(thePlayer, "loggedin")
 
 	if (logged==1) then
-		if (isElementWithinColShape(thePlayer, esColShape)) then
+		if (isElementWithinColShape(thePlayer, angColShape)) then
 		
 			local duty = tonumber(getElementData(thePlayer, "duty"))
 			local faction = getElementData(thePlayer, "faction")
