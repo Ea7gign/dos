@@ -659,6 +659,14 @@ function destroyItem(itemID, isWeapon)
 				removeElementData(source,"ESbadge")
 				exports.global:sendLocalMeAction(source, "removes an Emergency Services ID.")
 				exports.global:updateNametagColor(source)
+			elseif  tonumber(itemID) == 86 and not hasItem(source, 86)then
+				removeElementData(source,"SANbadge")
+				exports.global:sendLocalMeAction(source, "removes a SAN ID.")
+				exports.global:updateNametagColor(source)
+			elseif tonumber(itemID) == 87 and not hasItem(source, 87) then
+				removeElementData(source,"GOVbadge")
+				exports.global:sendLocalMeAction(source, "removes a Government Badge.")
+				exports.global:updateNametagColor(source)
 			elseif tonumber(itemID) == 76 and not exports.global:hasItem(source, 76) then
 				destroyElement(shields[source])
 				shields[source] = nil
