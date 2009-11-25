@@ -196,6 +196,8 @@ function playerQuit()
 				local reporter = reports[i][1]
 				if reporter ~= source then
 					outputChatBox("Your report #" .. i .. " has been closed (" .. getPlayerName(source) .. " left the game)", reporter, 255, 194, 14)
+					removeElementData(reporter, "report")
+					removeElementData(reporter, "reportadmin")
 				end
 				
 				local alertTimer = reports[i][6]
