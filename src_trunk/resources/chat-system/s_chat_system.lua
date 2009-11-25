@@ -49,7 +49,7 @@ function trunklateText(thePlayer, text, factor)
 end
 
 function getElementDistance( a, b )
-	if not isElement(a) or not isElement(b) then
+	if not isElement(a) or not isElement(b) or getElementDimension(a) ~= getElementDimension(b) then
 		return math.huge
 	else
 		local x, y, z = getElementPosition( a )
