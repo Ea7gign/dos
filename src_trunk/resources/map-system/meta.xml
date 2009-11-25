@@ -38,4 +38,5 @@
 	<script src="ANG_HQ.lua" type="client"/>
 	<script src="ES.lua" type="client"/>
 	<script src="court.lua" type="client"/>
+	<script src="san_tv.lua" type="client"/>
 </meta>
