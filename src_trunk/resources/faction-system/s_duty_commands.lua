@@ -22,6 +22,10 @@ exports.pool:allocateElement(fdColShape)
 setElementDimension(fdColShape, 10631)
 setElementInterior(fdColShape, 3)
 
+govColShape = createColSphere(347.1923828125, 161.8642578125, 1014.1875, 10)
+exports.pool:allocateElement(govColShape)
+setElementDimension(govColShape, 125)
+setElementInterior(govColShape, 3)
 
 local authSwat = nil
 
@@ -51,6 +55,7 @@ end
 -- 4 = ES
 -- 5 = FIRE ES
 -- 6 = FBI
+-- 7 = Gov
 
 -- ES
 function lvesHeal(thePlayer, commandName, targetPartialNick, price)
@@ -204,6 +209,73 @@ function lvesduty(thePlayer, commandName)
 	end
 end
 addCommandHandler("duty", lvesduty, false, false)
+
+-- gov duty
+function govduty(thePlayer, commandName)	
+	local logged = getElementData(thePlayer, "loggedin")
+
+	if (logged==1) then
+		if (isElementWithinColShape(thePlayer, govColShape)) then
+		
+			local duty = tonumber(getElementData(thePlayer, "duty"))
+			local faction = getElementData(thePlayer, "faction")
+			local factionrank = getElementData(thePlayer,"factionrank") 
+			
+			if (faction==3) then
+				if (factionrank == 4 or factionrank == 5 or factionrank > 10) then -- 4, 5, 11, 12, 13, 14, 15
+					if (duty==0) then
+						local dutyskin = 164					
+						outputChatBox("You are now on duty.", thePlayer)
+						exports.global:sendLocalMeAction(thePlayer, "takes their uniform from their locker.")
+							
+						
+						if setElementData(thePlayer, "casualskin", getPedSkin(thePlayer), false) then
+							mysql_free_result( mysql_query( handler, "UPDATE characters SET casualskin = " .. getPedSkin(thePlayer) .. " WHERE id = " .. getElementData(thePlayer, "dbid") ) )
+						end
+						
+						saveWeaponsOnDuty(thePlayer)
+						setElementHealth(thePlayer, 100) -- restore health
+						
+					
+						-- remember me to kill nathe when he changes this AGAIN
+						if (factionrank == 4 or factionrank == 5) then
+							setElementModel(thePlayer, dutyskin) -- setskin
+							setPedArmor(thePlayer, 100) -- armor
+							exports.global:giveWeapon(thePlayer, 22, 25) -- Colt
+							exports.global:giveItem(thePlayer, 45, 1) -- handcuffs
+							if (factionrank == 5) then
+								exports.global:giveWeapon(thePlayer, 29, 100) -- MP5
+							end
+						elseif (factionrank > 10) then
+							exports.global:giveWeapon(thePlayer, 22, 25) -- Colt
+							-- 100% armor only for rank 13, rest 50%
+							if (factionrank == 13) then
+								setPedArmor(thePlayer, 100) -- armor
+								exports.global:giveWeapon(thePlayer, 29, 100) -- MP5
+								exports.global:giveItem(thePlayer, 45, 1) -- handcuffs
+							else
+								setPedArmor(thePlayer, 50) -- armor
+							end
+						end
+						setElementData(thePlayer, "duty", 7, false)
+							
+						saveSkin(thePlayer)
+					elseif (duty==7) then -- gov
+						restoreWeapons(thePlayer)
+						outputChatBox("You are now off duty.", thePlayer)
+						exports.global:sendLocalMeAction(thePlayer, "puts their uniform into their locker.")
+						setElementData(thePlayer, "duty", 0, false)
+						
+						local casualskin = getElementData(thePlayer, "casualskin")
+						setElementModel(thePlayer, casualskin)
+						saveSkin(thePlayer)
+					end
+				end
+			end
+		end
+	end
+end
+addCommandHandler("duty", govduty, false, false)
 
 -- ES FD
 function lvfdduty(thePlayer, commandName)	
