@@ -1706,6 +1706,55 @@ function gotoPlayer(thePlayer, commandName, target)
 end
 addCommandHandler("goto", gotoPlayer, false, false)
 
+function getPlayer(thePlayer, commandName, from, to)
+	if (exports.global:isPlayerAdmin(thePlayer)) then
+		if(not from or not to) then
+			outputChatBox("SYNTAX: /" .. commandName .. " [Sending Player] [To Player]", thePlayer, 255, 194, 14)
+		else
+			local admin = getPlayerName(thePlayer):gsub("_"," ")
+			local fromplayer, targetPlayerName1 = exports.global:findPlayerByPartialNick(thePlayer, from)
+			local toplayer, targetPlayerName2 = exports.global:findPlayerByPartialNick(thePlayer, to)
+			
+			if(fromplayer and toplayer) then
+				local logged1 = getElementData(fromplayer, "loggedin")
+				local logged2 = getElementData(toplayer, "loggedin")
+				
+				if(not logged1 or not logged2) then
+					outputChatBox("At least one of the players is not logged in.", thePlayer, 255, 0 , 0)
+				else
+					local x, y, z = getElementPosition(toplayer)
+					local interior = getElementInterior(toplayer)
+					local dimension = getElementDimension(toplayer)
+					local r = getPedRotation(toplayer)
+					
+					-- Maths calculations to stop the target being stuck in the player
+					x = x + ( ( math.cos ( math.rad ( r ) ) ) * 2 )
+					y = y + ( ( math.sin ( math.rad ( r ) ) ) * 2 )
+
+					if (isPedInVehicle(fromplayer)) then
+						local veh = getPedOccupiedVehicle(fromplayer)
+						setVehicleTurnVelocity(veh, 0, 0, 0)
+						setElementPosition(veh, x, y, z + 1)
+						setTimer(setVehicleTurnVelocity, 50, 20, veh, 0, 0, 0)
+						setElementInterior(veh, interior)
+						setElementDimension(veh, dimension)
+						
+					else
+						setElementPosition(fromplayer, x, y, z)
+						setElementInterior(fromplayer, interior)
+						setElementDimension(fromplayer, dimension)
+					end
+					
+					outputChatBox(" You have teleported player " .. targetPlayerName1:gsub("_"," ") .. " to " .. targetPlayerName2:gsub("_"," ") .. ".", thePlayer)
+					outputChatBox(" An admin " .. admin .. " has teleported you to " .. targetPlayerName2:gsub("_"," ") .. ". ", fromplayer)
+					outputChatBox(" An admin " .. admin .. " has teleported " .. targetPlayerName1:gsub("_"," ") .. " to you.", toplayer)
+				end
+			end
+		end
+	end
+end
+addCommandHandler("sendto", getPlayer, false, false)
+
 ----------------------------[GET PLAYER HERE]---------------------------------------
 function getPlayer(thePlayer, commandName, target)
 	if (exports.global:isPlayerAdmin(thePlayer)) then
