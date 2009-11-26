@@ -88,7 +88,7 @@ function advertMessage(thePlayer, commandName, showNumber, ...)
 					
 					exports.logs:logMessage("ADVERT: " .. message .. ". ((" .. name .. "))", 2)
 					for key, value in ipairs(exports.pool:getPoolElementsByType("player")) do
-						if (getElementData(value, "loggedin")==1) then
+						if (getElementData(value, "loggedin")==1 and not getElementData(value, "disableAds")) then
 							outputChatBox("   ADVERT: " .. message .. ". ((" .. name .. "))", value, 0, 255, 64)
 							
 							if (tonumber(showNumber)==1) then
