@@ -53,6 +53,7 @@ function adminhelp (sourcePlayer, commandName)
 					{ "/jailed", "/jailed", "shows a list of players that are in adminjail, including time left and reason" },
 					{ "/goto", "/goto [player]", "teleport to another player" },
 					{ "/gethere", "/gethere [player]", "teleports the player to you" },
+					{ "/sendto", "/gethere [player] [dest. player]", "teleports a player to another one" },
 					{ "/freeze", "/freeze [player]", "freezes the player" },
 					{ "/unfreeze", "/unfreeze [player]", "unfreezes the player" },
 					{ "/mark", "/mark", "saves your current position" },
