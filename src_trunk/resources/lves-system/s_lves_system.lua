@@ -42,8 +42,15 @@ addEventHandler("onPlayerWasted", getRootElement(), playerDeath)
 function respawnPlayer(thePlayer)
 	if (isElement(thePlayer)) then
 		local cost = 0
+		local faction = false
 		if not exports.global:isPlayerSilverDonator(thePlayer) then
-			_, cost = exports.global:takeMoney(thePlayer, math.random(150, 300), true)
+			local team = getPlayerTeam(thePlayer)
+			if getTeamName(team) == "San Andreas Network" then
+				_, cost = exports.global:takeMoney(team, math.random(150, 300), true)
+				faction = getTeamName(team)
+			else
+				_, cost = exports.global:takeMoney(thePlayer, math.random(150, 300), true)
+			end
 		end
 		
 		local tax = exports.global:getTaxAmount()
@@ -62,6 +69,9 @@ function respawnPlayer(thePlayer)
 		local text = "You have recieved treatment from the Los Santos Emergency Services."
 		if cost > 0 then
 			text = text .. " Cost: " .. cost .. "$"
+		end
+		if faction then
+			text = text .. ", paid by " .. faction .. "."
 		end
 		outputChatBox(text, thePlayer, 255, 255, 0)
 		
