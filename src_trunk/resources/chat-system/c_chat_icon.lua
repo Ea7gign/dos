@@ -25,7 +25,7 @@ function render()
 					if (dist < 25 or reconx) and isElementOnScreen(value) and not getElementData(value, "reconx") and not getElementData(value, "freecam:state") then
 						local lx, ly, lz = getCameraMatrix()
 						local vehicle = getPedOccupiedVehicle(value)
-						local collision, cx, cy, cz, element = processLineOfSight(lx, ly, lz, x, y, z+1, true, true, true, true, false, false, true, false, vehicle)
+						local collision, cx, cy, cz, element = processLineOfSight(lx, ly, lz, px, py, pz+1, true, true, true, true, false, false, true, false, vehicle)
 						if not (collision) or (reconx) then
 							local screenX, screenY = getScreenFromWorldPosition(px, py, pz+0.5)
 							if (screenX and screenY) then
