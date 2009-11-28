@@ -110,8 +110,8 @@ function applyMods()
 	---------------------
 	-- Malcolm Everett --
 	---------------------
-	lautner = engineLoadTXD( "lv/billbrd01_lan.txd" )
-	engineImportTXD ( lautner, 4239 )
+	-- lautner = engineLoadTXD( "lv/billbrd01_lan.txd" )
+	-- engineImportTXD ( lautner, 4239 )
 	
 	--[[--------------
 	-- Club 420 --
