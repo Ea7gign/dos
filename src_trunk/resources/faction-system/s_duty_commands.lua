@@ -397,7 +397,7 @@ function pdarmor(thePlayer, commandName)
 	local logged = getElementData(thePlayer, "loggedin")
 
 	if (logged==1) then
-		if (isElementWithinColShape(thePlayer, pdColShape)) or (isElementWithinColShape(thePlayer, pdColShape2)) then
+		if (isElementWithinColShape(thePlayer, pdColShape)) or (isElementWithinColShape(thePlayer, pdColShape2) or getElementDimension(thePlayer) == 10590) then
 		
 			local duty = tonumber(getElementData(thePlayer, "duty"))
 			local theTeam = getPlayerTeam(thePlayer)
@@ -416,7 +416,7 @@ function swatduty(thePlayer, commandName)
 	local logged = getElementData(thePlayer, "loggedin")
 
 	if (logged==1) then
-		if (isElementWithinColShape(thePlayer, pdColShape)) or (isElementWithinColShape(thePlayer, pdColShape2)) then
+		if (isElementWithinColShape(thePlayer, pdColShape)) or (isElementWithinColShape(thePlayer, pdColShape2) or getElementDimension(thePlayer) == 10590) then
 		
 			local duty = tonumber(getElementData(thePlayer, "duty"))
 			local theTeam = getPlayerTeam(thePlayer)
@@ -509,7 +509,7 @@ function policeduty(thePlayer, commandName)
 	local logged = getElementData(thePlayer, "loggedin")
 
 	if (logged==1) then
-		if (isElementWithinColShape(thePlayer, pdColShape)) or (isElementWithinColShape(thePlayer, pdColShape2)) then
+		if (isElementWithinColShape(thePlayer, pdColShape)) or (isElementWithinColShape(thePlayer, pdColShape2) or getElementDimension(thePlayer) == 10590) then
 		
 			local duty = tonumber(getElementData(thePlayer, "duty"))
 			local theTeam = getPlayerTeam(thePlayer)
@@ -599,7 +599,7 @@ function cadetduty(thePlayer, commandName)
 	local logged = getElementData(thePlayer, "loggedin")
 	
 	if (logged==1) then
-		if (isElementWithinColShape(thePlayer, pdColShape)) or (isElementWithinColShape(thePlayer, pdColShape2)) then
+		if (isElementWithinColShape(thePlayer, pdColShape)) or (isElementWithinColShape(thePlayer, pdColShape2) or getElementDimension(thePlayer) == 10590) then
 		
 			local duty = tonumber(getElementData(thePlayer, "duty"))
 			local theTeam = getPlayerTeam(thePlayer)
