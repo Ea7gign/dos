@@ -6,6 +6,9 @@ engineReplaceModel ( dff, 2918 )
 txd = engineLoadTXD("vgsn_billboard.txd")
 engineImportTXD(txd, 7301)
 
+txd = engineLoadTXD("billbrd01_lan.txd")
+engineImportTXD(txd, 4230)
+
 weapons = { }
 
 function weaponSwitch(prevSlot, newSlot)
