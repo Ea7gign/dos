@@ -1089,7 +1089,7 @@ function payPlayer(thePlayer, commandName, targetPlayerNick, amount)
 						outputChatBox("You cannot pay money to yourself.", thePlayer, 255, 0, 0)
 					elseif amount == 0 then
 						outputChatBox("You need to enter an amount larger than 0.", thePlayer, 255, 0, 0)
-					elseif (hoursplayed<5) and (amount>50) then
+					elseif (hoursplayed<5) and (amount>50) and not exports.global:isPlayerAdmin(thePlayer) and not exports.global:isPlayerAdmin(targetPlayer) and not exports.global:isPlayerBronzeDonator(thePlayer) then
 						outputChatBox("You must play atleast 5 hours before transferring over 50$", thePlayer, 255, 0, 0)
 					elseif exports.global:takeMoney(thePlayer, amount) then
 						
