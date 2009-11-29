@@ -40,6 +40,8 @@
 	<file src="silenced.dff"/>
 	<file src="silenced.txd"/>
 	
+	<file src="vgsn_billboard.txd"/>
+	
 	<file src="riot_shield.dff"/>
 	<file src="riot_shield.txd"/>
 	<file src="riot_shield.col"/>
