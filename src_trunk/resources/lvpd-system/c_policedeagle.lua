@@ -111,7 +111,7 @@ local shotsfired = 0
 
 function onTargetPDPed(element)
 	if (isElement(element)) then
-		if (getElementType(element)=="ped") and (getElementModel(element)==282) and not (underfire) and (getControlState("aim_weapon")) then
+		if (getElementType(element)=="ped") and (getElementModel(element)==282 or getElementModel(element)==280 or getElementModel(element)==285) and not (underfire) and (getControlState("aim_weapon")) then
 			underfire = true
 			fireelement = element
 			originalRot = getPedRotation(element)
