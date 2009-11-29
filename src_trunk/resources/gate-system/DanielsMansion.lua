@@ -35,7 +35,21 @@ local function useDoor(thePlayer, commandName, ...)
 end
 addCommandHandler("gate", useDoor)
 
-createObject(3279, 1145.1748046875, -608.6337890625, 103.9140625)
+-- sniper tower
+createObject(3279, 1145.1748046875, -618.6337890625, 93.9140625, 0, 0, 65)
+
+-- tree
+createObject(654, 1168.6181640625, -597.0595703125, 97.81089782715)
+createObject(3038, 1166.6181640625, -599.0595703125, 105.81089782715, 0, 0, 45)
+createObject(3038, 1166.6181640625, -599.0595703125, 109.81089782715, 0, 0, 45)
+createObject(3038, 1166.6181640625, -599.0595703125, 113.81089782715, 0, 0, 45)
+
+createObject(3038, 1168.6181640625, -594.5595703125, 105.81089782715, 0, 0, 270)
+createObject(3038, 1168.6181640625, -594.5595703125, 109.81089782715, 0, 0, 270)
+createObject(3038, 1168.6181640625, -594.5595703125, 113.81089782715, 0, 0, 270)
+
+
+-- gate guards
 local ped1 = createPed(280, 1157.533203125, -628.3515625, 104.00807189941)
 setTimer(giveWeapon, 100, 1, ped1, 31, 15000, true)
 setPedRotation(ped1, 181.274)
@@ -53,13 +67,13 @@ setTimer(giveWeapon, 100, 1, ped4, 31, 15000, true)
 setPedRotation(ped4, 0.82125854492188)
 
 -- snipers
-local ped4 = createPed(285, 1146.28125, -610.3056640625, 120.9921875)
+local ped4 = createPed(285, 1145.837890625, -620.6376953125, 110.9921875)
 setTimer(giveWeapon, 100, 1, ped4, 34, 15000, true)
-setPedRotation(ped4, 188.00915527344)
+setPedRotation(ped4, 155.6923828125)
 
-local ped5 = createPed(285, 1144.8779296875, -610.421875, 120.9921875)
+local ped5 = createPed(285, 1143.6767578125, -619.595703125, 110.9921875)
 setTimer(giveWeapon, 100, 1, ped5, 34, 15000, true)
-setPedRotation(ped5, 184.20233154297)
+setPedRotation(ped5, 152.55572509766)
 
 -- door guards
 local ped6 = createPed(282, 1141.2021484375, -585.6953125, 105.6206741333)
