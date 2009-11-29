@@ -9,6 +9,37 @@ engineImportTXD(txd, 7301)
 txd = engineLoadTXD("billbrd01_lan.txd")
 engineImportTXD(txd, 4230)
 
+-- metal detector
+local metalSphere = createColTube(214.578125, 123.8212890625, 999.015625, 0.5, 1)
+setElementInterior(metalSphere, 10)
+setElementDimension(metalSphere, 10583)
+
+function metalDetectorHit(element, dimension)
+	local x, y, z = getElementPosition(getLocalPlayer())
+	if (getDistanceBetweenPoints3D(214.578125, 123.8212890625, 999.015625, x, y, z) < 10) then
+		if ( dimension )  then
+			if ( getElementType(element) == "player") then
+				
+				local meleeammo = getPedTotalAmmo(element, 1)
+				local handgunammo = getPedTotalAmmo(element, 2)
+				local shotgunammo = getPedTotalAmmo(element, 3)
+				local smgammo = getPedTotalAmmo(element, 4)
+				local rifleammo = getPedTotalAmmo(element, 5)
+				local sniperammo = getPedTotalAmmo(element, 6)
+				local heavyammo = getPedTotalAmmo(element, 7)
+				local thrownammo = getPedTotalAmmo(element, 8)
+				local detonatorammo = getPedTotalAmmo(element, 9)
+				
+				if (meleeammo>0 or handgunammo>0 or shotgunammo>0 or smgammo>0 or rifleammo>0 or sniperammo>0 or heavyammo>0 or thrownammo>0 or detonatorammo>0) then
+					setTimer(playSoundFrontEnd, 100, 10, 5)
+				end
+			end
+		end
+	end
+end
+addEventHandler("onClientColShapeHit", metalSphere, metalDetectorHit)
+-- end of metal detector
+
 weapons = { }
 
 function weaponSwitch(prevSlot, newSlot)
