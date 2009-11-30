@@ -74,6 +74,22 @@ function loadAllFactions(res)
 			setElementData(theTeam, "type", factionType)
 			setElementData(theTeam, "money", money)
 			setElementData(theTeam, "id", id)
+			
+			local query2 = mysql_query(handler, "SELECT rank_1, rank_2, rank_3, rank_4, rank_5, rank_6, rank_7, rank_8, rank_9, rank_10, rank_11, rank_12, rank_13, rank_14, rank_15 FROM factions WHERE id='" .. id .. "' LIMIT 1")
+			local query3 = mysql_query(handler, "SELECT wage_1, wage_2, wage_3, wage_4, wage_5, wage_6, wage_7, wage_8, wage_9, wage_10, wage_11, wage_12, wage_13, wage_14, wage_15, motd FROM factions WHERE id='" .. id .. "' LIMIT 1")
+								
+			local rank1, rank2, rank3, rank4, rank5, rank6, rank7, rank8, rank9, rank10, rank11, rank12, rank13, rank14, rank15 = mysql_result(query2, 1, 1), mysql_result(query2, 1, 2), mysql_result(query2, 1, 3), mysql_result(query2, 1, 4), mysql_result(query2, 1, 5), mysql_result(query2, 1, 6), mysql_result(query2, 1, 7), mysql_result(query2, 1, 8), mysql_result(query2, 1, 9), mysql_result(query2, 1, 10), mysql_result(query2, 1, 11), mysql_result(query2, 1, 12), mysql_result(query2, 1, 13), mysql_result(query2, 1, 14), mysql_result(query2, 1, 15)
+			local wage1, wage2, wage3, wage4, wage5, wage6, wage7, wage8, wage9, wage10, wage11, wage12, wage13, wage14, wage15 = mysql_result(query3, 1, 1), mysql_result(query3, 1, 2), mysql_result(query3, 1, 3), mysql_result(query3, 1, 4), mysql_result(query3, 1, 5), mysql_result(query3, 1, 6), mysql_result(query3, 1, 7), mysql_result(query3, 1, 8), mysql_result(query3, 1, 9), mysql_result(query3, 1, 10), mysql_result(query3, 1, 11), mysql_result(query3, 1, 12), mysql_result(query3, 1, 13), mysql_result(query3, 1, 14), mysql_result(query3, 1, 15)
+	
+			local factionRanks = {rank1, rank2, rank3, rank4, rank5, rank6, rank7, rank8, rank9, rank10, rank11, rank12, rank13, rank14, rank15 }
+			local factionWages = {wage1, wage2, wage3, wage4, wage5, wage6, wage7, wage8, wage9, wage10, wage11, wage12, wage13, wage14, wage15 }
+			local motd = mysql_result(query3, 1, 16)
+			setElementData(theTeam, "ranks", factionRanks, false)
+			setElementData(theTeam, "wages", factionWages, false)
+			setElementData(theTeam, "motd", motd, false)
+								
+			mysql_free_result(query2)
+			mysql_free_result(query3)
 			counter = counter + 1
 		end
 		mysql_free_result(result)
@@ -143,14 +159,9 @@ function showFactionMenu(source)
 			local factionID = getElementData(source, "faction")
 			
 			if (factionID~=-1) then
+				local theTeam = getPlayerTeam(source)
 				local query = mysql_query(handler, "SELECT charactername, faction_rank, faction_leader, DATEDIFF(NOW(), lastlogin) FROM characters WHERE faction_ID='" .. factionID .. "' ORDER BY faction_rank DESC, charactername ASC")
-				local query2 = mysql_query(handler, "SELECT rank_1, rank_2, rank_3, rank_4, rank_5, rank_6, rank_7, rank_8, rank_9, rank_10, rank_11, rank_12, rank_13, rank_14, rank_15 FROM factions WHERE id='" .. factionID .. "' LIMIT 1")
-				local query3 = mysql_query(handler, "SELECT wage_1, wage_2, wage_3, wage_4, wage_5, wage_6, wage_7, wage_8, wage_9, wage_10, wage_11, wage_12, wage_13, wage_14, wage_15, motd FROM factions WHERE id='" .. factionID .. "' LIMIT 1")
-				
-				if (query) and (query2) and (query3) then
-					local rank1, rank2, rank3, rank4, rank5, rank6, rank7, rank8, rank9, rank10, rank11, rank12, rank13, rank14, rank15 = mysql_result(query2, 1, 1), mysql_result(query2, 1, 2), mysql_result(query2, 1, 3), mysql_result(query2, 1, 4), mysql_result(query2, 1, 5), mysql_result(query2, 1, 6), mysql_result(query2, 1, 7), mysql_result(query2, 1, 8), mysql_result(query2, 1, 9), mysql_result(query2, 1, 10), mysql_result(query2, 1, 11), mysql_result(query2, 1, 12), mysql_result(query2, 1, 13), mysql_result(query2, 1, 14), mysql_result(query2, 1, 15)
-					local wage1, wage2, wage3, wage4, wage5, wage6, wage7, wage8, wage9, wage10, wage11, wage12, wage13, wage14, wage15 = mysql_result(query3, 1, 1), mysql_result(query3, 1, 2), mysql_result(query3, 1, 3), mysql_result(query3, 1, 4), mysql_result(query3, 1, 5), mysql_result(query3, 1, 6), mysql_result(query3, 1, 7), mysql_result(query3, 1, 8), mysql_result(query3, 1, 9), mysql_result(query3, 1, 10), mysql_result(query3, 1, 11), mysql_result(query3, 1, 12), mysql_result(query3, 1, 13), mysql_result(query3, 1, 14), mysql_result(query3, 1, 15)
-					local motd = mysql_result(query3, 1, 16)
+				if (query) then
 					
 					local memberUsernames = {}
 					local memberRanks = {}
@@ -158,8 +169,9 @@ function showFactionMenu(source)
 					local memberOnline = {}
 					local memberLastLogin = {}
 					local memberLocation = {}
-					local factionRanks = {rank1, rank2, rank3, rank4, rank5, rank6, rank7, rank8, rank9, rank10, rank11, rank12, rank13, rank14, rank15 }
-					local factionWages = {wage1, wage2, wage3, wage4, wage5, wage6, wage7, wage8, wage9, wage10, wage11, wage12, wage13, wage14, wage15 }
+					local factionRanks = getElementData(theTeam, "ranks")
+					local factionWages = getElementData(theTeam, "wages")
+					local motd = getElementData(theTeam, "motd")
 					
 					if (motd == "") then motd = nil end
 					
@@ -175,14 +187,8 @@ function showFactionMenu(source)
 							memberLeaders[i] = false
 						end
 						
-						--local charyearday = tonumber(row[4])
-						--local charyear = tonumber(row[5])
 						local login = ""
 						
-						-- Compare the TIME
-						--local time = getRealTime()
-						--local year = 1900+time.year
-						--local yearday = time.yearday
 						memberLastLogin[i] = tonumber(row[4])
 						
 						
@@ -198,15 +204,12 @@ function showFactionMenu(source)
 							end
 						else
 							memberOnline[i] = false
-							memberLocation[i] = "Not Available"
+							memberLocation[i] = "N/A"
 						end
 						i = i + 1
 					end
 					setElementData(source, "factionMenu", 1)
-					
 					mysql_free_result(query)
-					mysql_free_result(query2)
-					mysql_free_result(query3)
 					
 					local theTeam = getPlayerTeam(source)
 					triggerClientEvent(source, "showFactionMenu", getRootElement(), motd, memberUsernames, memberRanks, memberLeaders, memberOnline, memberLastLogin, memberLocation, factionRanks, factionWages, theTeam)
@@ -236,10 +239,12 @@ function callbackUpdateRanks(ranks, wages)
 		
 		local update = mysql_query(handler, "UPDATE factions SET wage_1='" .. wages[1] .. "', wage_2='" .. wages[2] .. "', wage_3='" .. wages[3] .. "', wage_4='" .. wages[4] .. "', wage_5='" .. wages[5] .. "', wage_6='" .. wages[6] .. "', wage_7='" .. wages[7] .. "', wage_8='" .. wages[8] .. "', wage_9='" .. wages[9] .. "', wage_10='" .. wages[10] .. "', wage_11='" .. wages[11] .. "', wage_12='" .. wages[12] .. "', wage_13='" .. wages[13] .. "', wage_14='" .. wages[14] .. "', wage_15='" .. wages[15] .. "' WHERE id='" .. factionID .. "'")
 		mysql_free_result(update)
+		setElementData(theTeam, "wages", wages, false)
 	end
 	
 	local query = mysql_query(handler, "UPDATE factions SET rank_1='" .. ranks[1] .. "', rank_2='" .. ranks[2] .. "', rank_3='" .. ranks[3] .. "', rank_4='" .. ranks[4] .. "', rank_5='" .. ranks[5] .. "', rank_6='" .. ranks[6] .. "', rank_7='" .. ranks[7] .. "', rank_8='" .. ranks[8] .. "', rank_9='" .. ranks[9] .. "', rank_10='" .. ranks[10] .. "', rank_11='" .. ranks[11] .. "', rank_12='" .. ranks[12] .. "', rank_13='" .. ranks[13] .. "', rank_14='" .. ranks[14] .. "', rank_15='" .. ranks[15] .. "' WHERE id='" .. factionID .. "'")
 	mysql_free_result(query)
+	setElementData(theTeam, "ranks", ranks, false)
 	
 	outputChatBox("Faction information updated successfully.", source, 0, 255, 0)
 	showFactionMenu(source)
@@ -269,9 +274,8 @@ function callbackRespawnVehicles()
 		for k, v in ipairs(teamPlayers) do
 			outputChatBox(username .. " respawned all unoccupied faction vehicles.", v)
 		end
-		
-		outputChatBox("Unoccupied faction vehicles respawned successfully.", source, 0, 255, 0)
-		setTimer(resetFactionCooldown, 900000, 1, theTeam)
+
+		setTimer(resetFactionCooldown, 600000, 1, theTeam)
 		setElementData(theTeam, "cooldown", true, false)
 	else
 		outputChatBox("You currently cannot respawn your factions vehicles, Please wait a while.", source, 255, 0, 0)
@@ -286,6 +290,7 @@ end
 
 function callbackUpdateMOTD(motd)
 	local faction = tonumber(getElementData(source, "faction"))
+	local theTeam = getPlayerTeam(source)
 	
 	if (faction~=-1) then
 		local safemotd = mysql_escape_string(handler, motd)
@@ -294,6 +299,7 @@ function callbackUpdateMOTD(motd)
 		if (query) then
 			mysql_free_result(query)
 			outputChatBox("You changed your faction's MOTD to '" .. motd .. "'", source, 0, 255, 0)
+			setElementData(theTeam, "motd", safemotd, false)
 		else
 			outputChatBox("Error 300000 - Ensure your MOTD does not include characters such as '@!,.", source, 255, 0, 0)
 		end
@@ -413,7 +419,7 @@ function callbackPromotePlayer(playerName, rankNum, oldRank, newRank)
 	if (query) then
 		mysql_free_result(query)
 		local thePlayer = getPlayerFromName(playerName)
-		if(thePlayer) then -- Player is online, tell them
+		if(thePlayer) then -- Player is online, set his rank
 			setElementData(thePlayer, "factionrank", rankNum)
 		end
 		
