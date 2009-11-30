@@ -222,20 +222,15 @@ function chatMain(message, messageType)
 				local language = getElementData(source, "languages.lang" .. languageslot)
 				local languagename = call(getResourceFromName("language-system"), "getLanguageName", language)
 				
-				-- get faction rank title
-				local result = mysql_query(handler, "SELECT faction_id, faction_rank FROM characters WHERE id = " .. getElementData(source, "dbid") .. " LIMIT 1")
-									
-				local factionID = tonumber(mysql_result(result, 1, 1))
-				local factionRank = tonumber(mysql_result(result, 1, 2))
-				mysql_free_result(result)
-									
-				local titleresult = mysql_query(handler, "SELECT rank_" .. factionRank .. " FROM factions WHERE id='" .. factionID .. "' LIMIT 1")
-				if mysql_num_rows(titleresult) == 0 then
-					factionRankTitle = ""
+				local factionID = getElementData(source,"faction")
+				if not (factionID == -1) then
+					local theTeam = getPlayerTeam(source)
+					local factionrank = tonumber(getElementData(source,"factionrank"))
+					local ranks = getElementData(theTeam,"ranks")
+					factionRankTitle = ranks[factionrank] .. " - "
 				else
-					factionRankTitle = tostring(mysql_result(titleresult, 1, 1)) .. " - "
+					factionRankTitle = ""
 				end
-				mysql_free_result(titleresult)
 				
 				message = trunklateText( source, message )
 				outputChatBox("[" .. languagename .. "] [RADIO #" .. theChannel .. "] " .. factionRankTitle .. username .. " says: " .. message, source, 0, 102, 255)
@@ -303,28 +298,16 @@ function govAnnouncement(thePlayer, commandName, ...)
 		local teamID = tonumber(getElementData(theTeam, "id"))
 	
 		if (teamID==1 or teamID==2 --[[or teamID==3]] or teamID==35) then
-			local message = table.concat({...}, " ")
-			
-			local result = mysql_query(handler, "SELECT faction_id, faction_rank FROM characters WHERE id=" .. getElementData(thePlayer, "dbid") .. " LIMIT 1")
-								
-			local factionID = tonumber(mysql_result(result, 1, 1))
-			local factionRank = tonumber(mysql_result(result, 1, 2))
+			local message = table.concat({...}, " ")			
+			local factionRank = tonumber(getElementData(thePlayer,"factionrank"))
 			
 			if (factionRank<10) then
 				outputChatBox("You do not have permission to use this command.", thePlayer, 255, 0, 0)
 			elseif #message == 0 then
 				outputChatBox("SYNTAX: " .. commandName .. " [message]", thePlayer, 255, 194, 14)
 			else
-				mysql_free_result(result)
-				
-				local factionRankTitle
-				local titleresult = mysql_query(handler, "SELECT rank_" .. factionRank .. " FROM factions WHERE id='" .. factionID .. "' LIMIT 1")
-				if not mysql_result(titleresult, 1, 1) then
-					factionRankTitle = ""
-				else
-					factionRankTitle = tostring(mysql_result(titleresult, 1, 1))
-				end
-				mysql_free_result(titleresult)
+				local ranks = getElementData(theTeam,"ranks")
+				local factionRankTitle = ranks[factionRank]
 				
 				exports.logs:logMessage("[IC: Government Message] " .. factionRankTitle .. " " .. getPlayerName(thePlayer) .. ": " .. message, 6)
 				
