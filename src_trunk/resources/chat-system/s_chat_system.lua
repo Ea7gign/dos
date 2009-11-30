@@ -1396,7 +1396,7 @@ function interviewChat(thePlayer, commandName, ...)
 					end
 				end
 				
-				exports.global:giveMoney(getTeamFromName"San Andreas Network News", 200)
+				exports.global:giveMoney(getTeamFromName"San Andreas Network", 200)
 			end
 		end
 	end
@@ -1445,11 +1445,11 @@ function newsHotline(thePlayer, commandName, ...)
 				end
 			end
 		
-			outputChatBox("Thank you for calling the San Andreas Network News Desk. Your tip will be forwarded to our staff.", thePlayer, 255, 194, 14)
+			outputChatBox("Thank you for calling the San Andreas Network Desk. Your tip will be forwarded to our staff.", thePlayer, 255, 194, 14)
 			exports.global:sendLocalMeAction(thePlayer,"hangs up their cellphone.")
 			
 			local playerNumber = getElementData(thePlayer, "cellnumber")
-			local theTeam = getTeamFromName("San Andreas Network News")
+			local theTeam = getTeamFromName("San Andreas Network")
 			local teamMembers = getPlayersInTeam(theTeam)
 			
 			for key, value in ipairs(teamMembers) do
