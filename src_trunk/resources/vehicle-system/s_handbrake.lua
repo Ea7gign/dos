@@ -20,7 +20,7 @@ function cmdHandbrake(sourcePlayer)
 			outputChatBox("You need to be an driver to control the handbrake...", sourcePlayer, 255, 0, 0)
 		end
 	else
-		outputChatBox("Ahum, how would you apply a handbrake withoit a vehicle...", sourcePlayer, 255, 0, 0)
+		outputChatBox("Ahum, how would you apply a handbrake without a vehicle...", sourcePlayer, 255, 0, 0)
 	end
 end
 
