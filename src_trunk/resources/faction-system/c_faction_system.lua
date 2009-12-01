@@ -183,7 +183,7 @@ function btEditRanks(button, state)
 				lRanks[i] = guiCreateLabel(0.05, y+0.0025, 0.4, 0.1, "Rank #" .. i .. " Title & Wage: ", true, wRanks)
 				guiSetFont(lRanks[i], "default-bold-small")
 				tRanks[i] = guiCreateEdit(0.4, y, 0.3, 0.04, arrFactionRanks[i], true, wRanks)
-				tRankWages[i] = guiCreateEdit(0.775, y, 0.2, 0.04, arrFactionWages[i], true, wRanks)
+				tRankWages[i] = guiCreateEdit(0.775, y, 0.2, 0.04, tostring(arrFactionWages[i]), true, wRanks)
 				y = y + 0.05
 			end
 		else

@@ -83,6 +83,9 @@ function loadAllFactions(res)
 	
 			local factionRanks = {rank1, rank2, rank3, rank4, rank5, rank6, rank7, rank8, rank9, rank10, rank11, rank12, rank13, rank14, rank15 }
 			local factionWages = {wage1, wage2, wage3, wage4, wage5, wage6, wage7, wage8, wage9, wage10, wage11, wage12, wage13, wage14, wage15 }
+			for k, v in ipairs(factionWages) do
+				factionWages[k] = tonumber(v)
+			end
 			local motd = mysql_result(query3, 1, 16)
 			setElementData(theTeam, "ranks", factionRanks, false)
 			setElementData(theTeam, "wages", factionWages, false)
