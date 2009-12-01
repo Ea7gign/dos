@@ -38,11 +38,18 @@ function isPlayerFreecamEnabled(player)
 	return getElementData(player,"freecamTV:state")
 end
 
+-- 
+
+local earnings = 0
+local watching = 0
+
+--
+
 addCommandHandler("tv",
 	function(player)
 		if isPlayerFreecamEnabled(player) then
 			setPlayerFreecamDisabled(player)
-		elseif getElementDimension(marker) == 127 then
+		elseif isTVRunning() then
 			setPlayerFreecamEnabled(player)
 		else
 			outputChatBox("There's no TV Show running.", player, 255, 194, 14)
@@ -55,6 +62,9 @@ addCommandHandler("starttv",
 		if getElementData(player, "faction") == 20 then
 			if setElementDimension(marker, 127) then
 				outputChatBox("[TV] " .. getPlayerName(player):gsub("_", " ") .. " started a TV Show. (( /tv to watch ))", getRootElement( ), 200, 100, 200)
+				exports.logs:logMessage("(start) " .. getPlayerName(player):gsub("_", " ") .. " started a TV Show.", 20)
+				watching = 0
+				earnings = 0
 			else
 				outputChatBox("The TV Show is already running.", player, 255, 0, 0)
 			end
@@ -72,7 +82,15 @@ addCommandHandler("endtv",
 					if isPlayerFreecamEnabled(v) then
 						setPlayerFreecamDisabled(v)
 					end
+					
+					if getElementData(v, "faction") == 20 then
+						outputChatBox("[TV] Max. Viewers: " .. watching .. ", Earnings: $" .. earnings, v, 200, 100, 200)
+					end
 				end
+				
+				exports.logs:logMessage("(stop) " .. getPlayerName(player):gsub("_", " ") .. " ended the TV Show.", 20)
+				exports.logs:logMessage("(stats) Max. Viewers: " .. watching, 20)
+				exports.logs:logMessage("(stats) Earnings: $" .. earnings, 20)
 			else
 				outputChatBox("There's no TV Show running.", player, 255, 0, 0)
 			end
@@ -80,3 +98,18 @@ addCommandHandler("endtv",
 	end
 )
 
+function isTVRunning()
+	return getElementDimension(marker) == 127
+end
+
+function add( shownto, message )
+	if isTVRunning() then
+		watching = math.max( shownto, watching )
+		earnings = earnings + 10 * shownto
+		
+		exports.global:giveMoney(getTeamFromName"San Andreas Network", 10 * shownto)
+		exports.logs:logMessage( "($" .. ( 10 * shownto ) .. ") " .. message, 20)
+	else
+		exports.logs:logMessage( "(off) " .. message, 20)
+	end
+end

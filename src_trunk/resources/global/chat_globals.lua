@@ -111,13 +111,19 @@ function sendLocalText(root, message, r, g, b, distance, exclude)
 	
 	if getElementType(root) == "player" and exports['freecam-tv']:isPlayerFreecamEnabled(root) then return end
 	
+	local shownto = 0
 	for index, nearbyPlayer in ipairs(getElementsByType("player")) do
 		if isElement(nearbyPlayer) and getDistanceBetweenPoints3D(x, y, z, getElementPosition(nearbyPlayer)) < ( distance or 20 ) then
 			local logged = getElementData(nearbyPlayer, "loggedin")
 			if not exclude[nearbyPlayer] and not isPedDead(nearbyPlayer) and logged==1 and getElementDimension(root) == getElementDimension(nearbyPlayer) then
 				outputChatBox(message, nearbyPlayer, r, g, b)
+				shownto = shownto + 1
 			end
 		end
+	end
+	
+	if getElementType(root) == "player" and shownto > 0 and getElementDimension(root) == 127 then -- TV SHOW!
+		exports['freecam-tv']:add(shownto, message)
 	end
 end
 

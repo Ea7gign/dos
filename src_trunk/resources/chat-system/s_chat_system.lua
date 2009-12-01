@@ -126,6 +126,7 @@ function localIC(source, message, language)
 	
 	local dimension = getElementDimension(source)
 	local interior = getElementInterior(source)
+	local shownto = 1
 	
 	for key, nearbyPlayer in ipairs(getElementsByType( "player" )) do
 		local dist = getElementDistance( source, nearbyPlayer )
@@ -156,9 +157,15 @@ function localIC(source, message, language)
 					else
 						outputChatBox( "#AAAAAA [" .. languagename .. "] " .. playerName .. " Says: " .. message2, nearbyPlayer, 133, 44, getElementData(nearbyPlayer, "chatbubbles") > 0 and 89 or 88, true)
 					end
+					
+					shownto = shownto + 1
 				end
 			end
 		end
+	end
+	
+	if dimension == 127 then -- TV SHOW!
+		exports['freecam-tv']:add(shownto, playerName .. " Says: " .. message)
 	end
 end
 for i = 1, 3 do

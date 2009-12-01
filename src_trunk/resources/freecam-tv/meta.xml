@@ -7,6 +7,7 @@
 	<export function="setPlayerFreecamDisabled" />
 	<export function="isPlayerFreecamEnabled" />
 	<export function="setPlayerFreecamOption" />
+	<export function="add" />
 	<!-- client functions -->
 	<export function="setFreecamEnabled" type="client" />
 	<export function="setFreecamDisabled" type="client" />

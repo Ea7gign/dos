@@ -17,7 +17,8 @@ enumTypes = {
 	"changelock",
 	"moveitems",
 	"news",
-	"do"
+	"do",
+	"tv"
 }
 
 
