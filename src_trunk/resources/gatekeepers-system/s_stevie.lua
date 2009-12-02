@@ -307,7 +307,7 @@ function startPhoneCall(thePlayer)
 						local theTeam = getPlayerTeam(thePlayer)
 						local factionType = getElementData(theTeam, "type")
 						
-						if not(steviesFriend==1) or (factionType==1) or (factionType==2) or (factionType==3) then
+						if not(steviesFriend==1) or (factionType==4) or (factionType==2) or (factionType==3) then
 							setTimer( endCall, 6000, 1, thePlayer)
 							outputChatBox("#081016 [Cellphone]: Yeah?", thePlayer)
 							setTimer(outputChatBox, 3000, 1, "#081016 [Cellphone]: How did you get this number? ", thePlayer)
