@@ -4,7 +4,7 @@ function cmdHandbrake(sourcePlayer)
 		if (getVehicleOccupant(playerVehicle, 0) == sourcePlayer) then
 			local handbrake = getElementData(playerVehicle, "handbrake")
 			if (handbrake == 0) then
-				if isVehicleOnGround(playerVehicle) and getVehicleType(playerVehicle) ~= "Boat" then
+				if isVehicleOnGround(playerVehicle) or getVehicleType(playerVehicle) == "Boat" then
 					setElementData(playerVehicle, "handbrake", 1, false)
 					setVehicleFrozen(playerVehicle, true)
 					outputChatBox("Handbrake has been applied.", sourcePlayer)
