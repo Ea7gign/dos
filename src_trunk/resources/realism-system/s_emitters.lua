@@ -19,6 +19,8 @@ function createEmitter(thePlayer, commandName, type)
 			emitters[id][5] = createObject(848 + type, x, y, z)
 			
 			setElementAlpha(emitters[id][5], 0)
+			setElementDimension(emitters[id][5], getElementDimension(thePlayer))
+			setElementInterior(emitters[id][5], getElementInterior(thePlayer))
 			outputChatBox("Emitter created with ID " .. id .. " and Type " .. type .. ".", thePlayer, 0, 255, 0)
 		end
 	end
@@ -36,7 +38,7 @@ function nearbyEmitters(thePlayer)
 			local z = emitters[key][3]
 			local type = emitters[key][4]
 			
-			if ( getDistanceBetweenPoints3D(x, y, z, px, py, pz) < 50) then
+			if ( getDistanceBetweenPoints3D(x, y, z, px, py, pz) < 50) and getElementDimension( thePlayer ) == getElementDimension( value[5] ) then
 				count = count + 1
 				outputChatBox("Emitter with ID " .. key .. " and type " .. type .. ".", thePlayer, 255, 194, 15)
 			end
