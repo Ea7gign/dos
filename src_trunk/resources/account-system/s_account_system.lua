@@ -980,7 +980,7 @@ function sendAccounts(thePlayer, id, isChangeChar)
 
 	local result = mysql_query(handler, "SELECT id, charactername, cked, lastarea, age, gender, faction_id, faction_rank, skin, DATEDIFF(NOW(), lastlogin) FROM characters WHERE account='" .. id .. "'  ORDER BY cked ASC, lastlogin DESC")
 	local emailresult = mysql_query(handler, "SELECT email FROM accounts WHERE id = '" .. id .. "'")
-	outputChatBox("SELECT email FROM accounts WHERE id = '" .. id .. "'")
+	
 	
 	if (mysql_num_rows(result)>0) then
 		if (isChangeChar) then
