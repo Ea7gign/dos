@@ -21,6 +21,8 @@
 	
 		$username = $_POST["username"];
 		$password = $_POST["password"];
+		$email = $_POST["emailaddress"];
+		
 		$conn = mysql_pconnect($mysql_host, $mysql_user, $mysql_pass);
 		
 		if (!$conn)
@@ -36,10 +38,12 @@
 		
 		$escUsername = mysql_real_escape_string($username, $conn);
 		$escPassword = mysql_real_escape_string($hashpassword, $conn);
+		$escEmail = mysql_real_escape_string($email, $conn);
 		
 		// check the username doesn't already exist
 		mysql_select_db("mta", $conn);
 		$result = mysql_query("SELECT id FROM accounts WHERE username='" . $escUsername . "' LIMIT 1", $conn);
+		$result2 = mysql_query("SELECT id FROM accounts WHERE email='" . $escEmail . "' LIMIT 1", $conn);
 		
 		if (!$result || mysql_num_rows($result)!=0)
 		{
@@ -47,6 +51,14 @@
 			setcookie("username", "", time()-3600);
 			setcookie("password", "", time()-3600);
 			header('Location: register.php?errno=1');
+			exit;
+		}
+		elseif (!$result2 || mysql_num_rows($result2)!=0)
+		{
+			setcookie("uid", "", time()-3600);
+			setcookie("username", "", time()-3600);
+			setcookie("password", "", time()-3600);
+			header('Location: register.php?errno=3');
 			exit;
 		}
 		else // create the account and log them into it
@@ -63,11 +75,11 @@
 			$ip = $_SERVER['REMOTE_ADDR'];
 			
 			// security key generation
-			$keysalt1 = "vg";
-			$keysalt2 = "securitykey";
-			$securitykey = strtoupper(encryptSerial($keysalt1 . $username . $keysalt2));
+			//$keysalt1 = "vg";
+			//$keysalt2 = "securitykey";
+			//$securitykey = strtoupper(encryptSerial($keysalt1 . $username . $keysalt2));
 			
-			$result = mysql_query("INSERT INTO accounts SET username='" . $escUsername . "', password='" . $escPassword . "', securitykey='" . $securitykey . "', registerdate=NOW(), lastlogin=NOW(), ip='" . $ip . "', country='" . $country . "', friendsmessage='Sample Messsage'", $conn);
+			$result = mysql_query("INSERT INTO accounts SET username='" . $escUsername . "', password='" . $escPassword . "', email='" . $escEmail. "', registerdate=NOW(), lastlogin=NOW(), ip='" . $ip . "', country='" . $country . "', friendsmessage='Sample Messsage'", $conn);
 			
 			if ($result)
 			{

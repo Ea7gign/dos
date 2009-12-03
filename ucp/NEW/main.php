@@ -12,7 +12,7 @@
 	$userid = mysql_real_escape_string($_COOKIE["uid"], $conn);
 	
 	mysql_select_db("mta", $conn);
-	$result = mysql_query("SELECT username, admin, donator, appstate, apphandler, appreason, banned, securitykey, appdatetime > NOW(), HOUR(TIMEDIFF(NOW(), appdatetime)), MINUTE(TIMEDIFF(NOW(), appdatetime)), overseer FROM accounts WHERE id='" . $userid . "' LIMIT 1", $conn);
+	$result = mysql_query("SELECT username, admin, donator, appstate, apphandler, appreason, banned, email, appdatetime > NOW(), HOUR(TIMEDIFF(NOW(), appdatetime)), MINUTE(TIMEDIFF(NOW(), appdatetime)), overseer FROM accounts WHERE id='" . $userid . "' LIMIT 1", $conn);
 
 	if (!$result || mysql_num_rows($result)==0)
 	{
@@ -29,11 +29,14 @@
 	$apphandler = mysql_result($result, 0, 4);
 	$appreason = mysql_result($result, 0, 5);
 	$banned = mysql_result($result, 0, 6);
-	$securitykey = mysql_result($result, 0, 7);
+	$email = mysql_result($result, 0, 7);
 	$noapply = mysql_result($result, 0, 8);
 	$timehour = mysql_result($result, 0, 9);
 	$timeminute = mysql_result($result, 0, 10);
 	$overseer = mysql_result($result, 0, 11);
+	
+	if ( is_null($email))
+		$email = "None."
 ?>
 
 <?php 
@@ -228,7 +231,7 @@
 								<?php echo ( ( $overseer == 1 ) ? '<li>Overseer: Yes</li>' : '' ); ?> 
 								<li>Donator: <?php echo getDonatorTitleFromIndex($donator) ?></li>
 								<li>Account Standing: <?php echo getStandingFromIndex($banned) ?></li>
-								<li>Security Key: <?php echo $securitykey; ?></li>
+								<li>Email Address: <?php echo $email; ?></li>
 							</ul>
 						</div>
 					</div>

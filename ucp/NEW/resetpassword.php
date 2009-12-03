@@ -148,19 +148,19 @@
 							<h2>Reset Password</h2>
 							<div align="center">
 								<form action="index.php" method="post">
-									<span style="text-align:left;"><p>Please enter your vG MTA Security Key below.</p></span>
+									<span style="text-align:left;"><p>Please enter your Email Address below.</p></span>
 									<?php
 										$errno = $_GET["errno"];
 										
 										if ($errno==1)
 											echo "<p>UCP is currently unavailable!</p>";
 										elseif ($errno==2)
-											echo "<p>Invalid Security Key!</p>";
+											echo "<p>Invalid Email Address!</p>";
 									?>
 									<br />
-									<label for="secuirtykey">Security Key:</label>
+									<label for="emailaddress">Email Address:</label>
 									<!--webbot bot="Validation" b-value-required="TRUE" i-minimum-length="3" i-maximum-length="32" -->
-									<input type="text" name="securitykey" style="width:150px;height:16px" maxlength="32" /><br />
+									<input type="text" name="emailaddress" style="width:150px;height:16px" maxlength="32" /><br />
 									<br />
 									<input type="submit" value="Reset Password"/>
 								</form>

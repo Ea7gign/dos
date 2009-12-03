@@ -194,6 +194,16 @@
 									 }
 									 return false;
 								  }
+								  
+								function isValidEmail(t)
+								{
+									for (var i = 0; i < t.length; i++) 
+									{
+										if ( t.charAt(i) == "@")
+											return true;
+									}
+									return false;
+								}
 								 
 								 function checkSecurity(field)
 								 {
@@ -223,6 +233,11 @@
 									<input name="password" type="password" id="password" size="30" maxlength="30" onKeyUp="checkSecurity(this)">
 									<br />
 									<br />
+				
+									<label for="username" style="font-weight:bold">Email Address:</label><br />
+									<input name="emailaddress" type="emailaddress" id="emailaddress" size="30" maxlength="30">
+									<br />
+									<br />
 									<label for="securitybar" style="font-weight:bold">Password Strength:</label><br />
 									<div class="percentImage1" id="securitybar"></div><br />
 									<?php
@@ -232,6 +247,8 @@
 											echo "<p>An account with this username already exists!</p><br />";
 										elseif ($errno==2)
 											echo "<p>An unknown error occured, please report this on the forums!</p><br />";
+										elseif ($errno==3)
+											echo "<p>An account already exists with that email address, please use Reset Password!</p><br />";
 									?>
 									<input type="submit" name="register" id="register" value="Register">
 								</form>

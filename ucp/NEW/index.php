@@ -158,6 +158,18 @@
 									{
 										echo "<span style='text-align:left;'><p>You have used up your 3 login attempts. You are now locked out for 15 minutes.</p></span>";
 									}
+									else if ($errno==5)
+									{
+										echo "<span style='text-align:left;'><p>Invalid Key, Key may have expired.</p></span>";
+									}
+									else if ($errno==6)
+									{
+										echo "<span style='text-align:left;'><p>Your key has been destroyed.</p></span>";
+									}
+									else if ($errno==7)
+									{
+										echo "<span style='text-align:left;'><p>Your username and new password has been emailed to you.</p></span>";
+									}
 									elseif ($loggedout==1)
 									{
 										echo "<span style='text-align:left;'><p>You are now logged out.</p><p>Please login using your vG MTA account details to continue.</p></span>";
@@ -200,9 +212,9 @@
 									}
 
 									
-									$securitykey = $_POST["securitykey"];
+									$emailaddress = $_POST["emailaddress"];
 
-									if ($securitykey) // was reset password
+									if ($emailaddress) // was reset password
 									{
 										$conn = mysql_pconnect($mysql_host, $mysql_user, $mysql_pass);
 										
@@ -210,23 +222,54 @@
 											header('Location: resetpassword.php?errno=2');
 
 										mysql_select_db("mta",$conn);
-										$result = mysql_query("SELECT username FROM accounts WHERE securitykey='" . $securitykey . "'", $conn);
+										$result = mysql_query("SELECT id, username, email FROM accounts WHERE email='" . $emailaddress . "'", $conn);
 											
 											
 										if (!$result || mysql_num_rows($result)==0)
 										{
-											echo "<p>Invalid Security Key!</p>"; 
+											echo "<p>Invalid Email Address!</p>"; 
 											//header('Location: resetpassword.php?errno=2');
 										}
 										else
 										{
-											$username = mysql_result($result, 0);
-											$password = generatePassword(9, 4);
-											$salt = "vgrpkeyscotland";
-												
-											$query = mysql_query("UPDATE accounts SET password='" . md5($salt . $password) . "' WHERE username='" . $username . "'", $conn);
+											$id = mysql_result($result, 0, 0);
+											$username = mysql_result($result, 0, 1);
+											$email = mysql_result($result, 0, 2);
+											$unixtime = time();
+											$hash = md5('vgrpkeyscotlandforgotpassword' . $unixtime . $username . $email);
 											
-											echo "<p>Your username is <i>" . $username . "</i> and your new password is <i>" . $password . ".</i></p>"; 
+											
+											//$password = generatePassword(9, 4);
+											//$query = mysql_query("UPDATE accounts SET password='" . md5($salt . $password) . "' WHERE username='" . $username . "'", $conn);
+
+											// delete old keys or keys with this account id
+											mysql_query("DELETE FROM forgotdetails WHERE DATEDIFF(NOW(), keytimestamp) >= 1 OR account='" . $id . "'", $conn);
+											
+											//insert our new key
+											mysql_query("INSERT INTO forgotdetails SET uniquekey='" . $hash . "', account='" . $id . "', keytimestamp=NOW()", $conn);
+											
+												
+											// send mail
+			$to      = $email;
+			$subject = 'ValhallaGaming MTA - Forgot Details';
+			
+			$message = "Hello " . $username . "\n\n
+			Recently you requested an account details reminder be sent to your email. Simply click the URL below and you will be given your username and new password.
+			\n\n
+				http://www.valhallagaming.net/mtaucp/forgotdetails.php?key=" . $hash . "\n\n
+							
+						Please note that this URL is only valid for 24 hours.
+							
+			\n\n
+	If you did not request this URL please destroy it at http://www.valhallagaming.net/mtaucp/destroykey.php?key=" . $hash . "
+						";
+			$headers = 'From: noreply@valhallagaming.net' . "\r\n" .
+				'Reply-To: noreply@valhallagaming.net' . "\r\n" .
+				'X-Mailer: PHP/' . phpversion();
+				
+			mail($to, $subject, $message, $headers);
+											
+											echo "<p>Information on how to retrieve your username and new password have been sent to your email address (" . $email . ")."; 
 										}
 									}
 									?>
