@@ -638,7 +638,7 @@ function spawnCharacter(charname, version)
 			end
 		end
 		
-		if (version) and (version ~= getVersion().mta) then
+		if (version) and (version ~= "1.0.2") and (version ~= "1.0.3") then --getVersion().mta
 			outputChatBox("You are using an Old Version of MTA! (V" .. version .. ").", source, 255, 0, 0)
 			outputChatBox("We recommend you upgrade to V" .. getVersion().mta .. " to ensure full script compatability and improve your experience.", source, 255, 0, 0)
 		end
