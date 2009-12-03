@@ -145,9 +145,9 @@ function registerPlayer(username, password)
 		mysql_free_result(result)
 	end
 end
-addEvent("onPlayerRegister", false)
-addEvent("attemptRegister", true)
-addEventHandler("attemptRegister", getRootElement(), registerPlayer)
+--addEvent("onPlayerRegister", false)
+--addEvent("attemptRegister", true)
+--addEventHandler("attemptRegister", getRootElement(), registerPlayer)
 
 addEvent("restoreJob", false)
 function spawnCharacter(charname, version)
@@ -838,7 +838,7 @@ function loginPlayer(username, password, operatingsystem)
 				
 				local ip = getPlayerIP(source)
 				
-				local update = mysql_query(handler, "UPDATE accounts SET lastlogin=NOW(), ip='" .. ip .. "', country='" .. country .. "', os='" .. operatingsystem .. "' WHERE id='" .. id .. "'")
+				local update = mysql_query(handler, "UPDATE accounts SET lastlogin=NOW(), ip='" .. ip .. "', country='" .. country .. "', WHERE id='" .. id .. "'")
 				
 				if (update) then
 					mysql_free_result(update)
@@ -870,7 +870,44 @@ addEvent("onPlayerLogin", false)
 addEvent("attemptLogin", true)
 addEventHandler("attemptLogin", getRootElement(), loginPlayer)
 
-function retrieveDetails(securityKey)
+
+pendingResult = { }
+function displayRetrieveDetailsResult(result, player)
+	if (player) and (pendingResult[player] ~= nil) then
+		pendingResult[player] = nil
+		if ( result == 0 ) then
+			outputChatBox("Information on how to retrieve your username and password has been sent to your email address.", player, 0, 255, 0)
+		else
+			outputChatBox("This service is currently unavailable.", player, 255, 0, 0)
+		end
+	end
+end
+
+function checkTimeout(player)
+	if ( pendingResult[player] ) then
+		pendingResult[player] = nil
+		outputChatBox("[TIMEOUT] This service is currently unavailable.", player, 255, 0, 0)
+	end
+end
+
+function retrieveDetails(email)
+	local safeEmail = mysql_escape_string(handler, tostring(email))
+	
+	local result = mysql_query(handler, "SELECT id FROM accounts WHERE email='" .. safeEmail .. "'")
+	
+	if (mysql_num_rows(result)>0) then
+		local id = tonumber(mysql_result(result, 1, 1))
+		callRemote("http://www.valhallagaming.net/mtaucp/sendfpmail.php", displayRetrieveDetailsResult, id)
+		outputChatBox("Contacting account server... Please wait...", source, 255, 194, 15)
+		
+		pendingResult[source] = true
+		setTimer(checkTimeout, 10000, 1, source)
+	else
+		outputChatBox("Invalid Email.", source, 255, 0, 0)
+	end
+
+
+--[[
 	local safesecurityKey = mysql_escape_string(handler, tostring(securityKey))
 
 	local result = mysql_query(handler, "SELECT username FROM accounts WHERE securitykey='" .. safesecurityKey .. "'")
@@ -932,6 +969,7 @@ function retrieveDetails(securityKey)
 	if (result) then
 		mysql_free_result(result)
 	end
+	]]--
 end
 addEvent("retrieveDetails", true)
 addEventHandler("retrieveDetails", getRootElement(), retrieveDetails)
@@ -941,6 +979,8 @@ function sendAccounts(thePlayer, id, isChangeChar)
 	local accounts = { }
 
 	local result = mysql_query(handler, "SELECT id, charactername, cked, lastarea, age, gender, faction_id, faction_rank, skin, DATEDIFF(NOW(), lastlogin) FROM characters WHERE account='" .. id .. "'  ORDER BY cked ASC, lastlogin DESC")
+	local emailresult = mysql_query(handler, "SELECT email FROM accounts WHERE id = '" .. id .. "'")
+	outputChatBox("SELECT email FROM accounts WHERE id = '" .. id .. "'")
 	
 	if (mysql_num_rows(result)>0) then
 		if (isChangeChar) then
@@ -1005,10 +1045,27 @@ function sendAccounts(thePlayer, id, isChangeChar)
 
 	spawnPlayer(thePlayer, 258.43417358398, -41.489139556885, 1002.0234375, 268.19247436523, 0, 14, 65000+playerid)
 	
-	triggerClientEvent(thePlayer, "showCharacterSelection", thePlayer, accounts)
+	if ( mysql_num_rows(emailresult) > 0 ) then
+		local hasEmail = mysql_result(emailresult, 1, 1)
+		
+		if ( hasEmail == mysql_null() ) then
+			triggerClientEvent(thePlayer, "showCharacterSelection", thePlayer, accounts, false, true)
+		else
+			triggerClientEvent(thePlayer, "showCharacterSelection", thePlayer, accounts)
+		end
+	else
+		triggerClientEvent(thePlayer, "showCharacterSelection", thePlayer, accounts)
+	end
 end
 addEvent("sendAccounts", true)
 addEventHandler("sendAccounts", getRootElement(), sendAccounts)
+
+function storeEmail(email)
+	local accountid = getElementData(source, "gameaccountid")
+	mysql_query(handler, "UPDATE accounts SET email = '" .. email .. "' WHERE id = '" .. accountid .. "'")
+end
+addEvent("storeEmail", true)
+addEventHandler("storeEmail", getRootElement(), storeEmail)
 
 function requestAchievements()
 	-- Get achievements

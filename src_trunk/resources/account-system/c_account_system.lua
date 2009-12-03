@@ -1035,12 +1035,15 @@ function createMainUI(res, isChangeAccount)
 			addEventHandler("onClientGUIClick", bLogin, validateDetails, false)
 			
 			-- FORGOTTEN DETAILS
-			lLostSecurityKey = guiCreateLabel(0.15, 0.4, 0.3, 0.1, "Security Key:", true, tabForgot)
-			tLostSecurityKey = guiCreateEdit(0.425, 0.4, 0.3, 0.1, "", true, tabForgot)
-			guiEditSetMaxLength(tLostSecurityKey, 12)
+			lLostSecurityKey = guiCreateLabel(0.025, 0.15, 0.95, 0.95, "To retrieve your username and password please visit the UCP: \n\n\nwww.ValhallaGaming.net/mtaucp.", true, tabForgot)
+			guiLabelSetHorizontalAlign(lLostSecurityKey, "center")
+			guiSetFont(lLostSecurityKey, "default-bold-small")
 			
-			bForgot = guiCreateButton(0.25, 0.75, 0.5, 0.2, "Retrieve Details", true, tabForgot)
-			addEventHandler("onClientGUIClick", bForgot, retrieveDetails, false)
+			--tLostSecurityKey = guiCreateEdit(0.37, 0.4, 0.5, 0.1, "", true, tabForgot)
+			--guiEditSetMaxLength(tLostSecurityKey, 30)
+			
+			--bForgot = guiCreateButton(0.25, 0.75, 0.5, 0.2, "Retrieve Details", true, tabForgot)
+			--addEventHandler("onClientGUIClick", bForgot, retrieveDetails, false)
 			
 			-- LOAD SAVED USER INFO 
 			local xmlRoot = xmlLoadFile( ip == "127.0.0.1" and "vgrploginlocal.xml" or "vgrplogin.xml" )
@@ -1103,9 +1106,7 @@ function createMainUI(res, isChangeAccount)
 								if(guiGetEnabled(chkAutoLogin)) then
 									guiCheckBoxSetSelected(chkAutoLogin, true)
 									if not (isChangeAccount) then
-										local vinfo = getVersion()
-										local operatingsystem = vinfo.os
-										triggerServerEvent("attemptLogin", getLocalPlayer(), guiGetText(tLogUsername), guiGetText(tLogPassword), operatingsystem) 
+										triggerServerEvent("attemptLogin", getLocalPlayer(), guiGetText(tLogUsername), guiGetText(tLogPassword)) 
 									end
 								end
 							end
@@ -1133,10 +1134,10 @@ function retrieveDetails()
 		local securityKey = guiGetText(tLostSecurityKey)
 		
 		clearChatBox()
-		if (string.len(securityKey)<12) then
-			outputChatBox("Your security key must be 12 characters long.", 255, 0, 0)
-		elseif (string.find(securityKey, ";", 0)) or (string.find(securityKey, "'", 0)) or (string.find(securityKey, "@", 0))  then
-			outputChatBox("Your security key cannot contain ;,@'", 255, 0, 0)
+		if (string.len(securityKey)<5) then
+			outputChatBox("Your email must be 5 characters long.", 255, 0, 0)
+		elseif (not string.find(securityKey, "@", 0))  then
+			outputChatBox("Your email must contain an @ symbol.", 255, 0, 0)
 		else
 			guiSetText(tLostSecurityKey, "")
 			showChat(true)
@@ -1283,6 +1284,7 @@ function hideUI(regged)
 	guiSetInputEnabled(false)
 	
 	cleanupScenarioOne()
+	cleanupEmail()
 	
 	if (tabPanelMain) then
 		destroyElement(tabPanelMain)
@@ -1330,7 +1332,7 @@ function changedTab(tab)
 	end
 end
 
-function showCharacterUI(accounts, firstTime)
+function showCharacterUI(accounts, firstTime, needsEmail)
 	sent = false
 	if (bChangeChar) then
 		destroyElement(bChangeChar)
@@ -1526,10 +1528,85 @@ function showCharacterUI(accounts, firstTime)
 	setElementAlpha(getLocalPlayer(), 0)
 	fadeCamera(true, 2)
 	
+	if ( needsEmail ) then
+		promptEmail()
+	end
+	
 	guiSetInputEnabled(true)
 end
 addEvent("showCharacterSelection", true)
 addEventHandler("showCharacterSelection", getRootElement(), showCharacterUI)
+
+wEmail, lEmailInfo, lEmail, tEmail, bSubmitEmail = nil
+function promptEmail()
+	guiSetAlpha(tabPanelCharacter, 0.3)
+	guiSetEnabled(tabPanelCharacter, false)
+	
+	local width, height = 400, 200
+	
+	local scrWidth, scrHeight = guiGetScreenSize()
+	local x = scrWidth/2 - (width/2)
+	local y = scrHeight/2 - (height/2)
+			
+	wEmail = guiCreateWindow(x, y, width, height, "Email Address Required!", false)
+	
+	lEmailInfo = guiCreateLabel(0.02, 0.1, 0.95, 0.3, "Our records show that you currently do not have an email address linked to your account.\n\nThis email address will be used should you forget your details.", true, wEmail)
+	guiLabelSetHorizontalAlign(lEmailInfo, "center", true)
+	guiSetFont(lEmailInfo, "default-bold-small")
+	
+	lEmail = guiCreateLabel(0.15, 0.6, 0.3, 0.3, "Email Address:", true, wEmail)
+	guiSetFont(lEmail, "default-bold-small")
+	
+	tEmail = guiCreateEdit(0.38, 0.59, 0.5, 0.1, "email@address.com", true, wEmail)
+	guiSetFont(tEmail, "default-bold-small")
+	addEventHandler("onClientGUIChanged", tEmail, checkEmail, false)
+	
+	bSubmitEmail = guiCreateButton(0.15, 0.75, 0.7, 0.15, "Submit", true, wEmail)
+	addEventHandler("onClientGUIClick", bSubmitEmail, submitEmail, false)
+	guiSetFont(bSubmitEmail, "default-bold-small")
+	guiSetEnabled(bSubmitEmail, false)
+	guiSetAlpha(bSubmitEmail, 0.5)
+end
+
+function submitEmail()
+	local email = guiGetText(tEmail)
+	cleanupEmail()
+	guiSetAlpha(tabPanelCharacter, 0.7)
+	guiSetEnabled(tabPanelCharacter, true)
+	
+	triggerServerEvent("storeEmail", getLocalPlayer(), email)
+end
+
+function checkEmail()
+	local text = guiGetText(source)
+	
+	local length = text:len()
+	local atSymbol = text:find("@")
+	
+	if ( length > 5 and atSymbol ~= nil ) then
+		guiSetEnabled(bSubmitEmail, true)
+		guiSetAlpha(bSubmitEmail, 1.0)
+	else
+		guiSetEnabled(bSubmitEmail, false)
+		guiSetAlpha(bSubmitEmail, 0.5)
+	end
+end
+
+function cleanupEmail()
+	if ( tabPanelCharacter ) then
+		guiSetAlpha(tabPanelCharacter, 1.0)
+		guiSetEnabled(tabPanelCharacter, true)
+	end
+	
+	if ( wEmail ) then
+		destroyElement(wEmail)
+		wEmail = nil
+		lEmail = nil
+		lEmailInfo = nil
+		tEmail = nil
+		bSubmitEmail = nil
+	end
+end
 
 function changeAccount(button, state)
 	if (source==bChangeAccount) and (button=="left") then
