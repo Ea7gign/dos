@@ -171,26 +171,29 @@ function updateDancing( )
 	end
 	
 	for ped, options in pairs( peds ) do
-		if isPedDead( ped ) then
-			-- BAAAAAD
-			peds[ ped ] = nil
-			
-			local x, y, z, rotation = unpack( getElementData( ped, "position" ) )
-			local newped = createPed( getElementModel( ped ), x, y, z )
-			setPedRotation( newped, rotation )
-			setElementData( newped, "dbid", getElementData( ped, "dbid" ), false )
-			setElementData( newped, "position", getElementData( ped, "position" ), false )
-			
-			peds[ newped ] = options
-			setElementInterior( newped, getElementInterior( ped ) )
-			setElementDimension( newped, getElementInterior( ped ) )
-			
-			destroyElement( ped )
-			ped = newped
-		end
-		
 		local type, offset = unpack( options )
 		local animid = ( currentcycle + offset ) % 4 + 1
 		setPedAnimation( ped, dancingcycles[ type ][ animid ][ 1 ], dancingcycles[ type ][ animid ][ 2 ], -1, true, false, false )
 	end
 end
+
+addEventHandler("onPedWasted", getResourceRootElement(),
+	function()
+		peds[ source ] = nil
+			
+		local x, y, z, rotation = unpack( getElementData( source, "position" ) )
+		local newped = createPed( getElementModel( source ), x, y, z )
+		setPedRotation( newped, rotation )
+		setElementData( newped, "dbid", getElementData( source, "dbid" ), false )
+		setElementData( newped, "position", getElementData( source, "position" ), false )
+		
+		peds[ newped ] = options
+		setElementInterior( newped, getElementInterior( source ) )
+		setElementDimension( newped, getElementInterior( source ) )
+		
+		destroyElement( source )
+		
+		currentcycle = currentcycle - 1
+		updateDancing( )
+	end
+)
