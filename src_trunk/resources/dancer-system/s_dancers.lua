@@ -79,10 +79,10 @@ addEventHandler( "onResourceStart", getResourceRootElement( ),
 
 addCommandHandler( "adddancer", 
 	function( thePlayer, commandName, type, skin, offset )
-		if exports.global:isPlayerAdmin( thePlayer ) then
-			type = math.floor( tonumber( type ) )
-			skin = math.floor( tonumber( skin ) )
-			offset = math.floor( tonumber( offset ) )
+		if exports.global:isPlayerLeadAdmin( thePlayer ) then
+			type = math.floor( tonumber( type ) or 0 )
+			skin = math.floor( tonumber( skin ) or -1 )
+			offset = math.floor( tonumber( offset ) or -1 )
 			if not type or not skin or type < 1 or type > 2 or offset < 0 or offset > 3 then
 				outputChatBox( "SYNTAX: /" .. commandName .. " [1=Dancer, 2=Stripper] [Skin] [Offset 0-3]", thePlayer, 255, 194, 14 )
 			else
@@ -140,7 +140,7 @@ addCommandHandler( "nearbydancers",
 
 addCommandHandler( "deldancer",
 	function( thePlayer, commandName, id )
-		if exports.global:isPlayerAdmin( thePlayer ) then
+		if exports.global:isPlayerLeadAdmin( thePlayer ) then
 			id = tonumber( id )
 			if not id then
 				outputChatBox( "SYNTAX: /" .. commandName .. " [ID]", thePlayer, 255, 194, 14 )
