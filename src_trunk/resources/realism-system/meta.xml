@@ -2,7 +2,6 @@
 	<info author="vG MTA Scripting Team" type="script" description="Realism System"/>
 
 	<script src="c_realism_system.lua" type="client" />
-	<script src="c_dancers.lua" type="client" />
 	
 	<script src="s_reload.lua" type="server" />
 	<script src="c_reload.lua" type="client" />
