@@ -101,11 +101,13 @@ addCommandHandler( "adddancer",
 						setElementData( ped, "dbid", id, false )
 						setElementData( ped, "position", { x, y, z, rotation }, false )
 						setPedRotation( ped, rotation )
-						setElementInterior( ped, dimension )
+						setElementInterior( ped, interior )
 						setElementDimension( ped, dimension )
 						
 						peds[ ped ] = { type, offset }
 						setTimer( updateDancing, 50, 1 )
+						
+						outputChatBox( "Added Dancer with ID " .. id .. ".", thePlayer, 0, 255, 0 )
 					else
 						destroyElement( ped )
 						outputDebugString( mysql_error( handler ) )
@@ -152,6 +154,7 @@ addCommandHandler( "deldancer",
 						destroyElement( ped )
 						
 						peds[ ped ] = nil
+						outputChatBox( "Dancer deleted.", thePlayer, 0, 255, 0 )
 						return
 					end
 				end
