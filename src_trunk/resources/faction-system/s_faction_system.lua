@@ -198,12 +198,16 @@ function showFactionMenu(source)
 						local targetPlayer = getPlayerFromName(tostring(playerName))
 						if (targetPlayer) then
 							memberOnline[i] = true
-							local zone, city = exports.global:getElementZoneName(targetPlayer)
-							
-							if(zone~=city) and (city~=nil) then
-								memberLocation[i] = zone .. ", " .. city
+							if getElementData(targetPlayer, "loggedin") == 1 then
+								local zone, city = exports.global:getElementZoneName(targetPlayer)
+								
+								if(zone~=city) and (city~=nil) then
+									memberLocation[i] = zone .. ", " .. city
+								else
+									memberLocation[i] = zone
+								end
 							else
-								memberLocation[i] = zone
+								memberLocation[i] = "Not logged in"
 							end
 						else
 							memberOnline[i] = false
