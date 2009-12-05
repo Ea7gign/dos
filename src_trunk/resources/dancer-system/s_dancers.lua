@@ -198,3 +198,11 @@ addEventHandler("onPedWasted", getResourceRootElement(),
 		updateDancing( )
 	end
 )
+
+addCommandHandler( "updatedancers",
+	function( thePlayer )
+		if exports.global:isPlayerAdmin( thePlayer ) then
+			updateDancing( )
+		end
+	end
+)
