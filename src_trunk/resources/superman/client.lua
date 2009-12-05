@@ -43,7 +43,7 @@ local EXTRA_ACCELERATION_FACTOR = 1.8
 local LOW_ACCELERATION_FACTOR = 0.85
 local TAKEOFF_VELOCITY = 1.75
 local TAKEOFF_FLIGHT_DELAY = 750
-local SMOKING_SPEED = 1.25
+local SMOKING_SPEED = 100
 local GROUND_ZERO_TOLERANCE = 0.18
 local LANDING_DISTANCE = 3.2
 local FLIGHT_ANIMLIB = "swim"
@@ -52,7 +52,7 @@ local FLIGHT_ANIM_LOOP = false
 local IDLE_ANIMLIB = "cop_ambient"
 local IDLE_ANIMATION = "Coplook_loop"
 local IDLE_ANIM_LOOP = true
-local MAX_Y_ROTATION = 55
+local MAX_Y_ROTATION = 70
 local ROTATION_Y_SPEED = 3.8
 
 -- Static global variables
