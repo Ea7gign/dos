@@ -73,7 +73,7 @@ addEventHandler( "onResourceStart", getResourceRootElement( ),
 		mysql_free_result( result )
 		
 		setTimer( updateDancing, 50, 1 )
-		setTimer( updateDancing, 30000, 0 )
+		setTimer( updateDancing, 12000, 0 )
 	end
 )
 
