@@ -838,7 +838,7 @@ function loginPlayer(username, password, operatingsystem)
 				
 				local ip = getPlayerIP(source)
 				
-				local update = mysql_query(handler, "UPDATE accounts SET lastlogin=NOW(), ip='" .. ip .. "', country='" .. country .. "', WHERE id='" .. id .. "'")
+				local update = mysql_query(handler, "UPDATE accounts SET lastlogin=NOW(), ip='" .. ip .. "', country='" .. country .. "' WHERE id='" .. id .. "'")
 				
 				if (update) then
 					mysql_free_result(update)
