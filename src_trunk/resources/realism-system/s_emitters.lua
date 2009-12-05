@@ -68,3 +68,15 @@ function delEmitter(thePlayer, commandName, id)
 	end
 end
 addCommandHandler("delemitter", delEmitter)
+
+function delEmitters(thePlayer, commandName)
+	if (exports.global:isPlayerAdmin(thePlayer)) then
+		local count = 0
+		for k, v in pairs( emitters ) do
+			destroyElement( v[5] )
+			count = count + 1
+		end
+		outputChatBox("Deleted " .. count .. " Emitters.", thePlayer, 0, 255, 0)
+	end
+end
+addCommandHandler("delemitters", delEmitters)
