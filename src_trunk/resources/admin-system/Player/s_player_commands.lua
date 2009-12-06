@@ -2606,3 +2606,81 @@ function deleteLanguage(thePlayer, commandName, targetPlayerName, language)
 	end
 end
 addCommandHandler("dellanguage", deleteLanguage)
+
+function marry(thePlayer, commandName, player1, player2)
+	if exports.global:isPlayerLeadAdmin(thePlayer) then
+		if not player1 or not player2 then
+			outputChatBox( "SYNTAX: /" .. commandName .. " [player] [player]", thePlayer, 255, 194, 14 )
+		else
+			local player1, player1name = exports.global:findPlayerByPartialNick( thePlayer, player1 )
+			if player1 then
+				local player2, player2name = exports.global:findPlayerByPartialNick( thePlayer, player2 )
+				if player2 then
+					-- check if one of the players is already married
+					local p1r = mysql_query( handler, "SELECT COUNT(*) FROM characters WHERE marriedto = " .. getElementData( player1, "dbid" ) )
+					if p1r then
+						if tonumber( mysql_result( p1r, 1, 1 ) ) == 0 then
+							local p2r = mysql_query( handler, "SELECT COUNT(*) FROM characters WHERE marriedto = " .. getElementData( player2, "dbid" ) )
+							if p2r then
+								if tonumber( mysql_result( p2r, 1, 1 ) ) == 0 then
+									mysql_free_result( mysql_query( handler, "UPDATE characters SET marriedto = " .. getElementData( player1, "dbid" ) .. " WHERE id = " .. getElementData( player2, "dbid" ) ) )
+									mysql_free_result( mysql_query( handler, "UPDATE characters SET marriedto = " .. getElementData( player2, "dbid" ) .. " WHERE id = " .. getElementData( player1, "dbid" ) ) )
+									
+									outputChatBox( "You are now married to " .. player2name .. ".", player1, 0, 255, 0 )
+									outputChatBox( "You are now married to " .. player1name .. ".", player2, 0, 255, 0 )
+									
+									exports['vehicle-system']:clearCharacterName( getElementData( player1, "dbid" ) )
+									exports['vehicle-system']:clearCharacterName( getElementData( player2, "dbid" ) )
+									
+									outputChatBox( player1name .. " and " .. player2name .. " are now married.", thePlayer, 255, 194, 14 )
+								else
+									outputChatBox( player2name .. " is already married.", thePlayer, 255, 0, 0 )
+								end
+								mysql_free_result( p1r )
+							else
+								outputDebugString( "p2r: " .. mysql_error( handler ) )
+							end
+						else
+							outputChatBox( player1name .. " is already married.", thePlayer, 255, 0, 0 )
+						end
+						mysql_free_result( p1r )
+					else
+						outputDebugString( "p1r: " .. mysql_error( handler ) )
+					end
+				end
+			end
+		end
+	end
+end
+addCommandHandler("marry", marry)
+
+function divorce(thePlayer, commandName, targetPlayer)
+	if exports.global:isPlayerLeadAdmin(thePlayer) then
+		if not targetPlayer then
+			outputChatBox( "SYNTAX: /" .. commandName .. " [player]", thePlayer, 255, 194, 14 )
+		else
+			local targetPlayer, targetPlayerName = exports.global:findPlayerByPartialNick( thePlayer, targetPlayer )
+			if targetPlayer then
+				local marriedto = mysql_query( handler, "SELECT marriedto FROM characters WHERE id = " .. getElementData( targetPlayer, "dbid" ) )
+				if marriedto then
+					local to = tonumber( mysql_result( marriedto, 1, 1 ) )
+					mysql_free_result( marriedto )
+					if to > 0 then
+						mysql_free_result( mysql_query( handler, "UPDATE characters SET marriedto = 0 WHERE id = " .. getElementData( targetPlayer, "dbid" ) ) )
+						mysql_free_result( mysql_query( handler, "UPDATE characters SET marriedto = 0 WHERE marriedto = " .. getElementData( targetPlayer, "dbid" ) ) )
+						
+						exports['vehicle-system']:clearCharacterName( getElementData( targetPlayer, "dbid" ) )
+						exports['vehicle-system']:clearCharacterName( to )
+						
+						outputChatBox( targetPlayerName .. " is now divorced.", thePlayer, 0, 255, 0 )
+					else
+						outputChatBox( targetPlayerName .. " is not married to anyone.", thePlayer, 255, 194, 14 )
+					end
+				else
+					outputDebugString( mysql_error( handler ) )
+				end
+			end
+		end
+	end
+end
+addCommandHandler("divorce", divorce)

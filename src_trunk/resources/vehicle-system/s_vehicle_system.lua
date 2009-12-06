@@ -36,14 +36,47 @@ addEvent("onVehicleSpawn", false)
 
 -- cached owner name queries
 local charCache = {} -- messes with name changes
+
+local function secondArg( a, b )
+	return b
+end
+
+local function makeName( a, b )
+	-- find first and last name
+	local ax, ay = a:sub( 1, a:find( "_" ) - 1 ), a:sub( secondArg( a:find( "_" ) ) + 1 )
+	local bx, by = b:sub( 1, b:find( "_" ) - 1 ), b:sub( secondArg( b:find( "_" ) ) + 1 )
+	
+	if ay == by then
+		return ax .. " & " .. bx .. " " .. by
+	else
+		return a .. " & " .. b
+	end
+end
+
 function getCharacterName( id )
 	if not charCache[ id ] then
-		local query = mysql_query(handler, "SELECT charactername FROM characters WHERE id='" .. id .. "' LIMIT 1")
+		local query = mysql_query(handler, "SELECT charactername, gender, marriedto FROM characters WHERE id = " .. id .. " LIMIT 1")
 		if query then
 			local name = mysql_result(query, 1, 1)
+			local gender = tonumber(mysql_result(query, 1, 2))
+			local marriedto = tonumber(mysql_result(query, 1, 3))
 			mysql_free_result(query)
 			
 			if name then
+				if marriedto > 0 then
+					local query = mysql_query(handler, "SELECT charactername FROM characters WHERE id = " .. marriedto .. " LIMIT 1")
+					if query then
+						local name2 = mysql_result(query, 1, 1)
+						if name2 ~= mysql_null( ) then
+							if gender == 1 then
+								name = makeName( name, name2 )
+							else
+								name = makeName( name2, name )
+							end
+						end
+						mysql_free_result(query)
+					end
+				end
 				charCache[ id ] = name:gsub("_", " ")
 			end
 		end

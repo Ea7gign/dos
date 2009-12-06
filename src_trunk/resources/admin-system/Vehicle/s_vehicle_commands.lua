@@ -263,9 +263,7 @@ function getNearbyVehicles(thePlayer, commandName)
 			elseif (owner==-1) then
 				ownerName = "Admin"
 			elseif (owner>0) then
-				local query = mysql_query(handler, "SELECT charactername FROM characters WHERE id='" .. owner .. "' LIMIT 1")
-				ownerName = tostring(mysql_result(query, 1, 1))
-				mysql_free_result(query)
+				ownerName = exports['vehicle-system']:getCharacterName( owner )
 			else
 				ownerName = "Civilian"
 			end
