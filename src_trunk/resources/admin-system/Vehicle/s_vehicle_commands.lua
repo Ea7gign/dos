@@ -337,6 +337,15 @@ function respawnAllVehicles(thePlayer, commandName, timeToRespawn)
 			else
 				timeToRespawn = tonumber(timeToRespawn) or 30
 				timeToRespawn = timeToRespawn < 10 and 10 or timeToRespawn
+				for k, arrayPlayer in ipairs(players) do
+					local logged = getElementData(arrayPlayer, "loggedin")
+					if (logged) then
+						if exports.global:isPlayerLeadAdmin(arrayPlayer) then
+							outputChatBox( "AdmWarn: " .. getPlayerName(thePlayer) .. " executed a vehicle respawn.", arrayPlayer, 255, 194, 14)
+						end
+					end
+				end
+				
 				outputChatBox("*** All vehicles will be respawned in "..timeToRespawn.." seconds! ***", getRootElement(), 255, 194, 14)
 				outputChatBox("You can stop it by typing /respawnstop!", thePlayer)
 				respawnTimer = setTimer(respawnAllVehicles, timeToRespawn*1000, 1, thePlayer)
