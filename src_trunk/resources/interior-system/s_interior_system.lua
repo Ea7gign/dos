@@ -795,7 +795,7 @@ end
 
 function setPlayerInsideInterior(thePickup, thePlayer)
 	-- check for entrance fee
-	if getElementData( thePlayer, "adminduty" ) ~= 1 and not exports.global:hasItem( thePlayer, 5, getElementData( thePickup, "dbid" ) ) and not getElementData(thePlayer,"ESbadge") == 1 and not getElementData(thePlayer,"PDbadge")==1 and not getElementData(thePlayer,"GOVbadge")==1 and not getElementData(thePlayer,"SANbadge")==1 then
+	if getElementData( thePlayer, "adminduty" ) ~= 1 and not exports.global:hasItem( thePlayer, 5, getElementData( thePickup, "dbid" ) ) and not (getElementData(thePlayer,"ESbadge") == 1) and not (getElementData(thePlayer,"PDbadge") == 1) and not (getElementData(thePlayer,"GOVbadge") == 1) and not (getElementData(thePlayer,"SANbadge") == 1) then
 		local fee = getElementData( thePickup, "fee" )
 		if fee and fee > 0 then
 			if not exports.global:takeMoney( thePlayer, fee ) then
