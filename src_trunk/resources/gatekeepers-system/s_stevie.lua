@@ -426,7 +426,14 @@ function decreaseDeals_S()
 	end
 end
 addEventHandler( "onPlayerQuit", getRootElement(), decreaseDeals_S )
-
+addEventHandler( "savePlayer", getRootElement(),
+	function( reason )
+		if reason == "Change Character" then
+			decreaseDeals_S( )
+			setTimer( removeElementData, 500, 1, source, "stevie.money" )
+		end
+	end
+)
 -- { isWeapon, item/weapon ID, Value/Ammo }
 deals = { 
 	{ 
