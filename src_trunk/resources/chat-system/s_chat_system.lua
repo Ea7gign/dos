@@ -253,13 +253,16 @@ function chatMain(message, messageType)
 							local message2 = call(getResourceFromName("language-system"), "applyLanguage", source, value, message, language)
 							outputChatBox("[" .. languagename .. "] [RADIO #" .. theChannel .. "] " .. factionRankTitle .. username .. " says: " .. trunklateText( value, message2 ), value, 0, 102, 255)
 							
-							-- Show it to people near who can hear his radio
-							for k, v in ipairs(getElementsByType("player")) do
-								if getElementDistance(value, v) < 10 then
-									local channel = getElementData(v, "radiochannel")
-									if (v~=source) and (channel~=targetChannel) then
-										local message2 = call(getResourceFromName("language-system"), "applyLanguage", source, v, message, language)
-										outputChatBox("[" .. languagename .. "] " .. getPlayerName(value) .. "'s Radio: " .. trunklateText( v, message2 ), v, 255, 255, 255)
+							-- if they not have an earpiece
+							if not (exports.global:hasItem(value, 88)) then
+								-- Show it to people near who can hear his radio
+								for k, v in ipairs(getElementsByType("player")) do
+									if getElementDistance(value, v) < 10 then
+										local channel = getElementData(v, "radiochannel")
+										if (v~=source) and (channel~=targetChannel) then
+											local message2 = call(getResourceFromName("language-system"), "applyLanguage", source, v, message, language)
+											outputChatBox("[" .. languagename .. "] " .. getPlayerName(value) .. "'s Radio: " .. trunklateText( v, message2 ), v, 255, 255, 255)
+										end
 									end
 								end
 							end
