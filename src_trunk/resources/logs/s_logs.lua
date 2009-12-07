@@ -18,7 +18,8 @@ enumTypes = {
 	"moveitems",
 	"news",
 	"do",
-	"tv"
+	"tv",
+	"adminlock"
 }
 
 

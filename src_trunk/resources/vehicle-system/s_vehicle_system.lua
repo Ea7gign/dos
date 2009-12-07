@@ -1137,9 +1137,17 @@ function lockUnlockOutside(vehicle)
 	if (isVehicleLocked(vehicle)) then
 		setVehicleLocked(vehicle, false)
 		exports.global:sendLocalMeAction(source, "presses on the key to unlock the vehicle. ((" .. getVehicleName(vehicle) .. "))")
+		
+		if not (exports.global:hasItem(source, 3, dbid) or (getElementData(source, "faction") > 0 and getElementData(source, "faction") == getElementData(vehicle, "faction"))) then
+			exports.logs:logMessage("[UNLOCK] car #" .. dbid .. " was unlocked by " .. getPlayerName(source), 21)
+		end
 	else
 		setVehicleLocked(vehicle, true)
 		exports.global:sendLocalMeAction(source, "presses on the key to lock the vehicle. ((" .. getVehicleName(vehicle) .. "))")
+		
+		if not (exports.global:hasItem(source, 3, dbid) or (getElementData(source, "faction") > 0 and getElementData(source, "faction") == getElementData(vehicle, "faction"))) then
+			exports.logs:logMessage("[LOCK] car #" .. dbid .. " was locked by " .. getPlayerName(source), 21)
+		end
 	end
 
 	if (storeTimers[vehicle] == nil) or not (isTimer(storeTimers[vehicle])) then
