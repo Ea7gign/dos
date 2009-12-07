@@ -341,7 +341,7 @@ function respawnAllVehicles(thePlayer, commandName, timeToRespawn)
 					local logged = getElementData(arrayPlayer, "loggedin")
 					if (logged) then
 						if exports.global:isPlayerLeadAdmin(arrayPlayer) then
-							outputChatBox( "AdmWarn: " .. getPlayerName(thePlayer) .. " executed a vehicle respawn.", arrayPlayer, 255, 194, 14)
+							outputChatBox( "LeadAdmWarn: " .. getPlayerName(thePlayer) .. " executed a vehicle respawn.", arrayPlayer, 255, 194, 14)
 						end
 					end
 				end
