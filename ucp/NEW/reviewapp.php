@@ -32,7 +32,7 @@
 	}
 	
 	$tuserid = mysql_real_escape_string($_GET["id"], $conn);
-	$result = mysql_query("SELECT username, appgamingexperience, appcountry, applanguage, apphow, appwhy, appexpectations, appdefinitions, appfirstcharacter, appclarifications, appreason, appstate FROM accounts WHERE id='" . $tuserid . "' limit 1", $conn);
+	$result = mysql_query("SELECT username, appgamingexperience, appcountry, applanguage, apphow, appwhy, appexpectations, appdefinitions, appfirstcharacter, appclarifications, appreason, appstate, adminnote FROM accounts WHERE id='" . $tuserid . "' limit 1", $conn);
 	
 	$targetusername = mysql_result($result, 0, 0);
 	$gamingexperience = mysql_result($result, 0, 1);
@@ -46,6 +46,7 @@
 	$clarifications = mysql_result($result, 0, 9);
 	$adminreason = mysql_result($result, 0, 10);
 	$appstate = mysql_result($result, 0, 11);
+	$adminnote = mysql_result($result, 0, 12);
 	
 	if ($appstate != 1 && $admin < 1)
 	{
@@ -268,6 +269,44 @@
 								<textarea name="clarifications" id="clarifications" readonly="readonly" style="width:580px;height:150px"><?php echo $clarifications; ?></textarea>
 								<br />
 								<br />
+								<p><b>Characters:</b> <?php
+									$result = mysql_query("SELECT charactername FROM characters WHERE account = " . $tuserid . " ORDER BY id ASC",$conn);
+									$chars = array( );
+									while( $row = mysql_fetch_assoc($result) )
+									{
+										$chars[ ] = $row['charactername'];
+									}
+									if( count( $chars ) > 0 )
+										echo str_replace( "_", " ", implode( ", ", $chars ) );
+									else
+										echo "-";
+								?></p>
+								<?php if( $adminnote && strlen( $adminnote ) > 0 ) { ?>
+								<label for="adminnote" style="color:#FFF;">Admin note</label>
+								<textarea name="adminnote" id="adminnote" readonly="readonly" style="width:580px;height:150px"><?php echo $adminnote; ?></textarea>
+								<br />
+								<?php }
+									$result = mysql_query("SELECT date, action, reason, duration, a.username, user_char FROM adminhistory h LEFT JOIN accounts a ON a.id = h.admin WHERE user = " . $tuserid . " ORDER BY h.id ASC",$conn);
+									if( mysql_num_rows( $result ) > 0 )
+									{
+								?>
+								<p><b>History (<?= mysql_num_rows( $result ); ?>)</b><br />
+								<?php
+										$types = array( 0 => "jail", 1 => "kick", 2 => "ban", 3 => "app", 4 => "warn", 5 => "aban" );
+										while( $row = mysql_fetch_assoc($result) )
+										{
+											echo "<b>" . $types[ $row[ 'action' ] ] . "</b>";
+											
+											if( $row[ 'action' ] == 0 )
+												echo $row['duration'] == 999 ? " - Perm" : " - " . $row['duration'] . " min";
+											elseif( $row[ 'action' ] == 2 )
+												echo $row['duration'] == 0 ? " - Perm" : " - " . $row['duration'] . " hr"; 
+											
+											echo " - <b>" . $row['reason'] . "</b> - " . $row['date'] . " - " . $row['username'] . '<br />';
+										}
+									}
+								?>
+								</p>
 								<input type="radio" name="decision" id="accept" value="accept"onClick="doCheck2(this)">Accept<br />
 								<input type="radio" name="decision" id="deny" value="deny" onClick="doCheck(this)">Deny<br />
 								<br />
