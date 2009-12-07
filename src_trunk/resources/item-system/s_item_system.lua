@@ -572,6 +572,8 @@ function useItem(itemSlot, additional)
 				exports.global:sendLocalMeAction(source, "puts on a Government Badge.")
 			end
 			exports.global:updateNametagColor(source)
+		elseif (itemID==88) then -- earpiece
+			outputChatBox("You can use this earpiece with an radio.", source, 255, 194, 14)
 		else
 			outputChatBox("Error 800001 - Report on http://bugs.valhallagaming.net", source, 255, 0, 0)
 		end
