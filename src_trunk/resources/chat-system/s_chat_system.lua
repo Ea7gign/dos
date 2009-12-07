@@ -254,7 +254,7 @@ function chatMain(message, messageType)
 							outputChatBox("[" .. languagename .. "] [RADIO #" .. theChannel .. "] " .. factionRankTitle .. username .. " says: " .. trunklateText( value, message2 ), value, 0, 102, 255)
 							
 							-- if they not have an earpiece
-							if not (exports.global:hasItem(value, 88)) then
+							if (exports.global:hasItem(value, 88) == false) then
 								-- Show it to people near who can hear his radio
 								for k, v in ipairs(getElementsByType("player")) do
 									if getElementDistance(value, v) < 10 then
