@@ -243,6 +243,7 @@ function getItemsForSale(shop_type, race, gender)
 			{"Cane", "A stick has never been so classy.", "65", 15, 1,1,true,35},
 			{"Fire Extinguisher", "There is never one of these around when there is a fire", "50", 42, 500, 1,true,25},
 			{"Spray Can", "Hey, you better not tag with this punk!", "50", 41, 500, 1,true,35},
+			{"Parachute", "If you don't want to splat on the ground, you better buy one", "400", 46, 1, 1,true,300},
 			{"City Guide", "A small city guide booklet.", "15", 18, 1,1,false,7},
 			{"Rope", "A long rope.", "15", 46, 1,1,false,2},
 			{"Backpack", "A reasonably sized backpack.", "30", 48, 1,1,false,2},
