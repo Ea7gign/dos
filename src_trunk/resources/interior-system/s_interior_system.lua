@@ -242,7 +242,7 @@ end
 function sellTo(thePlayer, commandName, targetPlayerName)
 	-- only works in dimensions
 	local dbid, entrance, exit, interiorType = findProperty( thePlayer )
-	if dbid > 0 then
+	if dbid > 0 and not isPedInVehicle( thePlayer ) then
 		if interiorType == 2 then
 			outputChatBox("You cannot sell a government property.", thePlayer, 255, 0, 0)
 		elseif not targetPlayerName then

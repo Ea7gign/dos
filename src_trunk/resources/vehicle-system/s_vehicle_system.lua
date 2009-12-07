@@ -1045,7 +1045,7 @@ setTimer(checkWaterVehicles, 600000, 0)
 ------------------------------------------------
 function sellVehicle(thePlayer, commandName, targetPlayerName)
 	-- can only sell vehicles outdoor, in a dimension is property
-	if getElementDimension(thePlayer) == 0 then
+	if isPedInVehicle(thePlayer) then
 		if not targetPlayerName then
 			outputChatBox("SYNTAX: /" .. commandName .. " [partial player name / id]", thePlayer, 255, 194, 14)
 			outputChatBox("Sells the Vehicle you're in to that Player.", thePlayer, 255, 194, 14)
