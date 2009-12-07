@@ -100,7 +100,7 @@ end
 addCommandHandler("addinterior", createInterior, false, false)
 
 function updateInteriorExit(thePlayer, commandName)
-	if (exports.global:isPlayerAdmin(thePlayer)) then
+	if (exports.global:isPlayerLeadAdmin(thePlayer)) then
 		local interior = getElementInterior(thePlayer)
 		
 		if (interior==0) then
@@ -163,7 +163,7 @@ function sellProperty(thePlayer, commandName)
 		elseif interiorType ~= 3 and commandName == "unrent" then
 			outputChatBox("You do not rent this property.", thePlayer, 255, 0, 0)
 		else
-			if exports.global:isPlayerAdmin(thePlayer) or getElementData(entrance, "owner") == getElementData(thePlayer, "dbid") then
+			if exports.global:isPlayerLeadAdmin(thePlayer) or getElementData(entrance, "owner") == getElementData(thePlayer, "dbid") then
 				publicSellProperty(thePlayer, dbid, true, true)
 			else
 				outputChatBox("You do not own this property.", thePlayer, 255, 0, 0)
@@ -255,7 +255,7 @@ function sellTo(thePlayer, commandName, targetPlayerName)
 				local px, py, pz = getElementPosition(thePlayer)
 				local tx, ty, tz = getElementPosition(targetPlayer)
 				if getDistanceBetweenPoints3D(px, py, pz, tx, ty, tz) < 20 and getElementDimension(targetPlayer) == getElementDimension(thePlayer) then
-					if getElementData(entrance, "owner") == getElementData(thePlayer, "dbid") or exports.global:isPlayerAdmin(thePlayer) then
+					if getElementData(entrance, "owner") == getElementData(thePlayer, "dbid") or exports.global:isPlayerLeadAdmin(thePlayer) then
 						if getElementData(targetPlayer, "dbid") ~= getElementData(entrance, "owner") then
 							if exports.global:hasSpaceForItem(targetPlayer, 4) then
 								local query = mysql_query(handler, "UPDATE interiors SET owner = '" .. getElementData(targetPlayer, "dbid") .. "' WHERE id='" .. dbid .. "'")
