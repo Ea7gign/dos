@@ -33,7 +33,7 @@ function animateParachuteOpen()
 					setObjectScale ( object, 1 )
 					changeVelocity = true
 					if not isPlayerDead ( player ) then
-						exports.global:applyAnimation(player, "PARACHUTE", "PARA_float", -1, false, false, true)
+						setPedAnimation ( player, "PARACHUTE", "PARA_float", -1, false, false, false )
 					end
 					openingChutes[object] = nil
 					return

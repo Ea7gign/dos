@@ -284,8 +284,8 @@ function Superman.onJump(key, keyState)
   local self = Superman
 
   local admin = getElementData(localPlayer, "adminlevel")
-  
-  if (admin>1) then
+  local parachuting = getElementData(localPlayer, "parachuting")
+  if admin>1 and not parachuting then
 	  local task = getPedSimplestTask(localPlayer)
 	  if not isPlayerFlying(localPlayer) then
 		if task == "TASK_SIMPLE_IN_AIR" then

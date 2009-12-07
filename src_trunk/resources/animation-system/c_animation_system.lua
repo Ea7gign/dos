@@ -6,8 +6,10 @@ function onRender()
 	if (getPedAnimation(getLocalPlayer())) and not (forcedanimation) then
 		local screenWidth, screenHeight = guiGetScreenSize()
 		anim = true
-		dxDrawText("Press Spacebar to Cancel Animation", screenWidth-420, screenHeight-91, screenWidth, screenHeight, tocolor ( 0, 0, 0, 255 ), 1, "pricedown")
-		dxDrawText("Press Spacebar to Cancel Animation", screenWidth-422, screenHeight-93, screenWidth-30, screenHeight, tocolor ( 255, 255, 255, 255 ), 1, "pricedown")
+		local text = "Press Spacebar to Cancel " .. ( getElementData(getLocalPlayer(), "parachuting") and "Parachuting" or "Animation" )
+		local width = getElementData(getLocalPlayer(), "parachuting") and 435 or 420
+		dxDrawText(text, screenWidth-width, screenHeight-91, screenWidth, screenHeight, tocolor ( 0, 0, 0, 255 ), 1, "pricedown")
+		dxDrawText(text, screenWidth-width-2, screenHeight-93, screenWidth-30, screenHeight, tocolor ( 255, 255, 255, 255 ), 1, "pricedown")
 		
 		-- turning while walking
 		local block, style = getPedAnimation(getLocalPlayer())
