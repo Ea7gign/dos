@@ -326,6 +326,7 @@ function getItemsForSale(shop_type, race, gender)
 			{"Camera", "A small black analogue camera.", "75", 43, 25,1,true, 30},
 			{"Cellphone", "A stylish, slim cell phone.", "75", 2, 1,1,false,50},
 			{"Radio", "A black radio.", "50", 6, 1,1,false,30},
+			{"Earpiece", "An earpiece that can be used with an radio.", "225", 88, 1,1,false,60},
 			{"Watch", "Telling the time was never so sexy!", "25", 17, 1, 1,false,10},
 			{"MP3 Player", "A white, sleek looking MP3 Player. The brand reads EyePod.", "120", 19, 1,1,false,7},
 			{"Chemistry Set", "A small chemistry set.", "2000", 44, 1,1,false,15},
