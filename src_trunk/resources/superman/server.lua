@@ -47,9 +47,11 @@ end
 addEventHandler("onResourceStart", getResourceRootElement(thisResource), Superman.Start, false)
 
 function Superman.clientStart()
-	setElementData(client, "superman:flying", true)
+  setElementData(client, "superman:flying", true)
+  setElementData(client, "forcedanimation", true)
 end
 
 function Superman.clientStop()
-  setElementData(client, "superman:flying", false)
+  removeElementData(client, "superman:flying")
+  removeElementData(client, "forcedanimation")
 end
