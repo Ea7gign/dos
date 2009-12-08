@@ -337,7 +337,7 @@ function respawnAllVehicles(thePlayer, commandName, timeToRespawn)
 			else
 				timeToRespawn = tonumber(timeToRespawn) or 30
 				timeToRespawn = timeToRespawn < 10 and 10 or timeToRespawn
-				for k, arrayPlayer in ipairs(exports:global:getAdmins()) do
+				for k, arrayPlayer in ipairs(exports.global:getAdmins()) do
 					local logged = getElementData(arrayPlayer, "loggedin")
 					if (logged) then
 						if exports.global:isPlayerLeadAdmin(arrayPlayer) then
