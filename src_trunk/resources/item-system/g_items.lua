@@ -120,6 +120,8 @@ end
 function getItemName(id, value)
 	if id == -100 then
 		return "Body Armor"
+	elseif id == -46 then -- MTA Client bug
+		return "Parachute"
 	elseif id < 0 then
 		return getWeaponNameFromID( -id )
 	elseif not g_items[id] then
