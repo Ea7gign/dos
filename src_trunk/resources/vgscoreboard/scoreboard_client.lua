@@ -40,6 +40,14 @@ function removeFromScoreboard()
 	updatePlayers()
 end
 
+local function name( player )
+	local n = getPlayerName( player ):gsub("_", " ")
+	if getElementData( player, "loggedin" ) ~= 1 then
+		n = n .. " (not logged in)"
+	end
+	return n
+end
+
 function updatePlayers()
 	guiGridListClear(scoreboardGrid)
 	scoreboardRows = {}
@@ -49,7 +57,7 @@ function updatePlayers()
 	scoreboardRows[localPlayer] = row
 
 	guiGridListSetItemText(scoreboardGrid, row, 1, tostring(getElementData(localPlayer, "playerid")), false, true)
-	guiGridListSetItemText(scoreboardGrid, row, 2, getPlayerName(localPlayer), false, false)
+	guiGridListSetItemText(scoreboardGrid, row, 2, name(localPlayer), false, false)
 	guiGridListSetItemText(scoreboardGrid, row, 3, tostring(getPlayerPing(localPlayer)), false, true)
 
 	for i = 1, 128 do
@@ -59,7 +67,7 @@ function updatePlayers()
 			scoreboardRows[player] = row
 			
 			guiGridListSetItemText(scoreboardGrid, row, 1, tostring(i), false, true)
-			guiGridListSetItemText(scoreboardGrid, row, 2, getPlayerName(player), false, false)
+			guiGridListSetItemText(scoreboardGrid, row, 2, name(player), false, false)
 			guiGridListSetItemText(scoreboardGrid, row, 3, tostring(getPlayerPing(player)), false, true)
 		end
 	end
@@ -186,5 +194,13 @@ addEventHandler("onClientResourceStart", getResourceRootElement(),
 		end
 		
 		updatePlayers()
+	end
+)
+
+addEventHandler( "onClientElementDataChange", getRootElement(),
+	function( name )
+		if name == "playerid" or name == "loggedin" then
+			updatePlayers()
+		end
 	end
 )
