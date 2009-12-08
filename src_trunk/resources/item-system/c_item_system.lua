@@ -210,7 +210,7 @@ function pickupItem(button, state)
 					local slot = getSlotFromWeapon( -itemID )
 					if slot and slot ~= 0 and getPedTotalAmmo( getLocalPlayer(), slot ) > 0 then
 						local weapon = getPedWeapon( getLocalPlayer(), slot )
-						weaponName = getWeaponNameFromID( weapon )
+						weaponName = getItemName( -weapon )
 					end
 					outputChatBox( "You don't carry that weapon, please drop your " .. weaponName .. " first.", 255, 0, 0 )
 				elseif free == 0 then
@@ -432,7 +432,7 @@ function showInventory(player, syncw, synca)
 					break
 				else
 					local row = guiGridListAddRow(gWeapons)
-					local weapon = getWeaponNameFromID(tokenweapon)
+					local weapon = getItemName(-tokenweapon)
 					guiGridListSetItemText(gWeapons, row, colWSlot, tostring(getSlotFromWeapon(tokenweapon)), false, true)
 					guiGridListSetItemText(gWeapons, row, colWName, tostring(weapon), false, false)
 					guiGridListSetItemText(gWeapons, row, colWValue, tostring(tokenammo), false, false)
@@ -440,9 +440,9 @@ function showInventory(player, syncw, synca)
 			end
 		elseif player == getLocalPlayer() then
 			for i = 0, 12 do
-				if getPedWeapon(player, i) and getWeaponNameFromID(getPedWeapon(player, i)) ~= "Melee" and getPedTotalAmmo(player, i) > 0 then
+				if getPedWeapon(player, i) and getPedWeapon(player, i) ~= 0 and getPedTotalAmmo(player, i) > 0 then
 					local row = guiGridListAddRow(gWeapons)
-					local weapon = getWeaponNameFromID(getPedWeapon(player, i))
+					local weapon = getItemName(-getPedWeapon(player, i))
 					local ammo = getPedTotalAmmo(player, i)
 					guiGridListSetItemText(gWeapons, row, colWSlot, tostring(i), false, true)
 					guiGridListSetItemText(gWeapons, row, colWName, tostring(weapon), false, false)
