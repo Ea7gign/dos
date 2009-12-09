@@ -96,7 +96,8 @@ g_items = {
 	{ "Emergency Siren", "An emergency siren to put in your car.", 7, 330, 90, 90, 0, -0.05 },
 	{ "SAN Identifcation", "An SAN Identification issued to #v.", 7, 330, 90, 90, 0, -0.05 },
 	{ "LS Government Badge", "A Los Santos Government Badge.", 4, 1581, 270, 270, 0, 0 },
-	{ "Earpiece", "A small earpiece, can be connected to a radio.", 7, 1581, 270, 270, 0, 0 }
+	{ "Earpiece", "A small earpiece, can be connected to a radio.", 7, 1581, 270, 270, 0, 0 },
+	{ "Food", "", 1, 2222, 0, 0, 0, 0.07 },
 	--Chairs = { 1663, 1671, 1720, 1721, 1810, 1811, 2079, 2120, 2121, 2125, 2777, 2788, 1369 }
 }
 
@@ -131,8 +132,22 @@ function getItemName(id, value)
 	elseif ( id == 4 or id == 5 ) and value then
 		local pickup = exports['interior-system']:findParent( nil, value )
 		return g_items[id][1] .. ( pickup and ( " (" .. getElementData( pickup, "name" ) .. ")" ) or "" )
+	elseif ( id == 80 ) and value then
+		return value
+	elseif ( id == 89 ) and value and value:find( ";" ) then
+		return value:sub( 1, value:find( ";" ) - 1 )
 	else
 		return g_items[id][1]
+	end
+end
+
+function getItemValue(id, value)
+	if id == 80 then
+		return ""
+	elseif id == 89 then
+		return value:sub( value:find( ";" ) + 1 )
+	else
+		return value
 	end
 end
 

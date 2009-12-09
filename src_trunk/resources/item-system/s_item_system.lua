@@ -20,7 +20,7 @@ function useItem(itemSlot, additional)
 	local items = getItems(source)
 	local itemID = items[itemSlot][1]
 	local itemValue = items[itemSlot][2]
-	local itemName = getItemName( itemID )
+	local itemName = getItemName( itemID, itemValue )
 	if isPedDead(source) or getElementData(source, "injuriedanimation") then return end
 	if itemID then
 		if (itemID==1) then -- haggis
@@ -525,6 +525,8 @@ function useItem(itemSlot, additional)
 			exports.global:sendLocalText(source, " *((Cards)) " .. getPlayerName(source):gsub("_", " ") .. " draws a card and gets a" .. ( number == 1 and "n" or "" ) .. " " .. cards[number] ..".", 255, 51, 102)
 		elseif (itemID==79) then -- Porn tape
 			exports.global:applyAnimation( source, "PAULNMAC", "wank_loop", -1, true, false, false)
+		elseif (itemID==80) then -- Generic Item
+			showItem(itemName)
 		elseif (itemID==83) then -- Coffee
 			giveHealth(source, 40)
 			exports.global:applyAnimation(source, "VENDING", "VEND_Drink_P", 4000, false, true, true)
@@ -574,6 +576,12 @@ function useItem(itemSlot, additional)
 			exports.global:updateNametagColor(source)
 		elseif (itemID==88) then -- earpiece
 			outputChatBox("You can use this earpiece with an radio.", source, 255, 194, 14)
+		elseif (itemID==89) then -- sandwich
+			giveHealth(source, tonumber(getItemValue(itemID, itemValue)))
+			exports.global:applyAnimation(source, "food", "eat_burger", 4000, false, true, true)
+			toggleAllControls(source, true, true, true)
+			exports.global:sendLocalMeAction(source, "eats a " .. itemName .. ".")
+			takeItemFromSlot(source, itemSlot)
 		else
 			outputChatBox("Error 800001 - Report on http://bugs.valhallagaming.net", source, 255, 0, 0)
 		end
@@ -709,7 +717,7 @@ function dropItem(itemID, x, y, z, ammo, keepammo)
 			local id = mysql_insert_id(handler)
 			mysql_free_result(insert)
 			
-			outputChatBox("You dropped a " .. ( itemID == 80 and itemValue or getItemName( itemID ) ) .. ".", source, 255, 194, 14)
+			outputChatBox("You dropped a " .. getItemName( itemID, itemValue ) .. ".", source, 255, 194, 14)
 			
 			-- Animation
 			exports.global:applyAnimation(source, "CARRY", "putdwn", 500, false, false, true)
@@ -802,7 +810,7 @@ function dropItem(itemID, x, y, z, ammo, keepammo)
 				destroyElement(shields[source])
 				shields[source] = nil
 			end
-			exports.global:sendLocalMeAction(source, "dropped a " .. ( itemID == 80 and itemValue or getItemName( itemID ) ) .. ".")
+			exports.global:sendLocalMeAction(source, "dropped a " .. getItemName( itemID, itemValue ) .. ".")
 		else
 			outputDebugString( mysql_error( handler ) )
 		end
@@ -989,8 +997,8 @@ function pickupItem(object, leftammo)
 			exports.global:giveWeapon(source, -itemID, itemValue, true)
 			triggerClientEvent(source, "saveGuns", source)
 		end
-		outputChatBox("You picked up a " .. ( itemID == 80 and itemValue or getItemName( itemID ) ) .. ".", source, 255, 194, 14)
-		exports.global:sendLocalMeAction(source, "bends over and picks up a " .. ( itemID == 80 and itemValue or getItemName( itemID ) ) .. ".")
+		outputChatBox("You picked up a " .. getItemName( itemID, itemValue ) .. ".", source, 255, 194, 14)
+		exports.global:sendLocalMeAction(source, "bends over and picks up a " .. getItemName( itemID, itemValue ) .. ".")
 		if itemID == 2 or itemID == 17 then
 			triggerClientEvent(source, "updateHudClock", source)
 		end
