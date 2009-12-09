@@ -41,9 +41,9 @@ addCommandHandler("stopani", stopAnimation, false, false)
 function animationList(thePlayer)
 	outputChatBox("/piss /wank /slapass /fixcar /handsup /hailtaxi /scratch /fu /carchat /tired", thePlayer, 255, 194, 14)
 	outputChatBox("/strip 1-2 /lightup /drink /beg /mourn /cheer 1-3 /dance 1-3 /crack 1-2 /walk 1-37", thePlayer, 255, 194, 14)
-	outputChatBox("/gsign 1-5 /puke /rap 1-3 /sit 1-3 /smoke 1-3 /smokelean /laugh /startrace", thePlayer, 255, 194, 14)
+	outputChatBox("/gsign 1-5 /puke /rap 1-3 /sit 1-3 /smoke 1-3 /smokelean /laugh /startrace /bat 1-3", thePlayer, 255, 194, 14)
 	outputChatBox("/daps 1-2 /shove /bitchslap /shocked /dive /what /fall /fallfront /cpr /copaway", thePlayer, 255, 194, 14)
-	outputChatBox("/copcome /copleft /copstop /wait /think /shake /idle /lay /cry /aim /drag", thePlayer, 255, 194, 14)
+	outputChatBox("/copcome /copleft /copstop /wait /think /shake /idle /lay /cry /aim /drag /win 1-2", thePlayer, 255, 194, 14)
 	outputChatBox("/stopanim or press the space bar to cancel animations.", thePlayer, 255, 194, 14)
 end
 addCommandHandler("animlist", animationList, false, false)
@@ -443,12 +443,22 @@ function sitAnimation(thePlayer, cmd, arg)
 	arg = tonumber(arg)
 	
 	if (logged==1) then
-		if arg == 2 then
-			exports.global:applyAnimation( thePlayer, "FOOD", "FF_Sit_Look", -1, true, false, false)
-		elseif arg == 3 then
-			exports.global:applyAnimation( thePlayer, "Attractors", "Stepsit_loop", -1, true, false, false)
+		if isPedInVehicle( thePlayer ) then
+			if arg == 2 then
+				setPedAnimation( thePlayer, "CAR", "Sit_relaxed" )
+			else
+				setPedAnimation( thePlayer, "CAR", "Tap_hand" )
+			end
+			source = thePlayer
+			bindAnimationStopKey()
 		else
-			exports.global:applyAnimation( thePlayer, "ped", "SEAT_idle", -1, true, false, false)
+			if arg == 2 then
+				exports.global:applyAnimation( thePlayer, "FOOD", "FF_Sit_Look", -1, true, false, false)
+			elseif arg == 3 then
+				exports.global:applyAnimation( thePlayer, "Attractors", "Stepsit_loop", -1, true, false, false)
+			else
+				exports.global:applyAnimation( thePlayer, "ped", "SEAT_idle", -1, true, false, false)
+			end
 		end
 	end
 end
@@ -636,3 +646,35 @@ function walkAnimation(thePlayer, cmd, arg)
 	end
 end
 addCommandHandler("walk", walkAnimation, false, false)
+
+-- /bat animtion -------------------------------------------------
+function batAnimation(thePlayer, cmd, arg)
+	local logged = getElementData(thePlayer, "loggedin")
+	arg = tonumber(arg)
+	
+	if (logged==1) then
+		if arg == 2 then
+			exports.global:applyAnimation( thePlayer, "CRACK", "Bbalbat_Idle_02", -1, true, false, false)
+		elseif arg == 3 then
+			exports.global:applyAnimation( thePlayer, "Baseball", "Bat_IDLE", -1, true, false, false)
+		else
+			exports.global:applyAnimation( thePlayer, "CRACK", "Bbalbat_Idle_01", -1, true, false, false)
+		end
+	end
+end
+addCommandHandler("bat", batAnimation, false, false)
+
+-- /win Amination -------------------------------------------------------------------------
+function winAnimation(thePlayer, cmd, arg)
+	local logged = getElementData(thePlayer, "loggedin")
+	arg = tonumber(arg)
+	
+	if (logged==1) then
+		if arg == 2 then
+			exports.global:applyAnimation( thePlayer, "CASINO", "manwinb", 2000, false, false, false)
+		else
+			exports.global:applyAnimation( thePlayer, "CASINO", "manwind", 2000, false, false, false)
+		end
+	end
+end
+addCommandHandler ( "win", winAnimation, false, false )
