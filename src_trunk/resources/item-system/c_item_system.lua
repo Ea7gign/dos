@@ -88,13 +88,10 @@ addEventHandler("onClientClick", getRootElement(), clickItem, true)
 function showItemMenu()
 	local itemID = getElementData(item, "itemID")
 	local itemValue = getElementData(item, "itemValue")
-	local itemName = getItemName( itemID )
+	local itemName = getItemName( itemID, itemValue )
 	
-	local label = itemName .. " (" .. itemValue .. ")"
-	if itemID == 80 then
-		label = itemValue
-	elseif itemID == 89 then
-		label = itemValue:sub( 1, itemValue:find( ";" ) - 1 ) .. " (" .. itemValue:sub( itemValue:find( ";" ) + 1 ) .. ")"
+	if itemID ~= 80 then
+		itemName = itemName .. " (" .. getItemValue( itemID, itemValue ) .. ")"
 	end
 	wRightClick = guiCreateWindow(ax, ay, 150, 200, label, false)
 	
