@@ -299,7 +299,7 @@
 								$phpns['disable_pagination'] = 'True';
 								$phpns['script_link'] = 'news.php';
 								//after variable declaration(s), include shownews.php
-								include("../site/mta/admin/shownews.php");
+								//include("../site/mta/admin/shownews.php");
 							?>
 							<h4><a href="archive.php">News Archive</a></h4>
 						</div>
