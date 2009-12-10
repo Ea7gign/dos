@@ -39,7 +39,7 @@
 	
 	$globalbans = mysql_result($result2, 0, 0);
 	$falsepos = mysql_result($result3, 0, 0);
-	$bannedreason = mysql_result($reuslt, 0, 12);
+	$bannedreason = mysql_result($result, 0, 12);
 	
 	if ((strpos($bannedreason, "cheat") || strpos($bannedreason, "cheat")) && $banned == 1)
 		$vacbanned = 1;
