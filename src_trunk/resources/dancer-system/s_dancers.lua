@@ -91,30 +91,42 @@ addCommandHandler( "adddancer",
 				local interior = getElementInterior( thePlayer )
 				local dimension = getElementDimension( thePlayer )
 				
-				local ped = createPed( skin, x, y, z )
-				if ped then
-					local result = mysql_query( handler, "INSERT INTO dancers (x,y,z,rotation,skin,type,interior,dimension,offset) VALUES (" .. x .. "," .. y .. "," .. z .. "," .. rotation .. "," .. skin .. "," .. type .. "," .. interior .. "," .. dimension .. "," .. offset .. ")" )
-					if result then
-						local id = mysql_insert_id( handler )
-						mysql_free_result( result )
-						
-						setElementData( ped, "dbid", id, false )
-						setElementData( ped, "position", { x, y, z, rotation }, false )
-						setPedRotation( ped, rotation )
-						setElementInterior( ped, interior )
-						setElementDimension( ped, dimension )
-						
-						peds[ ped ] = { type, offset }
-						setTimer( updateDancing, 50, 1 )
-						
-						outputChatBox( "Added Dancer with ID " .. id .. ".", thePlayer, 0, 255, 0 )
+				local query = mysql_query( handler, "SELECT COUNT(*) FROM dancers WHERE dimension = " .. dimension )
+				if query then
+					local num = tonumber( mysql_result( query, 1, 1 ) ) or 5
+					mysql_free_result( query )
+					if dimension == 0 or num < 3 or exports.global:isPlayerScripter( thePlayer ) then
+						local ped = createPed( skin, x, y, z )
+						if ped then
+							local result = mysql_query( handler, "INSERT INTO dancers (x,y,z,rotation,skin,type,interior,dimension,offset) VALUES (" .. x .. "," .. y .. "," .. z .. "," .. rotation .. "," .. skin .. "," .. type .. "," .. interior .. "," .. dimension .. "," .. offset .. ")" )
+							if result then
+								local id = mysql_insert_id( handler )
+								mysql_free_result( result )
+								
+								setElementData( ped, "dbid", id, false )
+								setElementData( ped, "position", { x, y, z, rotation }, false )
+								setPedRotation( ped, rotation )
+								setElementInterior( ped, interior )
+								setElementDimension( ped, dimension )
+								
+								peds[ ped ] = { type, offset }
+								setTimer( updateDancing, 50, 1 )
+								
+								outputChatBox( "Added Dancer with ID " .. id .. ".", thePlayer, 0, 255, 0 )
+							else
+								destroyElement( ped )
+								outputDebugString( mysql_error( handler ) )
+								outputChatBox( "SQL Error.", thePlayer, 255, 0, 0 )
+							end
+						else
+							outputChatBox( "Invalid Skin ID.", thePlayer, 255, 0, 0 )
+						end
 					else
-						destroyElement( ped )
-						outputDebugString( mysql_error( handler ) )
-						outputChatBox( "SQL Error.", thePlayer, 255, 0, 0 )
+						outputChatBox( "You can only have 3 dancers per interior.", thePlayer, 255, 0, 0 )
 					end
 				else
-					outputChatBox( "Invalid Skin ID.", thePlayer, 255, 0, 0 )
+					outputDebugString( mysql_error( handler ) )
+					outputChatBox( "SQL Error.", thePlayer, 255, 0, 0 )
 				end
 			end
 		end
