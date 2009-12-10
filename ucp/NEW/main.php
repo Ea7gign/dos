@@ -312,7 +312,7 @@
 								
 								<li><b>Global Bans:</b> <?php echo $globalbans ?></li>
 								<li><b>False Positives:</b> <?php echo $falsepos ?></li>
-								<li><b>Accuracy:</b> <?php echo 100- (($falsepos/$globalbans) * 100) . "%" ?></li>
+								<li><b>Accuracy:</b> <?php echo round(100- (($falsepos/$globalbans) * 100)) . "%" ?></li>
 								<li><b>VAC Standing:</b> <?php echo getVACStandingFromIndex($vacbanned) ?></li>
 							</ul>
 						</div>
