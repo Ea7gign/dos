@@ -12,8 +12,10 @@
 	$userid = mysql_real_escape_string($_COOKIE["uid"], $conn);
 	
 	mysql_select_db("mta", $conn);
-	$result = mysql_query("SELECT username, admin, donator, appstate, apphandler, appreason, banned, email, appdatetime > NOW(), HOUR(TIMEDIFF(NOW(), appdatetime)), MINUTE(TIMEDIFF(NOW(), appdatetime)), overseer FROM accounts WHERE id='" . $userid . "' LIMIT 1", $conn);
-
+	$result = mysql_query("SELECT username, admin, donator, appstate, apphandler, appreason, banned, email, appdatetime > NOW(), HOUR(TIMEDIFF(NOW(), appdatetime)), MINUTE(TIMEDIFF(NOW(), appdatetime)), overseer, banned_reason FROM accounts WHERE id='" . $userid . "' LIMIT 1", $conn);
+	$result2 = mysql_query("SELECT count(*) FROM accounts WHERE banned = 1 AND (banned_reason LIKE '%cheat%' OR banned_reason LIKE '%hack%')", $conn);
+	$result3 = mysql_query("SELECT count(*) FROM accounts WHERE banned = 0 AND (banned_reason LIKE '%cheat%' OR banned_reason LIKE '%hack%')", $conn);
+	
 	if (!$result || mysql_num_rows($result)==0)
 	{
 		setcookie("uid", "", time()-3600);
@@ -35,6 +37,15 @@
 	$timeminute = mysql_result($result, 0, 10);
 	$overseer = mysql_result($result, 0, 11);
 	
+	$globalbans = mysql_result($result2, 0, 0);
+	$falsepos = mysql_result($result3, 0, 0);
+	$bannedreason = mysql_result($reuslt, 0, 12);
+	
+	if ((strpos($bannedreason, "cheat") || strpos($bannedreason, "cheat")) && $banned == 1)
+		$vacbanned = 1;
+	else
+		$vacbanned = 0;
+	
 	if ( is_null($email))
 		$email = "None."
 ?>
@@ -55,6 +66,12 @@
 	function getStandingFromIndex($index)
 	{
 		$ranks = array("<em><font color='#66FF00'>In Good Standing</font></em>", "<em><font color='#FF0000'>Banned</font></em>");
+		return $ranks[$index];
+	}
+	
+	function getVACStandingFromIndex($index)
+	{
+		$ranks = array("<em><font color='#66FF00'>In Good Standing</font></em>", "<em><font color='#FF0000'>VAC Banned</font></em>");
 		return $ranks[$index];
 	}
 ?>
@@ -197,7 +214,7 @@
 				<div id="content-middle">
 					<div class="content-box">
 						<div class="content-holder">
-							<h2>Main</h2>
+							<h2>Account Information</h2>
 							<span style="text-align:center;">
 							 <?php
 								if ($appstate == 3)
@@ -210,9 +227,9 @@
 								}
 							?>
 							</span>
-							<h3>Account Information</h3>
+							
 							<ul style="list-style-type:none;margin-left:0px;padding-left:0px;">
-								<li>Application Status:							
+								<li><b>Application Status:</b>							
 								<?php
 									if ($appstate == 0)
 										echo "<a href='writeapplication.php'><font color='#FF9900' align='left'>Click here to write one</font></a></li>";
@@ -227,16 +244,16 @@
 										echo "<font color='#66FF00'>Accepted</font></li>";
 								?>
 								
-								<li>Administrator: <?php echo getAdminTitleFromIndex($admin) ?></li>
-								<?php echo ( ( $overseer == 1 ) ? '<li>Overseer: Yes</li>' : '' ); ?> 
-								<li>Donator: <?php echo getDonatorTitleFromIndex($donator) ?></li>
-								<li>Account Standing: <?php echo getStandingFromIndex($banned) ?></li>
-								<li>Email Address: <?php echo $email; ?></li>
+								<li><b>Administrator:</b> <?php echo getAdminTitleFromIndex($admin) ?></li>
+								<?php echo ( ( $overseer == 1 ) ? '<li>Overseer: <b>Yes</b></li>' : '' ); ?> 
+								<li><b>Donator:</b> <?php echo getDonatorTitleFromIndex($donator) ?></li>
+								<li><b>Account Standing:</b> <?php echo getStandingFromIndex($banned) ?></li>
+								<li><b>Email Address:</b> <?php echo $email; ?></li>
 							</ul>
 						</div>
 					</div>
 				</div>
-				
+
 				<!-- Column -->
 				<div id="content-left">
 					<div class="content-box">
@@ -286,6 +303,23 @@
 					</div>
 				</div>
 				<!-- End of column -->
+				
+				<div id="content-middle">
+					<div class="content-box">
+						<div class="content-holder">
+							<h2>Valhalla Anti-Cheat</h2>
+							<ul style="list-style-type:none;margin-left:0px;padding-left:0px;">
+								
+								<li><b>Global Bans:</b> <?php echo $globalbans ?></li>
+								<li><b>False Positives:</b> <?php echo $falsepos ?></li>
+								<li><b>Accuracy:</b> <?php echo 100- (($falsepos/$globalbans) * 100) . "%" ?></li>
+								<li><b>VAC Standing:</b> <?php echo getVACStandingFromIndex($vacbanned) ?></li>
+							</ul>
+						</div>
+					</div>
+				</div>
+				
+				
 				
 				<div id="break"></div>
 			</div>
