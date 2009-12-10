@@ -149,13 +149,10 @@ function renderNametags()
 								--sx, sy2 = getScreenFromWorldPosition(x, y, z+0.25, 100, false)
 								
 								if (sx) and (sy) then
-									if (distance==1) then
-										sy = sy + 30
-									elseif (distance<=1.5) then
-										sy = sy + 20
-									else
-										sy = sy + 10
+									if (distance<=2) then
+										sy = math.ceil( sy + ( 2 - distance ) * 20 )
 									end
+									sy = sy + 10
 									
 									
 									if (sx) and (sy) then
@@ -195,17 +192,10 @@ function renderNametags()
 									--sx, sy = getScreenFromWorldPosition(x, y, z+0.6, 100, false)
 									--sy = sy - (60 - distance*10)
 									
-									if (distance==1) then
-										sy = sy - 60
-									elseif (distance<=1.25) then
-										sy = sy - 50
-									elseif (distance<=1.5) then
-										sy = sy - 40
-									elseif (distance<=1.75) then
-										sy = sy - 30
-									else
-										sy = sy - 20
+									if (distance<=2) then
+										sy = math.ceil( sy - ( 2 - distance ) * 40 )
 									end
+									sy = sy - 20
 										
 									if (sx) and (sy) then
 										if (distance < 1) then distance = 1 end
