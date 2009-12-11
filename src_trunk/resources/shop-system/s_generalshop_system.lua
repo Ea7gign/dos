@@ -374,7 +374,7 @@ function givePlayerBoughtItem(itemID, itemValue, theCost, isWeapon, name, supply
 							exports.global:giveMoney(getTeamFromName("Government of Los Santos"), math.floor(theCost/2))
 						end
 					else
-						outputChatBox("You do not have a weapons license - You can buy this license at City Hall.", source, 255, 194, 14)
+						outputChatBox("You do not have a weapons license - You can buy this license at the LSPD.", source, 255, 194, 14)
 					end
 				else
 					if exports.global:takeMoney(source, theCost) then
