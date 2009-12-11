@@ -432,29 +432,14 @@ addEvent("updateGlobalSupplies", true)
 addEventHandler("updateGlobalSupplies", getRootElement(), updateGlobalSupplies)
 
 function checkSupplies(thePlayer)
-	local interior = getElementInterior(thePlayer)
+	local dbid, entrance, exit, inttype = exports['interior-system']:findProperty( thePlayer )
 	
-	if (interior==0) then
+	if (dbid==0) then
 		outputChatBox("You are not in a business.", thePlayer, 255, 0, 0)
 	else
-		local dbid = getElementDimension(thePlayer)
-			
-		local owner = nil
-		local inttype = nil
-		local pickups = exports.pool:getPoolElementsByType("pickup")
-		for k, thePickup in ipairs(pickups) do
-			local pickupType = getElementData(thePickup, "type")
-			
-			if (pickupType=="interiorexit") then
-				local pickupID = getElementData(thePickup, "dbid")
-				if (pickupID==dbid) then
-					owner = getElementData(thePickup, "owner")
-					inttype = getElementData(thePickup, "inttype")
-				end
-			end
-		end
-			
-		if (tonumber(owner)==getElementData(thePlayer, "dbid")) and (inttype==1) then
+		owner = getElementData(entrance, "owner")
+		
+		if (tonumber(owner)==getElementData(thePlayer, "dbid") or exports.global:hasItem(thePlayer, 4, dbid) or exports.global:hasItem(thePlayer, 5, dbid)) and (inttype==1) then
 			local query = mysql_query(handler, "SELECT supplies FROM interiors WHERE id='" .. dbid .. "' LIMIT 1")
 			local supplies = mysql_result(query, 1, 1)
 			mysql_free_result(query)
@@ -471,29 +456,14 @@ function orderSupplies(thePlayer, commandName, amount)
 	if not (amount) then
 		outputChatBox("SYNTAX: /" .. commandName .. " [Amount of Supplies]", thePlayer, 255, 194, 14)
 	else
-		local interior = getElementInterior(thePlayer)
+		local dbid, entrance, exit, inttype = exports['interior-system']:findProperty( thePlayer )
 		
-		if (interior==0) then
+		if (dbid==0) then
 			outputChatBox("You are not in a business.", thePlayer, 255, 0, 0)
 		else
-			local dbid = getElementDimension(thePlayer)
-				
-			local owner = nil
-			local inttype = nil
-			local pickups = exports.pool:getPoolElementsByType("pickup")
-			for k, thePickup in ipairs(pickups) do
-				local pickupType = getElementData(thePickup, "type")
-				
-				if (pickupType=="interiorexit") then
-					local pickupID = getElementData(thePickup, "dbid")
-					if (pickupID==dbid) then
-						owner = getElementData(thePickup, "owner")
-						inttype = getElementData(thePickup, "inttype")
-					end
-				end
-			end
+			owner = getElementData(entrance, "owner")
 			
-			if (tonumber(owner)==getElementData(thePlayer, "dbid")) and (inttype==1) then
+			if (tonumber(owner)==getElementData(thePlayer, "dbid") or exports.global:hasItem(thePlayer, 4, dbid) or exports.global:hasItem(thePlayer, 5, dbid)) and (inttype==1) then
 				amount = tonumber(amount)
 				
 				if (amount>globalSupplies) then
