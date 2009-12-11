@@ -93,7 +93,7 @@ function showItemMenu()
 	if itemID ~= 80 then
 		itemName = itemName .. " (" .. getItemValue( itemID, itemValue ) .. ")"
 	end
-	wRightClick = guiCreateWindow(ax, ay, 150, 200, label, false)
+	wRightClick = guiCreateWindow(ax, ay, 150, 200, itemName, false)
 	
 	local y = 0.13
 	if itemID == 81 then
