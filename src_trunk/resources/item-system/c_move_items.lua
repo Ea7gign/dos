@@ -25,8 +25,8 @@ local function forceUpdate( )
 		end
 	end
 	
-	-- WEAPONS
 	if getElementModel( element ) ~= 2147 then
+		-- WEAPONS
 		for slot = 0, 12 do
 			if getPedWeapon(localPlayer, slot) and getPedWeapon(localPlayer, slot) > 0 and getPedTotalAmmo( localPlayer, slot ) > 0 then
 				local row = guiGridListAddRow(gUserItems)
@@ -34,6 +34,14 @@ local function forceUpdate( )
 				guiGridListSetItemText(gUserItems, row, UIColName, getItemName( -getPedWeapon(localPlayer, slot) ) .. " - " .. getPedTotalAmmo( localPlayer, slot ), false, false)
 				guiGridListSetItemData(gUserItems, row, UIColName, tostring( -slot ) )
 			end
+		end
+		
+		-- ARMOR
+		if getPedArmor( localPlayer ) > 0 then
+			local row = guiGridListAddRow(gUserItems)
+			
+			guiGridListSetItemText(gUserItems, row, UIColName, getItemName( -100  ) .. " - " .. math.ceil( getPedArmor( localPlayer ) ), false, false )
+			guiGridListSetItemData(gUserItems, row, UIColName, tostring( -100 ) )
 		end
 	end
 	
@@ -84,6 +92,8 @@ local function moveToElement( button )
 			guiSetEnabled( wInventory, false )
 			if slot > 0 then
 				triggerServerEvent( "moveToElement", localPlayer, element, slot )
+			elseif slot == -100 then
+				triggerServerEvent( "moveToElement", localPlayer, element, slot, true )
 			else
 				slot = -slot
 				triggerServerEvent( "moveToElement", localPlayer, element, getPedWeapon( localPlayer, slot ), math.min( getPedTotalAmmo( localPlayer, slot ), getElementData( localPlayer, "ACweapon" .. getPedWeapon( localPlayer, slot ) ) or 0 ) )
@@ -101,7 +111,7 @@ local function moveFromElement( button )
 			if item then
 				local itemID, itemValue, itemIndex = unpack( item )
 				
-				if itemID < 0 then -- weapon
+				if itemID < 0 and itemID ~= -100 then -- weapon
 					local free, totalfree = exports.weaponcap:getFreeAmmo( -itemID )
 					local cap = exports.weaponcap:getAmmoCap( -itemID )
 					if totalfree == 0 then

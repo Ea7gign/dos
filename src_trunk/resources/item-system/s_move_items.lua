@@ -75,7 +75,7 @@ local function moveToElement( element, slot, ammo )
 			end
 		end
 	else
-		if not hasSpaceForItem( element, -slot ) then
+		if not ( ( slot == -100 and hasSpaceForItem( element, slot ) ) or ( slot > 0 and hasSpaceForItem( element, -slot ) ) ) then
 			outputChatBox( "The Inventory is full.", source, 255, 0, 0 )
 		else
 			if tonumber(getElementData(source, "duty")) > 0 then
@@ -83,10 +83,19 @@ local function moveToElement( element, slot, ammo )
 			elseif tonumber(getElementData(source, "job")) == 4 and slot == 41 then
 				outputChatBox("You can't put this spray can into a " .. name .. ".", source, 255, 0, 0)
 			else
-				exports.global:takeWeapon( source, slot )
-				if ammo > 0 then
-					giveItem( element, -slot, ammo )
-					exports.logs:logMessage( getPlayerName( source ) .. "->" .. name .. " #" .. getElementID(element) .. " - " .. getItemName( -slot ) .. " - " .. ammo, 17)
+				if slot == -100 then
+					local ammo = math.ceil( getPedArmor( source ) )
+					if ammo > 0 then
+						setPedArmor( source, 0 )
+						giveItem( element, slot, ammo )
+						exports.logs:logMessage( getPlayerName( source ) .. "->" .. name .. " #" .. getElementID(element) .. " - " .. getItemName( slot ) .. " - " .. ammo, 17)
+					end
+				else
+					exports.global:takeWeapon( source, slot )
+					if ammo > 0 then
+						giveItem( element, -slot, ammo )
+						exports.logs:logMessage( getPlayerName( source ) .. "->" .. name .. " #" .. getElementID(element) .. " - " .. getItemName( -slot ) .. " - " .. ammo, 17)
+					end
 				end
 			end
 		end
@@ -109,6 +118,23 @@ local function moveFromElement( element, slot, ammo, index )
 		if item[1] > 0 then
 			moveItem( element, source, slot )
 			exports.logs:logMessage( name .. " #" .. getElementID(element) .. "->" .. getPlayerName( source ) .. " - " .. getItemName( item[1] ) .. " - " .. item[2], 17)
+		elseif item[1] == -100 then
+			local armor = math.max( 0, ( ( getElementData( source, "faction" ) == 1 or ( getElementData( source, "faction" ) == 3 and ( getElementData( source, "factionrank" ) == 4 or getElementData( source, "factionrank" ) == 5 or getElementData( source, "factionrank" ) == 13 ) ) ) and 100 or 50 ) - math.ceil( getPedArmor( source ) ) )
+			
+			if armor == 0 then
+				outputChatBox( "You can't wear any more armor.", source, 255, 0, 0 )
+			else
+				takeItemFromSlot( element, slot )
+				
+				local leftover = math.max( 0, item[2] - armor )
+				if leftover > 0 then
+					giveItem( element, item[1], leftover )
+				end
+				
+				setPedArmor( source, math.ceil( getPedArmor( source ) + math.min( item[2], armor ) ) )
+				exports.logs:logMessage( name .. " #" .. getElementID(element) .. "->" .. getPlayerName( source ) .. " - " .. getItemName( item[1] ) .. " - " .. ( math.min( item[2], armor ) ), 17)
+			end
+			triggerClientEvent( source, "forceElementMoveUpdate", source )
 		else
 			takeItemFromSlot( element, slot )
 			if ammo < item[2] then
