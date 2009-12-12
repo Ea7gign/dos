@@ -30,32 +30,30 @@ function render()
 	local reconx = getElementData(getLocalPlayer(), "reconx")
 	for key, value in ipairs(chatters) do
 		if (isElement(value)) then
-				local px, py, pz = getPedBonePosition(value, 6)
-				
-					local dist = getDistanceBetweenPoints3D(x, y, z, px, py, pz)
-					if isElementOnScreen(value) and not getElementData(value, "reconx") and not getElementData(value, "freecam:state") then
-						if (dist>25) then 
-							chatters[value] = nil
-							return
-						end
-					
-						local lx, ly, lz = getCameraMatrix()
-						local vehicle = getPedOccupiedVehicle(value)
-						local collision, cx, cy, cz, element = processLineOfSight(lx, ly, lz, px, py, pz+1, true, true, true, true, false, false, true, false, vehicle)
-						if not (collision) or (reconx) then
-							local screenX, screenY = getScreenFromWorldPosition(px, py, pz+0.5)
-							if (screenX and screenY) then
-								dist = dist / 5
-									
-								if (dist<1) then dist = 1 end
-								if (dist>4 and reconx) then dist = 4 end
-								
-								
-								local offset = 70 / dist
-								
-								local draw = dxDrawImage(screenX, screenY, 60 / dist, 60 / dist, "chat.png")
-							end
-						end
+			local px, py, pz = getPedBonePosition(value, 6)
+			
+			local dist = getDistanceBetweenPoints3D(x, y, z, px, py, pz)
+			if isElementOnScreen(value) and not getElementData(value, "reconx") and not getElementData(value, "freecam:state") then
+				if (dist>25) then 
+					chatters[value] = nil
+					return
+				end
+			
+				local lx, ly, lz = getCameraMatrix()
+				local vehicle = getPedOccupiedVehicle(value)
+				local collision, cx, cy, cz, element = processLineOfSight(lx, ly, lz, px, py, pz+1, true, true, true, true, false, false, true, false, vehicle)
+				if not (collision) or (reconx) then
+					local screenX, screenY = getScreenFromWorldPosition(px, py, pz+0.5)
+					if (screenX and screenY) then
+						dist = dist / 5
+							
+						if (dist<1) then dist = 1 end
+						if (dist>4 and reconx) then dist = 4 end
+						
+						
+						local offset = 70 / dist
+						
+						local draw = dxDrawImage(screenX, screenY, 60 / dist, 60 / dist, "chat.png")
 					end
 				end
 			end
