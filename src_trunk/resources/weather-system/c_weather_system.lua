@@ -179,11 +179,29 @@ end
 addEvent ( "onCreateWeatherForecastGUI", true )
 addEventHandler("onCreateWeatherForecastGUI", getLocalPlayer(), showWeatherForecastGUI )
 
-function ChangePlayerWeather(weather, blend)
-	setWeather ( tonumber(weather) )
-	if(blend ~= nil) then
-		setWeatherBlended ( tonumber( blend ))
-	end
+local currentWeather = 10
+local interior = false
+function ChangePlayerWeather(weather)
+	currentWeather = weather
+	interior = false
 end
 addEvent( "onServerChangesWeather", true )
 addEventHandler( "onServerChangesWeather", getRootElement(), ChangePlayerWeather )
+
+addEventHandler( "onClientRender", getRootElement( ),
+	function( )
+		if getElementInterior( getLocalPlayer( ) ) > 0 and not interior then
+			interior = true
+			setWeather( 7 )
+		elseif getElementInterior( getLocalPlayer( ) ) == 0 and interior then
+			interior = false
+			setWeather( currentWeather )
+		end
+	end
+)
+
+addEventHandler( "onClientResourceStart", getResourceRootElement( ),
+	function( )
+		triggerServerEvent( "requestCurrentWeather", getLocalPlayer( ) )
+	end
+)

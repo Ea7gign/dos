@@ -311,16 +311,6 @@ function enterElevator(player, pickup)
 			for i = 0, getVehicleMaxPassengers( vehicle ) do
 				local p = getVehicleOccupant( vehicle )
 				if p then
-					if getElementData(p, "IsInCustomInterior") == 1 then
-						removeElementData(p,"IsInCustomInterior")
-						local weather, blend = getWeather()
-						triggerClientEvent(p, "onClientWeatherChange", getRootElement(), weather, blend)
-					end
-					if z <= -5 then
-						triggerClientEvent (p, "onClientWeatherChange", getRootElement(), 7, nil)
-						setElementData(p,"IsInCustomInterior", 1, false)
-					end
-					
 					-- fade camera to black
 					fadeCamera ( p, false, 1,0,0,0 )
 					
@@ -328,16 +318,6 @@ function enterElevator(player, pickup)
 				end
 			end
 		else
-			if getElementData(player, "IsInCustomInterior") == 1 then
-				removeElementData(player,"IsInCustomInterior")
-				local weather, blend = getWeather()
-				triggerClientEvent(player, "onClientWeatherChange", getRootElement(), weather, blend)
-			end
-			if z <= -5 then
-				triggerClientEvent (player, "onClientWeatherChange", getRootElement(), 7, nil)
-				setElementData(player,"IsInCustomInterior", 1, false)
-			end
-			
 			-- fade camera to black
 			fadeCamera ( player, false, 1,0,0,0 )
 		end
@@ -501,19 +481,6 @@ function SmallestElevatorID( ) -- finds the smallest ID in the SQL instead of au
 	end
 	return false
 end
-
-function JoinsInCustomInt()
-	dimension = getElementDimension( source )
-	interior = getElementInterior( source )
-	x,y,z = getElementPosition( source )
-	if( interior == 0 and dimension == 0) then
-		if z <= -5 then
-			setElementData(source,"IsInCustomInterior", 1, false)
-			triggerClientEvent (source, "onClientWeatherChange", getRootElement(), 7, nil)
-		end
-	end
-end
-addEventHandler("onPlayerSpawn", getRootElement(), JoinsInCustomInt)
 
 addEvent( "toggleCarTeleportMode", false )
 addEventHandler( "toggleCarTeleportMode", getRootElement(),

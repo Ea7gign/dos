@@ -1,13 +1,3 @@
-
-function ChangePlayerWeather(weather, blend)
-	setWeather ( tonumber(weather) )
-	if(blend ~= nil) then
-		setWeatherBlended ( tonumber( blend ))
-	end
-end
-addEvent( "onClientWeatherChange", true )
-addEventHandler( "onClientWeatherChange", getRootElement(), ChangePlayerWeather )
-
 elevatortimer = nil
 function usedElevator(x, y, z)
 	if (isTimer(elevatorTimer)) then killTimer(elevatortimer) end

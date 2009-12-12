@@ -11,7 +11,7 @@ local delay2 = 1
 function startWeather(resource)
 	-- tempoarily set the weather to cloudy
 	setWeather(10)
-
+	
 	local choice = math.random(1, 5)
 		 
 		 -- On server startup, set the weather to a certain type, use the delay variable since its pointless creating a new one.
@@ -32,7 +32,7 @@ function startWeather(resource)
 	triggerEvent("onChangeNextWeatherType", getRootElement())
 	triggerEvent("onChangeWeatherType", getRootElement())
 	-- trigger event to blend into the weather ID
-	triggerEvent ( "onChangeWeather", getRootElement() )
+	setTimer( triggerEvent, 200, 1, "onChangeWeather", getRootElement() )
 end
 addEventHandler ( "onResourceStart", getResourceRootElement(getThisResource()), startWeather)
 
@@ -331,10 +331,7 @@ function changeWeather()
 		setWeather(ID)
 		local players = exports.pool:getPoolElementsByType("player")
 		for k, thePlayer in ipairs(players) do
-			local check = getElementData(thePlayer, "IsInCustomInterior")
-			if(check == 1) then
-				triggerClientEvent (thePlayer, "onServerChangesWeather", getRootElement(), 7, nil)
-			end
+			triggerClientEvent("onServerChangesWeather", getRootElement(), ID)
 		end
 		
 		-- Set the delay variable for the next time
@@ -353,8 +350,6 @@ addCommandHandler("getweather", getWeatherType)
 function setWeatherType(thePlayer, command)
 	if(exports.global:isPlayerSuperAdmin(thePlayer)) then
 		triggerClientEvent ( thePlayer, "onCreateWeatherControlGUI", thePlayer, weather )
-	else
-		outputChatBox("You are not authorised to use that command!", thePlayer, 255, 0, 0, true)
 	end
 end
 addCommandHandler("setweather", setWeatherType)
@@ -417,4 +412,11 @@ setTimer(function()
 changeWeatherType()
 changeNextWeatherType()
 changeLaterWeatherType()
-end , 120*60*1000 + (delay2*1000*60) , 0) 
+end , 120*60*1000 + (delay2*1000*60) , 0)
+
+addEvent( "requestCurrentWeather", true )
+addEventHandler( "requestCurrentWeather", getRootElement( ),
+	function( )
+		triggerClientEvent(source, "onServerChangesWeather", getRootElement(), getWeather())
+	end
+)
