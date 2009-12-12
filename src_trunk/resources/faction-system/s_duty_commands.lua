@@ -370,6 +370,7 @@ function lvfdduty(thePlayer, commandName)
 						
 						exports.global:giveWeapon(thePlayer, 42, 1500) -- Fire Extinguisher
 						exports.global:giveWeapon(thePlayer, 9, 1) -- Chainsaw
+						exports.global:giveItem(thePlayer, 26, 1) -- Gas Mask
 						exports.global:giveItem(thePlayer, 70, 3) -- first aid kit
 						setElementModel(thePlayer, dutyskin)
 						
