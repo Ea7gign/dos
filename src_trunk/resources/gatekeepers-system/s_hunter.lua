@@ -47,11 +47,6 @@ setElementData (hunter, "activeConvo",  0) -- Set the convo state to 0 so people
 setElementData(hunter, "name", "Hunter")
 setElementData(hunter, "talk", true)
 
-local hunterBlockGarage = createObject ( 8171, 608.9248, -75.0812, 1000.9953, 0, 270 )
-exports.pool:allocateElement(hunterBlockGarage)
-setElementDimension(hunterBlockGarage, 1001)
-setElementInterior(hunterBlockGarage, 2)
-
 function hunterIntro () -- When player enters the colSphere create GUI with intro output to all local players as local chat.	
 	-- Give the player the "Find Hunter" achievement.
 		

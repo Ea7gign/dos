@@ -10,10 +10,9 @@
 	<script src="Jefferson Emerald Isle.lua" type="client"/>
 	<script src="LS Harbor.lua" type="client"/>
 	<script src="Main Street.lua" type="client"/>
-	<script src="Marcos Bistro Interior Fix.lua" type="client"/>
 	<script src="Recording Studio.lua" type="client"/>
 	<script src="Smokes House Wall Fix.lua" type="client"/>
-	<script src="Steak House Floor Fix.lua" type="client"/>
+	<script src="Fixes.lua" type="client"/>
 	<script src="Strip Club Back Room.lua" type="client"/>
 	<script src="Idlewood Gas.lua" type="client"/>
 	<script src="seville.lua" type="client"/>

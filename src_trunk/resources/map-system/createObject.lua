@@ -1,4 +1,3 @@
-temp=nil
 _c=createObject
 
 function createObject(m,x,y,z,a,b,c,i,d)
