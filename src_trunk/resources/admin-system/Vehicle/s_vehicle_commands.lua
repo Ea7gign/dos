@@ -375,7 +375,7 @@ function respawnAllVehicles(thePlayer, commandName, timeToRespawn)
 					local pass2 = getVehicleOccupant(theVehicle, 2)
 					local pass3 = getVehicleOccupant(theVehicle, 3)
 
-					if (dimensions[dbid + 20000]) or (pass1) or (pass2) or (pass3) or (driver) or (getVehicleTowingVehicle(theVehicle)) or #getAttachedElements(theVehicle) > 0 then
+					if (dbid and dimensions[dbid + 20000]) or (pass1) or (pass2) or (pass3) or (driver) or (getVehicleTowingVehicle(theVehicle)) or #getAttachedElements(theVehicle) > 0 then
 						tempoccupied = tempoccupied + 1
 					else
 						destroyElement(theVehicle)
