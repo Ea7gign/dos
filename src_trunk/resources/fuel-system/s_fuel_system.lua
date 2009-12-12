@@ -137,7 +137,7 @@ function FuelDepetingEmptyVehicles()
 				local fuel = getElementData(theVehicle, "fuel")
 				if fuel >= 1 then
 					local newFuel = fuel - (30/200)
-					setElementData(theVehicle, "fuel", newFuel)
+					setElementData(theVehicle, "fuel", newFuel, false)
 					if (newFuel<1) then
 						setVehicleEngineState(theVehicle, false)
 						setElementData(theVehicle, "engine", 0, false)
