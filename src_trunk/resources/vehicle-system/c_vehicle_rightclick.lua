@@ -62,10 +62,19 @@ function showVehicleMenu()
 	
 	local vx,vy,vz = getElementVelocity(vehicle)
 	if vx < 0.05 and vy < 0.05 and vz < 0.05 and not getPedOccupiedVehicle(localPlayer) and not isVehicleLocked(vehicle) then -- completely stopped
-		if exports.global:hasItem(localPlayer, 57) then -- FUEL CAN
-			bFill = guiCreateButton(0.05, y, 0.87, 0.1, "Fill tank", true, wRightClick)
-			addEventHandler("onClientGUIClick", bFill, fillFuelTank, false)
-			y = y + 0.14
+		local trailers = { [606] = true, [607] = true, [610] = true, [590] = true, [569] = true, [611] = true, [584] = true, [608] = true, [435] = true, [450] = true, [591] = true }
+		if trailers[ getElementModel( vehicle ) ] then
+			if exports.global:hasItem(localPlayer, 3, getElementData(vehicle, "dbid")) then
+				bPark = guiCreateButton(0.05, y, 0.87, 0.1, "Park", true, wRightClick)
+				addEventHandler("onClientGUIClick", bPark, parkTrailer, false)
+				y = y + 0.14
+			end
+		else
+			if exports.global:hasItem(localPlayer, 57) then -- FUEL CAN
+				bFill = guiCreateButton(0.05, y, 0.87, 0.1, "Fill tank", true, wRightClick)
+				addEventHandler("onClientGUIClick", bFill, fillFuelTank, false)
+				y = y + 0.14
+			end
 		end
 		
 		if getElementData(localPlayer, "job") == 5 or getElementData(localPlayer, "faction") == 30 then -- Mechanic or BTR
@@ -115,6 +124,13 @@ function lockUnlock(button, state)
 		elseif exports.global:hasItem(localPlayer, 3, getElementData(vehicle, "dbid")) or (getElementData(localPlayer, "faction") > 0 and getElementData(localPlayer, "faction") == getElementData(vehicle, "faction")) then
 			triggerServerEvent("lockUnlockOutsideVehicle", localPlayer, vehicle)
 		end
+		hideVehicleMenu()
+	end
+end
+
+function parkTrailer(button, state)
+	if (button=="left") then
+		triggerServerEvent("parkVehicle", localPlayer, vehicle)
 		hideVehicleMenu()
 	end
 end

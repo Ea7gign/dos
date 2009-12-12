@@ -1383,6 +1383,68 @@ end
 addCommandHandler("avehpos", setVehiclePosition2, false, false)
 addCommandHandler("apark", setVehiclePosition2, false, false)
 
+function setVehiclePosition3(veh)
+	if call( getResourceFromName("tow-system"), "cannotVehpos", source ) then
+		outputChatBox("Only Best's Towing and Recovery is allowed to park their vehicles on the Impound Lot.", source, 255, 0, 0)
+	elseif isElementWithinColShape( source, HospitalCol ) and getElementData( source, "faction" ) ~= 2 and not exports.global:isPlayerAdmin(source) then
+		outputChatBox("Only Los Santos Emergency Service is allowed to park their vehicles in front of the Hospital.", source, 255, 0, 0)
+	elseif isElementWithinColShape( source, PershingSquareCol ) and getElementData( source, "faction" ) ~= 1  and not exports.global:isPlayerAdmin(source) then
+		outputChatBox("Only Los Santos Police Department is allowed to park their vehicles on Pershing Square.", source, 255, 0, 0)
+	else
+		local playerid = getElementData(source, "dbid")
+		local owner = getElementData(veh, "owner")
+		local dbid = getElementData(veh, "dbid")
+		local TowingReturn = call(getResourceFromName("tow-system"), "CanTowTruckDriverVehPos", source) -- 2 == in towing and in col shape, 1 == colshape only, 0 == not in col shape
+		if (exports.global:isPlayerAdmin(source)) or (owner==playerid and TowingReturn == 0) or (exports.global:hasItem(source, 3, dbid)) or (TowingReturn == 2) then
+			if (dbid<0) then
+				outputChatBox("This vehicle is not permanently spawned.", source, 255, 0, 0)
+			else
+				if (call(getResourceFromName("tow-system"), "CanTowTruckDriverGetPaid", source)) then
+					-- pd has to pay for this impound
+					exports.global:giveMoney(getTeamFromName("Best's Towing and Recovery"), 75)
+					exports.global:takeMoney(getTeamFromName("Los Santos Police Department"), 75)
+				end
+				removeElementData(veh, "requires.vehpos")
+				local x, y, z = getElementPosition(veh)
+				local rx, ry, rz = getVehicleRotation(veh)
+				
+				local interior = getElementInterior(source)
+				local dimension = getElementDimension(source)
+				
+				local query = mysql_query(handler, "UPDATE vehicles SET x='" .. x .. "', y='" .. y .."', z='" .. z .. "', rotx='" .. rx .. "', roty='" .. ry .. "', rotz='" .. rz .. "', currx='" .. x .. "', curry='" .. y .. "', currz='" .. z .. "', currrx='" .. rx .. "', currry='" .. ry .. "', currrz='" .. rz .. "', interior='" .. interior .. "', currinterior='" .. interior .. "', dimension='" .. dimension .. "', currdimension='" .. dimension .. "' WHERE id='" .. dbid .. "'")
+				mysql_free_result(query)
+				setVehicleRespawnPosition(veh, x, y, z, rx, ry, rz)
+				setElementData(veh, "respawnposition", {x, y, z, rx, ry, rz}, false)
+				setElementData(veh, "interior", interior)
+				setElementData(veh, "dimension", dimension)
+				outputChatBox("Vehicle spawn position set.", source)
+				
+				for key, value in ipairs(destroyTimers) do
+					if (tonumber(destroyTimers[key][2]) == dbid) then
+						local timer = destroyTimers[key][1]
+						
+						if (isTimer(timer)) then
+							killTimer(timer)
+							table.remove(destroyTimers, key)
+						end
+					end
+				end
+				
+				if ( getElementData(veh, "Impounded") or 0 ) > 0 then
+					local owner = getPlayerFromName( getCharacterName( getElementData( veh, "owner" ) ) )
+					if isElement( owner ) and exports.global:hasItem( owner, 2 ) then
+						outputChatBox("((Best's Towing & Recovery)) #999 [SMS]: Your " .. getVehicleName(veh) .. " has been impounded. Head over to the Impound to release it.", owner, 120, 255, 80)
+					end
+				end
+			end
+		else
+			outputChatBox( "You can't park this vehicle.", source, 255, 0, 0 )
+		end
+	end
+end
+addEvent( "parkVehicle", true )
+addEventHandler( "parkVehicle", getRootElement( ), setVehiclePosition3 )
+
 function quitPlayer ( quitReason )
 	if (quitReason == "Timed out") then -- if timed out
 		if (isPedInVehicle(source)) then -- if in vehicle
