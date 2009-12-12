@@ -338,7 +338,7 @@ function createCivilianPermVehicle(thePlayer, commandName, ...)
 					outputChatBox(getVehicleName(veh) .. " (Civilian) spawned with ID #" .. insertid .. ".", thePlayer, 255, 194, 14)
 					triggerEvent("onVehicleSpawn", veh)
 					
-					exports.logs:logMessage("[MAKECIVVEH] " .. getPlayerName( thePlayer ) .. " created car #" .. insertid .. " (" .. getVehicleNameFromModel( id ) .. ") - " .. owner, 9)
+					exports.logs:logMessage("[MAKECIVVEH] " .. getPlayerName( thePlayer ) .. " created car #" .. insertid .. " (" .. getVehicleNameFromModel( id ) .. ")", 9)
 					
 					exports['vehicle-interiors']:add( veh )
 				end
