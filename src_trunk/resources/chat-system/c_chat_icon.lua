@@ -1,26 +1,35 @@
+local chatting = 0
+local chatters = { }
+
 function checkForChat()
 	local recon = getElementData(getLocalPlayer(), "reconx")
 	
 	if not (reconx) then
 		if (isChatBoxInputActive() and chatting==0) then
+			chatting = 1
 			triggerServerEvent("chat1", getLocalPlayer())
 		elseif (not isChatBoxInputActive() and chatting==1) then
+			chatting = 0
 			triggerServerEvent("chat0", getLocalPlayer())
 		end
 	end
 end
 setTimer(checkForChat, 100, 0)
 
-local chatters = { }
+
 
 function addChatter()
-	chatters[source] = source
+	table.insert(chatters, source)
 end
 addEvent("addChatter", true)
 addEventHandler("addChatter", getRootElement(), addChatter)
 
 function delChatter()
-	chatters[source] = nil
+	for key, value in ipairs(chatters) do
+		if ( value == source ) then
+			table.remove(chatters, key)
+		end
+	end
 end
 addEvent("delChatter", true)
 addEventHandler("delChatter", getRootElement(), delChatter)
