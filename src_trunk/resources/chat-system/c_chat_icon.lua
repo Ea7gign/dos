@@ -37,7 +37,7 @@ function render()
 						if (dist>25) then 
 							chatters[value] = nil
 							return
-						endd
+						end
 					
 						local lx, ly, lz = getCameraMatrix()
 						local vehicle = getPedOccupiedVehicle(value)
