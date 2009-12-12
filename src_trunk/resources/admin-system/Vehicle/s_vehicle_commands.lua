@@ -361,6 +361,11 @@ function respawnAllVehicles(thePlayer, commandName, timeToRespawn)
 		local unlockedcivs = 0
 		local notmoved = 0
 		
+		local dimensions = { }
+		for k, p in ipairs(getElementsByType("player")) do
+			dimensions[ getElementDimension( p ) ] = true
+		end
+		
 		for k, theVehicle in ipairs(vehicles) do
 			if isElement( theVehicle ) then
 				local dbid = getElementData(theVehicle, "dbid")
@@ -370,7 +375,7 @@ function respawnAllVehicles(thePlayer, commandName, timeToRespawn)
 					local pass2 = getVehicleOccupant(theVehicle, 2)
 					local pass3 = getVehicleOccupant(theVehicle, 3)
 
-					if (pass1) or (pass2) or (pass3) or (driver) or (getVehicleTowingVehicle(theVehicle)) or #getAttachedElements(theVehicle) > 0 then
+					if (dimensions[dbid + 20000]) or (pass1) or (pass2) or (pass3) or (driver) or (getVehicleTowingVehicle(theVehicle)) or #getAttachedElements(theVehicle) > 0 then
 						tempoccupied = tempoccupied + 1
 					else
 						destroyElement(theVehicle)
@@ -382,7 +387,7 @@ function respawnAllVehicles(thePlayer, commandName, timeToRespawn)
 					local pass2 = getVehicleOccupant(theVehicle, 2)
 					local pass3 = getVehicleOccupant(theVehicle, 3)
 
-					if (pass1) or (pass2) or (pass3) or (driver) or (getVehicleTowingVehicle(theVehicle)) or #getAttachedElements(theVehicle) > 0 then
+					if (dimensions[dbid + 20000]) or (pass1) or (pass2) or (pass3) or (driver) or (getVehicleTowingVehicle(theVehicle)) or #getAttachedElements(theVehicle) > 0 then
 						occupiedcounter = occupiedcounter + 1
 					else
 						if isVehicleBlown(theVehicle) or isElementInWater(theVehicle) then
