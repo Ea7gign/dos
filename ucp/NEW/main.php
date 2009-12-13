@@ -383,7 +383,7 @@
 								<li><b>Richest Character (Cash-In-Hand):</b> <?php echo $mostmoneynamehand . " with " . $mostmoneyhand . " $." ?></li>
 								<li><b>Richest Faction:</b> <?php echo $richestfactionname . " with " . $richestfactionamount . " $." ?></li>
 								<li><b>Faction-ed Characters:</b> <?php echo $factionedCharacters ?></li>
-								<li><b>Unfaction-ed Characters:</b> <?php echo $unfactionedCharacters ?></li>
+								<li><b>Factionless Characters:</b> <?php echo $unfactionedCharacters ?></li>
 								<li><b>Employed Characters:</b> <?php echo $jobCharacters ?></li>
 								<li><b>Unemployed Characters:</b> <?php echo $nojobCharacters ?></li>
 								<li><b>CKed Characters:</b> <?php echo $ckedcharacters ?></li>
