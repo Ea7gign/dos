@@ -35,11 +35,18 @@
 	$sresult7 = mysql_query("SELECT COUNT(*) FROM characters WHERE cked = 1;", $conn);	
 	$sresult8 = mysql_query("SELECT COUNT(*) FROM characters WHERE marriedto > 0;", $conn);	
 	$sresult9 = mysql_query("SELECT COUNT(*) FROM accounts WHERE banned = 1;", $conn);	
-	$sresult10 = mysql_query("SELECT username, adminreports FROM accounts ORDER BY adminreports DESC LIMIT 1;", $conn);	
-	$sresult11 = mysql_query("SELECT username, adminreports FROM accounts ORDER BY adminreports ASC LIMIT 1;", $conn);	
+	$sresult10 = mysql_query("SELECT username, adminreports FROM accounts WHERE admin > 0 ORDER BY adminreports DESC LIMIT 1;", $conn);	
+	$sresult11 = mysql_query("SELECT username, adminreports FROM accounts WHERE admin > 0 ORDER BY adminreports ASC LIMIT 1;", $conn);	
 	$sresult12 = mysql_query("SELECT COUNT(*) FROM characters WHERE job > 0;", $conn);
 	$sresult13 = mysql_query("SELECT COUNT(*) FROM characters WHERE job <= 0;", $conn);
-	
+	$sresult14 = mysql_query("SELECT COUNT(*) FROM accounts;", $conn);
+	$sresult15 = mysql_query("SELECT COUNT(*) FROM characters;", $conn);
+	$sresult16 = mysql_query("SELECT COUNT(*) FROM achievements;", $conn);
+	$sresult17 = mysql_query("SELECT account, COUNT(*) FROM achievements GROUP BY account ORDER BY COUNT(*) DESC LIMIT 1;", $conn);
+	$sresult18 = mysql_query("SELECT username FROM accounts WHERE id='" . mysql_result($sresult17, 0, 0) . "'");
+	$sresult19 = mysql_query("SELECT COUNT(*) FROM vehicles;", $conn);
+	$sresult20 = mysql_query("SELECT OWNER, COUNT(*) FROM vehicles WHERE EXISTS (SELECT characters.id FROM characters WHERE characters.id = owner) GROUP BY OWNER ORDER BY COUNT(*) DESC LIMIT 1;", $conn);
+	$sresult21 = mysql_query("SELECT charactername FROM characters WHERE id='" . mysql_result($sresult20, 0, 0) . "' LIMIT 1;");
 	
 	$mostactiveplayer = str_replace("_", " ", mysql_result($sresult1, 0, 0));
 	$mostactiveplayerhours = mysql_result($sresult1, 0, 1);
@@ -60,6 +67,14 @@
 	$hyperadminreports = mysql_result($sresult10, 0, 1);
 	$lazyadminname = str_replace("_", " ", mysql_result($sresult11, 0, 0));
 	$lazyadminreports = mysql_result($sresult11, 0, 1);
+	$numaccounts = mysql_result($sresult14, 0, 0);
+	$numcharacters = mysql_result($sresult15, 0, 0);
+	$numachievements = mysql_result($sresult16, 0, 0);
+	$numachievementsmost = mysql_result($sresult17, 0, 1);
+	$numachievementsmostusername = mysql_result($sresult18, 0, 0);
+	$numvehicles = mysql_result($sresult19, 0, 0);
+	$numvehiclesmost = mysql_result($sresult20, 0, 1);
+	$numvehiclesmostusername = str_replace("_", " ", mysql_result($sresult21, 0, 0));
 	
 	mysql_free_result($sresult1);
 	mysql_free_result($sresult2);
@@ -72,6 +87,17 @@
 	mysql_free_result($sresult9);
 	mysql_free_result($sresult10);
 	mysql_free_result($sresult11);
+	mysql_free_result($sresult12);
+	mysql_free_result($sresult13);
+	mysql_free_result($sresult14);
+	mysql_free_result($sresult15);
+	mysql_free_result($sresult16);
+	mysql_free_result($sresult17);
+	mysql_free_result($sresult18);
+	mysql_free_result($sresult19);
+	mysql_free_result($sresult20);
+	mysql_free_result($sresult21);
+	
 	
 	$username = mysql_result($result, 0, 0);
 	$admin = mysql_result($result, 0, 1);
@@ -389,6 +415,12 @@
 								<li><b>CKed Characters:</b> <?php echo $ckedcharacters ?></li>
 								<li><b>Married Characters:</b> <?php echo $marriedcharacters ?></li>
 								<li><b>Banned Accounts:</b> <?php echo $bannedaccounts ?></li>
+								<li><b>Total Accounts:</b> <?php echo $numaccounts ?></li>
+								<li><b>Total Characters:</b> <?php echo $numcharacters ?></li>
+								<li><b>Total Achivements:</b> <?php echo $numachievements ?></li>
+								<li><b>Total Vehicles:</b> <?php echo $numvehicles ?></li>
+								<li><b>Most Achievements:</b> <?php echo $numachievementsmostusername . " with " . $numachievementsmost . " achievements." ?></li>
+								<li><b>Most Vehicles:</b> <?php echo $numvehiclesmostusername . " with " . $numvehiclesmost . " vehicles." ?></li>
 								<li><b>Most Hyperactive Admin:</b> <?php echo $hyperadminname . " with " . $hyperadminreports . " reports." ?></li>
 								<li><b>Laziest Admin:</b> <?php echo $lazyadminname . " with " . $lazyadminreports . " reports." ?></li>
 							</ul>
