@@ -378,7 +378,7 @@
 							<h2>Valhalla Statistics</h2>
 							<ul style="list-style-type:none;margin-left:0px;padding-left:0px;">
 								
-								<li><b>Most Active Characters:</b> <?php echo $mostactiveplayer . " with " . $mostactiveplayerhours . " hours." ?></li>
+								<li><b>Most Active Character:</b> <?php echo $mostactiveplayer . " with " . $mostactiveplayerhours . " hours." ?></li>
 								<li><b>Richest Character (Overall):</b> <?php echo $mostmoneyname . " with " . $mostmoney . " $." ?></li>
 								<li><b>Richest Character (Cash-In-Hand):</b> <?php echo $mostmoneynamehand . " with " . $mostmoneyhand . " $." ?></li>
 								<li><b>Richest Faction:</b> <?php echo $richestfactionname . " with " . $richestfactionamount . " $." ?></li>
