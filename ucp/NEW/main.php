@@ -24,6 +24,55 @@
 		header('Location: index.php');
 		exit;
 	}
+	
+	// STATISTICS
+	$sresult1 = mysql_query("SELECT charactername, hoursplayed FROM characters ORDER BY hoursplayed DESC LIMIT 1;", $conn);	
+	$sresult2 = mysql_query("SELECT charactername, money+bankmoney FROM characters ORDER BY money+bankmoney DESC LIMIT 1;", $conn);	
+	$sresult3 = mysql_query("SELECT charactername, money FROM characters ORDER BY money DESC LIMIT 1;", $conn);	
+	$sresult4 = mysql_query("SELECT NAME, bankbalance FROM factions ORDER BY bankbalance DESC LIMIT 1;", $conn);
+	$sresult5 = mysql_query("SELECT COUNT(*) FROM characters WHERE faction_id > 0;", $conn);	
+	$sresult6 = mysql_query("SELECT COUNT(*) FROM characters WHERE faction_id <= 0;", $conn);	
+	$sresult7 = mysql_query("SELECT COUNT(*) FROM characters WHERE cked = 1;", $conn);	
+	$sresult8 = mysql_query("SELECT COUNT(*) FROM characters WHERE marriedto > 0;", $conn);	
+	$sresult9 = mysql_query("SELECT COUNT(*) FROM accounts WHERE banned = 1;", $conn);	
+	$sresult10 = mysql_query("SELECT username, adminreports FROM accounts ORDER BY adminreports DESC LIMIT 1;", $conn);	
+	$sresult11 = mysql_query("SELECT username, adminreports FROM accounts ORDER BY adminreports ASC LIMIT 1;", $conn);	
+	$sresult12 = mysql_query("SELECT COUNT(*) FROM characters WHERE job > 0;", $conn);
+	$sresult13 = mysql_query("SELECT COUNT(*) FROM characters WHERE job <= 0;", $conn);
+	
+	
+	$mostactiveplayer = str_replace("_", " ", mysql_result($sresult1, 0, 0));
+	$mostactiveplayerhours = mysql_result($sresult1, 0, 1);
+	$mostmoneyname = str_replace("_", " ", mysql_result($sresult2, 0, 0));
+	$mostmoney = mysql_result($sresult2, 0, 1);
+	$mostmoneynamehand = str_replace("_", " ", mysql_result($sresult3, 0, 0));
+	$mostmoneyhand = mysql_result($sresult3, 0, 1);
+	$richestfactionname = str_replace("_", " ", mysql_result($sresult4, 0, 0));
+	$richestfactionamount = mysql_result($sresult4, 0, 1);
+	$factionedCharacters = mysql_result($sresult5, 0, 0);
+	$unfactionedCharacters = mysql_result($sresult6, 0, 0);
+	$jobCharacters = mysql_result($sresult12, 0, 0);
+	$nojobCharacters = mysql_result($sresult13, 0, 0);
+	$ckedcharacters  = mysql_result($sresult7, 0, 0);
+	$marriedcharacters = mysql_result($sresult8, 0, 0);
+	$bannedaccounts = mysql_result($sresult9, 0, 0);
+	$hyperadminname = str_replace("_", " ", mysql_result($sresult10, 0, 0));
+	$hyperadminreports = mysql_result($sresult10, 0, 1);
+	$lazyadminname = str_replace("_", " ", mysql_result($sresult11, 0, 0));
+	$lazyadminreports = mysql_result($sresult11, 0, 1);
+	
+	mysql_free_result($sresult1);
+	mysql_free_result($sresult2);
+	mysql_free_result($sresult3);
+	mysql_free_result($sresult4);
+	mysql_free_result($sresult5);
+	mysql_free_result($sresult6);
+	mysql_free_result($sresult7);
+	mysql_free_result($sresult8);
+	mysql_free_result($sresult9);
+	mysql_free_result($sresult10);
+	mysql_free_result($sresult11);
+	
 	$username = mysql_result($result, 0, 0);
 	$admin = mysql_result($result, 0, 1);
 	$donator = mysql_result($result, 0, 2);
@@ -48,6 +97,10 @@
 	
 	if ( is_null($email))
 		$email = "None."
+		
+		
+	
+	
 ?>
 
 <?php 
@@ -314,6 +367,30 @@
 								<li><b>False Positives:</b> <?php echo $falsepos ?></li>
 								<li><b>Accuracy:</b> <?php echo round(100- (($falsepos/$globalbans) * 100)) . "%" ?></li>
 								<li><b>VAC Standing:</b> <?php echo getVACStandingFromIndex($vacbanned) ?></li>
+							</ul>
+						</div>
+					</div>
+				</div>
+				
+				<div id="content-middle">
+					<div class="content-box">
+						<div class="content-holder">
+							<h2>Valhalla Statistics</h2>
+							<ul style="list-style-type:none;margin-left:0px;padding-left:0px;">
+								
+								<li><b>Most Active Characters:</b> <?php echo $mostactiveplayer . " with " . $mostactiveplayerhours . " hours." ?></li>
+								<li><b>Richest Character (Overall):</b> <?php echo $mostmoneyname . " with " . $mostmoney . " $." ?></li>
+								<li><b>Richest Character (Cash-In-Hand):</b> <?php echo $mostmoneynamehand . " with " . $mostmoneyhand . " $." ?></li>
+								<li><b>Richest Faction:</b> <?php echo $richestfactionname . " with " . $richestfactionamount . " $." ?></li>
+								<li><b>Faction-ed Characters:</b> <?php echo $factionedCharacters ?></li>
+								<li><b>Unfaction-ed Characters:</b> <?php echo $unfactionedCharacters ?></li>
+								<li><b>Employed Characters:</b> <?php echo $jobCharacters ?></li>
+								<li><b>Unemployed Characters:</b> <?php echo $nojobCharacters ?></li>
+								<li><b>CKed Characters:</b> <?php echo $ckedcharacters ?></li>
+								<li><b>Married Characters:</b> <?php echo $marriedcharacters ?></li>
+								<li><b>Banned Accounts:</b> <?php echo $bannedaccounts ?></li>
+								<li><b>Most Hyperactive Admin:</b> <?php echo $hyperadminname . " with " . $hyperadminreports . " reports." ?></li>
+								<li><b>Laziest Admin:</b> <?php echo $lazyadminname . " with " . $lazyadminreports . " reports." ?></li>
 							</ul>
 						</div>
 					</div>
