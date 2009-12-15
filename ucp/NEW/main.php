@@ -71,8 +71,6 @@
 	$numvehiclesmostusername = str_replace("_", " ", mysql_result($sresult21, 0, 0));
 	
 	mysql_free_result($sresult1);
-	mysql_free_result($sresult2);
-	mysql_free_result($sresult3);
 	mysql_free_result($sresult4);
 	mysql_free_result($sresult5);
 	mysql_free_result($sresult6);
