@@ -360,7 +360,7 @@ addEventHandler("onCreateAccount", getRootElement(), CreateAccount)
 function RemoveAccount(details)
 	local result = mysql_query(handler, "SELECT user_name FROM mdcUsers where user_name='" .. details[1] .. "'")
 	
-	if not (mysql_num_rows(result)>0) then
+	if (mysql_num_rows(result)>0) then
 		local query = mysql_query(handler, "DELETE FROM mdcUsers WHERE user_name='" .. details[1] .. "'")
 		mysql_free_result(query)
 		outputChatBox("Account: "..details[1].." has been removed from the database.", client, 0, 255, 0, true)
