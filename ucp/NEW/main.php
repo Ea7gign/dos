@@ -27,8 +27,6 @@
 	
 	// STATISTICS
 	$sresult1 = mysql_query("SELECT charactername, hoursplayed FROM characters ORDER BY hoursplayed DESC LIMIT 1;", $conn);	
-	$sresult2 = mysql_query("SELECT charactername, money+bankmoney FROM characters ORDER BY money+bankmoney DESC LIMIT 1;", $conn);	
-	$sresult3 = mysql_query("SELECT charactername, money FROM characters ORDER BY money DESC LIMIT 1;", $conn);	
 	$sresult4 = mysql_query("SELECT NAME, bankbalance FROM factions ORDER BY bankbalance DESC LIMIT 1;", $conn);
 	$sresult5 = mysql_query("SELECT COUNT(*) FROM characters WHERE faction_id > 0;", $conn);	
 	$sresult6 = mysql_query("SELECT COUNT(*) FROM characters WHERE faction_id <= 0;", $conn);	
@@ -50,10 +48,6 @@
 	
 	$mostactiveplayer = str_replace("_", " ", mysql_result($sresult1, 0, 0));
 	$mostactiveplayerhours = mysql_result($sresult1, 0, 1);
-	$mostmoneyname = str_replace("_", " ", mysql_result($sresult2, 0, 0));
-	$mostmoney = mysql_result($sresult2, 0, 1);
-	$mostmoneynamehand = str_replace("_", " ", mysql_result($sresult3, 0, 0));
-	$mostmoneyhand = mysql_result($sresult3, 0, 1);
 	$richestfactionname = str_replace("_", " ", mysql_result($sresult4, 0, 0));
 	$richestfactionamount = mysql_result($sresult4, 0, 1);
 	$factionedCharacters = mysql_result($sresult5, 0, 0);
@@ -405,8 +399,6 @@
 							<ul style="list-style-type:none;margin-left:0px;padding-left:0px;">
 								
 								<li><b>Most Active Character:</b> <?php echo $mostactiveplayer . " with " . $mostactiveplayerhours . " hours." ?></li>
-								<li><b>Richest Character (Overall):</b> <?php echo $mostmoneyname . " with " . $mostmoney . " $." ?></li>
-								<li><b>Richest Character (Cash-In-Hand):</b> <?php echo $mostmoneynamehand . " with " . $mostmoneyhand . " $." ?></li>
 								<li><b>Richest Faction:</b> <?php echo $richestfactionname . " with " . $richestfactionamount . " $." ?></li>
 								<li><b>Faction-ed Characters:</b> <?php echo $factionedCharacters ?></li>
 								<li><b>Factionless Characters:</b> <?php echo $unfactionedCharacters ?></li>
