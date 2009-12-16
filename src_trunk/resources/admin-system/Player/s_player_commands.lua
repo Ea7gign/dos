@@ -627,7 +627,7 @@ function givePlayerItem(thePlayer, commandName, targetPlayer, itemID, ...)
 				elseif (logged==1) then
 					local name = call( getResourceFromName( "item-system" ), "getItemName", itemID )
 					
-					if itemID > 0 and name then
+					if itemID > 0 and name and name ~= "?" then
 						local success, reason = exports.global:giveItem(targetPlayer, itemID, itemValue)
 						if success then
 							outputChatBox("Player " .. targetPlayerName .. " now has a " .. name .. " with value " .. itemValue .. ".", thePlayer, 0, 255, 0)
