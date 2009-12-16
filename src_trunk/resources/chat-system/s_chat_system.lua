@@ -112,7 +112,7 @@ function advertMessage(thePlayer, commandName, showNumber, ...)
 									removeElementData(p, "ads")
 								end
 							end
-						end, 30000, 1, thePlayer
+						end, 300000, 1, thePlayer
 					)
 				else
 					outputChatBox("You cannot afford to place such an advert, try making it smaller.", thePlayer)
