@@ -75,6 +75,10 @@ function advertMessage(thePlayer, commandName, showNumber, ...)
 			outputChatBox("You are too drunk to advertise!", thePlayer, 255, 0, 0)
 		else
 			if (exports.global:hasItem(thePlayer, 2)) then
+				if (getElementData(thePlayer, "ads") or 0) >= 2 then
+					outputChatBox("You can only place 2 ads every 5 minutes.", thePlayer, 255, 0, 0)
+					return
+				end
 				message = table.concat({...}, " ")
 				if showNumber ~= "0" and showNumber ~= "1" then
 					message = showNumber .. " " .. message
@@ -97,6 +101,19 @@ function advertMessage(thePlayer, commandName, showNumber, ...)
 						end
 					end
 					outputChatBox("Thank you for placing your advert. Total Cost: $" .. cost .. ".", thePlayer)
+					setElementData(thePlayer, "ads", ( getElementData(thePlayer, "ads") or 0 ) + 1, false)
+					setTimer(
+						function(p)
+							if isElement(p) then
+								local c =  getElementData(p, "ads") or 0
+								if c > 1 then
+									setElementData(p, "ads", c-1, false)
+								else
+									removeElementData(p, "ads")
+								end
+							end
+						end, 30000, 1, thePlayer
+					)
 				else
 					outputChatBox("You cannot afford to place such an advert, try making it smaller.", thePlayer)
 				end
