@@ -690,7 +690,6 @@ function destroyItem(itemID, isWeapon)
 			itemName = "Body Armor"
 		else
 			exports.global:takeWeapon(source, tonumber(itemID))
-			triggerClientEvent(source, "saveGuns", source)
 			itemName = getWeaponNameFromID( itemID )
 		end
 	end
@@ -844,7 +843,6 @@ function dropItem(itemID, x, y, z, ammo, keepammo)
 				if keepammo then
 					exports.global:giveWeapon(source, itemID, keepammo)
 				end
-				triggerClientEvent(source, "saveGuns", source)
 				
 				local modelid = 2969
 				-- MODEL ID
@@ -995,7 +993,6 @@ function pickupItem(object, leftammo)
 				destroyElement(object)
 			end
 			exports.global:giveWeapon(source, -itemID, itemValue, true)
-			triggerClientEvent(source, "saveGuns", source)
 		end
 		outputChatBox("You picked up a " .. getItemName( itemID, itemValue ) .. ".", source, 255, 194, 14)
 		exports.global:sendLocalMeAction(source, "bends over and picks up a " .. getItemName( itemID, itemValue ) .. ".")

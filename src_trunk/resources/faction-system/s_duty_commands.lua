@@ -38,7 +38,6 @@ local authSwat = nil
 function saveWeaponsOnDuty( thePlayer )
 	triggerClientEvent(thePlayer, "saveGunsDuty", thePlayer)
 	exports.global:takeAllWeapons(thePlayer)
-	triggerClientEvent(thePlayer, "saveGuns", thePlayer)
 end
 
 function restoreWeapons( thePlayer )
@@ -50,7 +49,6 @@ function restoreWeapons( thePlayer )
 		end
 		removeElementData(thePlayer, "dutyguns")
 	end
-	triggerClientEvent(thePlayer, "saveGuns", thePlayer)
 end
 
 --- DUTY TYPE

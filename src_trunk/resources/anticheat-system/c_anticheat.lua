@@ -86,32 +86,36 @@ end
 function giveSafeWeapon(weapon, ammo)
 	resetWeaponTimer()
 	setElementData(localPlayer, "ACweapon" .. weapon, (getElementData(localPlayer, "ACweapon" .. weapon) or 0) + ammo, false)
+	triggerEvent("saveGuns", localPlayer)
 end
 addEvent("giveSafeWeapon", true)
-addEventHandler("giveSafeWeapon", getLocalPlayer(), giveSafeWeapon)
+addEventHandler("giveSafeWeapon", localPlayer, giveSafeWeapon)
 
 function setSafeWeaponAmmo(weapon, ammo)
 	resetWeaponTimer()
 	setElementData(localPlayer, "ACweapon" .. weapon, ammo, false)
+	triggerEvent("saveGuns", localPlayer)
 end
 addEvent("setSafeWeaponAmmo", true)
-addEventHandler("setSafeWeaponAmmo", getLocalPlayer(), setSafeWeaponAmmo)
+addEventHandler("setSafeWeaponAmmo", localPlayer, setSafeWeaponAmmo)
 
 function takeAllWeaponsSafe()
 	resetWeaponTimer()
 	for weapon = 0, 47 do
 		setElementData(localPlayer, "ACweapon" .. weapon, nil, false)
 	end
+	triggerEvent("saveGuns", localPlayer)
 end
 addEvent("takeAllWeaponsSafe", true)
-addEventHandler("takeAllWeaponsSafe", getLocalPlayer(), takeAllWeaponsSafe)
+addEventHandler("takeAllWeaponsSafe", localPlayer, takeAllWeaponsSafe)
 
 function takeWeaponSafe(weapon)
 	resetWeaponTimer()
 	setElementData(localPlayer, "ACweapon" .. weapon, nil, false)
+	triggerEvent("saveGuns", localPlayer)
 end
 addEvent("takeWeaponSafe", true)
-addEventHandler("takeWeaponSafe", getLocalPlayer(), takeWeaponSafe)
+addEventHandler("takeWeaponSafe", localPlayer, takeWeaponSafe)
 
 addEventHandler("onClientResourceStart", getResourceRootElement(), resetWeaponTimer)
 
