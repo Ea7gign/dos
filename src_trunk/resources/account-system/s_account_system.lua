@@ -1525,6 +1525,11 @@ function timerPDUnjailPlayer(jailedPlayer)
 		local timeServed = getElementData(jailedPlayer, "pd.jailserved", false) or 0
 		local timeLeft = getElementData(jailedPlayer, "pd.jailtime", false) or 0
 		local username = getPlayerName(jailedPlayer)
+		if not username then
+			local theTimer = getElementData(jailedPlayer, "pd.jailtimer")
+			killTimer(theTimer)	
+			return
+		end
 		setElementData(jailedPlayer, "pd.jailserved", timeServed+1, false)
 		local timeLeft = timeLeft - 1
 		setElementData(jailedPlayer, "pd.jailtime", timeLeft, false)
