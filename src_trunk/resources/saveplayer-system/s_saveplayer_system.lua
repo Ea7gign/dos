@@ -141,6 +141,13 @@ function savePlayer(reason, player)
 			outputDebugString( "Saveplayer Update: " .. mysql_error( handler ) )
 		end
 		
+		local update2 = mysql_query(handler, "UPDATE accounts SET lastlogin=NOW() WHERE id = " .. getElementData(source,"gameaccountid"))
+		if (update2) then
+			mysql_free_result(update2)
+		else
+			outputDebugString( "Saveplayer Update2: " .. mysql_error( handler2 ) )
+		end
+		
 		--outputDebugString("Saved player '" .. getPlayerName(source) .. "' [" .. reason .. "].")
 	end
 end
