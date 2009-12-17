@@ -61,8 +61,8 @@ function giveTicket(aPlayer)
 	local result = mysql_query(handler, "SELECT characterid FROM lottery WHERE ticketnumber = " .. ticketNumber )
 	if (mysql_num_rows(result) == 0) then
 		mysql_free_result( mysql_query( handler, "INSERT INTO lottery (characterid, ticketnumber) VALUES (" .. PlayerID .. ", " .. ticketNumber .. " )" ) )
-		mysql_free_result( mysql_query( handler, "UPDATE settings SET value = value + 40 WHERE name = 'lotteryjackpot'" ) )	
-		return tonumber(ticketNumber)
+		mysql_free_result( mysql_query( handler, "UPDATE settings SET value = value + 30 WHERE name = 'lotteryjackpot'" ) )	
+		return tonumber(ticketNumber), 40 -- should be above the value + xxx
 	else
 		local result = mysql_query( handler, "SELECT COUNT(*) FROM lottery" )
 		if result then
@@ -72,7 +72,7 @@ function giveTicket(aPlayer)
 			end
 			mysql_free_result( result )
 		else
-			giveTicket(aPlayer)
+			return giveTicket(aPlayer)
 		end
 	end
 end

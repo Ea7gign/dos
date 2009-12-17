@@ -302,12 +302,13 @@ function givePlayerBoughtItem(itemID, itemValue, theCost, isWeapon, name, supply
 					exports.global:givePlayerAchievement(source, 21)
 				end
 			elseif (isWeapon==false) and (itemID==68) then
-				local ticketNumber = exports.lottery:giveTicket(source)
+				local ticketNumber, moniez = exports.lottery:giveTicket(source)
 				if ticketNumber ~= false then
 					exports.global:takeMoney(source, tonumber(theCost))
 					outputChatBox("You bought a " .. name .. ". The ticket number is: " .. ticketNumber .. ".", source, 255, 194, 14)
 					outputChatBox("The money will be transfered to your account if you win.", source, 255, 194, 14)
 					outputChatBox("You have $"..exports.global:getMoney(source).." left in your wallet.", source, 255, 194, 14)
+					theCost = theCost - moniez
 				else
 					outputChatBox("I'm sorry, the lottery is already closed. Wait for the next round.", source, 255, 194, 14)
 				end
