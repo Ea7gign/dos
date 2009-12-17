@@ -19,7 +19,15 @@ function toggleShowFPS()
 end
 addCommandHandler("showfps", toggleShowFPS, false)
 
+local setknockoff = false
 function resetFPS()
+	if lastfps < 20 then
+		setPedCanBeKnockedOffBike(getLocalPlayer(), false)
+		setknockoff = true
+	elseif setknockoff then
+		setPedCanBeKnockedOffBike(getLocalPlayer(), true)
+		setknockoff = false
+	end
 	lastfps = fps
 	fps = 0
 end
