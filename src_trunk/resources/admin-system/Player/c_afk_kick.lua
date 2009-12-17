@@ -28,3 +28,15 @@ function reset()
 	timer = setTimer(checkAFK, 300000, 0)
 end
 addEventHandler("onClientCursorMove", getRootElement(), reset)
+addEventHandler("onClientConsole", getRootElement(), reset)
+
+state = false
+addEventHandler("onClientRender", getRootElement(),
+	function()
+		local cb = isChatBoxInputActive()
+		if cb ~= state then
+			reset()
+			state = cb
+		end
+	end
+)
