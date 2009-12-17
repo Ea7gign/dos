@@ -98,6 +98,7 @@ g_items = {
 	{ "LS Government Badge", "A Los Santos Government Badge.", 4, 1581, 270, 270, 0, 0 },
 	{ "Earpiece", "A small earpiece, can be connected to a radio.", 7, 1581, 270, 270, 0, 0 },
 	{ "Food", "", 1, 2222, 0, 0, 0, 0.07 },
+	{ "Helmet", "Ideal for riding bikes.", 6, 2386, 0, 0, 0, 0.1 },
 	--Chairs = { 1663, 1671, 1720, 1721, 1810, 1811, 2079, 2120, 2121, 2125, 2777, 2788, 1369 }
 }
 

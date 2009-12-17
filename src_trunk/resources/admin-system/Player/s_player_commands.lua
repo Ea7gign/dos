@@ -207,13 +207,15 @@ function adminUnmask(thePlayer, commandName, targetPlayer)
 				else
 					local gasmask = getElementData(targetPlayer, "gasmask")
 					local mask = getElementData(targetPlayer, "mask")
+					local helmet = getElementData(targetPlayer, "helmet")
 					
-					if (gasmask==1 or mask==1) then
+					if (gasmask==1 or mask==1 or helmet==1) then
 						local name = targetPlayerName:gsub("_", " ")
 						setPlayerNametagText(targetPlayer, tostring(name))
 
 						removeElementData(targetPlayer, "gasmask")
 						removeElementData(targetPlayer, "mask")
+						removeElementData(targetPlayer, "helmet")
 						outputChatBox("You have removed the mask from " .. name .. ".", thePlayer, 255, 0, 0)
 					else
 						outputChatBox("Player is not masked.", thePlayer, 255, 0, 0)

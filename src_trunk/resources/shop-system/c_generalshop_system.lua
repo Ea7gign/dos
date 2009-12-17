@@ -248,12 +248,13 @@ function getItemsForSale(shop_type, race, gender)
 			{"Rope", "A long rope.", "15", 46, 1,1,false,2},
 			{"Backpack", "A reasonably sized backpack.", "30", 48, 1,1,false,2},
 			{"Fishing Rod", "A 7 foot carbon steel fishing rod.", "300", 49, 1,1,false, 175},
-			{"Mask", "A comical mask.", "20", 56, 1, 1, false, 5},
+			{"Mask", "A ski mask.", "20", 56, 1, 1, false, 5},
 			{"Fuel Can", "A small metal fuel canister.", "35", 57, 1, 1, false, 5},
 			{"Blindfold", "A black blindfold.", "15", 66, 1,1, false,2},
 			{"Lottery Ticket", "A lottery ticket.","50", 68, 1,1, false,40},
 			{"First Aid Kit", "A small First Aid Kit", "15", 70, 3, 1, false, 5},
 			{"Notebook", "An empty Notebook, enough to write 5 notes.", "40", 71, 5, 1, false, 15},
+			{"Helmet", "A helmet commonly used by people riding bikes.", "100", 90, 1, 1, false, 20},
 
 			-- Consumable
 			{"Sandwich", "A yummy sandwich with cheese.", "6", 8, 1,2,false,2},

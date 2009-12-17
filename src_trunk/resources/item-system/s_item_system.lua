@@ -582,6 +582,28 @@ function useItem(itemSlot, additional)
 			toggleAllControls(source, true, true, true)
 			exports.global:sendLocalMeAction(source, "eats a " .. itemName .. ".")
 			takeItemFromSlot(source, itemSlot)
+		elseif (itemID==90) then -- Helmet
+			local mask = getElementData(source, "mask")
+			
+			if not (mask) or (mask==0) then
+				exports.global:sendLocalMeAction(source, "puts a helmet over their head.")
+				
+				-- can't see their name
+				local pid = getElementData(source, "playerid")
+				local fixedName = "Unknown Person"
+				setPlayerNametagText(source, tostring(fixedName))
+
+				setElementData(source, "helmet", 1, false)
+			elseif (mask==1) then
+				exports.global:sendLocalMeAction(source, "puts a helmet off their head.")
+				
+				-- can't see their name
+				local pid = getElementData(source, "playerid")
+				local name = string.gsub(getPlayerName(source), "_", " ")
+				setPlayerNametagText(source, tostring(name))
+
+				setElementData(source, "helmet", 0, false)
+			end
 		else
 			outputChatBox("Error 800001 - Report on http://bugs.valhallagaming.net", source, 255, 0, 0)
 		end
