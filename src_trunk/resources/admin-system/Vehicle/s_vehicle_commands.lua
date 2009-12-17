@@ -295,6 +295,9 @@ function respawnCmdVehicle(thePlayer, commandName, id)
 				local dbid = getElementData(theVehicle, "dbid")
 
 				if (dbid==tonumber(id)) then
+					if isElementAttached(theVehicle) then
+						detachElements(theVehicle)
+					end
 					if (dbid<0) then -- TEMP vehicle
 						fixVehicle(theVehicle) -- Can't really respawn this, so just repair it
 						if armoredCars[ getElementModel( theVehicle ) ] then
@@ -404,6 +407,9 @@ function respawnAllVehicles(thePlayer, commandName, timeToRespawn)
 						end
 						
 						if getElementData(theVehicle, "owner") == -2 and getElementData(theVehicle,"Impounded") == 0 then
+							if isElementAttached(theVehicle) then
+								detachElements(theVehicle)
+							end
 							respawnVehicle(theVehicle)
 							setVehicleLocked(theVehicle, false)
 							unlockedcivs = unlockedcivs + 1
@@ -414,6 +420,9 @@ function respawnAllVehicles(thePlayer, commandName, timeToRespawn)
 							if (round(checkx, 6) == x) and (round(checky, 6) == y) then
 								notmoved = notmoved + 1
 							else
+								if isElementAttached(theVehicle) then
+									detachElements(theVehicle)
+								end
 								setElementPosition(theVehicle, x, y, z)
 								setVehicleRotation(theVehicle, rx, ry, rz)
 								setElementInterior(theVehicle, getElementData(theVehicle, "interior"))
@@ -480,6 +489,9 @@ function respawnAllCivVehicles(thePlayer, commandName)
 				if not pass1 and not pass2 and not pass3 and not driver and not getVehicleTowingVehicle(theVehicle) and #getAttachedElements(theVehicle) == 0 then
 					-- civ vehicles
 					if getElementData(theVehicle, "owner") == -2 then
+						if isElementAttached(theVehicle) then
+							detachElements(theVehicle)
+						end
 						respawnVehicle(theVehicle)
 						setVehicleLocked(theVehicle, false)
 						counter = counter + 1
@@ -515,6 +527,9 @@ function respawnAllInteriorVehicles(thePlayer, commandName, repair)
 						local x, y, z, rx, ry, rz = unpack(getElementData(theVehicle, "respawnposition"))
 						
 						if (round(checkx, 6) ~= x) or (round(checky, 6) ~= y) then
+							if isElementAttached(theVehicle) then
+								detachElements(theVehicle)
+							end
 							if repair then
 								respawnVehicle(theVehicle)
 							else
