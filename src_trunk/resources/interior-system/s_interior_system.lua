@@ -858,18 +858,7 @@ function setPlayerInsideInterior(thePickup, thePlayer)
 			local inttype = getElementData(thePickup, "inttype")
 			local cost = getElementData(thePickup, "cost")
 			
-			local ownerName = "None"
-			local result = mysql_query(handler, "SELECT charactername FROM characters WHERE id='" .. owner .. "' LIMIT 1")
-			
-			if (mysql_num_rows(result)>0) then
-				ownerName = mysql_result(result, 1, 1)
-				ownerName = string.gsub(tostring(ownerName), "_", " ")
-			end
-			
-			if (result) then
-				mysql_free_result(result)
-			end
-
+			local ownerName = exports['vehicle-system']:getCharacterName( owner ) or "None"
 			triggerClientEvent(thePlayer, "displayInteriorName", thePlayer, name, ownerName, inttype, cost, getElementData( thePickup, "fee" ))
 
 			playSoundFrontEnd(thePlayer, 40)
