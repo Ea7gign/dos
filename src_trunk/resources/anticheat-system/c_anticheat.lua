@@ -86,7 +86,7 @@ end
 function giveSafeWeapon(weapon, ammo)
 	resetWeaponTimer()
 	setElementData(localPlayer, "ACweapon" .. weapon, (getElementData(localPlayer, "ACweapon" .. weapon) or 0) + ammo, false)
-	triggerEvent("saveGuns", localPlayer)
+	setTimer(triggerEvent, 200, 1, "saveGuns", localPlayer)
 end
 addEvent("giveSafeWeapon", true)
 addEventHandler("giveSafeWeapon", localPlayer, giveSafeWeapon)
@@ -94,7 +94,7 @@ addEventHandler("giveSafeWeapon", localPlayer, giveSafeWeapon)
 function setSafeWeaponAmmo(weapon, ammo)
 	resetWeaponTimer()
 	setElementData(localPlayer, "ACweapon" .. weapon, ammo, false)
-	triggerEvent("saveGuns", localPlayer)
+	setTimer(triggerEvent, 200, 1, "saveGuns", localPlayer)
 end
 addEvent("setSafeWeaponAmmo", true)
 addEventHandler("setSafeWeaponAmmo", localPlayer, setSafeWeaponAmmo)
@@ -104,7 +104,7 @@ function takeAllWeaponsSafe()
 	for weapon = 0, 47 do
 		setElementData(localPlayer, "ACweapon" .. weapon, nil, false)
 	end
-	triggerEvent("saveGuns", localPlayer)
+	setTimer(triggerEvent, 200, 1, "saveGuns", localPlayer)
 end
 addEvent("takeAllWeaponsSafe", true)
 addEventHandler("takeAllWeaponsSafe", localPlayer, takeAllWeaponsSafe)
@@ -112,7 +112,7 @@ addEventHandler("takeAllWeaponsSafe", localPlayer, takeAllWeaponsSafe)
 function takeWeaponSafe(weapon)
 	resetWeaponTimer()
 	setElementData(localPlayer, "ACweapon" .. weapon, nil, false)
-	triggerEvent("saveGuns", localPlayer)
+	setTimer(triggerEvent, 200, 1, "saveGuns", localPlayer)
 end
 addEvent("takeWeaponSafe", true)
 addEventHandler("takeWeaponSafe", localPlayer, takeWeaponSafe)
