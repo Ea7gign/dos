@@ -18,7 +18,6 @@
 	<script src="ScottieMansion.lua" type="server"/>
 	<script src="DanielsMansion.lua" type="server"/>
 	<script src="airport.lua" type="server"/>
-	<script src="Rayray.lua" type="server"/>
 	
 	<script src="fd_interior.lua"/>
 	<script src="CharlieMansion.lua"/>
