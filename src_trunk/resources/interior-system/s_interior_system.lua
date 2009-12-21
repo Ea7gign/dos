@@ -183,12 +183,12 @@ function publicSellProperty(thePlayer, dbid, showmessages, givemoney)
 		mysql_free_result(query)
 		
 		if getElementDimension(thePlayer) == dbid then
+			setElementInterior(thePlayer, getElementInterior(entrance))
+			setCameraInterior(thePlayer, getElementInterior(entrance))
+			
 			setElementDimension(thePlayer, getElementDimension(entrance))
 			setElementPosition(thePlayer, getElementPosition(entrance))
 			removeElementData(thePlayer, "interiormarker")
-			
-			setElementInterior(thePlayer, getElementInterior(entrance))
-			setCameraInterior(thePlayer, getElementInterior(entrance))
 		end
 
 		if safeTable[dbid] then
@@ -322,10 +322,10 @@ function deleteInterior(thePlayer, commandName)
 				-- move all players outside
 				for key, value in pairs( getElementsByType( "player" ) ) do
 					if isElement( value ) and getElementDimension( value ) == dbid then
-						setElementDimension( value, getElementDimension( entrance ) )
-						setElementPosition( value, getElementPosition( entrance ) )
 						setElementInterior( value, getElementInterior( entrance ) )
 						setCameraInterior( value, getElementInterior( entrance ) )
+						setElementDimension( value, getElementDimension( entrance ) )
+						setElementPosition( value, getElementPosition( entrance ) )
 						removeElementData( value, "interiormarker" )
 						
 						triggerEvent("onPlayerInteriorChange", value, exit, entrance)
@@ -836,10 +836,10 @@ function setPlayerInsideInterior(thePickup, thePlayer)
 		-- teleport the player during the black fade
 		setTimer(function(thePlayer, thePickup, other)
 			if isElement(thePlayer) then
-				setElementDimension(thePlayer, dimension)
-				setElementPosition(thePlayer, x, y, z)
 				setElementInterior(thePlayer, interior)
 				setCameraInterior(thePlayer, interior)
+				setElementDimension(thePlayer, dimension)
+				setElementPosition(thePlayer, x, y, z)
 				if rot then
 					setPedRotation(thePlayer, rot)
 				end
@@ -1141,10 +1141,10 @@ function gotoHouse( thePlayer, commandName, houseID )
 				local interior = getElementInterior( entrance )
 				local x, y, z = getElementPosition( entrance )
 				
-				setElementDimension(thePlayer, dimension)
-				setElementPosition(thePlayer, x, y, z)
 				setElementInterior(thePlayer, interior)
 				setCameraInterior(thePlayer, interior)
+				setElementDimension(thePlayer, dimension)
+				setElementPosition(thePlayer, x, y, z)
 				
 				outputChatBox( "Teleported to House #" .. houseID, thePlayer, 0, 255, 0 )
 			else
