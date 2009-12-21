@@ -140,16 +140,7 @@ function hitInteriorPickup( thePlayer )
 				local owner = getElementData( thePickup, "owner" )
 				local cost = getElementData( thePickup, "cost" )
 				
-				local ownerName = "None"
-				local result = mysql_query(handler, "SELECT charactername FROM characters WHERE id='" .. owner .. "' LIMIT 1")
-			
-				if result then
-					if mysql_num_rows(result) > 0 then
-						ownerName = mysql_result(result, 1, 1):gsub("_", " ")
-					end
-					mysql_free_result(result)
-				end
-				
+				local ownerName = exports['vehicle-system']:getCharacterName( owner ) or "None"
 				triggerClientEvent(thePlayer, "displayInteriorName", thePlayer, name, ownerName, getElementData( thePickup, "inttype" ), cost, getElementData( thePickup, "fee" ) )
 			end
 		end
