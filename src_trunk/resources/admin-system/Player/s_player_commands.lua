@@ -594,6 +594,7 @@ function givePlayerGun(thePlayer, commandName, targetPlayer, ...)
 						outputChatBox("Invalid Weapon ID.", thePlayer, 255, 0, 0)
 					else
 						outputChatBox("Player " .. targetPlayerName .. " now has a " .. getWeaponNameFromID(weapon) .. " with " .. ammo .. " Ammo.", thePlayer, 0, 255, 0)
+						exports.logs:logMessage(getPlayerName(thePlayer):gsub("_", " ") .. " gave " .. targetPlayerName .. " a " .. getWeaponNameFromID(weapon) .. " with " .. ammo .. " Ammo.", 22)
 						if (hiddenAdmin==0) then
 							local adminTitle = exports.global:getPlayerAdminTitle(thePlayer)
 							exports.global:sendMessageToAdmins("AdmCmd: " .. tostring(adminTitle) .. " " .. getPlayerName(thePlayer) .. " gave " .. targetPlayerName .. " a " .. getWeaponNameFromID(weapon) .. " with " .. ammo .. " ammo.")

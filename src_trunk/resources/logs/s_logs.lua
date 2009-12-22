@@ -19,7 +19,8 @@ enumTypes = {
 	"news",
 	"do",
 	"tv",
-	"adminlock"
+	"adminlock",
+	"weaponspawn"
 }
 
 
