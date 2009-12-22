@@ -33,7 +33,9 @@ function findPlayerByPartialNick(thePlayer, partialNick)
 	local players = exports.pool:getPoolElementsByType("player")
 	local count = 0
 	
-	if getPlayerFromName(partialNick) then
+	if thePlayer and partialNick == "*" then
+		return thePlayer, getPlayerName(thePlayer):gsub("_", " ")
+	elseif getPlayerFromName(partialNick) then
 		return getPlayerFromName(partialNick), getPlayerName( getPlayerFromName(partialNick) ):gsub("_", " ")
 	-- IDS
 	elseif tonumber(partialNick) then
