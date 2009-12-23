@@ -241,6 +241,7 @@ end
 ------------------------------ telephone conversation ------------------------------
 ------------------------------------------------------------------------------------
 pwStevie, pstevieText, poptionOne, poptionTwo, poptionThree, poptionFour = nil
+factionLeader = nil
 
 function noDeal()
 	-- Window variables
@@ -268,8 +269,9 @@ end
 addEvent("outOfDeals", true)
 addEventHandler("outOfDeals",  getRootElement(), noDeal)
 
-function createPhoneConvo( )
-
+function createPhoneConvo( leader )
+	factionLeader = leader == 1
+	
 	-- Window variables
 	local Width = 400
 	local Height = 250
@@ -345,7 +347,7 @@ function cacceptSteviePhoneDeal( )
 	-- Create Stevies text box
 	guiSetText ( pstevieText, "I got a couple crates here. Which one tickles ya fancy?")
 	
-	if (factionType==0) then -- Gang
+	if (factionLeader and factionType==0) then -- Gang
 
 		poptionOne = guiCreateButton(  0.05, 0.65, 0.45, 0.2, "To: Ammu-nation LTD.\
 															- $7,500", true, pwStevie )
@@ -369,7 +371,7 @@ function cacceptSteviePhoneDeal( )
 			end
 		end, false)
 		
-	elseif (factionType==1) then -- Mafia
+	elseif (factionLeader and factionType==1) then -- Mafia
 	
 		-- Create close, previous and Next Button
 		poptionOne = guiCreateButton( 0.05, 0.65, 0.45, 0.2, "To: Ammu-nation LTD.\

@@ -232,7 +232,7 @@ function stevieSuccess_S()
 	
 	exports.global:sendLocalMeAction( source,"takes Stevie's business card.")
 	
-	-- Give the player an item. Name = "Business card"  Description = "Steven Pullman, L.V. Freight Depot, Tel: 081016"  !NEEDS NEW ITEM!
+	-- Give the player an item. Name = "Business card"  Description = "Steven Pullman, L.V. Freight Depot, Tel: 12555"
 	exports.global:giveItem(source, 55, 1) -- change the ID.
 	
 	-- set the players "stevie" stat to "1" meaning they have met him and successfully made it through the conversation.
@@ -300,8 +300,9 @@ function startPhoneCall(thePlayer)
 						toggleAllControls(thePlayer, true, true, true)
 						setTimer(startPhoneAnim, 3050, 2, thePlayer)
 						-- are they a friend?
-						local query = mysql_query(handler, "SELECT stevie FROM characters WHERE charactername='" .. mysql_escape_string(handler, getPlayerName(thePlayer)) .."'")
+						local query = mysql_query(handler, "SELECT stevie, faction_leader FROM characters WHERE charactername='" .. mysql_escape_string(handler, getPlayerName(thePlayer)) .."'")
 						local steviesFriend = tonumber(mysql_result(query, 1, 1))
+						local factionLeader = tonumber(mysql_result(query, 1, 2))
 						mysql_free_result(query)
 						-- are they in law enforcement?
 						local theTeam = getPlayerTeam(thePlayer)
@@ -309,19 +310,19 @@ function startPhoneCall(thePlayer)
 						
 						if not(steviesFriend==1) or (factionType==4) or (factionType==2) or (factionType==3) then
 							setTimer( endCall, 6000, 1, thePlayer)
-							outputChatBox("#081016 [Cellphone]: Yeah?", thePlayer)
-							setTimer(outputChatBox, 3000, 1, "#081016 [Cellphone]: How did you get this number? ", thePlayer)
-							setTimer(outputChatBox, 6000, 1, "#081016 [Cellphone]: Sorry you must have the wrong number, pal.", thePlayer)
+							outputChatBox("#12555 [Cellphone]: Yeah?", thePlayer)
+							setTimer(outputChatBox, 3000, 1, "#12555 [Cellphone]: How did you get this number? ", thePlayer)
+							setTimer(outputChatBox, 6000, 1, "#12555 [Cellphone]: Sorry you must have the wrong number, pal.", thePlayer)
 							setTimer(outputChatBox, 6000, 1, "They hung up.", thePlayer)
 							phoneState = 0
 						else
 							if(doneDeals >= 5) then
 								triggerClientEvent ( thePlayer, "outOfDeals", getRootElement() ) -- Trigger Client side function to create GUI.
 							elseif stevieMarker then
-								outputChatBox("((Steven Pullman)) #081016 [Cellphone]: Just a bad time - call later.", thePlayer)
+								outputChatBox("((Steven Pullman)) #12555 [Cellphone]: Just a bad time - call later.", thePlayer)
 								endCall()
 							else
-								triggerClientEvent ( thePlayer, "showPhoneConvo", getRootElement() ) -- Trigger Client side function to create GUI.
+								triggerClientEvent ( thePlayer, "showPhoneConvo", getRootElement(), factionLeader ) -- Trigger Client side function to create GUI.
 								addEventHandler ( "onPlayerQuit", thePlayer, endCall )
 							end
 						end
@@ -331,7 +332,7 @@ function startPhoneCall(thePlayer)
 		end
 	end
 end
-addCommandHandler ( "081016", startPhoneCall )
+addCommandHandler ( "12555", startPhoneCall )
 
 function startPhoneAnim() -- taken from phone res.
 	exports.global:applyAnimation(source, "ped", "phone_talk", -1, true, true, true)
@@ -345,7 +346,7 @@ function declineDeal_S ()
 	-- Output the text from the last option to all player in radius
 	local name = string.gsub(getPlayerName(source), "_", " ")
 	exports.global:sendLocalText(source, name.. " says: Maybe another time.", 255, 255, 255, 10)
-	outputChatBox("((Steven Pullman)) #081016 [Cellphone]: Sure thing.", source)
+	outputChatBox("((Steven Pullman)) #12555 [Cellphone]: Sure thing.", source)
 	
 	endCall()
 	
@@ -379,11 +380,11 @@ function acceptDeal_S( dealNumber )
 	end
 	
 	if not exports.global:takeMoney(source, cost) then -- can the player afford the deal?
-		outputChatBox("((Steven Pullman)) #081016 [Cellphone]: Call me when you've got some money.", source)
+		outputChatBox("((Steven Pullman)) #12555 [Cellphone]: Call me when you've got some money.", source)
 		outputChatBox("You can't afford to pay Stevie for the deal.", source, 255, 0, 0)
 		endCall()
 	elseif stevieMarker then
-		outputChatBox("((Steven Pullman)) #081016 [Cellphone]: Just a bad time - call later.", source)
+		outputChatBox("((Steven Pullman)) #12555 [Cellphone]: Just a bad time - call later.", source)
 		endCall()
 	else
 		-- just some check to make sure the table has that value, i.e. deals are accepted (shouldn't happen, just in case)

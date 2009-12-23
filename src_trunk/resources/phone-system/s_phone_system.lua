@@ -227,8 +227,8 @@ function callSomeone(thePlayer, commandName, phoneNumber, ...)
 						exports.global:applyAnimation(thePlayer, "ped", "phone_in", 3000, false)
 						setTimer(toggleAllControls, 150, 1, thePlayer, true, true, true)
 						setTimer(startPhoneAnim, 3050, 1, thePlayer)
-					elseif phoneNumber == "081016" then
-						if not executeCommandHandler( "081016", thePlayer ) then
+					elseif phoneNumber == "12555" then
+						if not executeCommandHandler( "12555", thePlayer ) then
 							outputChatBox("You get a dead tone...", thePlayer, 255, 194, 14)
 						end
 					else

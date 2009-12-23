@@ -63,7 +63,7 @@ g_items = {
 	{ "Police Officer's Manual", "The Police Officer's Manual.", 5, 2824, 0, 0, 0, -0.01 },
 	{ "Breathalizer", "A small black breathalizer.", 4, 1271, 0, 0, 0, 0.285 },
 	{ "Ghettoblaster", "A black Ghettoblaster.", 7, 2226, 0, 0, 0, 0 },
-	{ "Business Card", "Steven Pullman - L.V. Freight Depot, Tel: ((/081016))", 4, 1581, 270, 270, 0, 0 },
+	{ "Business Card", "Steven Pullman - L.V. Freight Depot, Tel: 12555", 4, 1581, 270, 270, 0, 0 },
 	{ "Ski Mask", "A Ski mask.", 6, 2386, 0, 0, 0, 0.1 },
 	{ "Fuel Can", "A small metal fuel canister.", 4, 1517, 0, 0, 0, 0.15 },
 	{ "Ziebrand Beer", "The finest beer, imported from Holland.", 1, 1520, 0, 0, 0, 0.15 },
