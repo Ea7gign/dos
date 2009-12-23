@@ -48,11 +48,19 @@ end
 
 local lastrot = nil
 
+function aimsSniper()
+	return getPedControlState(localPlayer, "aim_weapon") and getPedWeapon(localPlayer) == 34
+end
+
+function aimsAt(player)
+	return getPedTarget(localPlayer) == player and aimsSniper()
+end
+
 function renderNametags()
 	if (show) then
 		local players = { }
 		local distances = { }
-		local lx, ly, lz = getElementPosition(localPlayer)
+		local lx, ly, lz = getCameraMatrix()
 	
 		for key, player in ipairs(getElementsByType("player")) do
 			if (isElement(player)) and isElementStreamedIn(player) then
@@ -78,14 +86,14 @@ function renderNametags()
 						lastarmor[player] = playerarmor[player]
 					end
 					
-					if (player~=localPlayer) and (isElementOnScreen(player)) and ((distance<limitdistance) or reconx) then
+					if (player~=localPlayer) and (isElementOnScreen(player)) and (aimsAt(player) or distance<limitdistance or reconx) then
 						if not getElementData(player, "reconx") and not getElementData(player, "freecam:state") then
 							--local lx, ly, lz = getPedBonePosition(localPlayer, 7)
 							local lx, ly, lz = getCameraMatrix()
 							local vehicle = getPedOccupiedVehicle(player)
 							local collision, cx, cy, cz, element = processLineOfSight(lx, ly, lz, rx, ry, rz+1, true, true, true, true, false, false, true, false, vehicle)
 
-							if not (collision) or (reconx) then
+							if not (collision) or aimsSniper() or (reconx) then
 								local x, y, z = getElementPosition(player)
 								
 								if not (isPedDucked(player)) then
@@ -111,10 +119,10 @@ function renderNametags()
 									if (health>0) then
 										distance = distance / 5
 										
-										if (distance<1) then distance = 1 end
-										if (distance>2) then distance = 2 end
-										if (reconx) then distance = 1 end
-
+										if (reconx or aimsAt(player)) then distance = 1
+										elseif (distance<1) then distance = 1
+										elseif (distance>2) then distance = 2 end
+										
 										local offset = 45 / distance
 										
 										-- DRAW BG
