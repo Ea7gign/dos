@@ -32,25 +32,34 @@ function tyIntro () -- When player enters the colSphere create GUI with intro ou
 	-- Give the player the "Find Ty" achievement.
 	exports.global:sendLocalMeAction(source,"knocks on the door")
 	
-	if(getElementData( tyrese, "activeConvo" )==1)then
+	local theTeam = getPlayerTeam(source)
+	local factionType = getElementData(theTeam, "type")
+	
+	if(factionType ~= 0 or getElementData( tyrese, "activeConvo" )==1)then
 		exports.global:sendLocalText(source, "Ty shouts: Yo', I'm busy!", 255, 255, 255, 10)
 		triggerClientEvent(source, "closeTyWindow", getRootElement())
 	else
 		-- Friend of Ty/Rook
-		local query = mysql_query(handler, "SELECT tyrese, rook FROM characters WHERE charactername='" .. mysql_escape_string(handler, getPlayerName(source)) .."'")
+		local query = mysql_query(handler, "SELECT tyrese, rook, faction_leader FROM characters WHERE charactername='" .. mysql_escape_string(handler, getPlayerName(source)) .."'")
 		local tysFriend = tonumber(mysql_result(query, 1, 1))
 		local rooksFriend = tonumber(mysql_result(query, 1, 2))
+		local factionLeader = tonumber(mysql_result(query, 1, 3))
 		mysql_free_result(query)
 		
-		-- Output chat.
-		exports.global:sendLocalText(source, "Ty shouts: Yo', who is it?!", 255, 255, 255, 10)
-		
-		setElementData (tyrese, "activeConvo",  1)
-		talkingToTy = source
-		addEventHandler("onPlayerQuit", talkingToTy, resetTyConvoStateDelayed)
-		addEventHandler("onPlayerWasted", talkingToTy, resetTyConvoStateDelayed)
-		
-		triggerClientEvent( source, "callback", getRootElement(), rooksFriend, tysFriend)
+		if factionLeader == 0 then
+			exports.global:sendLocalText(source, "Ty shouts: Yo', I'm busy!", 255, 255, 255, 10)
+			triggerClientEvent(source, "closeTyWindow", getRootElement())
+		else
+			-- Output chat.
+			exports.global:sendLocalText(source, "Ty shouts: Yo', who is it?!", 255, 255, 255, 10)
+			
+			setElementData (tyrese, "activeConvo",  1)
+			talkingToTy = source
+			addEventHandler("onPlayerQuit", talkingToTy, resetTyConvoStateDelayed)
+			addEventHandler("onPlayerWasted", talkingToTy, resetTyConvoStateDelayed)
+			
+			triggerClientEvent( source, "callback", getRootElement(), rooksFriend, tysFriend)
+		end
 	end
 end
 addEvent( "startTyConvo", true )
@@ -228,7 +237,7 @@ function giveTyItems( itemNumber )
 		
 		triggerClientEvent(source, "closeTyWindow", getRootElement())
 		
-		resetTyConvoStateDelayed()
+		setTimer(resetTyConvoStateDelayed, 600000, 1)
 	
 	else
 		exports.global:giveItem(source, itemID, 1)

@@ -376,7 +376,9 @@ function acceptDeal_S( dealNumber )
 	elseif(dealNumber==3)then
 		cost = 15000
 	elseif(dealNumber==4)then
-		cost = 1000
+		cost = 3000
+	elseif(dealNumber==5) then
+		cost = 2000
 	end
 	
 	if not exports.global:takeMoney(source, cost) then -- can the player afford the deal?
@@ -438,29 +440,45 @@ addEventHandler( "savePlayer", getRootElement(),
 -- { isWeapon, item/weapon ID, Value/Ammo }
 deals = { 
 	{ 
-		{ true, 23, 100 },	-- silenced pistol
+		{ true, 23, 60 },	-- silenced pistol
 		{ true, 25, 30 },	-- shotgun
-		{ true, 28, 250 },	-- Uzi
-		{ true, 32, 250 },	-- tec 9
+		{ true, 28, 150 },	-- Uzi
+		{ true, 32, 150 },	-- tec 9
+		{ true, 23, 100 },	-- silenced pistol
+		{ true, 25, 20 },	-- shotgun
+		{ true, 28, 100 },	-- Uzi
+		{ true, 32, 100 },	-- tec 9
 	},
 	{
 		{ false, 19, 1 },	-- MP3
 		{ false, 54, 1 },	-- Ghettoblaster
 		{ false, 6, 1 },	-- radio
 		{ false, 2, 1 },	-- cellphone
+		{ false, 88, 1 },	-- Earpiece
+		{ false, 67, 1 },	-- GPS
 	},
-	{
-		{ true, 30, 500 },	-- AK47
+	{ -- MAFIA GUN DEAL
+		{ true, 30, 100 },	-- AK47
 		{ false, 6, 1 },	-- radio
-		{ true, 34, 10 },	-- Sniper rifle
+		{ false, 88, 1 },	-- Earpiece
+		{ false, 6, 1 },	-- radio
+		{ false, 88, 1 },	-- Earpiece
+		{ true, 34, 5 },	-- Sniper rifle
 		-- { true, 16, 6 },	-- grenade
 		-- { true, 39, 4 },	-- satchel
 		{ false, 16, 287 },	-- uniform
-		{ true, 29, 500 },	-- MP5
-		{ true, 31, 400 },	-- M4
-		{ true, 17, 6 }		-- teargas
+		{ true, 29, 100 },	-- MP5
+		{ true, 31, 80 },	-- M4
+		{ true, 29, 70 },	-- MP5
+		{ true, 31, 30 },	-- M4
+		{ true, 17, 4 },	-- teargas
+		{ true, 17, 3 }		-- teargas
 	},
-	{ 
+	{ -- MAFIA DRUG DEAL
+		{ false, 32, 1 },		-- Lysergic acid
+		{ false, 31, 1 },		-- Cocaine Alcaloid
+	},
+	{ -- GANG DRUG DEAL
 		{ false, 32, 1 },		-- Lysergic acid
 		{ false, 33, 1 },		-- PCP
 		{ false, 31, 1 },		-- Cocaine Alcaloid

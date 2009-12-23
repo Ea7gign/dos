@@ -371,6 +371,17 @@ function cacceptSteviePhoneDeal( )
 			end
 		end, false)
 		
+		poptionFour = guiCreateButton( 0.5, 0.65, 0.45, 0.2, "To: RaNu Chemical Research.\
+															- $2,000", true, pwStevie )
+		addEventHandler ( "onClientGUIClick", poptionFour,  function(button, state)
+			if(button == "left" and state == "up") then
+				
+				c_closePhoneGUI()
+				triggerServerEvent( "acceptSteviePhoneDeal", getLocalPlayer(), 5)
+				
+			end
+		end, false)
+		
 	elseif (factionLeader and factionType==1) then -- Mafia
 	
 		-- Create close, previous and Next Button
@@ -408,7 +419,7 @@ function cacceptSteviePhoneDeal( )
 		end, false)
 
 		poptionFour = guiCreateButton( 0.5, 0.65, 0.45, 0.2, "To: RaNu Chemical Research.\
-															- $1,000", true, pwStevie )
+															- $3,000", true, pwStevie )
 		addEventHandler ( "onClientGUIClick", poptionFour,  function(button, state)
 			if(button == "left" and state == "up") then
 				
