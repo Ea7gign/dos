@@ -1,15 +1,13 @@
-local tyColSphere = createColSphere( 2242.52, -1170.7, 1029.79, 1)
+local tyColSphere = createColSphere( 2532.8212890625, -2029.841796875, 13.546875, 1)
 exports.pool:allocateElement(tyColSphere)
-tyColDim = 1160
-setElementDimension( tyColSphere, tyColDim )
 
-tyrese = createPed (28, 2264.65234375, -1134.3662109375, 1050.6328125)
+tyrese = createPed (28, 219.3525390625, 1242.6259765625, 1082.140625)
 exports.pool:allocateElement(tyrese)
 
-setPedRotation(tyrese, 120)
+setPedRotation(tyrese, 220)
 setPedFrozen(tyrese, true)
-setElementInterior( tyrese, 10 )
-setElementDimension( tyrese, 1165 )
+setElementInterior( tyrese, 2 )
+setElementDimension( tyrese, 364 )
 setElementData (tyrese, "activeConvo",  0) -- Set the convo state to 0 so people can start talking to him.
 setElementData(tyrese, "name", "Ty")
 setElementData(tyrese, "talk", true)
@@ -89,9 +87,9 @@ function tyStatement5_S()
 	exports.global:sendLocalText(source, "* The door unlocks", 255, 51, 102, 10)
 	exports.global:sendLocalText(source, "Ty says: Only you. Anyone else is gonna have to wait outside.", 255, 255, 255, 10)
 	
-	setElementPosition(source, 2260, -1136, 1049.6)
-	setElementDimension(source, 1165)
-	setElementInterior(source, 10)
+	setElementPosition(source, 226.48, 1239.87, 1082.14)
+	setElementDimension(source, 364)
+	setElementInterior(source, 2)
 	
 	-- Output the text from the last option to all player in radius
 	outputChatBox( "Ty says: So you talked to Rook, right? What did he tell you?.", source, 255, 255, 255)
@@ -118,9 +116,9 @@ function tyStatement7_S()
 	exports.global:sendLocalText(source, name .. " says: He said you had connects but didn't know what to do with them.", 255, 255, 255, 5)
 	exports.global:sendLocalText(source, "Ty says: Fuck you! I ain't no amateur. Get the fuck up out of here. ", 255, 255, 255, 5)
 	
-	setElementPosition(source, 2242.52, -1170.7, 1029.79)
-	setElementDimension(source, 1160)
-	setElementInterior(source, 15)
+	setElementPosition(source, 2532.8212890625, -2029.841796875, 13.546875)
+	setElementDimension(source, 0)
+	setElementInterior(source, 0)
 	
 	resetTyConvoStateDelayed()
 	
@@ -135,9 +133,9 @@ function tyStatement8_S()
 	exports.global:sendLocalText(source, name .. " says: Sounds a'ight.", 255, 255, 255, 5)
 	exports.global:sendLocalText(source, "Ty says: You ever need the shit just come by.", 255, 255, 255, 5)
 	
-	setElementPosition(source, 2242.52, -1170.7, 1029.79)
-	setElementDimension(source, 1160)
-	setElementInterior(source, 15)
+	setElementPosition(source, 2532.8212890625, -2029.841796875, 13.546875)
+	setElementDimension(source, 0)
+	setElementInterior(source, 0)
 	
 	resetTyConvoStateDelayed()
 	
@@ -164,9 +162,9 @@ function tyStatement10_S()
 	exports.global:sendLocalText(source, name .. " says: Na, it's cool. We got a deal.", 255, 255, 255, 5)
 	exports.global:sendLocalText(source, "Ty says: You ever need me to hook you up, just stop by.", 255, 255, 255, 5)
 	
-	setElementPosition(source, 2242.52, -1170.7, 1029.79)
-	setElementDimension(source, 1160)
-	setElementInterior(source, 15)
+	setElementPosition(source, 2532.8212890625, -2029.841796875, 13.546875)
+	setElementDimension(source, 0)
+	setElementInterior(source, 0)
 	
 	resetTyConvoStateDelayed()
 	
@@ -183,9 +181,9 @@ function tyStatement11_S()
 	exports.global:sendLocalText(source, name .. " says: Yeah you do that.", 255, 255, 255, 5)
 	exports.global:sendLocalText(source, "Ty says: Then we're done here.  Get the steppin'.", 255, 255, 255, 5)
 	
-	setElementPosition(source, 2242.52, -1170.7, 1029.79)
-	setElementDimension(source, 1160)
-	setElementInterior(source, 15)
+	setElementPosition(source, 2532.8212890625, -2029.841796875, 13.546875)
+	setElementDimension(source, 0)
+	setElementInterior(source, 0)
 	
 	resetTyConvoStateDelayed()
 	
@@ -201,9 +199,9 @@ function tyFriendStatement2_S()
 	exports.global:sendLocalText(source, "Ty shouts: A'ight hold up..", 255, 255, 255, 10)
 	exports.global:sendLocalText(source, "* The door unlocks", 255, 51, 102, 10)
 	
-	setElementPosition(source, 2260, -1136, 1049.6)
-	setElementDimension(source, 1165)
-	setElementInterior(source, 10)
+	setElementPosition(source, 226.48, 1239.87, 1082.14)
+	setElementDimension(source, 364)
+	setElementInterior(source, 2)
 	
 	outputChatBox("Ty says: So what you looking for this time?", source, 255, 255, 255)
 		
@@ -232,9 +230,9 @@ function giveTyItems( itemNumber )
 	if not exports.global:takeMoney(source, cost) then
 		exports.global:sendLocalText(tyrese, "Ty says: I ain't givin' this shit away. Come back when you got the money.", 255, 255, 255, 5)
 		
-		setElementPosition(source, 2242.52, -1170.7, 1029.79)
-		setElementDimension(source, 1160)
-		setElementInterior(source, 15)
+		setElementPosition(source, 2532.8212890625, -2029.841796875, 13.546875)
+		setElementDimension(source, 0)
+		setElementInterior(source, 0)
 		
 		triggerClientEvent(source, "closeTyWindow", getRootElement())
 		
@@ -258,9 +256,9 @@ function tyClose_S()
 	exports.global:sendLocalText( tyrese, name .. " says: I'm set.", 255, 255, 255, 5)
 	exports.global:sendLocalText( tyrese, "Ty says: Peace, homie.", 255, 255, 255, 5)
 	
-	setElementPosition(source, 2242.52, -1170.7, 1029.79)
-	setElementDimension(source, 1160)
-	setElementInterior(source, 15)
+	setElementPosition(source, 2532.8212890625, -2029.841796875, 13.546875)
+	setElementDimension(source, 0)
+	setElementInterior(source, 0)
 	
 	setTimer(resetTyConvoStateDelayed, 600000, 1)
 end
