@@ -22,10 +22,10 @@ exports.pool:allocateElement(fdColShape)
 setElementDimension(fdColShape, 10631)
 setElementInterior(fdColShape, 3)
 
-govColShape = createColSphere(347.1923828125, 161.8642578125, 1014.1875, 8)
+--[[govColShape = createColSphere(347.1923828125, 161.8642578125, 1014.1875, 8)
 exports.pool:allocateElement(govColShape)
 setElementDimension(govColShape, 125)
-setElementInterior(govColShape, 3)
+setElementInterior(govColShape, 3)]]
 
 angColShape = createColSphere(347.693359375, 162.5078125, 1014.1875, 7)
 exports.pool:allocateElement(angColShape)
@@ -272,7 +272,7 @@ addCommandHandler("duty", angduty, false, false)
 addCommandHandler("combatduty", angduty, false, false)
 
 -- gov duty
-function govduty(thePlayer, commandName)	
+--[[function govduty(thePlayer, commandName)	
 	local logged = getElementData(thePlayer, "loggedin")
 
 	if (logged==1) then
@@ -336,7 +336,7 @@ function govduty(thePlayer, commandName)
 		end
 	end
 end
-addCommandHandler("duty", govduty, false, false)
+addCommandHandler("duty", govduty, false, false)]]
 
 -- ES FD
 function lvfdduty(thePlayer, commandName)	
