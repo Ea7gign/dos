@@ -1,7 +1,7 @@
 local emitters = { }
 
 function streamInEmitter()
-	if (getElementType(source)=="object") then
+	if (getElementType(source)=="object") and getElementParent(getElementParent(source)) == getResourceRootElement() then
 		local model = getElementModel(source)
 		local x, y, z = getElementPosition(source)
 			
@@ -20,14 +20,8 @@ end
 addEventHandler("onClientElementStreamIn", getRootElement(), streamInEmitter)
 
 function streamOutEmitter()
-	if (getElementType(source)=="object") then
-		local model = getElementModel(source)
-		local id = #emitters + 1
-		local x, y, z = getElementPosition(source)
-			
-		if (model >= 849 and model <= 850) then -- is an emitter
-			destroyElement(emitters[source])
-		end
+	if emitters[source] then
+		destroyElement(emitters[source])
 	end
 end
 addEventHandler("onClientElementStreamOut", getRootElement(), streamOutEmitter)
