@@ -347,7 +347,7 @@ function cacceptSteviePhoneDeal( )
 	-- Create Stevies text box
 	guiSetText ( pstevieText, "I got a couple crates here. Which one tickles ya fancy?")
 	
-	if (factionLeader and factionType==0) then -- Gang
+	if false and (factionLeader and factionType==0) then -- Gang
 
 		poptionOne = guiCreateButton(  0.05, 0.65, 0.45, 0.2, "To: Ammu-nation LTD.\
 															- $7,500", true, pwStevie )
