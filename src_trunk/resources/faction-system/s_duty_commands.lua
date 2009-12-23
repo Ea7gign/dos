@@ -759,7 +759,7 @@ addCommandHandler( "authswat",
 				local factionRank = tonumber(mysql_result(result, 1, 1))
 				mysql_free_result(result)
 				
-				if factionRank >= 10 then
+				if factionRank >= 8 then
 					if isTimer( authSwat ) then
 						killTimer( authSwat )
 						authSwat = nil

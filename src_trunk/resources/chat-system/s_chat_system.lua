@@ -328,7 +328,7 @@ function govAnnouncement(thePlayer, commandName, ...)
 			local message = table.concat({...}, " ")			
 			local factionRank = tonumber(getElementData(thePlayer,"factionrank"))
 			
-			if (factionRank<10) then
+			if (factionRank<8) then
 				outputChatBox("You do not have permission to use this command.", thePlayer, 255, 0, 0)
 			elseif #message == 0 then
 				outputChatBox("SYNTAX: " .. commandName .. " [message]", thePlayer, 255, 194, 14)
