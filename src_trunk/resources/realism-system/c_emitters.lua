@@ -22,6 +22,7 @@ addEventHandler("onClientElementStreamIn", getRootElement(), streamInEmitter)
 function streamOutEmitter()
 	if emitters[source] then
 		destroyElement(emitters[source])
+		emitters[source] = nil
 	end
 end
 addEventHandler("onClientElementStreamOut", getRootElement(), streamOutEmitter)
