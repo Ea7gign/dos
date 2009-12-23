@@ -118,7 +118,7 @@ function tyStatement7_S()
 	exports.global:sendLocalText(source, name .. " says: He said you had connects but didn't know what to do with them.", 255, 255, 255, 5)
 	exports.global:sendLocalText(source, "Ty says: Fuck you! I ain't no amateur. Get the fuck up out of here. ", 255, 255, 255, 5)
 	
-	setElementPosition(source, 2242.52, -1170.7, 1028.79)
+	setElementPosition(source, 2242.52, -1170.7, 1029.79)
 	setElementDimension(source, 1160)
 	setElementInterior(source, 15)
 	
@@ -135,7 +135,7 @@ function tyStatement8_S()
 	exports.global:sendLocalText(source, name .. " says: Sounds a'ight.", 255, 255, 255, 5)
 	exports.global:sendLocalText(source, "Ty says: You ever need the shit just come by.", 255, 255, 255, 5)
 	
-	setElementPosition(source, 2242.52, -1170.7, 1028.79)
+	setElementPosition(source, 2242.52, -1170.7, 1029.79)
 	setElementDimension(source, 1160)
 	setElementInterior(source, 15)
 	
@@ -164,7 +164,7 @@ function tyStatement10_S()
 	exports.global:sendLocalText(source, name .. " says: Na, it's cool. We got a deal.", 255, 255, 255, 5)
 	exports.global:sendLocalText(source, "Ty says: You ever need me to hook you up, just stop by.", 255, 255, 255, 5)
 	
-	setElementPosition(source, 2242.52, -1170.7, 1028.79)
+	setElementPosition(source, 2242.52, -1170.7, 1029.79)
 	setElementDimension(source, 1160)
 	setElementInterior(source, 15)
 	
@@ -183,7 +183,7 @@ function tyStatement11_S()
 	exports.global:sendLocalText(source, name .. " says: Yeah you do that.", 255, 255, 255, 5)
 	exports.global:sendLocalText(source, "Ty says: Then we're done here.  Get the steppin'.", 255, 255, 255, 5)
 	
-	setElementPosition(source, 2242.52, -1170.7, 1028.79)
+	setElementPosition(source, 2242.52, -1170.7, 1029.79)
 	setElementDimension(source, 1160)
 	setElementInterior(source, 15)
 	
@@ -211,6 +211,7 @@ end
 addEvent( "tyFriendStatement2ServerEvent", true )
 addEventHandler( "tyFriendStatement2ServerEvent", getRootElement(), tyFriendStatement2_S )
 
+local count = 0
 function giveTyItems( itemNumber )
 
 	if(itemNumber == 1)then
@@ -231,7 +232,7 @@ function giveTyItems( itemNumber )
 	if not exports.global:takeMoney(source, cost) then
 		exports.global:sendLocalText(tyrese, "Ty says: I ain't givin' this shit away. Come back when you got the money.", 255, 255, 255, 5)
 		
-		setElementPosition(source, 2242.52, -1170.7, 1028.79)
+		setElementPosition(source, 2242.52, -1170.7, 1029.79)
 		setElementDimension(source, 1160)
 		setElementInterior(source, 15)
 		
@@ -240,8 +241,12 @@ function giveTyItems( itemNumber )
 		setTimer(resetTyConvoStateDelayed, 600000, 1)
 	
 	else
+		count = count + 1
 		exports.global:giveItem(source, itemID, 1)
 		outputChatBox("You have bought a drug item from Ty for $"..cost..".", source)
+		if count >= 4 then
+			tyClose_S()
+		end
 	end
 end
 addEvent("tyGiveItem", true)
@@ -253,11 +258,11 @@ function tyClose_S()
 	exports.global:sendLocalText( tyrese, name .. " says: I'm set.", 255, 255, 255, 5)
 	exports.global:sendLocalText( tyrese, "Ty says: Peace, homie.", 255, 255, 255, 5)
 	
-	setElementPosition(source, 2242.52, -1170.7, 1028.79)
+	setElementPosition(source, 2242.52, -1170.7, 1029.79)
 	setElementDimension(source, 1160)
 	setElementInterior(source, 15)
 	
-	resetTyConvoStateDelayed()
+	setTimer(resetTyConvoStateDelayed, 600000, 1)
 end
 addEvent("tyFriendClose", true)
 addEventHandler("tyFriendClose", getRootElement(), tyClose_S)
@@ -271,8 +276,9 @@ function resetTyConvoStateDelayed()
 	if talkingToTy then
 		removeEventHandler("onPlayerQuit", talkingToTy, resetTyConvoStateDelayed)
 		removeEventHandler("onPlayerWasted", talkingToTy, resetTyConvoStateDelayed)
-		triggerClientEvent(talkingToTy, "closeTyWinodw", getRootElement())
+		triggerClientEvent(talkingToTy, "closeTyWindow", getRootElement())
 		talkingToTy = nil
+		count = 0
 	end
 	setTimer(resetTyConvoState, 120000, 1)
 end
