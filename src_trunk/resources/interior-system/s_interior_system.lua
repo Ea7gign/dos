@@ -941,6 +941,7 @@ function addSafeAtPosition( thePlayer, x, y, z, rotz )
 		setElementInterior(tempobject, interior)
 		setElementDimension(tempobject, dbid)
 		safeTable[dbid] = tempobject
+		call( getResourceFromName( "item-system" ), "clearItems", tempobject )
 		return 0
 	end
 	return 2
