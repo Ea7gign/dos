@@ -22,7 +22,7 @@
 	
 	<script src="rphelp.lua" type="client"/>
 	
-	<script src="HelpCommandsv1.lua" type="client"/>
+	<script src="c_commands_help.lua" type="client"/>
 	
 	<script src="s_check.lua" type="server" />
 	<script src="c_check.lua" type="client" />
