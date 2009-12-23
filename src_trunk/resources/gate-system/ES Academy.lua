@@ -29,7 +29,6 @@ local function useDoor(thePlayer, commandName)
 	local x, y, z = getElementPosition(thePlayer)
 	local distance = getDistanceBetweenPoints3D(1067.46875,1357.6520996094,9.8972969055176, x, y, z)
 
-	outputChatBox( distance )
 	if (distance<=20) and (open==false) then
 		if exports.global:hasItem(thePlayer, 65) then
 			outputChatBox("The " .. GateName .. " are now open!", thePlayer, 0, 255, 0)
