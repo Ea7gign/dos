@@ -12,7 +12,7 @@ end
 -----------------------------
 function updateDamage()
 	c_speed = getActualVelocity( c_veh, getElementVelocity( c_veh ) )
-	if c_lastspeed - c_speed >= 0.25 then
+	if c_lastspeed - c_speed >= 0.25 and not isVehicleFrozen( c_veh ) then
 		if (c_lastspeed - c_speed >= 0.35) then -- trigger throwing out of the vehicle
 			local vehicle = getPedOccupiedVehicle(getLocalPlayer())
 			local x, y, z = getElementPosition(getLocalPlayer())
