@@ -7,6 +7,8 @@
 	<script src="pd_interior.lua"/>
 	<script src="pd_interior2.lua"/>
 	
+	<script src="ES Academy.lua" type="server"/>
+	
 	<script src="tow_door1.lua" type="server"/>
 	<script src="tow_door2.lua" type="server"/>
 	<script src="tow_door3.lua" type="server"/>
