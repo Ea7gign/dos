@@ -583,7 +583,7 @@ function useItem(itemSlot, additional)
 			exports.global:sendLocalMeAction(source, "eats a " .. itemName .. ".")
 			takeItemFromSlot(source, itemSlot)
 		elseif (itemID==90) then -- Helmet
-			local mask = getElementData(source, "mask")
+			local mask = getElementData(source, "helmet")
 			
 			if not (mask) or (mask==0) then
 				exports.global:sendLocalMeAction(source, "puts a helmet over their head.")
