@@ -240,7 +240,8 @@ end
 addEventHandler("onResourceStart", getResourceRootElement(), loadFuelPoints)
 
 local vehiclesFueling = { }
-function fillVehicle(thePlayer, commandName)
+function fillVehicle(thePlayer, commandName, amount)
+	local amount = tonumber(amount)
 	if not (isPedInVehicle(thePlayer)) then
 		outputChatBox("You are not in a vehicle.", thePlayer, 255, 0, 0)
 	else
@@ -281,6 +282,10 @@ function fillVehicle(thePlayer, commandName)
 					local cost = FUEL_PRICE + (tax*FUEL_PRICE)
 					local litresAffordable = math.ceil(money/cost)
 					
+					if amount and amount <= litresAffordable and amount > 0 then
+						litresAffordable = amount
+					end
+					
 					if (litresAffordable>100) then
 						litresAffordable=100
 					end
@@ -313,7 +318,8 @@ function fillVehicle(thePlayer, commandName)
 end
 addCommandHandler("fill", fillVehicle)
 
-function fillCan(thePlayer, commandName)
+function fillCan(thePlayer, commandName, amount)
+	local amount = tonumber(amount)
 	if not (exports.global:hasItem(thePlayer, 57)) then
 		outputChatBox("You do not have a fuel can.", thePlayer, 255, 0, 0)
 	else
@@ -352,6 +358,10 @@ function fillCan(thePlayer, commandName)
 					local tax = exports.global:getTaxAmount()
 					local cost = FUEL_PRICE + (tax*FUEL_PRICE)
 					local litresAffordable = math.ceil(money/cost)
+					
+					if amount and amount <= litresAffordable and amount > 0 then
+						litresAffordable = amount
+					end
 					
 					if (litresAffordable>25) then
 						litresAffordable=25
