@@ -87,7 +87,7 @@ addEventHandler("onClientPlayerSpawn", getLocalPlayer(), playerRespawn)
 -- weapon fix for #131
 function checkWeapons()
 	local weapons = { }
-	local removedWeapons
+	local removedWeapons, removedWeapons2
 	local count = 1
 	
 	local gunlicense = tonumber(getElementData(getLocalPlayer(), "license.gun"))
@@ -102,7 +102,7 @@ function checkWeapons()
 			-- takes away weapons if you do not have a gun license and aren't in a PD/fbi
 			-- takes away mp5/sniper/m4/ak if you aren't in PD/fbi
 			-- always takes away rocket launchers, flamethrowers and miniguns, knifes and katanas
-			if (((weapon >= 16 and weapon <= 40 and gunlicense == 0) or weapon == 29 or weapon == 30 or weapon ==31 or weapon == 34) and factiontype ~= 2) or (weapon >= 35 and weapon <= 38) or weapon == 4 or weapon == 8 then
+			if (((weapon >= 16 and weapon <= 40 and gunlicense == 0) or weapon == 29 or weapon == 30 or weapon ==31 or weapon == 34) and factiontype ~= 2) or (weapon >= 35 and weapon <= 38) then
 				if (removedWeapons==nil) then
 					removedWeapons = getWeaponNameFromID(weapon)
 				else
@@ -112,6 +112,12 @@ function checkWeapons()
 				weapons[count][1] = weapon
 				weapons[count][2] = ammo
 				weapons[count][3] = 1
+			elseif weapon == 4 or weapon == 8 then
+				if removedWeapons2 == nil then
+					removedWeapons2 = getWeaponNameFromID(weapon)
+				else
+					removedWeapons2 = removedWeapons2 .. " and " .. getWeaponNameFromID(weapon)
+				end
 			else
 				weapons[count] = { }
 				weapons[count][1] = weapon
@@ -122,6 +128,6 @@ function checkWeapons()
 		end
 	end
 	
-	triggerServerEvent("onDeathRemovePlayerWeapons", getLocalPlayer(), weapons, removedWeapons)
+	triggerServerEvent("onDeathRemovePlayerWeapons", getLocalPlayer(), weapons, removedWeapons, removedWeapons2)
 end
 addEventHandler("onClientPlayerWasted", getLocalPlayer(), checkWeapons)

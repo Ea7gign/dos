@@ -109,13 +109,16 @@ end
 addEvent("onDeathRemovePlayerWeapons", true)
 addEventHandler("onDeathRemovePlayerWeapons", getRootElement(), deathRemoveWeapons)
 
-function giveGunsBack(thePlayer, weapons, removedWeapons)
+function giveGunsBack(thePlayer, weapons, removedWeapons, removedWeapons2)
 	if (removedWeapons~=nil) then
 		if tonumber(getElementData(thePlayer, "license.gun")) == 0 and getElementData(getPlayerTeam(thePlayer),"type") ~= 2 then
 		outputChatBox("LSES Employee: We have taken away weapons which you did not have a license for. (" .. removedWeapons .. ").", thePlayer, 255, 194, 14)
 		else
 			outputChatBox("LSES Employee: We have taken away weapons which you are not allowed to carry. (" .. removedWeapons .. ").", thePlayer, 255, 194, 14)
 		end
+	end
+	if removedWeapons2 ~= nil then
+		outputChatBox("LESES Employee: We have taken away your " .. removedWeapons2 .. " for safety purposes.", thePlayer, 255, 194, 14)
 	end
 
 	for key, value in ipairs(weapons) do
