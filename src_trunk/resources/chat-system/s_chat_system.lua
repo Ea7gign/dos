@@ -139,7 +139,7 @@ function localIC(source, message, language)
 	-- Show chat to console, for admins + log
 	exports.irc:sendMessage("[IC: Local Chat] " .. playerName .. ": " .. message)
 	exports.logs:logMessage("[IC: Local Chat] " .. playerName .. ": " .. message, 1)
-	outputChatBox( "#EEEEEE [" .. languagename .. "] " .. playerName .. " Says: " .. message, source, 133, 44, getElementData(source, "chatbubbles") == 2 and 89 or 88, true)
+	outputChatBox( "#EEEEEE [" .. languagename .. "] " .. playerName .. " says: " .. message, source, 133, 44, getElementData(source, "chatbubbles") == 2 and 89 or 88, true)
 	
 	local dimension = getElementDimension(source)
 	local interior = getElementInterior(source)
@@ -164,15 +164,15 @@ function localIC(source, message, language)
 					--end
 					
 					if dist < 4 then
-						outputChatBox( "#EEEEEE [" .. languagename .. "] " .. playerName .. " Says: " .. message2, nearbyPlayer, 133, 44, getElementData(nearbyPlayer, "chatbubbles") > 0 and 89 or 88, true)
+						outputChatBox( "#EEEEEE [" .. languagename .. "] " .. playerName .. " says: " .. message2, nearbyPlayer, 133, 44, getElementData(nearbyPlayer, "chatbubbles") > 0 and 89 or 88, true)
 					elseif dist < 8 then
-						outputChatBox( "#DDDDDD [" .. languagename .. "] " .. playerName .. " Says: " .. message2, nearbyPlayer, 133, 44, getElementData(nearbyPlayer, "chatbubbles") > 0 and 89 or 88, true)
+						outputChatBox( "#DDDDDD [" .. languagename .. "] " .. playerName .. " says: " .. message2, nearbyPlayer, 133, 44, getElementData(nearbyPlayer, "chatbubbles") > 0 and 89 or 88, true)
 					elseif dist < 12 then
-						outputChatBox( "#CCCCCC [" .. languagename .. "] " .. playerName .. " Says: " .. message2, nearbyPlayer, 133, 44, getElementData(nearbyPlayer, "chatbubbles") > 0 and 89 or 88, true)
+						outputChatBox( "#CCCCCC [" .. languagename .. "] " .. playerName .. " says: " .. message2, nearbyPlayer, 133, 44, getElementData(nearbyPlayer, "chatbubbles") > 0 and 89 or 88, true)
 					elseif dist < 16 then
-						outputChatBox( "#BBBBBB [" .. languagename .. "] " .. playerName .. " Says: " .. message2, nearbyPlayer, 133, 44, getElementData(nearbyPlayer, "chatbubbles") > 0 and 89 or 88, true)
+						outputChatBox( "#BBBBBB [" .. languagename .. "] " .. playerName .. " says: " .. message2, nearbyPlayer, 133, 44, getElementData(nearbyPlayer, "chatbubbles") > 0 and 89 or 88, true)
 					else
-						outputChatBox( "#AAAAAA [" .. languagename .. "] " .. playerName .. " Says: " .. message2, nearbyPlayer, 133, 44, getElementData(nearbyPlayer, "chatbubbles") > 0 and 89 or 88, true)
+						outputChatBox( "#AAAAAA [" .. languagename .. "] " .. playerName .. " says: " .. message2, nearbyPlayer, 133, 44, getElementData(nearbyPlayer, "chatbubbles") > 0 and 89 or 88, true)
 					end
 					
 					shownto = shownto + 1
@@ -182,7 +182,7 @@ function localIC(source, message, language)
 	end
 	
 	if dimension == 127 then -- TV SHOW!
-		exports['freecam-tv']:add(shownto, playerName .. " Says: " .. message)
+		exports['freecam-tv']:add(shownto, playerName .. " says: " .. message)
 	end
 end
 for i = 1, 3 do
@@ -293,7 +293,7 @@ function chatMain(message, messageType)
 					if getElementDistance(source, value) < 10 then
 						if (value~=source) then
 							local message2 = call(getResourceFromName("language-system"), "applyLanguage", source, value, message, language)
-							outputChatBox("[" .. languagename .. "] " .. getPlayerName(source) .. " [RADIO] Says: " .. message2, value, 255, 255, 255)
+							outputChatBox("[" .. languagename .. "] " .. getPlayerName(source) .. " [RADIO] says: " .. message2, value, 255, 255, 255)
 						end
 					end
 				end
