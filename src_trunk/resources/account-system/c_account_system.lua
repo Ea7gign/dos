@@ -1019,7 +1019,7 @@ function createMainUI(res, isChangeAccount)
 			
 			
 			tLogUsername = guiCreateEdit(0.425, 0.2, 0.3, 0.1, "", true, tabLogin)
-			guiEditSetMaxLength(tLogUsername, 16)
+			guiEditSetMaxLength(tLogUsername, 32)
 			
 			lLogPassword = guiCreateLabel(0.15, 0.45, 0.3, 0.1, "Account Password:", true, tabLogin)
 			tLogPassword = guiCreateEdit(0.425, 0.45, 0.3, 0.1, "", true, tabLogin)
