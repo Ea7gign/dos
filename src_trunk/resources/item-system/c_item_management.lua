@@ -36,8 +36,8 @@ function hasSpaceForItem(element, itemID)
 		return false, "Unknown"
 	end
 	
-	local keycount = countItems( element, 3 ) + countItems( element, 4 ) + countItems( element, 5 )
-	if itemID == 3 or itemID == 4 or itemID == 5 then
+	local keycount = countItems( element, 3 ) + countItems( element, 4 ) + countItems( element, 5 ) + countItems( element, 73 )
+	if itemID == 3 or itemID == 4 or itemID == 5 or itemID == 73 then
 		return keycount < 2 * getInventorySlots(element)
 	else
 		return #getItems(element) - keycount < getInventorySlots(element)
