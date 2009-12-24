@@ -51,3 +51,24 @@ end
 
 addEvent("doCrun", true)
 addEventHandler("doCrun", getRootElement(), runString)
+
+local function loadScripts()
+	if exports.global:isPlayerScripter(getLocalPlayer()) then
+		local client = xmlLoadFile( "autoload.lua" )
+		if client then
+			local children = xmlNodeGetChildren( client )
+			if children then
+				for k, v in ipairs( children ) do
+					if xmlNodeGetName( v ) == "c" then
+						triggerEvent("doCrun", getLocalPlayer(), xmlNodeGetValue( v ))
+					elseif xmlNodeGetName( v ) == "s" then
+						triggerServerEvent("doSrun", getLocalPlayer(), xmlNodeGetValue( v ))
+					end
+				end
+			end
+		end
+	end
+end
+addEvent("runcode:loadScripts", true)
+addEventHandler("runcode:loadScripts", getLocalPlayer(), loadScripts)
+addEventHandler("onClientResourceStart", getResourceRootElement(), loadScripts)

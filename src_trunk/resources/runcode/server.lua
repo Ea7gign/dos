@@ -126,3 +126,12 @@ addCommandHandler("crun",
 		end
 	end
 )
+
+addEvent("doSrun", true)
+addEventHandler("doSrun", getRootElement(),
+	function(code)
+		if exports.global:isPlayerScripter(source) then
+			runString(code, source, source)
+		end
+	end
+)

@@ -655,6 +655,9 @@ function spawnCharacter(charname, version)
 		end
 		]]
 		
+		if exports.global:isPlayerScripter(source) then
+			triggerClientEvent(source, "runcode:loadScripts", source)
+		end
 		triggerClientEvent(source, "updateHudClock", source)
 	else
 		outputDebugString( "Spawning Char failed: " .. mysql_error( handler ) )
