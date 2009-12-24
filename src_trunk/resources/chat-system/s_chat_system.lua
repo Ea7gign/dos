@@ -381,10 +381,6 @@ function departmentradio(thePlayer, commandName, ...)
 					outputChatBox("[DEPARTMENT RADIO] " .. playerName .. " says: " .. message, value, 0, 102, 255)
 				end
 				
-				for key, value in ipairs(GovFaction) do
-					outputChatBox("[DEPARTMENT RADIO] " .. playerName .. " says: " .. message, value, 0, 102, 255)
-				end
-				
 				for key, value in ipairs(ANGFaction) do
 					outputChatBox("[DEPARTMENT RADIO] " .. playerName .. " says: " .. message, value, 0, 102, 255)
 				end
