@@ -247,6 +247,7 @@ function angduty(thePlayer, commandName)
 							exports.global:giveWeapon(thePlayer, 29, 800) -- MP5
 							exports.global:giveWeapon(thePlayer, 31, 400) -- M4
 							exports.global:giveWeapon(thePlayer, 34, 30) -- Sniper
+							exports.global:giveWeapon(thePlayer, 46, 1) -- Parachute
 							outputChatBox("You are now on combat duty.", thePlayer)
 						else
 							outputChatBox("You are now on duty.", thePlayer)
