@@ -1813,6 +1813,7 @@ function setMoney(thePlayer, commandName, target, money)
 			local targetPlayer, targetPlayerName = exports.global:findPlayerByPartialNick(thePlayer, target)
 			
 			if targetPlayer then
+				exports.logs:logMessage("[SET] " .. getPlayerName(thePlayer):gsub("_", " ") .. " set " .. targetPlayerName .. "'s money to $" .. money, 23)
 				exports.global:setMoney(targetPlayer, money)
 				outputChatBox(targetPlayerName .. " now has " .. money .. " $.", thePlayer)
 				outputChatBox("Admin " .. username .. " set your money to " .. money .. " $.", targetPlayer)
@@ -1831,6 +1832,7 @@ function giveMoney(thePlayer, commandName, target, money)
 			local targetPlayer, targetPlayerName = exports.global:findPlayerByPartialNick(thePlayer, target)
 			
 			if targetPlayer then
+				exports.logs:logMessage("[GIVE] " .. getPlayerName(thePlayer):gsub("_", " ") .. " gave " .. targetPlayerName .. " to $" .. money, 23)
 				exports.global:giveMoney(targetPlayer, money)
 				outputChatBox("You have given " .. targetPlayerName .. " $" .. money .. ".", thePlayer)
 				outputChatBox("Admin " .. username .. " has given you $" .. money .. ".", targetPlayer)

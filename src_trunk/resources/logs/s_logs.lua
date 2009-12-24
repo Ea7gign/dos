@@ -20,7 +20,8 @@ enumTypes = {
 	"do",
 	"tv",
 	"adminlock",
-	"weaponspawn"
+	"weaponspawn",
+	"moneyspawn"
 }
 
 
