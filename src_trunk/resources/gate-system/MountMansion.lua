@@ -15,14 +15,6 @@ for _, group in pairs(doors) do
 	end
 end
 
-local function closeDoor( shortestID )
-	group = doors[ shortestID ]
-	for _, door in ipairs(group) do
-		setElementData(door, "door:closed", true)
-	end
-	group.timer = nil
-end
-
 
 local function openDoor(thePlayer, commandName, password)
 	if getElementDimension(thePlayer) == 1252 and getElementInterior(thePlayer) == 5 then
@@ -43,17 +35,9 @@ local function openDoor(thePlayer, commandName, password)
 		end
 		
 		if shortest then
-			if shortest.timer then
-				killTimer( shortest.timer )
-				shortest.timer = nil
-				outputChatBox( "The door is already open!", thePlayer, 0, 255, 0 )
-			else
-				for _, door in ipairs(shortest) do
-					setElementData(door, "door:closed", false)
-				end
-				outputChatBox( "You opened the door!", thePlayer, 0, 255, 0 )
+			for _, door in ipairs(shortest) do
+				setElementData(door, "door:closed", not getElementData(door, "door:closed"))
 			end
-			shortest.timer = setTimer( closeDoor, 5000, 1, shortestID )
 		end
 	end
 end
