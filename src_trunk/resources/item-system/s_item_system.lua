@@ -623,13 +623,14 @@ function useItem(itemSlot, additional)
 			exports.global:sendLocalMeAction(source, "eats some Christmas Pudding.")
 			takeItemFromSlot(source, itemSlot)
 		elseif (itemID==94) then
+			call(getResourceFromName("achievement-system"), "givePlayerAchievement", source, 47)
 			local id = math.random(1, 10)
 			local prizeID = presents[id]
 			takeItemFromSlot(source, itemSlot)
 			giveItem(source, prizeID, 1)
 			exports.global:sendLocalMeAction(source, "opens a Christmas Present")
 			
-			call(getResourceFromName("achievement-system"), "givePlayerAchievement", source, 47)
+			
 		else
 			outputChatBox("Error 800001 - Report on http://bugs.valhallagaming.net", source, 255, 0, 0)
 		end
