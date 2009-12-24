@@ -718,7 +718,7 @@ function renderWelcomeMessage()
 	dxDrawText("Welcome to Valhalla Gaming", 36, screenHeight-61, screenWidth, screenHeight, tocolor ( 0, 0, 0, 255 ), 1, "pricedown")
     dxDrawText("Welcome to Valhalla Gaming", 34, screenHeight-63, screenWidth, screenHeight, tocolor ( 255, 255, 255, 255 ), 1, "pricedown")
 	
-	local version = exports.global:cgetScriptVersion()
+	local version = exports.global:getScriptVersion()
 	
 	dxDrawText("Version " .. version, screenWidth-170, screenHeight-61, screenWidth, screenHeight, tocolor ( 0, 0, 0, 255 ), 1, "pricedown")
     dxDrawText("Version " .. version, screenWidth-168, screenHeight-63, screenWidth, screenHeight, tocolor ( 255, 255, 255, 255 ), 1, "pricedown")
