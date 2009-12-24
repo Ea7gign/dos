@@ -42,4 +42,5 @@
 	<script src="LinoKazuma.lua" type="client"/><!-- Donator Helipad -->
 	<script src="Ballas Jacobsroof.lua" type="client"/>
 	<script src="Ballas Court.lua" type="client"/>
+	<script src="Church 2 Int.lua" type="client"/> <!-- Church at alhambra, approved by dvl @ 24/12/2009 -->
 </meta>
