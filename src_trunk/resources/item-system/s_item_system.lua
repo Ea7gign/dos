@@ -613,13 +613,11 @@ function useItem(itemSlot, additional)
 		elseif (itemID==92) then
 			setElementHealth(source, 100)
 			exports.global:applyAnimation(source, "FOOD", "EAT_Burger", 4000, false, true, true)
-			setTimer(removeAnimation, 4000, 1, source)
 			exports.global:sendLocalMeAction(source, "eats some Turkey.")
 			takeItemFromSlot(source, itemSlot)
 		elseif (itemID==93) then
 			setElementHealth(source, 100)
 			exports.global:applyAnimation(source, "FOOD", "EAT_Burger", 4000, false, true, true)
-			setTimer(removeAnimation, 4000, 1, source)
 			exports.global:sendLocalMeAction(source, "eats some Christmas Pudding.")
 			takeItemFromSlot(source, itemSlot)
 		elseif (itemID==94) then
