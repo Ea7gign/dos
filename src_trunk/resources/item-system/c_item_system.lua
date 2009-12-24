@@ -723,7 +723,14 @@ function useItem(button)
 			elseif (itemID==85) then -- Emergency Light Becon
 				outputChatBox("Put it in your car inventory and press 'N' to toggle it.", 255, 194, 14)
 				return
+			elseif (itemID==91) then
+				setTimer(
+					function()
+						setElementData(getLocalPlayer(), "alcohollevel", ( getElementData(getLocalPlayer(), "alcohollevel") or 0 ) + 0.35, false)
+					end, 15000, 1
+				)
 			end
+
 			
 			triggerServerEvent("useItem", getLocalPlayer(), itemSlot, additional)
 		elseif (guiGetSelectedTab(tabPanel)==tabWeapons) then -- WEAPONS

@@ -185,6 +185,8 @@ function  getShopTypeName(shop_type)
 		return "Book Store"
 	elseif(shop_type == 11) then
 		return "Cafe"
+	elseif(shop_type == 12) then
+		return "Santa's Grotto"
 	else
 		return "This isn't a shop. Go Away."
 	end
@@ -215,6 +217,8 @@ function getShopTabTitles(shop_type)
 		return { "Books" }
 	elseif(shop_type == 11) then
 		return {"Food","Drink"}
+	elseif(shop_type == 12) then
+		return {"Presents","Free Food & Drink"}
 	else
 		return "This isn't a shop. Go Away."
 	end
@@ -387,6 +391,15 @@ function getItemsForSale(shop_type, race, gender)
 			{"Softdrink", "A cold can of Sprunk.", "3", 9, 3, 2, false,1},
 			{"Water", "A bottle of mineral water.", "1", 15, 2, 2, false,1}
 		}
+	-- christmas
+	elseif(shop_type == 12) then
+		item = {
+			{"Christmas Present", "What could be inside?", "0", 94, 1, 1, false,0},
+		
+			{"Eggnog", "Yum Yum!", "0", 91, 1, 2, false,0},
+			{"Turkey", "Yum Yum!", "0", 92, 1, 2, false,0},
+			{"Christmas Pudding", "Yum Yum!", "0", 93, 1, 2, false,0},
+		}
 	end
 		
 	return item
@@ -414,6 +427,10 @@ function getImageName(shop_type)
 	elseif(shop_type == 9) then
 		return "general.png"
 	elseif(shop_type == 10) then
+		return "general.png"
+	elseif(shop_type == 11) then
+		return "general.png"
+	elseif(shop_type == 12) then
 		return "general.png"
 	else
 		return "This isn't a shop. Go Away."
@@ -444,6 +461,10 @@ function getIntroMessage(shop_type)
 		return "We got everything from Buckfast to Moet."
 	elseif(shop_type == 10) then
 		return "You wanna speak Ruski?."
+	elseif(shop_type == 11) then
+		return "You want some chocolate on your rim?."
+	elseif(shop_type == 12) then
+		return "Ho-ho-ho, Merry Christmas!"
 	else
 		return "This isn't a shop. Go Away."
 	end

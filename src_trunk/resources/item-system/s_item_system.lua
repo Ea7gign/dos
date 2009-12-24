@@ -15,6 +15,8 @@ function giveHealth(player, health)
 end
 
 local shields = { }
+local presents = { 1, 7, 8, 15, 11, 12, 19, 26, 59, 72 }
+
 -- callbacks
 function useItem(itemSlot, additional)
 	local items = getItems(source)
@@ -604,6 +606,30 @@ function useItem(itemSlot, additional)
 
 				setElementData(source, "helmet", 0, false)
 			end
+		elseif (itemID==91) then
+			takeItemFromSlot(source, itemSlot)
+			exports.global:sendLocalMeAction(source, "drinks some good Eggnog.")
+			setElementHealth(source, 100)
+		elseif (itemID==92) then
+			setElementHealth(source, 100)
+			exports.global:applyAnimation(source, "FOOD", "EAT_Burger", 4000, false, true, true)
+			setTimer(removeAnimation, 4000, 1, source)
+			exports.global:sendLocalMeAction(source, "eats some Turkey.")
+			takeItemFromSlot(source, itemSlot)
+		elseif (itemID==93) then
+			setElementHealth(source, 100)
+			exports.global:applyAnimation(source, "FOOD", "EAT_Burger", 4000, false, true, true)
+			setTimer(removeAnimation, 4000, 1, source)
+			exports.global:sendLocalMeAction(source, "eats some Christmas Pudding.")
+			takeItemFromSlot(source, itemSlot)
+		elseif (itemID==94) then
+			local id = math.random(1, 10)
+			local prizeID = presents[id]
+			takeItemFromSlot(source, itemSlot)
+			giveItem(source, prizeID, 1)
+			exports.global:sendLocalMeAction(source, "opens a Christmas Present")
+			
+			call(getResourceFromName("achievement-system"), "givePlayerAchievement", source, 47)
 		else
 			outputChatBox("Error 800001 - Report on http://bugs.valhallagaming.net", source, 255, 0, 0)
 		end

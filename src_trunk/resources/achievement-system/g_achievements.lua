@@ -44,7 +44,8 @@ local g_achievements = {
 	{ "Just Another Statistic", "Die in a vehicle crash.", 15 },
 	{ "Happy Birthday MTA Roleplay", "Present on MTA Roleplays 2nd Birthday - Two Years Today!", 100},
 	{ "Los 'Hiroshima' Santos", "What was that noise?", 100},
-	{ "Los Angeles 1992", "Participated in the First Riot of Los Santos.", 100}
+	{ "Los Angeles 1992", "Participated in the First Riot of Los Santos.", 100},
+	{ "Merry Christmas", "Open a Christmas Present.", 100}
 }
 
 function getAchievementInfo(id)
