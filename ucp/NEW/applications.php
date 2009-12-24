@@ -283,7 +283,7 @@
 											$diff = mysql_result($query, $i, 3);
 											$handler = mysql_result($query, $i, 4);
 											
-											echo "<li><strong>". $username ."</strong> - ". $registerdate ." (" . $diff . " Days Old) - ". $handler ." - <a href='deactivateaccount.php?id=" . $id . "'>Deactivate Account ></a>";
+											echo "<li><strong>". $username ."</strong> - ". $registerdate ." (" . $diff . " Days Old) - ". $handler ." - <a href='reviewapp.php?id=" . $id . "'>View</a> - <a href='deactivateaccount.php?id=" . $id . "'>Deactivate Account ></a>";
 											
 										}
 										echo "</ul>";
@@ -313,7 +313,7 @@
 											$banned_by = mysql_result($query, $i, 2);
 											$banned_reason = mysql_result($query, $i, 3);
 											
-											echo "<li><strong>". $username ."</strong> - ". $banned_by ." - ". $banned_reason ." - <a href='http://vg-lvpd.net/remote/unbanaccount.php?id=" . $id . "&uid=" . $userid . "'>Unban Account ></a>";
+											echo "<li><strong>". $username ."</strong> - ". $banned_by ." - ". $banned_reason ." - <a href='reviewapp.php?id=" . $id . "'>View</a> - <a href='http://vg-lvpd.net/remote/unbanaccount.php?id=" . $id . "&uid=" . $userid . "'>Unban Account ></a>";
 											
 										}
 										echo "</ul>";
