@@ -15,7 +15,7 @@ function giveHealth(player, health)
 end
 
 local shields = { }
-local presents = { 1, 7, 8, 15, 11, 12, 19, 26, 59, 72 }
+local presents = { 1, 7, 8, 15, 11, 12, 19, 26, 59, 71 }
 
 -- callbacks
 function useItem(itemSlot, additional)
