@@ -22,6 +22,17 @@
 	<export function="isPlayerScripter" type="server"/>
 	<export function="getAdmins" type="server"/>
 	
+	<script src="admin_globals.lua" type="client"/>
+	<export function="isPlayerAdmin" type="client"/>
+	<export function="isPlayerFullAdmin" type="client"/>
+	<export function="isPlayerSuperAdmin" type="client"/>
+	<export function="isPlayerHeadAdmin" type="client"/>
+	<export function="isPlayerLeadAdmin" type="client"/>
+	<export function="getPlayerAdminLevel" type="client"/>
+	<export function="getPlayerAdminTitle" type="client"/>
+	<export function="isPlayerScripter" type="client"/>
+	<export function="getAdmins" type="client"/>
+	
 	<script src="optomization_globals.lua" type="server"/>
 	
 	<script src="vehicle_globals.lua" type="server"/>
@@ -70,8 +81,10 @@
 	<export function="hasItem" type="client"/>
 	<export function="getItemName" type="client"/>
 	
-	<script src="s_version_globals.lua" type="server"/>
+	<script src="version_globals.lua" type="server"/>
+	<script src="version_globals.lua" type="client"/>
 	<export function="getScriptVersion" type="server"/>
+	<export function="getScriptVersion" type="client"/>
 	
 	<script src="donator_globals.lua" type="server"/>
 	<export function="isPlayerBronzeDonator" type="server"/>
@@ -95,10 +108,7 @@
 	<export function="cisPlayerGodleyDonator" type="client"/>
 	<export function="cgetPlayerDonatorLevel" type="client"/>
 	<export function="cgetPlayerDonatorTitle" type="client"/>
-	
-	<script src="c_version_globals.lua" type="client"/>
-	<export function="cgetScriptVersion" type="client"/>
-	
+		
 	<script src="c_animation_globals.lua" type="client"/>
 	<export function="applyAnimation" type="client"/>
 	<export function="removeAnimation" type="client"/>
