@@ -1277,8 +1277,9 @@ function setVehiclePosition(thePlayer, commandName)
 			local playerid = getElementData(thePlayer, "dbid")
 			local owner = getElementData(veh, "owner")
 			local dbid = getElementData(veh, "dbid")
+			local x, y, z = getElementPosition(veh)
 			local TowingReturn = call(getResourceFromName("tow-system"), "CanTowTruckDriverVehPos", thePlayer) -- 2 == in towing and in col shape, 1 == colshape only, 0 == not in col shape
-			if (exports.global:isPlayerAdmin(thePlayer)) or (owner==playerid and TowingReturn == 0) or (exports.global:hasItem(thePlayer, 3, dbid)) or (TowingReturn == 2) then
+			if (owner==playerid and TowingReturn == 0) or (exports.global:hasItem(thePlayer, 3, dbid)) or (TowingReturn == 2) or (exports.global:isPlayerAdmin(thePlayer) and exports.logs:logMessage("[AVEHPOS] " .. getPlayerName( thePlayer ) .. " parked car #" .. dbid .. " at " .. x .. ", " .. y .. ", " .. z, 9)) then
 				if (dbid<0) then
 					outputChatBox("This vehicle is not permanently spawned.", thePlayer, 255, 0, 0)
 				else
@@ -1288,7 +1289,6 @@ function setVehiclePosition(thePlayer, commandName)
 						exports.global:takeMoney(getTeamFromName("Los Santos Police Department"), 75)
 					end
 					removeElementData(veh, "requires.vehpos")
-					local x, y, z = getElementPosition(veh)
 					local rx, ry, rz = getVehicleRotation(veh)
 					
 					local interior = getElementInterior(thePlayer)
@@ -1374,6 +1374,7 @@ function setVehiclePosition2(thePlayer, commandName, vehicleID)
 						outputChatBox("((Best's Towing & Recovery)) #999 [SMS]: Your " .. getVehicleName(veh) .. " has been impounded. Head over to the Impound to release it.", owner, 120, 255, 80)
 					end
 				end
+				exports.logs:logMessage("[AVEHPOS] " .. getPlayerName( thePlayer ) .. " parked car #" .. vehicleID .. " at " .. x .. ", " .. y .. ", " .. z, 9)
 			else
 				outputChatBox( "Vehicle not found.", thePlayer, 255, 0, 0 )
 			end
@@ -1394,8 +1395,9 @@ function setVehiclePosition3(veh)
 		local playerid = getElementData(source, "dbid")
 		local owner = getElementData(veh, "owner")
 		local dbid = getElementData(veh, "dbid")
+		local x, y, z = getElementPosition(veh)
 		local TowingReturn = call(getResourceFromName("tow-system"), "CanTowTruckDriverVehPos", source) -- 2 == in towing and in col shape, 1 == colshape only, 0 == not in col shape
-		if (exports.global:isPlayerAdmin(source)) or (owner==playerid and TowingReturn == 0) or (exports.global:hasItem(source, 3, dbid)) or (TowingReturn == 2) then
+		if (owner==playerid and TowingReturn == 0) or (exports.global:hasItem(source, 3, dbid)) or (TowingReturn == 2) or (exports.global:isPlayerAdmin(source) and exports.logs:logMessage("[AVEHPOS] " .. getPlayerName( source ) .. " parked car #" .. dbid .. " at " .. x .. ", " .. y .. ", " .. z, 9)) then
 			if (dbid<0) then
 				outputChatBox("This vehicle is not permanently spawned.", source, 255, 0, 0)
 			else
@@ -1405,7 +1407,6 @@ function setVehiclePosition3(veh)
 					exports.global:takeMoney(getTeamFromName("Los Santos Police Department"), 75)
 				end
 				removeElementData(veh, "requires.vehpos")
-				local x, y, z = getElementPosition(veh)
 				local rx, ry, rz = getVehicleRotation(veh)
 				
 				local interior = getElementInterior(source)
