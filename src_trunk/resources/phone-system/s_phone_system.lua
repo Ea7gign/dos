@@ -383,7 +383,6 @@ function hangupPhone(thePlayer, commandName)
 			
 			if (calling) then
 				if (type(calling)~="number") then
-					local target = calling
 					local phoneState = getElementData(thePlayer, "phonestate")
 					if phoneState >= 1 then -- lets charge the player
 						if (getElementData(thePlayer, "called")) then
@@ -397,8 +396,8 @@ function hangupPhone(thePlayer, commandName)
 						end
 					end
 					removeElementData(calling, "calling")
-					if (isElement(target)) then
-						outputChatBox("They hung up.", target)
+					if (isElement(calling)) then
+						outputChatBox("They hung up.", calling)
 					end
 					removeElementData(calling, "caller")
 					removeElementData(calling, "call.col")
@@ -431,6 +430,14 @@ addEventHandler( "onColShapeLeave", getResourceRootElement(),
 	function( thePlayer )
 		if getElementData( thePlayer, "call.col" ) == source then
 			executeCommandHandler( "hangup", thePlayer )
+		end
+	end
+)
+addEventHandler( "onPlayerQuit", getRootElement(),
+	function( )
+		local calling = getElementData( source, "calling" )
+		if isElement( calling ) then
+			executeCommandHandler( "hangup", calling )
 		end
 	end
 )
