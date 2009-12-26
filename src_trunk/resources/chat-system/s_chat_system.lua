@@ -559,7 +559,6 @@ function localOOC(thePlayer, commandName, ...)
 		else
 			exports.global:sendLocalText(thePlayer, getPlayerName(thePlayer) .. ": (( " .. table.concat({...}, " ") .. " ))", 196, 255, 255)
 			exports.logs:logMessage("[OOC: Local Chat] " .. getPlayerName(thePlayer) .. ": " .. table.concat({...}, " "), 1)
-			exports.irc:sendMessage("[OOC: Local Chat] " .. getPlayerName(thePlayer .. ": " .. table.concat({...}, " "))
 		end
 	end
 end
