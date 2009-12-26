@@ -12,7 +12,6 @@ function playerJoin()
 	
 	ids[slot] = source
 	setElementData(source, "playerid", slot)
-	exports.irc:sendMessage("[SCRIPT] Player " .. getPlayerName(source) .. " was assigned ID #" .. slot .. ".")
 end
 addEventHandler("onPlayerJoin", getRootElement(), playerJoin)
 
@@ -21,7 +20,6 @@ function playerQuit()
 	
 	if (slot) then
 		ids[slot] = nil
-		exports.irc:sendMessage("[SCRIPT] Player ID #" .. slot .. " became free.")
 	end
 end
 addEventHandler("onPlayerQuit", getRootElement(), playerQuit)
@@ -33,6 +31,5 @@ function resourceStart()
 		ids[key] = value
 		setElementData(value, "playerid", key)
 	end
-	exports.irc:sendMessage("[SCRIPT] Assigned " .. #players .. " Player IDs.")
 end
 addEventHandler("onResourceStart", getResourceRootElement(getThisResource()), resourceStart)
