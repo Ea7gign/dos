@@ -1537,6 +1537,7 @@ function bigEars(thePlayer, commandName, targetPlayerNick)
 			
 			if targetPlayer then
 				outputChatBox("Now Listening to " .. targetPlayerName .. ".", thePlayer, 0, 255, 0)
+				exports.logs:logMessage("[/bigears] " .. getElementData(thePlayer, "gameaccountusername") .. "/".. getPlayerName(thePlayer) .." started bigear on " .. targetPlayerName, 4)
 				setElementData(thePlayer, "bigears", targetPlayer, false)
 			end
 		end
@@ -1577,6 +1578,7 @@ function bigEarsFaction(thePlayer, commandName, factionID)
 			else
 				outputChatBox("Now Listening to " .. getTeamName(team) .. " OOC Chat.", thePlayer, 0, 255, 0)
 				setElementData(thePlayer, "bigearsfaction", team, false)
+				exports.logs:logMessage("[/bigearsf] " .. getElementData(thePlayer, "gameaccountusername") .. "/".. getPlayerName(thePlayer) .." started bigear on " .. getTeamName(team), 4)
 			end
 		end
 	end
