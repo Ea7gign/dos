@@ -32,7 +32,7 @@ function logMessage(message, type)
 	
 	if (partialname == nil) then return end
 	
-	if partialname == "admincmds" then
+	if partialname == "admincmds" or partialname == "moneyspawn" or partialname == "weaponspawn" then
 		filename = "/hiddenlogs/" .. partialname .. ".log"
 	else
 		filename = "/logs/" .. partialname .. ".log"
