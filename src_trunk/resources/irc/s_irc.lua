@@ -12,7 +12,7 @@ conn = nil
 conn2 = nil
 timer = nil
 useSecond = false
---[[
+
 function initIRC()
 	ircInit()
 	conn = ircOpen(server, port, username, channel, password)
@@ -21,10 +21,10 @@ function initIRC()
 	conn2 = ircOpen(server, port, username2, channel, password)
 	displayStatus()
 	timer = setTimer(displayStatus, 900000, 0)
-	ircJoin(conn, pubchannel)
-	ircJoin(conn2, pubchannel)
-	ircJoin(conn, pubchannel2)
-	ircJoin(conn2, pubchannel2)
+	--ircJoin(conn, pubchannel)
+	--ircJoin(conn2, pubchannel)
+	--ircJoin(conn, pubchannel2)
+	--ircJoin(conn2, pubchannel2)
 	ircJoin(conn, channeladmins)
 	ircJoin(conn2, channeladmins)
 end
@@ -33,15 +33,17 @@ addEventHandler("onResourceStart", getResourceRootElement(getThisResource()), in
 function stopIRC()
 	sendMessage("Server Stopped.")
 	ircPart(conn, channel)
+	ircPart(conn2, channel)
 	ircDisconnect(conn)
+	ircDisconnect(conn2)
 	killTimer(timer)
 	timer = nil
 	conn = nil
 end
 addEventHandler("onResourceStop", getResourceRootElement(getThisResource()), stopIRC)
-]]--
+
 function sendMessage(message)
-	--[[
+
 	local time = getRealTime()
 	local hour = time.hour
 	local mins = time.minute
@@ -66,24 +68,21 @@ function sendMessage(message)
 	
 	if not (useSecond) then
 		useSecond = true
-		ircMessage(conn, channel, "[" .. hour .. ":" .. mins .. "] " .. tostring(message))
+		ircMessage(conn, channeladmins, "[" .. hour .. ":" .. mins .. "] " .. tostring(message))
 	else
 		useSecond = false
-		ircMessage(conn2, channel, "[" .. hour .. ":" .. mins .. "] " .. tostring(message))
+		ircMessage(conn2, channeladmins, "[" .. hour .. ":" .. mins .. "] " .. tostring(message))
 	end
-	]]--
 end
 
 function sendAdminMessage(message)
-	--outputDebugString(tostring(message))
-	
-	--if not (useSecond) then
-	--	useSecond = true
-	--	ircMessage(conn, channeladmins, tostring(message))
-	--else
-	--	useSecond = false
-	--	ircMessage(conn2, channeladmins, tostring(message))
-	--end
+	if not (useSecond) then
+		useSecond = true
+		ircMessage(conn, channeladmins, tostring(message))
+	else
+		useSecond = false
+		ircMessage(conn2, channeladmins, tostring(message))
+	end
 end
 
 --[[
@@ -115,5 +114,4 @@ function displayStatus()
 		ircMessage(conn, channeladmins, output)
 		ircMessage(conn, pubchannel2, output)
 	end
-end
-]]--
+end]]
