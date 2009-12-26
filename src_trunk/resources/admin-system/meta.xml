@@ -33,7 +33,5 @@
 	
 	<script src="c_admin_help.lua" type="client" />
 	
-	<script src="c_cheats.lua" type="client" />
-	
 	<script src="c_overlay.lua" type="client" />
 </meta>
