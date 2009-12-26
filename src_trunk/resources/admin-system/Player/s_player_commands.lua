@@ -2017,6 +2017,8 @@ function makePlayerDonator(thePlayer, commandName, target, level)
 					exports.global:sendMessageToAdmins("AdmCmd: " .. username .. " set " .. targetPlayerName .. " as a " .. levelString .. ".")
 					exports.irc:sendMessage("[ADMIN] " .. username .. " set " .. targetPlayerName .. " as a " .. levelString .. ".")
 					exports.global:updateNametagColor(targetPlayer)
+					exports.logs:logMessage("[/MAKEDONATOR] " .. getElementData(thePlayer, "gameaccountusername") .. "/".. getPlayerName(thePlayer) .." made " .. targetPlayerName .. " a " .. levelString , 4)
+
 				end
 			end
 		end
