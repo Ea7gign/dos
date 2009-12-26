@@ -34,74 +34,6 @@ addEventHandler("onResourceStop", getResourceRootElement(getThisResource()), clo
 -- 4: warn
 -- 5: auto-ban
 
--- ////////////////////////////////////
---[[
--- /GLUE
-local glueSpace = { [406] = 25, [422] = 10, [444] = 10, [455] = 10, [525] = 3, [543] = 10, [554] = 10, [556] = 10, [557] = 10, [600] = 10, [605] = 5 }
-function gluePlayer(thePlayer, commandName)
-	local glued = getElementData(thePlayer, "glue")
-	
-	if not (glued) then
-		if (isPedInVehicle(thePlayer)) then
-			outputChatBox("You are in a vehicle, please exit the vehicle to glue yourself.", thePlayer, 255, 0, 0)
-		else
-			local contactElement = getPedContactElement(thePlayer)
-			
-			if not (contactElement) or (getElementType(contactElement)~="vehicle") then
-				outputChatBox("There is nothing nearby to glue you to.", thePlayer, 255, 0, 0)
-				detachElements(thePlayer)
-			elseif getVehicleType(contactElement) == "Bike" or getVehicleType(contactElement) == "BMX" or getVehicleType(contactElement) == "Quad" then
-				outputChatBox("You can't glue yourself to this vehicle.", thePlayer, 255, 0, 0)
-			elseif getVehicleType(contactElement) == "Automobile" and #getAttachedElements(contactElement) >= (glueSpace[getElementModel(contactElement)] or 1) then
-				outputChatBox("This vehicle is full.", thePlayer, 255, 0, 0)
-			else
-				local px, py, pz = getElementPosition(thePlayer)
-				local vx, vy, vz = getElementPosition(contactElement)
-				local sx = px - vx
-				local sy = py - vy
-				local sz = pz - vz
-				
-				local rotpX = 0
-				local rotpY = 0
-				local rotpZ = getPedRotation(thePlayer)
-				
-				local rotvX, rotvY, rotvZ = getVehicleRotation(contactElement)
-				
-				local t = math.rad(rotvX)
-				local p = math.rad(rotvY)
-				local f = math.rad(rotvZ)
-				
-				local ct = math.cos(t)
-				local st = math.sin(t)
-				local cp = math.cos(p)
-				local sp = math.sin(p)
-				local cf = math.cos(f)
-				local sf = math.sin(f)
-				
-				local z = ct*cp*sz + (sf*st*cp + cf*sp)*sx + (-cf*st*cp + sf*sp)*sy
-				local x = -ct*sp*sz + (-sf*st*sp + cf*cp)*sx + (cf*st*sp + sf*cp)*sy
-				local y = st*sz - sf*ct*sx + cf*ct*sy
-				
-				local rotX = rotpX - rotvX
-				local rotY = rotpY - rotvY
-				local rotZ = rotpZ - rotvZ
-				
-				local slot = getPedWeaponSlot(thePlayer)
-				attachElements(thePlayer, contactElement, x, y, z, rotX, rotY, rotZ)
-				setElementData(thePlayer, "glue", true, false)
-				setPedWeaponSlot(thePlayer, slot)
-				outputChatBox("You are now glued to the " .. getVehicleName(contactElement) .. ".", thePlayer, 255, 194, 14)
-			end
-		end
-	else
-		detachElements(thePlayer)
-		outputChatBox("You are now unglued!", thePlayer, 255, 194, 14)
-		removeElementData(thePlayer, "glue")
-	end
-end
-addCommandHandler("glue", gluePlayer, false, false)
-]]
-
 -- /LOOK
 function lookPlayer(thePlayer, commandName, targetPlayer)
 	if not (targetPlayer) then
@@ -359,6 +291,7 @@ function disarmPlayer(thePlayer, commandName, targetPlayer)
 				elseif (logged==1) then
 					exports.global:takeAllWeapons(targetPlayer)
 					outputChatBox(targetPlayerName .. " is now disarmed.", thePlayer, 255, 194, 14)
+					exports.logs:logMessage("[/DISARM] " .. getElementData(thePlayer, "gameaccountusername") .. "/".. getPlayerName(thePlayer) .." disarmed ".. targetPlayerName , 4)
 				end
 			end
 		end
@@ -441,6 +374,7 @@ function ckPlayer(thePlayer, commandName, targetPlayer)
 					showChat(targetPlayer, true)
 					outputChatBox("You have CK'ed ".. targetPlayerName ..".", thePlayer, 255, 194, 1, 14)
 					mysql_free_result(query)
+					exports.logs:logMessage("[/CK] " .. getElementData(thePlayer, "gameaccountusername") .. "/".. getPlayerName(thePlayer) .." CK'ED ".. targetPlayerName , 4)
 				end
 			end
 		end
@@ -476,6 +410,7 @@ function unckPlayer(thePlayer, commandName, ...)
 				end
 				
 				outputChatBox(targetPlayer .. " is no longer CK'ed.", thePlayer, 0, 255, 0)
+				exports.logs:logMessage("[/UNCK] " .. getElementData(thePlayer, "gameaccountusername") .. "/".. getPlayerName(thePlayer) .." UNCK'ED ".. targetPlayer , 4)
 			end
 			mysql_free_result(result)
 		end
@@ -517,6 +452,7 @@ function buryPlayer(thePlayer, commandName, ...)
 					end
 					
 					outputChatBox(targetPlayer .. " was buried.", thePlayer, 0, 255, 0)
+					exports.logs:logMessage("[/BURY] " .. getElementData(thePlayer, "gameaccountusername") .. "/".. getPlayerName(thePlayer) .." buried ".. targetPlayerName , 4)
 				end
 			end
 			mysql_free_result(result)
@@ -545,6 +481,8 @@ function forceReconnect(thePlayer, commandName, targetPlayer)
 					local password = getServerPassword()
 					
 					redirectPlayer(targetPlayer, "87.238.173.138", port, password)
+					
+					exports.logs:logMessage("[/FRECONNECT] " .. getElementData(thePlayer, "gameaccountusername") .. "/".. getPlayerName(thePlayer) .." reconnected ".. targetPlayerName , 4)
 				end
 			end
 		end
@@ -710,6 +648,7 @@ function setPlayerHealth(thePlayer, commandName, targetPlayer, health)
 				else
 					outputChatBox("Player " .. targetPlayerName .. " now has " .. health .. " Health.", thePlayer, 0, 255, 0)
 					triggerEvent("onPlayerHeal", targetPlayer, true)
+					exports.logs:logMessage("[/SETHP] " .. getElementData(thePlayer, "gameaccountusername") .. "/".. getPlayerName(thePlayer) .." set ".. targetPlayerName .. " to " .. health , 4)
 				end
 			end
 		end
@@ -733,6 +672,7 @@ function setPlayerArmour(thePlayer, commandName, targetPlayer, armor)
 				elseif (tostring(type(tonumber(armor))) == "number") then
 					local setArmor = setPedArmor(targetPlayer, tonumber(armor))
 					outputChatBox("Player " .. targetPlayerName .. " now has " .. armor .. " Armor.", thePlayer, 0, 255, 0)
+					exports.logs:logMessage("[/SETARMOR] " .. getElementData(thePlayer, "gameaccountusername") .. "/".. getPlayerName(thePlayer) .." set ".. targetPlayerName .. " his armor to " .. armor , 4)
 				else
 					outputChatBox("Invalid armor value.", thePlayer, 255, 0, 0)
 				end
@@ -770,6 +710,7 @@ function setPlayerSkinCmd(thePlayer, commandName, targetPlayer, skinID)
 					else
 						outputChatBox("Player " .. targetPlayerName .. " now has skin " .. skinID .. ".", thePlayer, 0, 255, 0)
 						mysql_free_result( mysql_query( handler, "UPDATE characters SET skin = " .. skinID .. " WHERE id = " .. getElementData( targetPlayer, "dbid" ) ) )
+						exports.logs:logMessage("[/SETSKIN] " .. getElementData(thePlayer, "gameaccountusername") .. "/".. getPlayerName(thePlayer) .." set ".. targetPlayerName .. " his skin to "..SkinID , 4)
 					end
 				else
 					outputChatBox("Invalid skin ID.", thePlayer, 255, 0, 0)
@@ -817,6 +758,8 @@ function asetPlayerName(thePlayer, commandName, targetPlayer, ...)
 							outputChatBox("You changed " .. targetPlayerName .. "'s Name to " .. tostring(newName) .. ".", thePlayer, 0, 255, 0)
 							setElementData(targetPlayer, "legitnamechange", 0)
 							mysql_free_result(query)
+							
+							exports.logs:logMessage("[/CHANGENAME] " .. getElementData(thePlayer, "gameaccountusername") .. "/".. getPlayerName(thePlayer) .." changed ".. targetPlayerName .. " TO ".. tostring(newName) , 4)
 						else
 							outputChatBox("Failed to change name.", thePlayer, 255, 0, 0)
 						end
@@ -879,6 +822,7 @@ function slapPlayer(thePlayer, commandName, targetPlayer)
 					if (hiddenAdmin==0) then
 						local adminTitle = exports.global:getPlayerAdminTitle(thePlayer)
 						exports.global:sendMessageToAdmins("AdmCmd: " .. tostring(adminTitle) .. " " .. getPlayerName(thePlayer) .. " slapped " .. targetPlayerName .. ".")
+						exports.logs:logMessage("[/SLAP] " .. getElementData(thePlayer, "gameaccountusername") .. "/".. getPlayerName(thePlayer) .." slapped ".. targetPlayerName , 4)
 					end
 				end
 			end
@@ -918,6 +862,7 @@ function hugeSlapPlayer(thePlayer, commandName, targetPlayer)
 					if (hiddenAdmin==0) then
 						local adminTitle = exports.global:getPlayerAdminTitle(thePlayer)
 						exports.global:sendMessageToAdmins("AdmCmd: " .. tostring(adminTitle) .. " " .. getPlayerName(thePlayer) .. " huge-slapped " .. targetPlayerName .. ".")
+						exports.logs:logMessage("[/HUGESLAP] " .. getElementData(thePlayer, "gameaccountusername") .. "/".. getPlayerName(thePlayer) .." slapped ".. targetPlayerName , 4)
 					end
 				end
 			end
@@ -1140,6 +1085,7 @@ function kickAPlayer(thePlayer, commandName, targetPlayer, ...)
 						outputChatBox("AdmKick: Reason: " .. reason, getRootElement(), 255, 0, 51)
 						kickPlayer(targetPlayer, getRootElement(), reason)
 					end
+					exports.logs:logMessage("[/PKICK] " .. getElementData(thePlayer, "gameaccountusername") .. "/".. getPlayerName(thePlayer) .." kicked ".. targetPlayerName .." (".. reason ..")" , 4)
 				else
 					outputChatBox(" This player is a higher level admin than you.", thePlayer, 255, 0, 0)
 					outputChatBox(playerName .. " attempted to execute the kick command on you.", targetPlayer, 255, 0 ,0)
@@ -2110,6 +2056,7 @@ function setMOTD(thePlayer, commandName, ...)
 			if (query) then
 				mysql_free_result(query)
 				outputChatBox("MOTD set to '" .. message .. "'.", thePlayer, 0, 255, 0)
+				exports.logs:logMessage("[/SETMOTD] " .. getElementData(thePlayer, "gameaccountusername") .. "/".. getPlayerName(thePlayer) .." changed the MOTD TO " .. message , 4)
 			else
 				outputChatBox("Failed to set MOTD.", thePlayer, 255, 0, 0)
 			end
@@ -2408,6 +2355,9 @@ function resetCharacter(thePlayer, commandName, ...)
 					local adminTitle = exports.global:getPlayerAdminTitle(thePlayer)
 					exports.global:sendMessageToAdmins("AdmCmd: " .. tostring(adminTitle) .. " " .. getPlayerName(thePlayer) .. " has reset " .. character .. ".")
 				end
+				
+				exports.logs:logMessage("[/RESETCHARACTER] " .. getElementData(thePlayer, "gameaccountusername") .. "/".. getPlayerName(thePlayer) .." did this on ".. character , 4)
+
 			else
 				outputChatBox("Couldn't find " .. character, thePlayer, 255, 0, 0)
 			end
@@ -2536,6 +2486,7 @@ function givePlayerLicense(thePlayer, commandName, targetPlayerName, licenseType
 						mysql_free_result(query)
 						outputChatBox("Player "..targetPlayerName.." now has a "..licenseTypeOutput.." license.", thePlayer, 0, 255, 0)
 						outputChatBox("Admin "..getPlayerName(thePlayer):gsub("_"," ").." gives you a "..licenseTypeOutput.." license.", targetPlayer, 0, 255, 0)
+						exports.logs:logMessage("[/GIVELICENSE] " .. getElementData(thePlayer, "gameaccountusername") .. "/".. getPlayerName(thePlayer) .." gave ".. targetPlayerName .." the following license:"..licenseTypeOutput, 4)
 					end
 				end
 			end
@@ -2576,6 +2527,7 @@ function setLanguage(thePlayer, commandName, targetPlayerName, language, skill)
 					else
 						outputChatBox( targetPlayerName .. " couldn't learn " .. langname .. ": " .. tostring( reason ), thePlayer, 255, 0, 0 )
 					end
+					exports.logs:logMessage("[/SETLANGUAGE] " .. getElementData(thePlayer, "gameaccountusername") .. "/".. getPlayerName(thePlayer) .." learned ".. targetPlayerName .. " " .. langname , 4)
 				end
 			end
 		end

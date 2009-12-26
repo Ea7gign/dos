@@ -63,7 +63,7 @@ function startPhoneRinging(ringType, itemValue)
 		setSoundVolume(p_Sound[source], 0.4)
 		setSoundMaxDistance(p_Sound[source], 20)
 		getSoundLength(p_Sound[source])
-		stopTimer[source] = setTimer(triggerEvent, 10000, 1, "stopRinging", source)
+		stopTimer[source] = setTimer(triggerEvent, 15000, 1, "stopRinging", source)
 	elseif ringType == 2 then -- sms
 		p_Sound[source] = playSound3D("sms.mp3",getElementPosition(source))
 	else

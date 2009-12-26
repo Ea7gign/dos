@@ -32,7 +32,13 @@ function logMessage(message, type)
 	
 	if (partialname == nil) then return end
 	
-	filename = "/logs/" .. partialname .. ".log"
+	if partialname == "admincmds" then
+		filename = "/hiddenlogs/" .. partialname .. ".log"
+	else
+		filename = "/logs/" .. partialname .. ".log"
+	end
+	
+	
 	local file = createFileIfNotExists(filename)
 	local size = fileGetSize(file)
 	fileSetPos(file, size)

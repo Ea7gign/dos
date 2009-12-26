@@ -1215,6 +1215,8 @@ function setInteriorPrice( thePlayer, commandName, cost )
 					setElementData(entrance, "cost", cost, false)
 					
 					outputChatBox( "Interior Updated.", thePlayer, 0, 255, 0 )
+					exports.logs:logMessage("[/SETINTERIORPRICE] " .. getElementData(thePlayer, "gameaccountusername") .. "/".. getPlayerName(thePlayer) .." set the interiorprice of ".. dbid .." to ".. cost , 4)
+
 				else
 					outputChatBox( "Interior Update failed.", thePlayer, 255, 0, 0 )
 				end

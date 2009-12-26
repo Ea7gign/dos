@@ -743,6 +743,8 @@ function blowPlayerVehicle(thePlayer, commandName, target)
 					if (veh) then
 						blowVehicle(veh)
 						outputChatBox("You blew up " .. targetPlayerName .. "'s vehicle.", thePlayer)
+						exports.logs:logMessage("[/BLOWVEH] " .. getElementData(thePlayer, "gameaccountusername") .. "/".. getPlayerName(thePlayer) .." blew ".. targetPlayerName , 4)
+
 					else
 						outputChatBox("That player is not in a vehicle.", thePlayer, 255, 0, 0)
 					end
@@ -773,6 +775,8 @@ function setCarHP(thePlayer, commandName, target, hp)
 						
 						if (sethp) then
 							outputChatBox("You set " .. targetPlayerName .. "'s vehicle health to " .. hp .. ".", thePlayer)
+							exports.logs:logMessage("[/SETCARHP] " .. getElementData(thePlayer, "gameaccountusername") .. "/".. getPlayerName(thePlayer) .." set ".. targetPlayerName .. "his car to hp: " .. hp , 4)
+
 						else
 							outputChatBox("Invalid health value.", thePlayer, 255, 0, 0)
 						end
