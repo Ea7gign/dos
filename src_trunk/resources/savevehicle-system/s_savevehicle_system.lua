@@ -131,7 +131,6 @@ function saveVehicleOnExit(thePlayer, seat, vehicle)
 			mysql_free_result(update2)
 			
 			local timeTaken = (getTickCount() - tick)/1000
-			exports.irc:sendMessage("[SCRIPT] Saving Vehicle ID #" .. dbid .. " [Exit/Respawn] [" .. timeTaken .. " Seconds].")
 		end
 	end
 end
