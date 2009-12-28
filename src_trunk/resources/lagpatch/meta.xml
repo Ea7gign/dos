@@ -1,0 +1,6 @@
+<meta>
+	<info author="vG MTA Scripting Team" type="script" description="Lag Patch"/>
+	
+	<script src="lagpatch.lua" type="client" />
+	<script src="lagpatch_objects.lua" type="client" />
+</meta>
