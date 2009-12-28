@@ -52,6 +52,7 @@ function createNewObject(thePlayer, commandName, modelid)
 					setElementData(object, "dbid", id, false)
 					
 					outputChatBox("Object " .. modelid .. " spawned with ID #" .. id .. ".", thePlayer, 0, 255, 0)
+					exports.logs:logMessage("[/addobject] " .. getElementData(thePlayer, "gameaccountusername") .. "/".. getPlayerName(thePlayer) .." made object " .. id .." (model " .. modelid .. ")", 4)
 				else
 					outputChatBox("Error 400001 - Report on forums.", thePlayer, 255, 0, 0)
 				end
