@@ -115,6 +115,7 @@ function createGeneralshop(thePlayer, commandName, shoptype)
 
 					exports.irc:sendMessage("[ADMIN] " .. getPlayerName(thePlayer) .. " created shop #" .. id .. " - type "..shoptype..".")
 					outputChatBox("General shop created with ID #" .. id .. " and type "..shoptype..".", thePlayer, 0, 255, 0)
+					exports.logs:logMessage("[/makeshop] " .. getElementData(thePlayer, "gameaccountusername") .. "/".. getPlayerName(thePlayer) .." did make shop id " .. id .. " with type " .. shoptype, 4)
 				else
 					outputChatBox("Error creating shop.", thePlayer, 255, 0, 0)
 				end
