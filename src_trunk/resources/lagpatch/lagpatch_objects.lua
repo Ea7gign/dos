@@ -21,6 +21,16 @@ local function checkStreamIn()
 end
 setTimer(checkStreamIn, 2000, 0)
 
+local function render()
+	local width, height = guiGetScreenSize()
+	if (enabled) then
+		dxDrawText("Streamer Enabled", 200, height-50, 50, height-30, tocolor(0, 255, 0, 125), 1, "pricedown")
+	else
+		dxDrawText("Streamer Disabled", 200, height-50, 50, height-30, tocolor(255, 0, 0, 125), 1, "pricedown")
+	end
+end
+addEventHandler("onClientRender", getRootElement(), render)
+
 local function elementDestroy()
 	if (getElementType(source) == "object") then
 		unstreamedObjects[source] = nil
