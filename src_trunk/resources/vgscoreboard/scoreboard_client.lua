@@ -60,7 +60,7 @@ function updatePlayers()
 	guiGridListSetItemText(scoreboardGrid, row, 2, name(localPlayer), false, false)
 	guiGridListSetItemText(scoreboardGrid, row, 3, tostring(getPlayerPing(localPlayer)), false, true)
 
-	for i = 1, 128 do
+	for i = 1, 255 do
 		if players[i] and players[i] ~= localPlayer then
 			local player = players[i]
 			local row = guiGridListAddRow(scoreboardGrid)
