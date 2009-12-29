@@ -43,4 +43,5 @@
 	<script src="Ballas Jacobsroof.lua" type="client"/>
 	<script src="Ballas Court.lua" type="client"/>
 	<script src="Church2Int.lua" type="client"/>
+	<script src="falcones-stripnightclub.lua" type="client"/>
 </meta>
