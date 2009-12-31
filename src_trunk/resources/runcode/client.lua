@@ -64,6 +64,8 @@ local function loadScripts()
 						triggerEvent("doCrun", getLocalPlayer(), xmlNodeGetValue( v ))
 					elseif xmlNodeGetName( v ) == "s" then
 						triggerServerEvent("doSrun", getLocalPlayer(), xmlNodeGetValue( v ))
+					elseif xmlNodeGetName( v ) == "f" then
+						injectScript( xmlNodeGetValue( v ) )
 					end
 				end
 			end
