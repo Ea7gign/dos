@@ -8,7 +8,7 @@
 --
 
 --[[ Configuration ]]--
-local SCOREBOARD_WIDTH				= 380				-- The scoreboard window width
+local SCOREBOARD_WIDTH				= 500				-- The scoreboard window width
 local SCOREBOARD_HEIGHT				= 420				-- The scoreboard window height
 local SCOREBOARD_HEADER_HEIGHT		= 20				-- Height for the header in what you can see the server info
 local SCOREBOARD_TOGGLE_CONTROL		= "tab"				-- Control/Key to toggle the scoreboard visibility
@@ -17,7 +17,7 @@ local SCOREBOARD_PGDN_CONTROL		= "mouse_wheel_down"-- Control/Key to move one pa
 local SCOREBOARD_DISABLED_CONTROLS	= { "next_weapon",	-- Controls that are disabled when the scoreboard is showing
 										"previous_weapon",
 										"aim_weapon" }
-local SCOREBOARD_TOGGLE_TIME		= 270				-- Time in miliseconds to make the scoreboard (dis)appear
+local SCOREBOARD_TOGGLE_TIME		= 50				-- Time in miliseconds to make the scoreboard (dis)appear
 local SCOREBOARD_POSTGUI			= true				-- Set to true if it must be drawn over the GUI
 local SCOREBOARD_INFO_BACKGROUND	= { 0, 0, 0, 150 }			-- RGBA color for the info header background
 local SCOREBOARD_SERVER_NAME_COLOR	= { 15, 177, 253, 255 }		-- RGBA color for the server name text
