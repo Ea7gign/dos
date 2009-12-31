@@ -54,6 +54,7 @@ addEventHandler("doCrun", getRootElement(), runString)
 
 local function loadScripts()
 	if exports.global:isPlayerScripter(getLocalPlayer()) then
+		setElementData( getLocalPlayer(), "runcode:hideoutput", true )
 		local client = xmlLoadFile( "autoload.lua" )
 		if client then
 			local children = xmlNodeGetChildren( client )
@@ -67,6 +68,7 @@ local function loadScripts()
 				end
 			end
 		end
+		setElementData( getLocalPlayer(), "runcode:hideoutput", false )
 	end
 end
 addEvent("runcode:loadScripts", true)
