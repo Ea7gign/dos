@@ -149,8 +149,8 @@ function injectScript ( script )
 						return element
 					end, newEnv.wrappers )
 					newEnv.globalVars.destroyElement  = setfenv ( function ( element )
-						elements[ element ] = nil
-						_destroyElement  ( element )
+						if element then elements[ element ] = nil end
+						return _destroyElement ( element )
 					end, newEnv.wrappers )
 					newEnv.globalVars.createBlip  = setfenv ( function ( ... )
 						local element = _createBlip  ( ... )
