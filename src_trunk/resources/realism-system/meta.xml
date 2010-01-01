@@ -26,9 +26,7 @@
 	<file src="horn.wav"/>
 	
 	<script src="c_nametags.lua" type="client" />
-	
-	<script src="tree.lua" type="client"/>
-	
+
 	<script src="c_thermal_vision.lua" type="client" />
 	
 	<script src="water.lua" type="client" />
