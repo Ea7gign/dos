@@ -94,6 +94,8 @@ function onJoin()
 	clearChatBox(source)
 	outputChatBox("Server is running Valhalla Gaming MTA RP Script V" .. scriptVer, source)
 	outputChatBox("Script by Valhalla Gaming Scripting Team.", source)
+	
+	exports.global:updateNametagColor(source)
 end
 addEventHandler("onPlayerJoin", getRootElement(), onJoin)
 addEvent("playerJoinResourceStart", false)
@@ -978,6 +980,8 @@ addEvent("retrieveDetails", true)
 addEventHandler("retrieveDetails", getRootElement(), retrieveDetails)
 
 function sendAccounts(thePlayer, id, isChangeChar)
+	setElementData(thePlayer,"loggedin",0)
+	exports.global:updateNametagColor(thePlayer)
 	exports.global:takeAllWeapons(thePlayer)
 	local accounts = { }
 

@@ -1,5 +1,7 @@
 function updateNametagColor(thePlayer)
-	if isPlayerAdmin(thePlayer) and getElementData(thePlayer, "adminduty") == 1 and getElementData(thePlayer, "hiddenadmin") == 0 then -- Admin duty
+	if getElementData(thePlayer, "loggedin") ~= 1 then
+		setPlayerNametagColor(thePlayer, 127, 127, 127)
+	elseif isPlayerAdmin(thePlayer) and getElementData(thePlayer, "adminduty") == 1 and getElementData(thePlayer, "hiddenadmin") == 0 then -- Admin duty
 		setPlayerNametagColor(thePlayer, 255, 194, 14)
 	elseif (getElementData(thePlayer,"PDbadge")==1) then -- PD Badge
 		setPlayerNametagColor(thePlayer, 0, 100, 255)
