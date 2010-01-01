@@ -38,6 +38,7 @@ function injectScript ( script )
 					newEnv.wrappers._unbindKey = unbindKey
 					newEnv.wrappers._setTimer = setTimer
 					newEnv.wrappers._killTimer = killTimer
+					newEnv.wrappers._destroyElement = destroyElement
 					newEnv.wrappers._playSound = playSound
 					newEnv.wrappers._playSound3D = playSound3D
 					newEnv.wrappers._createBlip = createBlip
@@ -146,6 +147,10 @@ function injectScript ( script )
 							elements[ element ] = true
 						end
 						return element
+					end, newEnv.wrappers )
+					newEnv.globalVars.destroyElement  = setfenv ( function ( element )
+						elements[ element ] = nil
+						_destroyElement  ( element )
 					end, newEnv.wrappers )
 					newEnv.globalVars.createBlip  = setfenv ( function ( ... )
 						local element = _createBlip  ( ... )
@@ -448,12 +453,3 @@ end
 addCommandHandler ( "inject", function ( c, ... ) injectScript ( table.concat( { ... }, " " ) ) end )
 addCommandHandler ( "uninject", function ( c, ... ) uninjectScript ( table.concat( { ... }, " " ) ) end )
 addCommandHandler ( "reinject", function ( c, ... ) if uninjectScript ( table.concat( { ... }, " " ) ) then injectScript ( table.concat( { ... }, " " ) ) end end )
-addEventHandler ( "onClientElementDestroy", getResourceRootElement( ),
-	function( )
-		for k, v in pairs( INJECTED_SCRIPTS ) do
-			if v.wrappers.elements[ source ] then
-				v.wrappers.elements[ source ] = nil
-			end
-		end
-	end
-)
