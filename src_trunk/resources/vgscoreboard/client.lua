@@ -20,17 +20,17 @@ local SCOREBOARD_DISABLED_CONTROLS	= { "next_weapon",	-- Controls that are disab
 local SCOREBOARD_TOGGLE_TIME		= 50				-- Time in miliseconds to make the scoreboard (dis)appear
 local SCOREBOARD_POSTGUI			= true				-- Set to true if it must be drawn over the GUI
 local SCOREBOARD_INFO_BACKGROUND	= { 0, 0, 0, 150 }			-- RGBA color for the info header background
-local SCOREBOARD_SERVER_NAME_COLOR	= { 15, 177, 253, 255 }		-- RGBA color for the server name text
-local SCOREBOARD_PLAYERCOUNT_COLOR	= { 255, 255, 255, 255 }	-- RGBA color for the server player count text
-local SCOREBOARD_BACKGROUND			= { 0, 0, 0, 220 }			-- RGBA color for the background
-local SCOREBOARD_HEADERS_COLOR		= { 200, 200, 200, 255 }	-- RGBA color for the headers
-local SCOREBOARD_SEPARATOR_COLOR	= { 82, 82, 82, 255 }		-- RGBA color for the separator line between headers and body content
-local SCOREBOARD_ENTRY_COLOR		= { 255, 255, 255, 255 }	-- RGBA color for the scoreboard entries
-local SCOREBOARD_SCROLL_BACKGROUND	= { 60, 60, 60, 255 }		-- RGBA color for the scroll background
-local SCOREBOARD_SCROLL_FOREGROUND	= { 128, 0, 0, 255 }		-- RGBA color for the scroll foreground
+local SCOREBOARD_SERVER_NAME_COLOR	= { 15, 177, 253, 160 }		-- RGBA color for the server name text
+local SCOREBOARD_PLAYERCOUNT_COLOR	= { 255, 255, 255, 160 }	-- RGBA color for the server player count text
+local SCOREBOARD_BACKGROUND			= { 0, 0, 0, 140 }			-- RGBA color for the background
+local SCOREBOARD_BACKGROUND_IMAGE	= { 255, 255, 255, 40 }		-- RGBA color for the background image
+local SCOREBOARD_HEADERS_COLOR		= { 200, 200, 200, 160 }	-- RGBA color for the headers
+local SCOREBOARD_SEPARATOR_COLOR	= { 82, 82, 82, 140 }		-- RGBA color for the separator line between headers and body content
+local SCOREBOARD_SCROLL_BACKGROUND	= { 0, 10, 20, 100 }		-- RGBA color for the scroll background
+local SCOREBOARD_SCROLL_FOREGROUND	= { 15, 177, 253, 160 }		-- RGBA color for the scroll foreground
 local SCOREBOARD_SCROLL_HEIGHT		= 20						-- Size for the scroll marker
 local SCOREBOARD_COLUMNS_WIDTH		= { 0.08, 0.72, 0.16, 0.04 }	-- Relative width for each column: id, player name, ping and scroll position
-local SCOREBOARD_ROW_GAP			= 0						-- Gap between rows
+local SCOREBOARD_ROW_GAP			= 0							-- Gap between rows
 
 --[[ Uncomment to test with dummies ]]--
 --[[
@@ -75,8 +75,8 @@ SCOREBOARD_INFO_BACKGROUND = tocolor ( unpack ( SCOREBOARD_INFO_BACKGROUND ) )
 SCOREBOARD_SERVER_NAME_COLOR = tocolor ( unpack ( SCOREBOARD_SERVER_NAME_COLOR ) )
 SCOREBOARD_PLAYERCOUNT_COLOR = tocolor ( unpack ( SCOREBOARD_PLAYERCOUNT_COLOR ) )
 SCOREBOARD_BACKGROUND = tocolor ( unpack ( SCOREBOARD_BACKGROUND ) )
+SCOREBOARD_BACKGROUND_IMAGE = tocolor ( unpack ( SCOREBOARD_BACKGROUND_IMAGE ) )
 SCOREBOARD_HEADERS_COLOR = tocolor ( unpack ( SCOREBOARD_HEADERS_COLOR ) )
-SCOREBOARD_ENTRY_COLOR = tocolor ( unpack ( SCOREBOARD_ENTRY_COLOR ) )
 SCOREBOARD_SCROLL_BACKGROUND = tocolor ( unpack ( SCOREBOARD_SCROLL_BACKGROUND ) )
 SCOREBOARD_SCROLL_FOREGROUND = tocolor ( unpack ( SCOREBOARD_SCROLL_FOREGROUND ) )
 SCOREBOARD_SEPARATOR_COLOR = tocolor ( unpack ( SCOREBOARD_SEPARATOR_COLOR ) )
@@ -332,6 +332,11 @@ drawBackground = function ()
 	
 	-- Draw the body background
 	if g_currentHeight > SCOREBOARD_HEADER_HEIGHT then
+		-- Draw the image
+		dxDrawImage ( SCOREBOARD_X * 1.17, SCOREBOARD_Y * 1.1 + SCOREBOARD_HEADER_HEIGHT,
+					  g_currentWidth / 1.3, g_currentHeight / 1.05 - SCOREBOARD_HEADER_HEIGHT,
+					  "icon.png", 0, 0, 0, SCOREBOARD_BACKGROUND_IMAGE, SCOREBOARD_POSTGUI )
+		-- Overlay
 		dxDrawRectangle ( SCOREBOARD_X, SCOREBOARD_Y + SCOREBOARD_HEADER_HEIGHT,
 						  g_currentWidth, g_currentHeight - SCOREBOARD_HEADER_HEIGHT,
 						  SCOREBOARD_BACKGROUND, SCOREBOARD_POSTGUI )
@@ -482,7 +487,7 @@ drawScoreboard = function ()
 		local playerColor = tocolor ( r, g, b, 255 )
 		
 		-- Create the table of colors
-		local colors = { SCOREBOARD_ENTRY_COLOR, playerColor, SCOREBOARD_ENTRY_COLOR }
+		local colors = { playerColor, playerColor, playerColor }
 		
 		-- Render it!
 		drawRowBounded ( playerID, playerName, playerPing, colors, "default-bold", top )

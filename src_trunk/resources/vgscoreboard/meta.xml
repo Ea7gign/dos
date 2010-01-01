@@ -3,4 +3,5 @@
 	
 	<script src="client.lua" type="client" />
 	<script src="server.lua" type="server" />
+	<file src="icon.png"/>
 </meta>
