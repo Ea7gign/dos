@@ -102,7 +102,7 @@ function checkWeapons()
 			-- takes away weapons if you do not have a gun license and aren't in a PD/fbi
 			-- takes away mp5/sniper/m4/ak if you aren't in PD/fbi
 			-- always takes away rocket launchers, flamethrowers and miniguns, knifes and katanas
-			if (((weapon >= 16 and weapon <= 40 and gunlicense == 0) or weapon == 29 or weapon == 30 or weapon ==31 or weapon == 34) and factiontype ~= 2) or (weapon >= 35 and weapon <= 38) then
+			if (((weapon >= 16 and weapon <= 40 and gunlicense == 0) or weapon == 29 or weapon == 30 or weapon == 32 or weapon ==31 or weapon == 34) and factiontype ~= 2) or (weapon >= 35 and weapon <= 38) then
 				if (removedWeapons==nil) then
 					removedWeapons = getWeaponNameFromID(weapon)
 				else
