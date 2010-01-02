@@ -560,7 +560,7 @@ function givePlayerItem(thePlayer, commandName, targetPlayer, itemID, ...)
 				local itemValue = table.concat({...}, " ")
 				itemValue = tonumber(itemValue) or itemValue
 				
-				if ( itemID == 74 or itemID == 75 or itemID == 78 ) and not exports.global:isPlayerScripter( thePlayer ) then
+				if ( itemID == 74 or itemID == 75 or itemID == 78 ) and not exports.global:isPlayerScripter( thePlayer ) and not exports.global:isPlayerHeadAdmin( thePlayer) then
 					-- nuthin
 				elseif ( itemID == 84 ) and not exports.global:isPlayerLeadAdmin( thePlayer ) then
 				elseif (logged==0) then
