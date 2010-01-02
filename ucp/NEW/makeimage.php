@@ -77,7 +77,8 @@
 		$image = imagecreatefrompng($filename);
 		
 		$white = imagecolorallocate($image, 255, 255, 255);
-		imagestring($image, 2, 5, 35, "Generated From Cache", $white);
+		$blue = imagecolorallocate($image, 0, 162, 232);
+		imagestring($image, 2, 5, 35, "Generated From Cache", $blue);
 		
 		imagepng($image);
 		imagedestroy($image);
@@ -100,6 +101,7 @@
 		$orange = imagecolorallocate($image, 255, 194, 15);
 		$white = imagecolorallocate($image, 255, 255, 255);
 		$black = imagecolorallocate($image, 0, 0, 0);
+		$blue = imagecolorallocate($image, 0, 162, 232);
 		
 		imagefill($image, 0, 0, $orange);
 		
@@ -111,7 +113,7 @@
 		
 		
 		// title
-		imagestring($image, 2, 225, 35, "vGMTA - 87.238.173.138:22003", $white);
+		imagestring($image, 2, 225, 35, "vGMTA - 87.238.173.138:22003", $blue);
 		
 		// SQL
 		$result = mysql_query("SELECT id, admin, donator, friends FROM accounts WHERE username='" . $escUsername . "' LIMIT 1", $conn);
@@ -138,7 +140,7 @@
 		$achievements = mysql_result($result3, 0, 0);
 		mysql_free_result($result3);
 		
-		imagestring($image, 4, 5, 0, $name . " (" . getAdminTitleFromIndex($admin) . ")", imagecolorallocate($image, 255, 255, 255));
+		imagestring($image, 4, 5, 0, $name . " (" . getAdminTitleFromIndex($admin) . ")", $blue);
 		imagestring($image, 3, 7, 15, "Donator: " . getDonatorTitleFromIndex($donator), $black);
 		imagestring($image, 3, 7, 25, "Characters: " . $characters, $black);
 		imagestring($image, 3, 130, 15, "Hours Played: " . $hoursplayed, $black);
@@ -147,7 +149,7 @@
 		
 		header('Content-type: image/png');
 		imagepng($image, $filename);
-		imagestring($image, 2, 5, 35, "Generated Live", $white);
+		imagestring($image, 2, 5, 35, "Generated Live", $blue);
 		imagepng($image);
 		imagedestroy($image);
 	}
