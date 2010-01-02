@@ -118,7 +118,7 @@
 		
 		if (!$result || mysql_num_rows($result)==0)
 		{
-			echo "Error";
+			echo "No Such User";
 			exit;
 		}
 		
