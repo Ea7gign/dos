@@ -45,12 +45,14 @@
 	function writeCacheFile()
 	{
 		$cachefile = "cachefile.dat";
-		file_put_contents($cachefile, date("d"));
+		$string = date("d") . "," . date("H");
+		file_put_contents($cachefile, $string);
 	}
 ?><?php
 	$cachefile = "cachefile.dat";
-	$name = $_GET["name"];
-	$filename = "cache/" . md5("vgrpscotlandsalt" . $name) . ".png";
+	$hashid = $_GET["id"];
+	$username = substr(base64_decode($hashid), 16);
+	$filename = "cache/" . md5("vgrpscotlandsalt" . $username) . ".png";
 
 	// should we regenerate the cache?
 	
@@ -63,8 +65,10 @@
 	else if ( file_exists($cachefile) ) // we have a cache file
 	{
 		$data = file_get_contents($cachefile);
+		$array = explode(",", $data);
 		
-		if ($data != date("d")) // out of date, rebuild cache
+		
+		if ($array[0] != date("d") || $array[1] != date("H")) // out of date, rebuild cache
 		{
 			writeCacheFile();
 			destroyCache();
@@ -77,13 +81,17 @@
 		header('Content-Type: image/png');
 		$image = imagecreatefrompng($filename);
 		
-		$day = file_get_contents($cachefile);
+		$data = file_get_contents($cachefile);
+		$array = explode(",", $data);
+		
+		$day = $array[0];
+		$hour = $array[1];
 		$month = date("m");
 		$year = date("y");
 		
 		$white = imagecolorallocate($image, 255, 255, 255);
 		$blue = imagecolorallocate($image, 0, 162, 232);
-		imagestring($image, 2, 5, 35, "Generated From Cache (" . $day . "-" . $month . "-" . $year . ")", $blue);
+		imagestring($image, 2, 5, 35, "Generated From Cache (" . $day . "-" . $month . "-" . $year . "@" . $hour . ":00)", $blue);
 		
 		imagepng($image);
 		imagedestroy($image);
@@ -98,8 +106,7 @@
 		$width = 400;
 		$height = 50;
 		
-		
-		$escUsername = mysql_real_escape_string($name, $conn);
+		$escUsername = mysql_real_escape_string($username, $conn);
 
 		$image = imagecreatetruecolor(400, 50);
 		
@@ -118,14 +125,37 @@
 		
 		
 		// title
-		imagestring($image, 2, 225, 35, "vGMTA - 87.238.173.138:22003", $blue);
+		imagestring($image, 2, 230, 35, "vGMTA - 87.238.173.138:22003", $blue);
 		
 		// SQL
-		$result = mysql_query("SELECT id, admin, donator, friends FROM accounts WHERE username='" . $escUsername . "' LIMIT 1", $conn);
+		$result = mysql_query("SELECT id, admin, donator, friends FROM accounts WHERE username ='" . $escUsername . "' LIMIT 1", $conn);
+		
+		
 		
 		if (!$result || mysql_num_rows($result)==0)
 		{
-			echo "No Such User";
+			header('Content-Type: image/png');
+			$image = imagecreatetruecolor(400, 50);
+		
+			$orange = imagecolorallocate($image, 255, 194, 15);
+			$white = imagecolorallocate($image, 255, 255, 255);
+			$black = imagecolorallocate($image, 0, 0, 0);
+			$blue = imagecolorallocate($image, 0, 162, 232);
+			
+			imagefill($image, 0, 0, $orange);
+			
+			// border
+			imageline($image, 0, 0, $width-1, 0, $black);
+			imageline($image, $width-1, 0, $width-1, $height, $black);
+			imageline($image, 0, $height-1, $width-1, $height-1, $black);
+			imageline($image, 0, 0, 0, $height-1, $black);
+			
+			
+			// title
+			imagestring($image, 4, 5, 0, "No Such User", $blue);
+			imagepng($image);
+			imagedestroy($image);
+
 			exit;
 		}
 		
@@ -145,7 +175,7 @@
 		$achievements = mysql_result($result3, 0, 0);
 		mysql_free_result($result3);
 		
-		imagestring($image, 4, 5, 0, $name . " (" . getAdminTitleFromIndex($admin) . ")", $blue);
+		imagestring($image, 4, 5, 0, $username . " (" . getAdminTitleFromIndex($admin) . ")", $blue);
 		imagestring($image, 3, 7, 15, "Donator: " . getDonatorTitleFromIndex($donator), $black);
 		imagestring($image, 3, 7, 25, "Characters: " . $characters, $black);
 		imagestring($image, 3, 130, 15, "Hours Played: " . $hoursplayed, $black);

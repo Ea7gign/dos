@@ -167,14 +167,16 @@
 								echo "<h2>User Signature Bar</h2>";
 								echo "<p>Below is a user bar for your forum signature.</p>";
 						
+								$hash = base64_encode("vgrpscotlandsalt" . $username);
+						
 								echo "<h4>Userbar for '" . $username . "'</h4>";
-								echo "<img src='makeimage.php?name=" . $username . "'></img><br><br><br>";
+								echo "<img src='makeimage.php?id=" . $hash . "'></img><br><br><br>";
 								
 								echo "<h4>Forum BBCode</h4>";
-								echo "<textarea name='textarea' cols='40' rows='4' wrap='VIRTUAL'>[URL=\"http://valhallagaming.net/site/mta/\"][IMG]http://www.valhallagaming.net/mtaucp/makeimage.php?name=" . $username . "[/IMG][/URL]</textarea><br><br><br>";
+								echo "<textarea name='textarea' cols='40' rows='4' wrap='VIRTUAL'>[URL=\"http://valhallagaming.net/site/mta/\"][IMG]http://www.valhallagaming.net/mtaucp/makeimage.php?id=" . $hash . "[/IMG][/URL]</textarea><br><br><br>";
 								
 								echo "<h4>Dynamic Image URL</h4>";
-								echo "<textarea name='textarea' cols='40' rows='4' wrap='VIRTUAL'>http://www.valhallagaming.net/mtaucp/makeimage.php?name=" . $username . "</textarea><br><br><br>";
+								echo "<textarea name='textarea' cols='40' rows='4' wrap='VIRTUAL'>http://www.valhallagaming.net/mtaucp/makeimage.php?id=" . $hash . "</textarea><br><br><br>";
 							
 								//echo "<h4>Static Image URL (Cached)</h4>";
 								//echo "<textarea name='textarea' cols='40' rows='4' wrap='VIRTUAL'>http://www.valhallagaming.net/mtaucp/cache/" . md5("vgrpscotlandsalt" . $username) . ".png</textarea><br><br><br>";
