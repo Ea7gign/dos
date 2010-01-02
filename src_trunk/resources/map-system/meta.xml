@@ -45,4 +45,5 @@
 	<script src="Church2Int.lua" type="client"/>
 
 	<script src="lmc-resto.lua" type="client"/>
+	<script src="lmc-backroom.lua" type="client"/>
 </meta>
