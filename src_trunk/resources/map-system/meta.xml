@@ -44,5 +44,5 @@
 	<script src="Ballas Court.lua" type="client"/>
 	<script src="Church2Int.lua" type="client"/>
 
-	<script src="lmc-resto.lua" type"client"/>
+	<script src="lmc-resto.lua" type="client"/>
 </meta>
