@@ -320,6 +320,7 @@
 								<li><b>Donator:</b> <?php echo getDonatorTitleFromIndex($donator) ?></li>
 								<li><b>Account Standing:</b> <?php echo getStandingFromIndex($banned) ?></li>
 								<li><b>Email Address:</b> <?php echo $email; ?></li>
+								<li><b>User Signature Bar:</b> <a href='userbar.php'>Click Here</a> </li>
 							</ul>
 						</div>
 					</div>
