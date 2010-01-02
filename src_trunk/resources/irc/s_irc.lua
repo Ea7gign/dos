@@ -2,7 +2,7 @@ local server = "irc.gtanet.com"
 local port = 6667
 local username = "ValhallaGaming"
 local channeladmins = "#Valhalla.admins"
-local password = "adminmtavg"
+local password = "adminmtavgl337"
 
 local conn = { }
 local count = 0
