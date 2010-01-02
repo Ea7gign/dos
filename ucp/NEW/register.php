@@ -262,13 +262,6 @@
 					<div class="content-box">
 						<div class="side-content-holder">
 							<div style="margin-left:-30px;padding-top:10px;"><img src="images/news-title.png"/></div>
-							<?php
-								$phpns['category'] = '1';
-								$phpns['disable_pagination'] = 'True';
-								$phpns['script_link'] = 'news.php';
-								//after variable declaration(s), include shownews.php
-								include("/www/valhallagmaing.net/site/mta/admin/shownews.php");
-							?>
 							<h4><a href="archive.php">News Archive</a></h4>
 						</div>
 					</div>
