@@ -23,6 +23,7 @@
 		return $ranks[$index];
 	}
 ?><?php
+	date_default_timezone_set('UTC');
 	if (!is_dir("cache"))
 		mkdir("cache");
 
@@ -76,9 +77,13 @@
 		header('Content-Type: image/png');
 		$image = imagecreatefrompng($filename);
 		
+		$day = file_get_contents($cachefile);
+		$month = date("m");
+		$year = date("y");
+		
 		$white = imagecolorallocate($image, 255, 255, 255);
 		$blue = imagecolorallocate($image, 0, 162, 232);
-		imagestring($image, 2, 5, 35, "Generated From Cache", $blue);
+		imagestring($image, 2, 5, 35, "Generated From Cache (" . $day . "-" . $month . "-" . $year . ")", $blue);
 		
 		imagepng($image);
 		imagedestroy($image);
