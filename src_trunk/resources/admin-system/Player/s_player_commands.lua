@@ -249,7 +249,7 @@ function resKick(thePlayer, commandName, amount)
 				local players = { }
 				local count = 1
 				for key, value in ipairs(exports.pool:getPoolElementsByType("player")) do
-					if not (exports.global:isPlayerAdmin(value)) then
+					if not (exports.global:isPlayerAdmin(value)) and not exports.global:isPlayerScripter(value) then
 						players[count] = value
 						count = count + 1
 						
