@@ -237,8 +237,11 @@ function chatMain(message, messageType)
 			end
 		end
 	elseif (messageType==2) and (logged==1) then -- Radio
+		
 		if (exports.global:hasItem(source, 6)) then
-			local theChannel = getElementData(source, "radiochannel")
+			--local theChannel = getElementData(source, "radiochannel")
+			local hasRadio, itemKey, itemValue, itemID = exports.global:hasItem(source, 6)
+			local theChannel = itemValue
 			if theChannel > 0 then
 				triggerClientEvent (source, "playRadioSound", getRootElement())
 				local username = getPlayerName(source)
@@ -260,7 +263,9 @@ function chatMain(message, messageType)
 				outputChatBox("[" .. languagename .. "] [RADIO #" .. theChannel .. "] " .. factionRankTitle .. username .. " says: " .. message, source, 0, 102, 255)
 				
 				for key, value in ipairs(exports.pool:getPoolElementsByType("player")) do
-					local targetChannel = getElementData(value, "radiochannel")
+					--local targetChannel = getElementData(value, "radiochannel")
+					local thasRadio, titemKey, titemValue, titemID = exports.global:hasItem(value, 6)
+					local targetChannel = titemValue
 					local logged = getElementData(source, "loggedin")
 					
 					if (logged==1) and (targetChannel) and (exports.global:hasItem(value, 6)) and (value~=source) then
@@ -275,7 +280,8 @@ function chatMain(message, messageType)
 								-- Show it to people near who can hear his radio
 								for k, v in ipairs(getElementsByType("player")) do
 									if getElementDistance(value, v) < 10 then
-										local channel = getElementData(v, "radiochannel")
+										local tthasRadio, ttitemKey, ttitemValue, ttitemID = exports.global:hasItem(v, 6)
+										local channel = ttitemValue
 										if (v~=source) and (channel~=targetChannel) then
 											local message2 = call(getResourceFromName("language-system"), "applyLanguage", source, v, message, language)
 											outputChatBox("[" .. languagename .. "] " .. getPlayerName(value) .. "'s Radio: " .. trunklateText( v, message2 ), v, 255, 255, 255)
@@ -754,13 +760,17 @@ function setRadioChannel(thePlayer, commandName, channel)
 		outputChatBox("SYNTAX: /" .. commandName .. " [Channel Number]", thePlayer, 255, 194, 14)
 	else
 		if (exports.global:hasItem(thePlayer, 6)) then
-			if getElementData(thePlayer, "radiochannel") > 0 then
+			local thasRadio, titemKey, titemValue, titemID = exports.global:hasItem(thePlayer, 6)
+			if titemValue > 0 then
 				local channel = tonumber(channel)
-				if channel > 0 then
-					setElementData(thePlayer, "radiochannel", channel, false)
+				if channel > 0 and channel < 100000 then
+					
+					--setElementData(thePlayer, "radiochannel", channel, false)
 					outputChatBox("You retuned your radio to channel #" .. channel .. ".", thePlayer)
 					exports.global:sendLocalMeAction(thePlayer, "retunes their radio.")
-					mysql_free_result( mysql_query( handler, "UPDATE characters SET radiochannel=" .. channel .. " WHERE id = " .. getElementData(thePlayer, "dbid") ) )
+					exports.global:takeItem(thePlayer, 6, titemValue)
+					exports.global:giveItem(thePlayer, 6, channel)
+					--mysql_free_result( mysql_query( handler, "UPDATE characters SET radiochannel=" .. channel .. " WHERE id = " .. getElementData(thePlayer, "dbid") ) )
 				else
 					outputChatBox("You can't tune your radio to that frequency!", thePlayer, 255, 0, 0)
 				end
@@ -776,13 +786,17 @@ addCommandHandler("tuneradio", setRadioChannel, false, false)
 
 function toggleRadio(thePlayer, commandName)
 	if (exports.global:hasItem(thePlayer, 6)) then
+		local thasRadio, titemKey, titemValue, titemID = exports.global:hasItem(thePlayer, 6)
+		
+		-- gender switch for /me
 		local gender = getElementData(thePlayer, "gender")
 		local genderm = "his"
 		if (gender == 1) then
 			genderm = "her"
 		end
 		
-		local channel = getElementData(thePlayer, "radiochannel")
+		local oldchannel = titemValue
+		local channel = titemValue
 		if not channel or channel == 0 then
 			channel = 1
 		else
@@ -795,8 +809,10 @@ function toggleRadio(thePlayer, commandName)
 			outputChatBox("You turned your radio off.", thePlayer, 255, 194, 14)
 			exports.global:sendLocalMeAction(thePlayer, "turns " .. genderm .. " radio off.")
 		end
-		setElementData(thePlayer, "radiochannel", channel, false)
-		mysql_free_result( mysql_query( handler, "UPDATE characters SET radiochannel=" .. channel .. " WHERE id = " .. getElementData(thePlayer, "dbid") ) )
+		--setElementData(thePlayer, "radiochannel", channel, false)
+		exports.global:takeItem(thePlayer, 6, oldchannel)
+		exports.global:giveItem(thePlayer, 6, channel)
+		--mysql_free_result( mysql_query( handler, "UPDATE characters SET radiochannel=" .. channel .. " WHERE id = " .. getElementData(thePlayer, "dbid") ) )
 	else
 		outputChatBox("You do not have a radio!", thePlayer, 255, 0, 0)
 	end
