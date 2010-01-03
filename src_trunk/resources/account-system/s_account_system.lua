@@ -159,79 +159,65 @@ function spawnCharacter(charname, version)
 	
 	local safecharname = mysql_escape_string(handler, charname)
 	
-	local result = mysql_query(handler, "SELECT id, x, y, z, rotation, interior_id, dimension_id, health, armor, skin, money, faction_id, cuffed, radiochannel, masked, duty, cellnumber, fightstyle, pdjail, pdjail_time, job, casualskin, weapons, ammo, items, itemvalues, car_license, gun_license, bankmoney, fingerprint, tag, hoursplayed, pdjail_station, timeinserver, restrainedobj, restrainedby, faction_rank, dutyskin, phoneoff, blindfold, lang1, lang1skill, lang2, lang2skill, lang3, lang3skill, currLang, gender, cellphonesecret FROM characters WHERE charactername='" .. safecharname .. "' AND account='" .. id .. "'")
+	local result = mysql_query(handler, "SELECT * FROM characters WHERE charactername='" .. safecharname .. "' AND account='" .. id .. "'")
 	
 	if (result) then
-		local id = mysql_result(result, 1, 1)
-		local x = mysql_result(result, 1, 2)
-		local y = mysql_result(result, 1, 3)
-		local z = mysql_result(result, 1, 4)
+		local data = mysql_fetch_assoc(result)
 		
-		local rot = tonumber(mysql_result(result, 1, 5))
-		local interior = tonumber(mysql_result(result, 1, 6))
-		local dimension = tonumber(mysql_result(result, 1, 7))
-		local health = tonumber(mysql_result(result, 1, 8))
-		local armor = tonumber(mysql_result(result, 1, 9))
-		local skin = tonumber(mysql_result(result, 1, 10))
-		local money = tonumber(mysql_result(result, 1, 11))
-		local factionID = tonumber(mysql_result(result, 1, 12))
-		local cuffed = tonumber(mysql_result(result, 1, 13))
-		local radiochannel = tonumber(mysql_result(result, 1, 14))
-		local masked = tonumber(mysql_result(result, 1, 15))
-		local duty = tonumber(mysql_result(result, 1, 16))
-		local cellnumber = tonumber(mysql_result(result, 1, 17))
-		local fightstyle = tonumber(mysql_result(result, 1, 18))
-		local pdjail = tonumber(mysql_result(result, 1, 19))
-		local pdjail_time = tonumber(mysql_result(result, 1, 20))
+		local id = tonumber(data["id"])
+		local x = data["x"]
+		local y = data["y"]
+		local z = data["z"]
 		
-		local job = tonumber(mysql_result(result, 1, 21))
-		local casualskin = tonumber(mysql_result(result, 1, 22))
-		
-		local weapons = tostring(mysql_result(result, 1, 23))
-		local ammo = tostring(mysql_result(result, 1, 24))
-		
-		local items = tostring(mysql_result(result, 1, 25))
-		local itemvalues = tostring(mysql_result(result, 1, 26))
-		
-		local carlicense = tonumber(mysql_result(result, 1, 27))
-		local gunlicense = tonumber(mysql_result(result, 1, 28))
-		
-		local bankmoney = tonumber(mysql_result(result, 1, 29))
-		
-		local fingerprint = tostring(mysql_result(result, 1, 30))
-		
-		local tag = tonumber(mysql_result(result, 1, 31))
-		
-		local hoursplayed = tonumber(mysql_result(result, 1, 32))
-		
-		local pdjail_station = tonumber(mysql_result(result, 1, 33))
-		
-		local timeinserver = tonumber(mysql_result(result, 1, 34))
-		local restrainedobj = tonumber(mysql_result(result, 1, 35))
-		local restrainedby = tonumber(mysql_result(result, 1, 36))
-		local factionrank = tonumber(mysql_result(result, 1, 37))
-		local dutyskin = tonumber(mysql_result(result, 1, 38))
-		local phoneoff = tonumber(mysql_result(result, 1, 39))
-		local blindfold = tonumber(mysql_result(result, 1, 40))
+		local rot = tonumber(data["rotation"])
+		local interior = tonumber(data["interior_id"])
+		local dimension = tonumber(data["dimension_id"])
+		local health = tonumber(data["health"])
+		local armor = tonumber(data["armor"])
+		local skin = tonumber(data["skin"])
+		local money = tonumber(data["money"])
+		local factionID = tonumber(data["faction_id"])
+		local cuffed = tonumber(data["cuffed"])
+		local radiochannel = tonumber(data["radiochannel"])
+		local masked = tonumber(data["masked"])
+		local duty = tonumber(data["duty"])
+		local cellnumber = tonumber(data["cellnumber"])
+		local fightstyle = tonumber(data["fightstyle"])
+		local pdjail = tonumber(data["pdjail"])
+		local pdjail_time = tonumber(data["pdjailtime"])
+		local pdjail_station = tonumber(data["pdjail_station"])
+		local job = tonumber(data["job"])
+		local casualskin = tonumber(data["casualskin"])
+		local weapons = tostring(data["weapons"])
+		local ammo = tostring(data["ammo"])
+		local items = tostring(data["items"])
+		local itemvalues = tostring(data["itemvalues"])
+		local carlicense = tonumber(data["car_license"])
+		local gunlicense = tonumber(data["gun_license"])
+		local bankmoney = tonumber(data["bankmoney"])
+		local fingerprint = tostring(data["fingerprint"])
+		local tag = tostring(data["tag"])
+		local hoursplayed = tonumber(data["hoursplayed"])
+		local timeinserver = tonumber(data["timeinserver"])
+		local restrainedobj = tonumber(data["restrainedobj"])
+		local restrainedby = tonumber(data["restrainedby"])
+		local factionrank = tonumber(data["faction_rank"])
+		local dutyskin = tonumber(data["dutyskin"])
+		local phoneoff = tonumber(data["phoneoff"])
+		local blindfold = tonumber(data["blindfold"])
+		local gender = tonumber(data["gender"])
+		local cellphonesecret = tonumber(data["cellphonesecret"])
 		
 		-- LANGUAGES
-		local lang1 = tonumber(mysql_result(result, 1, 41))
-		local lang1skill = tonumber(mysql_result(result, 1, 42))
-		local lang2 = tonumber(mysql_result(result, 1, 43))
-		local lang2skill = tonumber(mysql_result(result, 1, 44))
-		local lang3 = tonumber(mysql_result(result, 1, 45))
-		local lang3skill = tonumber(mysql_result(result, 1, 46))
-		
-		
-		
-		
-		local currentLanguage = tonumber(mysql_result(result, 1, 47))
+		local lang1 = tonumber(data["lang1"])
+		local lang1skill = tonumber(data["lang1skill"])
+		local lang2 = tonumber(data["lang2"])
+		local lang2skill = tonumber(data["lang2skill"])
+		local lang3 = tonumber(data["lang3"])
+		local lang3skill = tonumber(data["lang3skill"])
+		local currentLanguage = tonumber(data["currlang"])
 		setElementData(source, "languages.current", currentLanguage, false)
-		
-		local gender = tonumber(mysql_result(result, 1, 48))
-		
-		local cellphonesecret = tonumber(mysql_result(result, 1, 49))
-		
+				
 		if lang1 == 0 then
 			lang1skill = 0
 		end
@@ -531,7 +517,7 @@ function spawnCharacter(charname, version)
 		setElementData(source, "calling", nil, false)
 		setElementData(source, "calltimer", nil, false)
 		setElementData(source, "phonestate", 0, false)
-		setElementData(source, "radiochannel", radiochannel, false)
+		--setElementData(source, "radiochannel", radiochannel, false)
 		setElementData(source, "realinvehicle", 0, false)
 		setElementData(source, "duty", duty, false)
 		setElementData(source, "job", job)
@@ -729,12 +715,13 @@ end
 
 function loginPlayer(username, password, operatingsystem)
 	local safeusername = mysql_escape_string(handler, username)
-	local result = mysql_query(handler, "SELECT id, admin, hiddenadmin, adminduty, donator, adminjail, adminjail_time, adminjail_by, adminjail_reason, banned, banned_by, banned_reason, muted, globalooc, blur, adminreports, pmblocked, warns, chatbubbles, appstate FROM accounts WHERE username='" .. safeusername .. "' AND password='" .. password .. "'")
+	local result = mysql_query(handler, "SELECT * FROM accounts WHERE username='" .. safeusername .. "' AND password='" .. password .. "'")
 	
 	if (mysql_num_rows(result)>0) then
+		local data = mysql_fetch_assoc(result)
 		triggerEvent("onPlayerLogin", source, username, password)
 		
-		local id = tonumber(mysql_result(result, 1, 1))
+		local id = tonumber(data["id"])
 		
 		-- Check the account isn't already logged in
 		local found = false
@@ -750,32 +737,27 @@ function loginPlayer(username, password, operatingsystem)
 		
 		if not (found) then
 			triggerClientEvent(source, "hideUI", source, false)
-			local admin = tonumber(mysql_result(result, 1, 2))
-			local hiddenadmin = tonumber(mysql_result(result, 1, 3))
-			local adminduty = tonumber(mysql_result(result, 1, 4))
-			local donator = tonumber(mysql_result(result, 1, 5))
-			local adminjail = tonumber(mysql_result(result, 1, 6))
-			local adminjail_time = tonumber(mysql_result(result, 1, 7))
-			local adminjail_by = tostring(mysql_result(result, 1, 8))
-			local adminjail_reason = mysql_result(result, 1, 9)
-			local banned = tonumber(mysql_result(result, 1, 10))
-			local banned_by = mysql_result(result, 1, 11)
-			local banned_reason = mysql_result(result, 1, 12)
-			local muted = tonumber(mysql_result(result, 1, 13))
-			local globalooc = tonumber(mysql_result(result, 1, 14))
-			local blur = tonumber(mysql_result(result, 1, 15))
-			local adminreports = tonumber(mysql_result(result, 1, 16))
-			local pmblocked = tonumber(mysql_result(result, 1, 17))
-			local warns = tonumber(mysql_result(result, 1, 18))
-			local chatbubbles = tonumber(mysql_result(result, 1, 19))
-			local appstate = tonumber(mysql_result(result, 1, 20))
+			local admin = tonumber(data["admin"])
+			local hiddenadmin = tonumber(data["hiddenadmin"])
+			local adminduty = tonumber(data["adminduty"])
+			local donator = tonumber(data["donator"])
+			local adminjail = tonumber(data["adminjail"])
+			local adminjail_time = tonumber(data["adminjail_time"])
+			local adminjail_by = tostring(data["adminjail_by"])
+			local adminjail_reason = data["adminjail_reason"]
+			local banned = tonumber(data["banned"])
+			local banned_by = data["banned_by"]
+			local banned_reason = data["banned_reason"]
+			local muted = tonumber(data["muted"])
+			local globalooc = tonumber(data["globalooc"])
+			local blur = tonumber(data["blur"])
+			local adminreports = tonumber(data["adminreports"])
+			local pmblocked = tonumber(data["pmblocked"])
+			local warns = tonumber(data["warns"])
+			local chatbubbles = tonumber(data["chatbubbles"])
+			local appstate = tonumber(data["appstate"])
 			
 			local country = tostring(exports.global:getPlayerCountry(source))
-			if username == "Daniels" then
-				country = "SC"
-			elseif username == "mcreary" then -- special request for Scott McReary (lol)
-				country = "UK"
-			end
 			setElementData(source, "country", country)
 			
 			if tonumber(admin) == 0 then
@@ -1141,6 +1123,10 @@ addEventHandler("deleteCharacter", getRootElement(), deleteCharacterByName)
 
 
 function clearChatBox(thePlayer)
+	outputChatBox(" ", thePlayer)
+	outputChatBox(" ", thePlayer)
+	outputChatBox(" ", thePlayer)
+	outputChatBox(" ", thePlayer)
 	outputChatBox(" ", thePlayer)
 	outputChatBox(" ", thePlayer)
 	outputChatBox(" ", thePlayer)
