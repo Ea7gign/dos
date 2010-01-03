@@ -16,7 +16,9 @@ local SCOREBOARD_PGUP_CONTROL		= "mouse_wheel_up"	-- Control/Key to move one pag
 local SCOREBOARD_PGDN_CONTROL		= "mouse_wheel_down"-- Control/Key to move one page down
 local SCOREBOARD_DISABLED_CONTROLS	= { "next_weapon",	-- Controls that are disabled when the scoreboard is showing
 										"previous_weapon",
-										"aim_weapon" }
+										"aim_weapon",
+										"radio_next",
+										"radio_previous" }
 local SCOREBOARD_TOGGLE_TIME		= 50				-- Time in miliseconds to make the scoreboard (dis)appear
 local SCOREBOARD_POSTGUI			= true				-- Set to true if it must be drawn over the GUI
 local SCOREBOARD_INFO_BACKGROUND	= { 0, 0, 0, 150 }			-- RGBA color for the info header background
@@ -480,7 +482,7 @@ drawScoreboard = function ()
 		local playerID = getElementData ( player, "playerid" ) or 0
 		playerID = tostring ( playerID )
 		local playerName = getPlayerName ( player )
-		playerName = tostring ( playerName )
+		playerName = tostring ( playerName ):gsub( "_", " " )
 		local playerPing = getPlayerPing ( player )
 		playerPing = tostring ( playerPing )
 		local r, g, b = getPlayerNametagColor ( player )
