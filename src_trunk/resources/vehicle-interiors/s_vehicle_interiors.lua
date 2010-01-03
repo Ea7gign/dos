@@ -43,7 +43,7 @@ end
 function add( vehicle )
 	if getElementModel( vehicle ) == 519 then -- Shamal
 		addInterior( vehicle, 3.8, 23.1, 1199.6, 1 )
-	elseif getElementModel( vehicle ) == 508 then
+	elseif getElementModel( vehicle ) == 508 or getElementModel( vehicle ) == 484 then
 		addInterior( vehicle, 1.9, -3.2, 999.4, 2 )
 	else
 		return false
