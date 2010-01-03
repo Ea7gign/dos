@@ -242,7 +242,9 @@ function chatMain(message, messageType)
 			--local theChannel = getElementData(source, "radiochannel")
 			local hasRadio, itemKey, itemValue, itemID = exports.global:hasItem(source, 6)
 			local theChannel = itemValue
-			if theChannel > 0 then
+			if theChannel == 1 then
+				outputChatBox("Please Tune your radio (( /tuneradio # ))", source, 255, 194, 14)
+			elseif theChannel > 0 then
 				triggerClientEvent (source, "playRadioSound", getRootElement())
 				local username = getPlayerName(source)
 				local languageslot = getElementData(source, "languages.current")
