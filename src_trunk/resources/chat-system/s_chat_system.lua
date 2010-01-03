@@ -763,7 +763,7 @@ function setRadioChannel(thePlayer, commandName, channel)
 			local thasRadio, titemKey, titemValue, titemID = exports.global:hasItem(thePlayer, 6)
 			if titemValue > 0 then
 				local channel = tonumber(channel)
-				if channel > 0 and channel < 100000 then
+				if channel > 0 and channel < 1000000000 then
 					
 					--setElementData(thePlayer, "radiochannel", channel, false)
 					outputChatBox("You retuned your radio to channel #" .. channel .. ".", thePlayer)
