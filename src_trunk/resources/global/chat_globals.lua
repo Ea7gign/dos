@@ -31,7 +31,6 @@ function findPlayerByPartialNick(thePlayer, partialNick)
 	local partialNick = string.lower(partialNick)
 
 	local players = exports.pool:getPoolElementsByType("player")
-	local count = 0
 	
 	if thePlayer and partialNick == "*" then
 		return thePlayer, getPlayerName(thePlayer):gsub("_", " ")
