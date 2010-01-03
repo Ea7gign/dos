@@ -71,6 +71,7 @@ function getWeapons(player)
 end
 
 function saveAllPlayers()
+	outputDebugString("WORLDSAVE INCOMING")
 	for key, value in ipairs(exports.pool:getPoolElementsByType("player")) do
 		triggerEvent("savePlayer", value, "Save All")
 	end
