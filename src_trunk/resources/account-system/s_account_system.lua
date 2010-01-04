@@ -612,6 +612,7 @@ function spawnCharacter(charname, version)
 			--fadeCamera(player, false)
 		else
 			fadeCamera(source, true, 2)
+			setTimer(blindfoldFix, 5000, 1, source)
 		end
 		
 		-- impounded cars
@@ -654,6 +655,10 @@ end
 addEvent("onCharacterLogin", false)
 addEvent("spawnCharacter", true)
 addEventHandler("spawnCharacter", getRootElement(), spawnCharacter)
+
+function blindfoldFix(player)
+	fadeCamera(player, true, 2)
+end
 
 function giveBirthdayAchievement(player)
 	exports.global:givePlayerAchievement(player, 44) -- MTA BETA ONLY
