@@ -90,7 +90,7 @@ setTimer(syncTIS, 60000, 0)
 function savePlayer(reason, player)
 	local logged = getElementData(source, "loggedin")
 
-	if (logged==1) then
+	if (logged==1 or reason=="Change Character") then
 		saveWeapons(source)
 		
 		local vehicle = getPedOccupiedVehicle(source)
