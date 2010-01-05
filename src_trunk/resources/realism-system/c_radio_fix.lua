@@ -2,6 +2,11 @@ radio = 0
 lawVehicles = { [416]=true, [433]=true, [427]=true, [490]=true, [528]=true, [407]=true, [544]=true, [523]=true, [470]=true, [598]=true, [596]=true, [597]=true, [599]=true, [432]=true, [601]=true }
 
 function saveRadio(station)
+	if exports.vgscoreboard:isVisible() then
+		cancelEvent()
+		return
+	end
+	
 	local vehicle = getPedOccupiedVehicle(getLocalPlayer())
 	
 	if (vehicle) then

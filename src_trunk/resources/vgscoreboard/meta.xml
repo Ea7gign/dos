@@ -3,5 +3,8 @@
 	
 	<script src="client.lua" type="client" />
 	<script src="server.lua" type="server" />
+	
+	<export function="isVisible" type="client" />
+	
 	<file src="icon.png"/>
 </meta>

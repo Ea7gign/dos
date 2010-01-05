@@ -537,3 +537,10 @@ drawScoreboard = function ()
 	drawScrollBar ( SCOREBOARD_Y + SCOREBOARD_HEADER_HEIGHT + rowHeight + 10, playersToSkip / ( #g_players - playersPerPage + 1 ) )
 end
 
+--[[
+* isVisible
+Returns wherever or not the scoreboard is visible
+--]]
+function isVisible ( )
+	return g_isShowing
+end
