@@ -903,16 +903,7 @@ end
 triggerServerEvent("getSalt", getLocalPlayer())
 
 function generateTimestamp(daysAhead)
-	local time = getRealTime()
-	local year = time.year
-	local yearday = time.yearday + daysAhead
-	
-	if (yearday > 365) then
-		yearday = yearday - 365
-		year = year + 1
-	end
-
-	return yearday .. year
+	return tostring( 50000000 + getRealTime().year * 366 + getRealTime().yearday + daysAhead )
 end
 
 function storeSalt(theSalt, theIP)
