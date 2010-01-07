@@ -400,12 +400,15 @@ local function switchIndicatorState ( indicator )
 	-- First check that we are in a vehicle.
 	local v = getPedOccupiedVehicle(localPlayer)
 	if v then
-		-- Check that we are the vehicle driver
-		if getVehicleOccupant(v, 0) == localPlayer then
-			-- Switch the indicator state
-			local dataName = 'i:' .. indicator
-			local currentValue = getElementData(v, dataName) or false
-			setElementData(v, dataName, not currentValue, true)
+		-- check for the correct vehicle type
+		if getVehicleType(v) == "Automobile" or getVehicleType(v) == "Bike" or getVehicleType(v) == "Quad" then
+			-- Check that we are the vehicle driver
+			if getVehicleOccupant(v, 0) == localPlayer then
+				-- Switch the indicator state
+				local dataName = 'i:' .. indicator
+				local currentValue = getElementData(v, dataName) or false
+				setElementData(v, dataName, not currentValue, true)
+			end
 		end
 	end
 end
