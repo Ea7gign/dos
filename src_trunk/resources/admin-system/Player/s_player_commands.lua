@@ -710,7 +710,7 @@ function setPlayerSkinCmd(thePlayer, commandName, targetPlayer, skinID)
 					else
 						outputChatBox("Player " .. targetPlayerName .. " now has skin " .. skinID .. ".", thePlayer, 0, 255, 0)
 						mysql_free_result( mysql_query( handler, "UPDATE characters SET skin = " .. skinID .. " WHERE id = " .. getElementData( targetPlayer, "dbid" ) ) )
-						exports.logs:logMessage("[/SETSKIN] " .. getElementData(thePlayer, "gameaccountusername") .. "/".. getPlayerName(thePlayer) .." set ".. targetPlayerName .. " his skin to "..SkinID , 4)
+						exports.logs:logMessage("[/SETSKIN] " .. getElementData(thePlayer, "gameaccountusername") .. "/".. getPlayerName(thePlayer) .." set ".. targetPlayerName .. " his skin to "..skinID , 4)
 					end
 				else
 					outputChatBox("Invalid skin ID.", thePlayer, 255, 0, 0)
