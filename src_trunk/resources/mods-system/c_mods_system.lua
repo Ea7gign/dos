@@ -107,11 +107,11 @@ function applyMods()
 	-- proLS = engineLoadTXD ( "lv/sunset02_law2.txd" )
 	-- engineImportTXD ( proLS, 6364 )
 	
-	---------------------
-	-- Malcolm Everett --
-	---------------------
-	-- lautner = engineLoadTXD( "lv/billbrd01_lan.txd" )
-	-- engineImportTXD ( lautner, 4239 )
+	----------
+	-- Fitz --
+	----------
+	lautner = engineLoadTXD( "lv/billbrd01_lan.txd" )
+	engineImportTXD ( lautner, 4239 )
 	
 	--[[--------------
 	-- Club 420 --
