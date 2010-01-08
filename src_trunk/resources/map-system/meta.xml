@@ -40,8 +40,6 @@
 	<script src="court.lua" type="client"/>
 	<script src="san_tv.lua" type="client"/>
 	<script src="LinoKazuma.lua" type="client"/><!-- Donator Helipad -->
-	<script src="Ballas Jacobsroof.lua" type="client"/>
-	<script src="Ballas Court.lua" type="client"/>
 	<script src="Church2Int.lua" type="client"/>
 
 	<script src="lmc-resto.lua" type="client"/>
