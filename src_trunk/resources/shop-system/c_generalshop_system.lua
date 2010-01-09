@@ -298,7 +298,8 @@ function getItemsForSale(shop_type, race, gender)
 			{"Long Purple Dildo","A very large purple dildo", "20", 10, 1, 1, true,10},
 			{"Short Tan Dildo","A small tan dildo.", "15", 11, 1, 1, true,7},
 			{"Vibrator","A vibrator, what more needs to be said?", "25", 12, 1, 1, true,12},
-			{"Flowers","A bouquet of lovely flowers.", "5", 14, 1, 1, true,2}
+			{"Flowers","A bouquet of lovely flowers.", "5", 14, 1, 1, true,2},
+			{"Handcuffs", "A metal pair of handcuffs.", "90", 45, 1,1,false,2}
 		}
 	elseif(shop_type == 5) then
 		availableskins = fittingskins[gender][race]
