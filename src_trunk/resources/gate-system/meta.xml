@@ -27,4 +27,5 @@
 	
 	<script src="MountMansion.lua" type="server"/>
 	<script src="c_doors.lua" type="client"/>
+	<script src="tigerclub.lua" type="server"/>
 </meta>
