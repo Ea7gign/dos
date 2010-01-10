@@ -567,6 +567,7 @@ function localOOC(thePlayer, commandName, ...)
 		else
 			exports.global:sendLocalText(thePlayer, getPlayerName(thePlayer) .. ": (( " .. table.concat({...}, " ") .. " ))", 196, 255, 255)
 			exports.logs:logMessage("[OOC: Local Chat] " .. getPlayerName(thePlayer) .. ": " .. table.concat({...}, " "), 1)
+			exports.irc:sendMessage("[OOC: Local Chat] " .. getPlayerName(thePlayer) .. ": " .. table.concat({...}, " "))
 		end
 	end
 end
@@ -834,7 +835,7 @@ function adminChat(thePlayer, commandName, ...)
 			local username = getPlayerName(thePlayer)
 			local adminTitle = exports.global:getPlayerAdminTitle(thePlayer)
 			exports.logs:logMessage("[Admin Chat] " .. username .. ": " .. message, 3)
-			
+			exports.irc:sendAdminMessage("[Admin Chat] " .. username .. ": " .. message)
 			for k, arrayPlayer in ipairs(players) do
 				local logged = getElementData(arrayPlayer, "loggedin")
 				
@@ -842,6 +843,7 @@ function adminChat(thePlayer, commandName, ...)
 					outputChatBox(adminTitle .. " " .. username .. ": " .. message, arrayPlayer, 51, 255, 102)
 				end
 			end
+			
 		end
 	end
 end

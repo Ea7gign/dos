@@ -4,5 +4,6 @@
 	<script src="s_irc.lua" type="server"/>
 	
 	<export function="sendMessage" type="server"/>
+	<export function="sendRawCommand" type="server"/>
 	<export function="sendAdminMessage" type="server"/>
 </meta>
