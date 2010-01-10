@@ -28,7 +28,7 @@ local function closeDoor( shortestID )
 end
 
 local function openDoor(thePlayer, commandName, pass)
-	if getElementDimension(thePlayer) == 9717 then
+	if getElementDimension(thePlayer) == 9717 and pass == "thumbcuffs" then
 		local shortest, shortestID, dist = nil, nil, 5
 		local px, py, pz = getElementPosition(thePlayer)
 		
