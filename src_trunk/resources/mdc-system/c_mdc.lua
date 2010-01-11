@@ -1624,7 +1624,7 @@ function getDefaultMemoText()
 		count = count+1
 	end
 			
-	return outro ("------ Welcome to the LSMPD Mobile Data Computer v1.2 ------\
+	local outro ("------ Welcome to the LSMPD Mobile Data Computer v1.2 ------\
 	\
 	You are logged in under the user name: "..user[1].."\
 	\
