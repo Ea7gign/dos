@@ -1605,26 +1605,11 @@ function getDefaultMemoText()
 	local intro
 	local warrants = ""
 	
-	intro = ( "------ Welcome to the LSMPD Mobile Data Computer v1.0 ------\
-	\
-	You are logged in under the user name: "..user[1].."\
-	\
-	The MDC system allows officers of the law to create, edit, manage and delete criminal records for any suspect.\
-	\
-	To search for a suspects records, enter the suspects name in the box above and click search. All of the suspects criminal records will be shown in this text box. You can also view the suspects personal information, by clicking on the 'View Personal Info' button to the right. Information here can be changed if it needs updating at a later date.\
-	\
-	You can only search for suspects that have a record stored on the database. If the search does not return any results then you need to create a new record for that suspect. Simply click on 'Add New Suspect', fill out the information required, and press submit. Now that the suspect has a record, you can add, delete and view any crimes that the suspect has comitted.\
-	\
-	Members of the high command can also set warrants on suspects. This will set a message below this introduction to say that a suspect is wanted. For more details on a warrant, search for the suspects name and click 'Warrant Details'. This will tell you why the warrant has been issued, by whome, and what the suggested punishment is.\
-	\
-	When you are finished, click 'log off'.\
-	\
-	~~ Thank you for using the LSMPD Mobile Data Computer ~~\
-	\
-	------------- CURRENT WARRANTS ISSUED ------------\
+	intro = ( "	------------- CURRENT WARRANTS ISSUED ------------\
 	Warrants have been issued for the arrest of the following people:\
 	\
 	")
+	
 		
 		local count = 1
 		
@@ -1639,7 +1624,24 @@ function getDefaultMemoText()
 		count = count+1
 	end
 			
-	return intro..warrants
+	return outro ("------ Welcome to the LSMPD Mobile Data Computer v1.2 ------\
+	\
+	You are logged in under the user name: "..user[1].."\
+	\
+	The MDC system allows officers of the law to create, edit, manage and delete criminal records for any suspect.\
+	\
+	To search for a suspects records, enter the suspects name in the box above and click search. All of the suspects criminal records will be shown in this text box. You can also view the suspects personal information, by clicking on the 'View Personal Info' button to the right. Information here can be changed if it needs updating at a later date.\
+	\
+	You can only search for suspects that have a record stored on the database. If the search does not return any results then you need to create a new record for that suspect. Simply click on 'Add New Suspect', fill out the information required, and press submit. Now that the suspect has a record, you can add, delete and view any crimes that the suspect has comitted.\
+	\
+	Members of the high command can also set warrants on suspects. This will set a message below this introduction to say that a suspect is wanted. For more details on a warrant, search for the suspects name and click 'Warrant Details'. This will tell you why the warrant has been issued, by whome, and what the suggested punishment is.\
+	\
+	When you are finished, click 'log off'.\
+	\
+	~~ Thank you for using the LSMPD Mobile Data Computer ~~\
+	\ ")
+			
+	return intro..warrants..outro
 end
 
 
