@@ -199,7 +199,7 @@ function getSuspectWhoAreWanted()
 	if (mysql_num_rows(result)>0) then
 		-- backwards compatability for jasons code...
 		local tableresult = { }
-		
+		local tablecount = 1
 		while true do
 			local row = mysql_fetch_assoc(result)
 			if (not row) then break end
