@@ -199,8 +199,14 @@ function getSuspectWhoAreWanted()
 	if (mysql_num_rows(result)>0) then
 		-- backwards compatability for jasons code...
 		local tableresult = { }
-		tableresult[1] = { }
-		tableresult[1][1] = mysql_result(result, 1, 1)
+		
+		while true do
+			local row = mysql_fetch_assoc(result)
+			if (not row) then break end
+			tableresult[tablecount] = { }
+			tableresult[tablecount][1] = row["suspect_name"]
+			tablecount = tablecount + 1
+		end
 		triggerClientEvent(client, "onSaveSuspectWantedClient", client, tableresult)
 	else
 		triggerClientEvent(client, "onSaveSuspectWantedClient", client, nil )
