@@ -95,23 +95,34 @@ function isGun(weaponID)
 	return true
 end
 
-function createGeneralshop(thePlayer, commandName, shoptype)
+function createGeneralshop(thePlayer, commandName, shoptype, skin)
 	if (exports.global:isPlayerAdmin(thePlayer)) then
 		if(tonumber(shoptype)) then
 			if((tonumber(shoptype) >= 1) and (tonumber(shoptype) < 13)) then
-			
+				local skin = tonumber(skin)
+				if skin then
+					local ped = createPed(skin, 0, 0, 3)
+					if not ped then
+						outputChatBox("Invalid Skin.", thePlayer, 255, 0, 0)
+						return
+					else
+						destroyElement(ped)
+					end
+				else
+					skin = -1
+				end
 				local x, y, z = getElementPosition(thePlayer)
 				local dimension = getElementDimension(thePlayer)
 				local interior = getElementInterior(thePlayer)
 				local rotation = math.ceil(getPedRotation(thePlayer) / 30)*30
 				
-				local query = mysql_query(handler, "INSERT INTO shops SET x='" .. x .. "', y='" .. y .. "', z='" .. z .. "', dimension='" .. dimension .. "', interior='" .. interior .. "', shoptype='" .. shoptype .. "', rotation='" .. rotation .. "'")
+				local query = mysql_query(handler, "INSERT INTO shops SET x='" .. x .. "', y='" .. y .. "', z='" .. z .. "', dimension='" .. dimension .. "', interior='" .. interior .. "', shoptype='" .. shoptype .. "', rotation='" .. rotation .. "',skin="..skin)
 				
 				if (query) then
 					local id = mysql_insert_id(handler)
 					mysql_free_result(query)
 					
-					createShopKeeper(x,y,z,interior,dimension,id,tonumber(shoptype),rotation)
+					createShopKeeper(x,y,z,interior,dimension,id,tonumber(shoptype),rotation,skin ~= -1 and skin)
 
 					exports.irc:sendMessage("[ADMIN] " .. getPlayerName(thePlayer) .. " created shop #" .. id .. " - type "..shoptype..".")
 					outputChatBox("General shop created with ID #" .. id .. " and type "..shoptype..".", thePlayer, 0, 255, 0)
@@ -123,7 +134,7 @@ function createGeneralshop(thePlayer, commandName, shoptype)
 				outputChatBox("Type must be between 1 and 10.", thePlayer, 255, 194, 14)
 			end
 		else
-			outputChatBox("SYNTAX: /" .. commandName .. " [shop type]", thePlayer, 255, 194, 14)
+			outputChatBox("SYNTAX: /" .. commandName .. " [shop type] [optional skin]", thePlayer, 255, 194, 14)
 			outputChatBox("TYPE 1 = General Store", thePlayer, 255, 194, 14)
 			outputChatBox("TYPE 2 = Gun + Ammo Shop", thePlayer, 255, 194, 14)
 			outputChatBox("TYPE 3 = Food Store", thePlayer, 255, 194, 14)
@@ -206,7 +217,7 @@ end
 addCommandHandler("delshop", deleteGeneralShop, false, false)
 
 function loadAllGeneralshops(res)
-	local result = mysql_query(handler, "SELECT id, x, y, z, dimension, interior, shoptype, rotation FROM shops")
+	local result = mysql_query(handler, "SELECT id, x, y, z, dimension, interior, shoptype, rotation, skin FROM shops")
 	
 	local counter = 0
 	if (result) then
@@ -221,8 +232,9 @@ function loadAllGeneralshops(res)
 			local shoptype = tonumber(row[7])
 			
 			local rotation = tonumber(row[8])
+			local skin = tonumber(row[9])
 			
-			createShopKeeper(x,y,z,interior,dimension,id,shoptype,rotation)
+			createShopKeeper(x,y,z,interior,dimension,id,shoptype,rotation,skin ~= -1 and skin)
 			counter = counter + 1
 		end
 		mysql_free_result(result)
