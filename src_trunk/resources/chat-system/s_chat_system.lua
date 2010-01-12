@@ -265,33 +265,27 @@ function chatMain(message, messageType)
 				outputChatBox("[" .. languagename .. "] [RADIO #" .. theChannel .. "] " .. factionRankTitle .. username .. " says: " .. message, source, 0, 102, 255)
 				
 				for key, value in ipairs(exports.pool:getPoolElementsByType("player")) do
-					--local targetChannel = getElementData(value, "radiochannel")
-					local thasRadio, titemKey, titemValue, titemID = exports.global:hasItem(value, 6)
-					local targetChannel = titemValue
 					local logged = getElementData(source, "loggedin")
 					
-					if (logged==1) and (targetChannel) and (exports.global:hasItem(value, 6)) and (value~=source) then
-						if (targetChannel==theChannel) then
-							triggerClientEvent (value, "playRadioSound", getRootElement())
+					if (logged==1) and (exports.global:hasItem(value, 6, theChannel)) and (value~=source) then
+						triggerClientEvent (value, "playRadioSound", getRootElement())
 
-							local message2 = call(getResourceFromName("language-system"), "applyLanguage", source, value, message, language)
-							outputChatBox("[" .. languagename .. "] [RADIO #" .. theChannel .. "] " .. factionRankTitle .. username .. " says: " .. trunklateText( value, message2 ), value, 0, 102, 255)
-							
-							-- if they not have an earpiece
-							if (exports.global:hasItem(value, 88) == false) then
-								-- Show it to people near who can hear his radio
-								for k, v in ipairs(getElementsByType("player")) do
-									if getElementDistance(value, v) < 10 then
-										local tthasRadio, ttitemKey, ttitemValue, ttitemID = exports.global:hasItem(v, 6)
-										local channel = ttitemValue
-										if (v~=source) and (channel~=targetChannel) then
-											local message2 = call(getResourceFromName("language-system"), "applyLanguage", source, v, message, language)
-											outputChatBox("[" .. languagename .. "] " .. getPlayerName(value) .. "'s Radio: " .. trunklateText( v, message2 ), v, 255, 255, 255)
-										end
+						local message2 = call(getResourceFromName("language-system"), "applyLanguage", source, value, message, language)
+						outputChatBox("[" .. languagename .. "] [RADIO #" .. theChannel .. "] " .. factionRankTitle .. username .. " says: " .. trunklateText( value, message2 ), value, 0, 102, 255)
+						
+						-- if they not have an earpiece
+						if (exports.global:hasItem(value, 88) == false) then
+							-- Show it to people near who can hear his radio
+							for k, v in ipairs(getElementsByType("player")) do
+								if getElementDistance(value, v) < 10 then
+									local tthasRadio, ttitemKey, ttitemValue, ttitemID = exports.global:hasItem(v, 6)
+									local channel = ttitemValue
+									if (v~=source) and (channel~=targetChannel) then
+										local message2 = call(getResourceFromName("language-system"), "applyLanguage", source, v, message, language)
+										outputChatBox("[" .. languagename .. "] " .. getPlayerName(value) .. "'s Radio: " .. trunklateText( v, message2 ), v, 255, 255, 255)
 									end
 								end
 							end
-							
 						end
 					end
 				end
