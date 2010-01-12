@@ -41,6 +41,7 @@
 	<script src="san_tv.lua" type="client"/>
 	<script src="LinoKazuma.lua" type="client"/><!-- Donator Helipad -->
 	<script src="Church2Int.lua" type="client"/>
+	<script src="Exile.lua" type="client"/>
 
 	<script src="lmc-resto.lua" type="client"/>
 	<script src="lmc-backroom.lua" type="client"/>
