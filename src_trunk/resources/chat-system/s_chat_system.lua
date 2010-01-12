@@ -502,7 +502,7 @@ function pmPlayer(thePlayer, commandName, who, ...)
 				setElementData(targetPlayer, "pmblocked", 0, false)
 			end
 			
-			if (logged==1) and (pmblocked==0 or exports.global:isPlayerAdmin(thePlayer) or exports.global:isPlayerScripter(thePlayer) or getElementData(thePlayer, "reportadmin") == targetPlayer or isFriendOf(thePlayer, targetPlayer)) then
+			if (logged==1) and not getElementData(targetPlayer, "disablePMs") and (pmblocked==0 or exports.global:isPlayerAdmin(thePlayer) or exports.global:isPlayerScripter(thePlayer) or getElementData(thePlayer, "reportadmin") == targetPlayer or isFriendOf(thePlayer, targetPlayer)) then
 				local playerName = getPlayerName(thePlayer):gsub("_", " ")
 				
 				if not exports.global:isPlayerScripter(thePlayer) and not exports.global:isPlayerScripter(targetPlayer) then
