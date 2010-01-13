@@ -76,6 +76,7 @@ function delEmitters(thePlayer, commandName)
 			destroyElement( v[5] )
 			count = count + 1
 		end
+		emitters = {}
 		outputChatBox("Deleted " .. count .. " Emitters.", thePlayer, 0, 255, 0)
 	end
 end
