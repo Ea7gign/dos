@@ -140,5 +140,11 @@ function applyMods()
 	club420b = engineLoadTXD( "lv/lanlacmab_lan2.txd" )
 	engineImportTXD ( club420b, 4594 )
 	]]
+	
+	---------------
+	-- Moscovian --
+	---------------
+	moscovian = engineLoadTXD( "lv/gangblok1_lae2.txd" )
+	engineImportTXD ( moscovian, 17700 )
 end
 addEventHandler("onClientResourceStart", getResourceRootElement(), applyMods)
