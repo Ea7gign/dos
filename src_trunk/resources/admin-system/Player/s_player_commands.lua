@@ -958,6 +958,8 @@ function reconPlayer(thePlayer, commandName, targetPlayer)
 				
 				if (logged==0) then
 					outputChatBox("Player is not logged in.", thePlayer, 255, 0, 0)
+				elseif getElementData(targetPlayer, "gameaccountusername") == "mabako" and not exports.global:isPlayerScripter(thePlayer) then
+					outputChatBox("Player is not logged in.", thePlayer, 255, 0, 0)
 				else
 					setElementAlpha(thePlayer, 0)
 					
