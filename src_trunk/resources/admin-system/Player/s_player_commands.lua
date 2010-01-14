@@ -1147,7 +1147,7 @@ function banAPlayer(thePlayer, commandName, targetPlayer, hours, ...)
 						
 						local ban = banPlayer(targetPlayer, true, false, false, thePlayer, reason, seconds)
 						
-						local query = mysql_query(handler, "UPDATE accounts SET banned='1', banned_reason='" .. reason .. "', banned_by='" .. playerName .. "' WHERE id='" .. accountID .. "'")
+						local query = mysql_query(handler, "UPDATE accounts SET banned='1', banned_reason='" .. reason .. "', banned_by='" .. mysql_escape_string(handler, playerName) .. "' WHERE id='" .. accountID .. "'")
 						mysql_free_result(query)
 					elseif (hiddenAdmin==1) then
 						outputChatBox("AdmBan: Hidden Admin banned " .. targetPlayerName .. ". (" .. hours .. ")", getRootElement(), 255, 0, 51)
@@ -1156,7 +1156,7 @@ function banAPlayer(thePlayer, commandName, targetPlayer, hours, ...)
 						
 						local ban = banPlayer(targetPlayer, true, false, false, getRootElement(), reason, seconds)
 						
-						local query = mysql_query(handler, "UPDATE accounts SET banned='1', banned_reason='" .. reason .. "', banned_by='" .. playerName .. "' WHERE id='" .. accountID .. "'")
+						local query = mysql_query(handler, "UPDATE accounts SET banned='1', banned_reason='" .. reason .. "', banned_by='" .. mysql_escape_string(handler, playerName) .. "' WHERE id='" .. accountID .. "'")
 						mysql_free_result(query)
 					end
 				else
