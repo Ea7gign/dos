@@ -1,5 +1,5 @@
 -- the office guy
-local ped = createPed(123, 224.0537109375, 112.4599609375, 1010.2117919922)
+local ped = createPed(206, 224.0537109375, 112.4599609375, 1010.2117919922)
 setElementInterior(ped, 10)
 setElementDimension(ped, 9001)
 addEventHandler("onClientPedDamage", ped, cancelEvent)
