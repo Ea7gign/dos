@@ -137,7 +137,7 @@ function localIC(source, message, language)
 	message = trunklateText( source, message )
 	
 	-- Show chat to console, for admins + log
-	exports.irc:sendMessage(playerName .. " says: " .. message)
+	exports.irc:sendMessage("  "  .. playerName .. " says: " .. message)
 	exports.logs:logMessage("[IC: Local Chat] " .. playerName .. ": " .. message, 1)
 	outputChatBox( "#EEEEEE [" .. languagename .. "] " .. playerName .. " says: " .. message, source, 133, 44, getElementData(source, "chatbubbles") == 2 and 89 or 88, true)
 	
@@ -204,7 +204,7 @@ function meEmote(source, cmd, ...)
 			outputChatBox("SYNTAX: /me [Action]", source, 255, 194, 14)
 		else
 			exports.global:sendLocalMeAction(source, message)
-			exports.irc:sendMessage("*" .. getPlayerName(source) .. " " .. message)
+			exports.irc:sendMessage(" *" .. getPlayerName(source) .. " " .. message)
 			exports.logs:logMessage("[IC OOC: ME ACTION] *" .. getPlayerName(source) .. " " .. message, 7)
 		end
 	end
@@ -230,7 +230,7 @@ function chatMain(message, messageType)
 			if not (message) then
 				outputChatBox("SYNTAX: /me [Action]", source, 255, 194, 14)
 			else
-				exports.irc:sendMessage("*" .. getPlayerName(source) .. " " .. message)
+				exports.irc:sendMessage(" *" .. getPlayerName(source) .. " " .. message)
 				exports.logs:logMessage("[IC OOC: ME ACTION] *" .. getPlayerName(source) .. " " .. message, 7)
 				
 				exports.global:sendLocalMeAction(source, message)
@@ -561,7 +561,7 @@ function localOOC(thePlayer, commandName, ...)
 		else
 			exports.global:sendLocalText(thePlayer, getPlayerName(thePlayer) .. ": (( " .. table.concat({...}, " ") .. " ))", 196, 255, 255)
 			exports.logs:logMessage("[OOC: Local Chat] " .. getPlayerName(thePlayer) .. ": " .. table.concat({...}, " "), 1)
-			exports.irc:sendMessage(getPlayerName(thePlayer) .. ": (( " .. table.concat({...}, " ") .. " ))")
+			exports.irc:sendMessage("  " .. getPlayerName(thePlayer) .. ": (( " .. table.concat({...}, " ") .. " ))")
 		end
 	end
 end
@@ -612,7 +612,7 @@ function localDo(thePlayer, commandName, ...)
 			outputChatBox("SYNTAX: /" .. commandName .. " [Action/Event]", thePlayer, 255, 194, 14)
 		else
 			local message = table.concat({...}, " ")
-			exports.irc:sendMessage("* " .. message .. " * ((" .. getPlayerName(thePlayer) .. "))")
+			exports.irc:sendMessage(" * " .. message .. " * ((" .. getPlayerName(thePlayer) .. "))")
 			exports.logs:logMessage("[IC: Local Do] * " .. message .. " *      ((" .. getPlayerName(thePlayer) .. "))", 19)
 			exports.global:sendLocalDoAction(thePlayer, message)
 		end
@@ -641,7 +641,7 @@ function localShout(thePlayer, commandName, ...)
 			local message = trunklateText(thePlayer, table.concat({...}, " "))
 			outputChatBox("[" .. languagename .. "] " .. playerName .. " shouts: " .. message .. "!!", thePlayer, 255, 255, 255)
 			
-			exports.irc:sendMessage(playerName .. " shouts: " .. message)
+			exports.irc:sendMessage("  " .. playerName .. " shouts: " .. message)
 			exports.logs:logMessage("[IC: Local Shout] " .. playerName .. ": " .. message, 1)
 			for index, nearbyPlayer in ipairs(getElementsByType("player")) do
 				if getElementDistance( thePlayer, nearbyPlayer ) < 40 then
@@ -1166,7 +1166,7 @@ function localWhisper(thePlayer, commandName, targetPlayerNick, ...)
 				if (getDistanceBetweenPoints3D(x, y, z, tx, ty, tz)<3) then
 					local name = getPlayerName(thePlayer)
 					local message = table.concat({...}, " ")
-					exports.irc:sendMessage(name .. " whispers to " .. targetPlayerName .. ": " .. message)
+					exports.irc:sendMessage("  "  .. name .. " whispers to " .. targetPlayerName .. ": " .. message)
 					exports.logs:logMessage("[IC: Whisper] " .. name .. " to " .. targetPlayerName .. ": " .. message, 1)
 					message = trunklateText( thePlayer, message )
 					
@@ -1201,7 +1201,7 @@ function localClose(thePlayer, commandName, ...)
 		else
 			local name = getPlayerName(thePlayer)
 			local message = table.concat({...}, " ")
-			exports.irc:sendMessage(name .. " whispers: " .. message)
+			exports.irc:sendMessage("  "  .. name .. " whispers: " .. message)
 			exports.logs:logMessage("[IC: Whisper] " .. name .. ": " .. message, 1)
 			message = trunklateText( thePlayer, message )
 			
