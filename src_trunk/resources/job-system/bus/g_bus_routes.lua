@@ -5,7 +5,7 @@ g_bus_routes =
 			"Unity Station (START OF SERVICE)",
 			"Idlewood Gas, Idlewood",
 			"Ten Green Bottles & Grove St, Ganton",
-			"Pig Pen, Little Moscow",
+			"The Moscovian Lounge, Little Moscow",
 			"Jefferson Motel, E. Vinewood, Jefferson",
 			"Glen Park",
 			"LS Prison",
@@ -31,7 +31,7 @@ g_bus_routes =
 			{2291.5940,-1662.8654,14.7959,true,3}, -- Line A - Ten Green Bottles, Grove Street
 			{2344.7405,-1395.3173,23.8092,false,0}, -- Line A - Checkpoint
 			{2373.8503,-1309.0031,23.8240,false,0}, -- Line A - Checkpoint
-			{2425.2192,-1260.2699,23.8250,true,4}, -- Line A - Pig Pen, Little Moscow
+			{2425.2192,-1260.2699,23.8250,true,4}, -- Line A - Moscovian Lounge, Little Moscow
 			{2453.3694,-1198.8491,35.9083,false,0}, -- Line A  - Checkpoint
 			{2339.6667,-1151.8619,26.9376,false,0}, -- Line A - Checkpoint
 			{2154.5393,-1113.0920,25.3323,true,5}, -- Line A - Jefferson
@@ -92,7 +92,7 @@ g_bus_routes =
 			"LS Prison",
 			"Glen Park",
 			"Jefferson Motel, E. Vinewood, Jefferson",
-			"Pig Pen, Little Moscow",
+			"The Moscovian Lounge, Little Moscow",
 			"Ten Green Bottles & Grove St, Ganton",
 			"Idlewood Gas, Idlewood",
 			"Unity Station (END OF SERVICE)"
