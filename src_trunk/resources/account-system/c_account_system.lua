@@ -3294,7 +3294,7 @@ function characterCreationStep5(button, state)
 		guiSetFont(lHeight, "default-bold-small")
 		guiLabelSetColor(lHeight, 0, 255, 0)
 		
-		tHeight = guiCreateEdit(0.635, 0.143, 0.15, 0.05, "140", true, tabCreationFive)
+		tHeight = guiCreateEdit(0.635, 0.143, 0.15, 0.05, "170", true, tabCreationFive)
 		addEventHandler("onClientGUIChanged", tHeight, checkInput)
 		
 		--/////////////
@@ -3304,7 +3304,7 @@ function characterCreationStep5(button, state)
 		guiSetFont(lWeight, "default-bold-small")
 		guiLabelSetColor(lWeight, 0, 255, 0)
 		
-		tWeight = guiCreateEdit(0.635, 0.213, 0.15, 0.05, "140", true, tabCreationFive)
+		tWeight = guiCreateEdit(0.635, 0.213, 0.15, 0.05, "70", true, tabCreationFive)
 		addEventHandler("onClientGUIChanged", tWeight, checkInput)
 		
 		--/////////////
