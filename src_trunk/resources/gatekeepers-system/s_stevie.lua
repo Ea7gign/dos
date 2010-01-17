@@ -81,7 +81,7 @@ function stevieIntro (thePlayer) -- When player enters the colSphere create GUI 
 	if(getElementData(stevie, "activeConvo")==1)then
 		exports.global:sendLocalText(source, "* Stevie ignores the person trying to talk to him and contiues to eat.",  255, 51, 102, 5)
 	else
-		
+		exports.logs:logMessage("[STEVIE] " .. getElementData(thePlayer, "gameaccountusername") .. "/".. getPlayerName(thePlayer) .." met Stevie" , 4)
 		setElementData (stevie, "activeConvo", 1, false) -- set the NPCs conversation state to active so no one else can begin to talk to him.
 		outputDebugString("Stevie is talking.")
 		
@@ -238,6 +238,8 @@ function stevieSuccess_S()
 	-- set the players "stevie" stat to "1" meaning they have met him and successfully made it through the conversation.
 	local query = mysql_query(handler, "UPDATE characters SET stevie='1' WHERE charactername='" .. mysql_escape_string(handler, getPlayerName(source)) .. "' LIMIT 1") -- NOT WORKING
 	mysql_free_result(query)
+	
+	exports.logs:logMessage("[STEVIE] " .. getElementData(thePlayer, "gameaccountusername") .. "/".. getPlayerName(thePlayer) .." got Stevie' his businesscard" , 4)
 end
 addEvent( "stevieSuccessServerEvent", true )
 addEventHandler( "stevieSuccessServerEvent", getRootElement(), stevieSuccess_S )
@@ -324,6 +326,7 @@ function startPhoneCall(thePlayer)
 							else
 								triggerClientEvent ( thePlayer, "showPhoneConvo", getRootElement(), factionLeader ) -- Trigger Client side function to create GUI.
 								addEventHandler ( "onPlayerQuit", thePlayer, endCall )
+								exports.logs:logMessage("[STEVIE] " .. getElementData(thePlayer, "gameaccountusername") .. "/".. getPlayerName(thePlayer) .." called Stevie" , 4)
 							end
 						end
 					end
@@ -395,7 +398,7 @@ function acceptDeal_S( dealNumber )
 		end
 		doneDeals = doneDeals + 1
 		setElementData( getRootElement( ), "stevie.done", doneDeals, false )
-		
+		exports.logs:logMessage("[STEVIE-CALL] " .. getElementData(thePlayer, "gameaccountusername") .. "/".. getPlayerName(thePlayer) .." accepted deal no " .. dealNumber .. " for ".. cost , 4)
 		outputChatBox("You have sent Stevie $".. cost .." for the deal.", source, 0, 255, 0)
 		
 		local x, y, z = locations[doneDeals][1], locations[doneDeals][2], locations[doneDeals][3]
@@ -509,6 +512,7 @@ function giveGoods(thePlayer)
 		local x,y,z = getElementPosition(veh)
 		collectionCol = createColSphere(x, y, z, 5)
 		removeElementData(thePlayer, "stevie.money")
+		exports.logs:logMessage("[STEVIE] " .. getElementData(thePlayer, "gameaccountusername") .. "/".. getPlayerName(thePlayer) .." starts loading stuff from deal no " .. deal , 4)
 	end
 end
 
