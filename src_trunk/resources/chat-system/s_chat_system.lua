@@ -1164,7 +1164,10 @@ function localWhisper(thePlayer, commandName, targetPlayerNick, ...)
 				local tx, ty, tz = getElementPosition(targetPlayer)
 				
 				if (getDistanceBetweenPoints3D(x, y, z, tx, ty, tz)<3) then
+					local name = getPlayerName(thePlayer)
 					local message = table.concat({...}, " ")
+					exports.irc:sendMessage(name .. " whispers to " .. targetPlayerName .. ": " .. message)
+					exports.logs:logMessage("[IC: Whisper] " .. name .. " to " .. targetPlayerName .. ": " .. message, 1)
 					message = trunklateText( thePlayer, message )
 					
 					local languageslot = getElementData(thePlayer, "languages.current")
@@ -1173,8 +1176,6 @@ function localWhisper(thePlayer, commandName, targetPlayerNick, ...)
 					
 					message2 = trunklateText( targetPlayer, message2 )
 					local message2 = call(getResourceFromName("language-system"), "applyLanguage", thePlayer, targetPlayer, message, language)
-					
-					local name = getPlayerName(thePlayer)
 					
 					exports.global:sendLocalMeAction(thePlayer, "whispers to " .. targetPlayerName .. ".")
 					outputChatBox("[" .. languagename .. "] " .. name .. " whispers: " .. message, thePlayer, 255, 255, 255)
