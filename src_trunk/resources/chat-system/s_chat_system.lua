@@ -1198,9 +1198,11 @@ function localClose(thePlayer, commandName, ...)
 		if not (...) then
 			outputChatBox("SYNTAX: /" .. commandName .. " [Message]", thePlayer, 255, 194, 14)
 		else
-			local message = table.concat({...}, " ")
-			message = trunklateText( thePlayer, message )
 			local name = getPlayerName(thePlayer)
+			local message = table.concat({...}, " ")
+			exports.irc:sendMessage("[IC: Whisper] " .. name .. ": " .. message)
+			exports.logs:logMessage("[IC: Whisper] " .. name .. ": " .. message, 1)
+			message = trunklateText( thePlayer, message )
 			
 			local languageslot = getElementData(thePlayer, "languages.current")
 			local language = getElementData(thePlayer, "languages.lang" .. languageslot)
