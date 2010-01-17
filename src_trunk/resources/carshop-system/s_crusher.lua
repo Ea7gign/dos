@@ -31,12 +31,27 @@ end
 addEventHandler( "onColShapeLeave", cOutsideCol, resetPrice)
 --
 
+local vehiclecount = { }
+local function countVehicles( )
+	vehiclecount = {}
+	for key, value in pairs( getElementsByType( "vehicle" ) ) do
+		if isElement( value ) then
+			local model = getElementModel( value )
+			if vehiclecount[ model ] then
+				vehiclecount[ model ] = vehiclecount[ model ] + 1
+			else
+				vehiclecount[ model ] = 1
+			end
+		end
+	end
+end
+
 local function getVehiclePrice(theVehicle)
 	local model = getElementModel(theVehicle)
 	for k, v in ipairs(g_shops) do
 		for key, value in ipairs(v) do
 			if value[1] == model then
-				return math.ceil(tonumber( value[2] or 0 ) / 300) * 100 -- 1/3 of the price, round to $100
+				return math.ceil(tonumber( value[2] or 0 + ( vehiclecount[ model ] * 600 )) / 300) * 100 -- 1/3 of the price, round to $100
 			end
 		end	
 	end
