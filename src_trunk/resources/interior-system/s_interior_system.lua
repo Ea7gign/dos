@@ -1228,6 +1228,18 @@ function setInteriorPrice( thePlayer, commandName, cost )
 end
 addCommandHandler( "setinteriorprice", setInteriorPrice )
 
+function getInteriorPrice( thePlayer )
+	if exports.global:isPlayerLeadAdmin( thePlayer ) then
+		local dbid, entrance, exit = findProperty( thePlayer )
+		if exit then
+			outputChatBox( "This Interior costs $" .. getElementData(entrance, "cost") .. ".", thePlayer, 255, 194, 14 )
+		else
+			outputChatBox( "You are not in an interior.", thePlayer, 255, 0, 0 )
+		end
+	end
+end
+addCommandHandler( "getinteriorprice", getInteriorPrice )
+
 function getInteriorID( thePlayer, commandName )
 	local c = 0
 	local interior = getElementInterior( thePlayer )

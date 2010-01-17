@@ -178,8 +178,10 @@ function adminhelp (sourcePlayer, commandName)
 					{ "/addinterior", "/addinterior  [Interior ID] [TYPE] [Cost] [Name]","adds an interior" },
 					{ "/sellproperty", "/sellproperty","sells an interior" },
 					{ "/delinterior", "/delproperty","deletes an interior" },
+					{ "/getinteriorid", "/getinteriorid [id]","shows the current interior" },
 					{ "/setinteriorid", "/setinteriorid [id]","changes the interior" },
-					{ "/setinteriorprice", "/setinteriorid [price]","changes the interiors price" },
+					{ "/getinteriorprice", "/getinteriorprice","shows the interiors price" },
+					{ "/setinteriorprice", "/setinteriorprice [price]","changes the interiors price" },
 					{ "/toggleinterior", "/toggleinterior [id]","sets the interior enabled or disabled" },
 					{ "/enableallinteriors", "/enableallinteriors","enables all the interiors" },
 					
