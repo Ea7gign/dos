@@ -145,7 +145,9 @@ end
 
 -- loads all items for that element
 function loadItems( element, force )
-	if force or not saveditems[ element ] then
+	if not isElement( element ) then
+		return false
+	elseif force or not saveditems[ element ] then
 		saveditems[ element ] = {}
 		notify( element )
 		local result = mysql_query( handler, "SELECT * FROM items WHERE type = " .. getType( element ) .. " AND owner = " .. getID( element ) .. " ORDER BY `index` ASC" )
