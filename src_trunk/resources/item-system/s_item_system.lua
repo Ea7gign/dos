@@ -1297,8 +1297,8 @@ function changeLock(thePlayer)
 				else
 					local itemid = interiortype == 1 and 5 or 4
 					exports.logs:logMessage( "[HOUSE] " .. getPlayerName( thePlayer ) .. " changed the lock for House #" .. dbid .. " (" .. getElementData( entrance, "name" ) .. ")", 16) 
-					deleteAll( 3, dbid )
 					deleteAll( 4, dbid )
+					deleteAll( 5, dbid )
 					giveItem( thePlayer, itemid, dbid )
 					outputChatBox( "Locks for this house have been changed.", thePlayer, 0, 255,0  )
 				end
