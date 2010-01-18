@@ -190,8 +190,6 @@ function spawnCharacter(charname, version)
 		local casualskin = tonumber(data["casualskin"])
 		local weapons = tostring(data["weapons"])
 		local ammo = tostring(data["ammo"])
-		local items = tostring(data["items"])
-		local itemvalues = tostring(data["itemvalues"])
 		local carlicense = tonumber(data["car_license"])
 		local gunlicense = tonumber(data["gun_license"])
 		local bankmoney = tonumber(data["bankmoney"])
@@ -243,33 +241,7 @@ function spawnCharacter(charname, version)
 		setElementData(source, "timeinserver", timeinserver, false)
 		
 		setElementData(source, "dbid", tonumber(id))
-		if (items~=tostring(mysql_null())) and (itemvalues~=tostring(mysql_null())) then
-			-- load traditional items
-			if #items > 0 and #itemvalues > 0 then
-				-- very old items
-				if call( getResourceFromName( "item-system" ), "clearItems", source, true ) then
-					for i = 1, 20 do
-						local token = tonumber(gettok(items, i, string.byte(',')))
-						local vtoken = tonumber(gettok(itemvalues, i, string.byte(',')))
-						
-						if token and vtoken then
-							exports.global:giveItem( source, tonumber(token), tonumber(vtoken) )
-						end
-					end
-				end
-			else
-				call( getResourceFromName( "item-system" ), "loadItems", source, true )
-			end
-			
-			local result = mysql_query(handler, "UPDATE characters SET items=NULL, itemvalues=NULL WHERE id = " .. id )
-			if result then
-				mysql_free_result( result )
-			else
-				outputDebugString( mysql_error( handler ) )
-			end
-		else
-			call( getResourceFromName( "item-system" ), "loadItems", source, true )
-		end
+		exports['item-system']:loadItems( source, true )
 		
 		setElementData(source, "loggedin", 1)
 		
