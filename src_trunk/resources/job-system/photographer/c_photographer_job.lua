@@ -4,7 +4,6 @@ swat = { [285]=true }
 flashCar = { [601]=true, [541]=true, [415]=true, [480]=true, [411]=true, [506]=true, [451]=true, [477]=true, [409]=true, [580]=true, [575]=true, [603]=true }
 emergencyVehicles = { [416]=true, [427]=true, [490]=true, [528]=true, [407]=true, [544]=true, [523]=true, [598]=true, [596]=true, [597]=true, [599]=true, [601]=true }
 
-local pictureValue = 0
 local collectionValue = 0
 local localPlayer = getLocalPlayer()
 
@@ -28,7 +27,7 @@ function snapPicture(weapon, ammo, ammoInClip, hitX, hitY, hitZ, hitElement )
 			
 			if (factionType==6) then
 				if (weapon == 43) then
-					pictureValue = 0
+					local pictureValue = 0
 					local onScreenPlayers = {}
 					local players = getElementsByType( "player" )
 					for theKey, thePlayer in ipairs(players) do			-- thePlayer ~= localPlayer
@@ -100,6 +99,7 @@ function snapPicture(weapon, ammo, ammoInClip, hitX, hitY, hitZ, hitElement )
 					else
 						collectionValue = collectionValue + pictureValue
 						outputChatBox("#FF9933That's a keeper! Picture value: $"..pictureValue, 255, 104, 91, true)
+						triggerServerEvent("updateCollectionValue", localPlayer, collectionValue)
 					end
 					outputChatBox("#FF9933Collection value: $"..collectionValue, 255, 104, 91, true)
 				end
@@ -129,5 +129,21 @@ addEventHandler("cSellPhotos", localPlayer,
 		else
 			triggerServerEvent("sellPhotosInfo", localPlayer)
 		end
+	end
+)
+
+addEvent("updateCollectionValue", true)
+addEventHandler("updateCollectionValue", localPlayer,
+	function(value)
+		collectionValue = value
+		if value > 0 then
+			outputChatBox("You still have photos worth $" .. collectionValue .. ".", 255, 194, 14)
+		end
+	end
+)
+
+addEventHandler( "onClientResourceStart", getResourceRootElement(),
+	function()
+		triggerServerEvent( "getCollectionValue", localPlayer )
 	end
 )

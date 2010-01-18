@@ -12,6 +12,7 @@ function getPaid(collectionValue)
 	outputChatBox("#FF9933SAN News made $".. collectionValue .." from the photographs.", source, 255, 104, 91, true)
 	exports.global:sendMessageToAdmins("SANNews: " .. tostring(getPlayerName(source)) .. " sold photos for $" .. collectionValue .. ".")
 	exports.logs:logMessage(tostring(getPlayerName(source)) .. " sold photos for $" .. collectionValue .. ".", 10)
+	updateCollectionValue(0)
 end
 addEvent("submitCollection", true)
 addEventHandler("submitCollection", getRootElement(), getPaid)
@@ -23,3 +24,22 @@ function info()
 end
 addEvent("sellPhotosInfo", true)
 addEventHandler("sellPhotosInfo", getRootElement(), info)
+
+function updateCollectionValue(value)
+	mysql_free_result( mysql_query( handler, "UPDATE characters SET photos = " .. (tonumber(value) or 0) .. " WHERE id = " .. getElementData(source, "dbid") ) )
+end
+addEvent("updateCollectionValue", true)
+addEventHandler("updateCollectionValue", getRootElement(), updateCollectionValue)
+
+addEvent("getCollectionValue", true)
+addEventHandler("getCollectionValue", getRootElement(),
+	function()
+		if getElementData( source, "loggedin" ) == 1 then
+			local result = mysql_query( handler, "SELECT photos FROM characters WHERE id = " .. getElementData(source, "dbid") )
+			if result then
+				triggerClientEvent( source, "updateCollectionValue", source, tonumber( mysql_result( result, 1, 1 ) ) )
+				mysql_free_result( result )
+			end
+		end
+	end
+)
