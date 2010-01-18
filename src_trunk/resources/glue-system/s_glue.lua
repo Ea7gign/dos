@@ -1,5 +1,6 @@
 	
 function gluePlayer(slot, vehicle, x, y, z, rotX, rotY, rotZ)
+	exports.logs:logMessage("[/GLUE] " .. getElementData(source, "gameaccountusername") .. "/".. getPlayerName(source) .." glued to #".. getElementData(vehicle, "dbid") .. " - " .. getElementModel(vehicle), 4)
 	attachElements(source, vehicle, x, y, z, rotX, rotY, rotZ)
 	setPedWeaponSlot(source, slot)
 end
