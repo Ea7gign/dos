@@ -928,7 +928,7 @@ function addSafeAtPosition( thePlayer, x, y, z, rotz )
 	local interior = getElementInterior( thePlayer )
 	if dbid == 0 or dbid > 19000 then -- vehicle interiors are 20k + dbid, so 19000 = temp -1000
 		return 2
-	if ((exports.global:hasItem( thePlayer, 5, dbid ) or exports.global:hasItem( thePlayer, 4, dbid))) then
+	elseif ((exports.global:hasItem( thePlayer, 5, dbid ) or exports.global:hasItem( thePlayer, 4, dbid))) then
 		if safeTable[dbid] then
 			outputChatBox("There is already a safe in this property. Type /movesafe to move it.", thePlayer, 255, 0, 0)
 			return 1
