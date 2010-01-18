@@ -7,18 +7,29 @@ function playerSpawn()
 	if (logged==1) then
 		job = tonumber(getElementData(source, "job"))
 		if (job==1) then -- TRUCKER
+			displayTruckerJob()
+		else
 			resetTruckerJob()
-			setTimer(displayTruckerJob, 1000, 1)
-		elseif (job==2) then -- TAXI
+		end
+		
+		if (job==2) then -- TAXI
+			displayTaxiJob()
+		else
 			resetTaxiJob()
-			setTimer(displayTaxiJob, 1000, 1)
-		elseif (job==3) then -- BUS
+		end
+		
+		if (job==3) then -- BUS
+			displayBusJob()
+		else
 			resetBusJob()
-			setTimer(displayBusJob, 1000, 1)
 		end
 	end
 end
-addEventHandler("onClientPlayerSpawn", localPlayer, playerSpawn)
+addEventHandler("onClientPlayerSpawn", localPlayer, 
+	function()
+		setTimer(playerSpawn, 1000, 1)
+	end
+)
 
 function quitJob(job)
 	if (job==1) then -- TRUCKER JOB
