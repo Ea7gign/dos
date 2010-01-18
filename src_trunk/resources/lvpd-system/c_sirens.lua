@@ -49,6 +49,15 @@ addEventHandler("onClientElementStreamOut", getRootElement(), streamOut)
 
 function updateSirens( name )
 	if name == "siren" and isElementStreamedIn( source ) and getElementType( source ) == "vehicle" then
+		local attached = getAttachedElements( source )
+		if attached then
+			for key, value in ipairs( attached ) do
+				if getElementType( value ) == "sound" and value ~= sounds[ source ] then
+					destroyElement( value )
+				end
+			end
+		end
+		
 		if not getElementData( source, name ) then
 			if sounds[ source ] then
 				destroyElement( sounds[ source ] )
