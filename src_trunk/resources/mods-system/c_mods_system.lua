@@ -79,8 +79,8 @@ function applyMods()
 	-- tag5 = engineLoadTXD ( "tags/tags_laseville.txd" )
 	-- engineImportTXD ( tag5, 1528 )
 
-	tag6 = engineLoadTXD ( "tags/tags_latemple.txd" )
-	engineImportTXD ( tag6, 1529 )
+	-- tag6 = engineLoadTXD ( "tags/tags_latemple.txd" )
+	-- engineImportTXD ( tag6, 1529 )
 
 	-- tag7 = engineLoadTXD ( "tags/tags_lavagos.txd" )
 	-- engineImportTXD ( tag7, 1530 )
