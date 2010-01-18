@@ -8,6 +8,7 @@
 	<export function="giveItem" type="server"/>
 	<export function="takeItem" type="server"/>
 	<export function="takeItemFromSlot" type="server"/>
+	<export function="updateItemValue" type="server"/>
 	<export function="moveItem" type="server"/>
 	<export function="hasItem" type="server"/>
 	<export function="hasSpaceForItem" type="server"/>

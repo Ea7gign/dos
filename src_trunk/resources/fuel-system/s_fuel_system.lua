@@ -337,11 +337,13 @@ function fillCan(thePlayer, commandName, amount)
 		end
 		
 		if (colShape) then
-			currFuel = 25
+			local currFuel = 25
+			local slot = -1
 			local items = exports['item-system']:getItems(thePlayer)
 			for k, v in pairs( items ) do
 				if v[1] == 57 and v[2] < 25 then
 					currFuel = v[2]
+					slot = k
 					break
 				end
 			end
@@ -378,8 +380,7 @@ function fillCan(thePlayer, commandName, amount)
 						outputChatBox("Gas Station Receipt:", thePlayer)
 						outputChatBox("    " .. math.ceil(litresAffordable) .. " Litres of petrol    -    " .. fuelCost .. "$", thePlayer)
 						exports.global:takeMoney(thePlayer, fuelCost, true)
-						exports.global:takeItem(thePlayer, 57, currFuel)
-						exports.global:giveItem(thePlayer, 57, litresAffordable+currFuel)
+						exports['item-system']:updateItemValue(thePlayer, slot, currFuel)
 					end
 				else
 					litresAffordable = 25
@@ -390,8 +391,7 @@ function fillCan(thePlayer, commandName, amount)
 					fuelCost = 0
 					outputChatBox("Gas Station Receipt:", thePlayer)
 					outputChatBox("    " .. math.ceil(litresAffordable) .. " Litres of petrol    -    " .. fuelCost .. "$", thePlayer)
-					exports.global:takeItem(thePlayer, 57, tonumber(currFuel))
-					exports.global:giveItem(thePlayer, 57, math.ceil(litresAffordable+currFuel))
+					exports['item-system']:updateItemValue(thePlayer, slot, currFuel)
 				end
 			end
 		end

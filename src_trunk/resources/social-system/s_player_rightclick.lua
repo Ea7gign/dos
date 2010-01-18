@@ -195,10 +195,10 @@ addEventHandler("removeBlindfold", getRootElement(), removeblindfoldPlayer)
 function stabilizePlayer(player)
 	local found, slot, itemValue = exports.global:hasItem(source, 70)
 	if found then
-		exports.global:takeItem(source, 70, itemValue)
-		itemValue = itemValue - 1
-		if itemValue > 0 then
-			exports.global:giveItem(source, 70, itemValue)
+		if itemValue > 1 then
+			exports.global:updateItemValue(source, slot, itemValue - 1)
+		else
+			exports.global:takeItem(source, 70, itemValue)
 		end
 		
 		local username = getPlayerName(source)

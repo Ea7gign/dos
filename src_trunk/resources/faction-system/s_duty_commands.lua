@@ -112,12 +112,14 @@ function lvesHeal(thePlayer, commandName, targetPartialNick, price)
 									outputChatBox("You healed '" ..targetPlayerName.. "'.", thePlayer, 0, 255, 0)
 									outputChatBox("You have been healed by '" ..getPlayerName(thePlayer).. "' for $" .. price .. ".", targetPlayer, 0, 255, 0)
 									
-									exports.global:takeItem(thePlayer, 70, itemValue)
-									itemValue = itemValue - 1
-									if itemValue > 0 then
-										exports.global:giveItem(thePlayer, 70, itemValue)
+									
+									if itemValue > 1 then
+										exports['item-system']:updateItemValue(thePlayer, slot, itemValue - 1)
 									else
+										exports.global:takeItem(thePlayer, 70, itemValue)
+										if not exports.global:hasItem(thePlayer, 70) then
 											outputChatBox("Warning, you're out of first aid kits. re /duty to get new ones.", thePlayer, 255, 0, 0)
+										end
 									end
 								end
 							else

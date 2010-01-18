@@ -1260,14 +1260,14 @@ function writeNote(thePlayer, commandName, ...)
 	else
 		local found, slot, itemValue = hasItem( thePlayer, 71 )
 		if found then
-			takeItem( thePlayer, 71, itemValue )
 			
 			giveItem( thePlayer, 72, table.concat({...}, " ") )
 			exports.global:sendLocalMeAction(thePlayer, "writes a note on a piece of paper.")
 			
-			itemValue = itemValue - 1
-			if itemValue > 0 then
-				giveItem( thePlayer, 71, itemValue )
+			if itemValue > 1 then
+				updateItemValue( thePlayer, 71, itemValue - 1 )
+			else
+				takeItem( thePlayer, 71, itemValue )
 			end
 		else
 			outputChatBox("You don't have any empty paper.", thePlayer, 255, 0, 0)

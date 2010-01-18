@@ -212,6 +212,90 @@ end
 addCommandHandler("ME", meEmote, false, true)
 addCommandHandler("Me", meEmote, false, true)
 
+function radio(source, radioID, message)
+	radioID = tonumber(radioID) or 1
+	local hasRadio, itemKey, itemValue, itemID = exports.global:hasItem(source, 6)
+	if hasRadio then
+		local theChannel = itemValue
+		if radioID ~= 1 then
+			local count = 0
+			local items = exports['item-system']:getItems(source)
+			for k, v in ipairs(items) do
+				if v[1] == 6 then
+					count = count + 1
+					if count == radioID then
+						theChannel = v[2]
+						break
+					end
+				end
+			end
+		end
+		
+		if theChannel == 1 then
+			outputChatBox("Please Tune your radio (( /tuneradio # ))", source, 255, 194, 14)
+		elseif theChannel > 0 then
+			triggerClientEvent (source, "playRadioSound", getRootElement())
+			local username = getPlayerName(source)
+			local languageslot = getElementData(source, "languages.current")
+			local language = getElementData(source, "languages.lang" .. languageslot)
+			local languagename = call(getResourceFromName("language-system"), "getLanguageName", language)
+			
+			local factionID = getElementData(source,"faction")
+			if not (factionID == -1) then
+				local theTeam = getPlayerTeam(source)
+				local factionrank = tonumber(getElementData(source,"factionrank"))
+				local ranks = getElementData(theTeam,"ranks")
+				factionRankTitle = ranks[factionrank] .. " - "
+			else
+				factionRankTitle = ""
+			end
+			
+			message = trunklateText( source, message )
+			outputChatBox("[" .. languagename .. "] [RADIO #" .. theChannel .. "] " .. factionRankTitle .. username .. " says: " .. message, source, 0, 102, 255)
+			
+			for key, value in ipairs(exports.pool:getPoolElementsByType("player")) do
+				local logged = getElementData(source, "loggedin")
+				
+				if (logged==1) and (exports.global:hasItem(value, 6, theChannel)) and (value~=source) then
+					triggerClientEvent (value, "playRadioSound", getRootElement())
+
+					local message2 = call(getResourceFromName("language-system"), "applyLanguage", source, value, message, language)
+					outputChatBox("[" .. languagename .. "] [RADIO #" .. theChannel .. "] " .. factionRankTitle .. username .. " says: " .. trunklateText( value, message2 ), value, 0, 102, 255)
+					
+					-- if they not have an earpiece
+					if (exports.global:hasItem(value, 88) == false) then
+						-- Show it to people near who can hear his radio
+						for k, v in ipairs(getElementsByType("player")) do
+							if getElementDistance(value, v) < 10 then
+								local tthasRadio, ttitemKey, ttitemValue, ttitemID = exports.global:hasItem(v, 6)
+								local channel = ttitemValue
+								if (v~=source) and (channel~=targetChannel) then
+									local message2 = call(getResourceFromName("language-system"), "applyLanguage", source, v, message, language)
+									outputChatBox("[" .. languagename .. "] " .. getPlayerName(value) .. "'s Radio: " .. trunklateText( v, message2 ), v, 255, 255, 255)
+								end
+							end
+						end
+					end
+				end
+			end
+			
+			-- Show the radio to nearby listening in people near the speaker
+			for key, value in ipairs(getElementsByType("player")) do
+				if getElementDistance(source, value) < 10 then
+					if (value~=source) then
+						local message2 = call(getResourceFromName("language-system"), "applyLanguage", source, value, message, language)
+						outputChatBox("[" .. languagename .. "] " .. getPlayerName(source) .. " [RADIO] says: " .. message2, value, 255, 255, 255)
+					end
+				end
+			end
+		else
+			outputChatBox("Your radio is off. ((/toggleradio))", source, 255, 0, 0)
+		end
+	else
+		outputChatBox("You do not have a radio.", source, 255, 0, 0)
+	end
+end
+
 function chatMain(message, messageType)
 	if exports['freecam-tv']:isPlayerFreecamEnabled(source) then cancelEvent() return end
 	
@@ -226,99 +310,34 @@ function chatMain(message, messageType)
 			local language = getElementData(source, "languages.lang" .. languageslot)
 			localIC(source, message, language)
 		elseif (messageType==1) then -- Local /me action
-		
-			if not (message) then
-				outputChatBox("SYNTAX: /me [Action]", source, 255, 194, 14)
-			else
-				exports.irc:sendMessage(" *" .. getPlayerName(source) .. " " .. message)
-				exports.logs:logMessage("[IC OOC: ME ACTION] *" .. getPlayerName(source) .. " " .. message, 7)
-				
-				exports.global:sendLocalMeAction(source, message)
-			end
+			meEmote(source, "me", message)
 		end
 	elseif (messageType==2) and (logged==1) then -- Radio
-		
-		if (exports.global:hasItem(source, 6)) then
-			--local theChannel = getElementData(source, "radiochannel")
-			local hasRadio, itemKey, itemValue, itemID = exports.global:hasItem(source, 6)
-			local theChannel = itemValue
-			if theChannel == 1 then
-				outputChatBox("Please Tune your radio (( /tuneradio # ))", source, 255, 194, 14)
-			elseif theChannel > 0 then
-				triggerClientEvent (source, "playRadioSound", getRootElement())
-				local username = getPlayerName(source)
-				local languageslot = getElementData(source, "languages.current")
-				local language = getElementData(source, "languages.lang" .. languageslot)
-				local languagename = call(getResourceFromName("language-system"), "getLanguageName", language)
-				
-				local factionID = getElementData(source,"faction")
-				if not (factionID == -1) then
-					local theTeam = getPlayerTeam(source)
-					local factionrank = tonumber(getElementData(source,"factionrank"))
-					local ranks = getElementData(theTeam,"ranks")
-					factionRankTitle = ranks[factionrank] .. " - "
-				else
-					factionRankTitle = ""
-				end
-				
-				message = trunklateText( source, message )
-				outputChatBox("[" .. languagename .. "] [RADIO #" .. theChannel .. "] " .. factionRankTitle .. username .. " says: " .. message, source, 0, 102, 255)
-				
-				for key, value in ipairs(exports.pool:getPoolElementsByType("player")) do
-					local logged = getElementData(source, "loggedin")
-					
-					if (logged==1) and (exports.global:hasItem(value, 6, theChannel)) and (value~=source) then
-						triggerClientEvent (value, "playRadioSound", getRootElement())
-
-						local message2 = call(getResourceFromName("language-system"), "applyLanguage", source, value, message, language)
-						outputChatBox("[" .. languagename .. "] [RADIO #" .. theChannel .. "] " .. factionRankTitle .. username .. " says: " .. trunklateText( value, message2 ), value, 0, 102, 255)
-						
-						-- if they not have an earpiece
-						if (exports.global:hasItem(value, 88) == false) then
-							-- Show it to people near who can hear his radio
-							for k, v in ipairs(getElementsByType("player")) do
-								if getElementDistance(value, v) < 10 then
-									local tthasRadio, ttitemKey, ttitemValue, ttitemID = exports.global:hasItem(v, 6)
-									local channel = ttitemValue
-									if (v~=source) and (channel~=targetChannel) then
-										local message2 = call(getResourceFromName("language-system"), "applyLanguage", source, v, message, language)
-										outputChatBox("[" .. languagename .. "] " .. getPlayerName(value) .. "'s Radio: " .. trunklateText( v, message2 ), v, 255, 255, 255)
-									end
-								end
-							end
-						end
-					end
-				end
-				
-				-- Show the radio to nearby listening in people near the speaker
-				for key, value in ipairs(getElementsByType("player")) do
-					if getElementDistance(source, value) < 10 then
-						if (value~=source) then
-							local message2 = call(getResourceFromName("language-system"), "applyLanguage", source, value, message, language)
-							outputChatBox("[" .. languagename .. "] " .. getPlayerName(source) .. " [RADIO] says: " .. message2, value, 255, 255, 255)
-						end
-					end
-				end
-			else
-				outputChatBox("Your radio is off. ((/toggleradio))", source, 255, 0, 0)
-			end
-		else
-			outputChatBox("You do not have a radio.", source, 255, 0, 0)
-		end
+		radio(source, 1, message)
 	end
 end
 addEventHandler("onPlayerChat", getRootElement(), chatMain)
 
-function radio(thePlayer, commandName, ...)
+function msgRadio(thePlayer, commandName, ...)
 	if (...) then
 		local message = table.concat({...}, " ")
-		triggerEvent("onPlayerChat", thePlayer, message, 2)
+		radio(thePlayer, 1, message)
 	else
 		outputChatBox("SYNTAX: /" .. commandName .. " [Message]", thePlayer, 255, 194, 14)
 	end
 end
-addCommandHandler("r", radio, false, false)
-addCommandHandler("radio", radio, false, false)
+addCommandHandler("r", msgRadio, false, false)
+addCommandHandler("radio", msgRadio, false, false)
+
+for i = 1, 20 do
+	addCommandHandler( "r" .. tostring( i ), 
+		function( thePlayer, commandName, ... )
+			if i <= exports['item-system']:countItems(thePlayer, 6) then
+				radio( thePlayer, i, table.concat({...}, " ") )
+			end
+		end
+	)
+end
 
 function govAnnouncement(thePlayer, commandName, ...)
 	local theTeam = getPlayerTeam(thePlayer)
@@ -746,29 +765,42 @@ function factionOOC(thePlayer, commandName, ...)
 end
 addCommandHandler("f", factionOOC, false, false)
 
-function setRadioChannel(thePlayer, commandName, channel)
+function setRadioChannel(thePlayer, commandName, slot, channel)
+	slot = tonumber( slot )
 	channel = tonumber( channel )
+	
+	if not channel then
+		channel = slot
+		slot = 1
+	end
+	
 	if not (channel) then
-		outputChatBox("SYNTAX: /" .. commandName .. " [Channel Number]", thePlayer, 255, 194, 14)
+		outputChatBox("SYNTAX: /" .. commandName .. " [Radio Slot] [Channel Number]", thePlayer, 255, 194, 14)
 	else
 		if (exports.global:hasItem(thePlayer, 6)) then
-			local thasRadio, titemKey, titemValue, titemID = exports.global:hasItem(thePlayer, 6)
-			if titemValue > 0 then
-				local channel = tonumber(channel)
-				if channel > 0 and channel < 1000000000 then
-					
-					--setElementData(thePlayer, "radiochannel", channel, false)
-					outputChatBox("You retuned your radio to channel #" .. channel .. ".", thePlayer)
-					exports.global:sendLocalMeAction(thePlayer, "retunes their radio.")
-					exports.global:takeItem(thePlayer, 6, titemValue)
-					exports.global:giveItem(thePlayer, 6, channel)
-					--mysql_free_result( mysql_query( handler, "UPDATE characters SET radiochannel=" .. channel .. " WHERE id = " .. getElementData(thePlayer, "dbid") ) )
-				else
-					outputChatBox("You can't tune your radio to that frequency!", thePlayer, 255, 0, 0)
+			local count = 0
+			local items = exports['item-system']:getItems(thePlayer)
+			for k, v in ipairs( items ) do
+				if v[1] == 6 then
+					count = count + 1
+					if count == slot then	
+						if v[2] > 0 then
+							if channel > 0 and channel < 1000000000 then
+								if exports['item-system']:updateItemValue(thePlayer, k, channel) then
+									outputChatBox("You retuned your radio to channel #" .. channel .. ".", thePlayer)
+									exports.global:sendLocalMeAction(thePlayer, "retunes their radio.")
+								end
+							else
+								outputChatBox("You can't tune your radio to that frequency!", thePlayer, 255, 0, 0)
+							end
+						else
+							outputChatBox("Your radio is off. ((/toggleradio))", thePlayer, 255, 0, 0)
+						end
+						return
+					end
 				end
-			else
-				outputChatBox("Your radio is off. ((/toggleradio))", thePlayer, 255, 0, 0)
 			end
+			outputChatBox("You do not have that many radios.", thePlayer, 255, 0, 0)
 		else
 			outputChatBox("You do not have a radio!", thePlayer, 255, 0, 0)
 		end
@@ -776,25 +808,31 @@ function setRadioChannel(thePlayer, commandName, channel)
 end
 addCommandHandler("tuneradio", setRadioChannel, false, false)
 
-function toggleRadio(thePlayer, commandName)
+function toggleRadio(thePlayer, commandName, slot)
 	if (exports.global:hasItem(thePlayer, 6)) then
-		local thasRadio, titemKey, titemValue, titemID = exports.global:hasItem(thePlayer, 6)
+		local slot = tonumber( slot )
+		local items = exports['item-system']:getItems(thePlayer)
+		local titemValue = false
+		local count = 0
+		for k, v in ipairs( items ) do
+			if v[1] == 6 then
+				if slot then
+					count = count + 1
+					if count == slot then
+						titemValue = v[2]
+						break
+					end
+				else
+					titemValue = v[2]
+					break
+				end
+			end
+		end
 		
 		-- gender switch for /me
-		local gender = getElementData(thePlayer, "gender")
-		local genderm = "his"
-		if (gender == 1) then
-			genderm = "her"
-		end
+		local genderm = getElementData(thePlayer, "gender") == 1 and "her" or "his"
 		
-		local oldchannel = titemValue
-		local channel = titemValue
-		if not channel or channel == 0 then
-			channel = 1
-		else
-			channel = -channel
-		end
-		if channel > 0 then
+		if titemValue < 0 then
 			outputChatBox("You turned your radio on.", thePlayer, 255, 194, 14)
 			exports.global:sendLocalMeAction(thePlayer, "turns " .. genderm .. " radio on.")
 		else
@@ -802,8 +840,21 @@ function toggleRadio(thePlayer, commandName)
 			exports.global:sendLocalMeAction(thePlayer, "turns " .. genderm .. " radio off.")
 		end
 		--setElementData(thePlayer, "radiochannel", channel, false)
-		exports.global:takeItem(thePlayer, 6, oldchannel)
-		exports.global:giveItem(thePlayer, 6, channel)
+		
+		local count = 0
+		for k, v in ipairs( items ) do
+			if v[1] == 6 then
+				if slot then
+					count = count + 1
+					if count == slot then
+						exports['item-system']:updateItemValue(thePlayer, k, ( titemValue < 0 and 1 or -1 ) * math.abs( v[2] or 1))
+						break
+					end
+				else
+					exports['item-system']:updateItemValue(thePlayer, k, ( titemValue < 0 and 1 or -1 ) * math.abs( v[2] or 1))
+				end
+			end
+		end
 		--mysql_free_result( mysql_query( handler, "UPDATE characters SET radiochannel=" .. channel .. " WHERE id = " .. getElementData(thePlayer, "dbid") ) )
 	else
 		outputChatBox("You do not have a radio!", thePlayer, 255, 0, 0)

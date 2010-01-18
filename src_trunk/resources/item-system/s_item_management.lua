@@ -35,6 +35,7 @@ x clearItems(obj) -- clears all items from the player
 x giveItem(obj, itemID, itemValue, nosqlupdate) -- gives an item
 x takeItem(obj, itemID, itemValue = nil) -- takes the item, or if nil/false, the first one with the same item ID
 x takeItemFromSlot(obj, slot, nosqlupdate) -- ...
+x updateItemValue(obj, slot, itemValue) -- updates the object's item value
 
 x moveItem(from, to, slot) -- moves an item from any inventory to another (was on from's specified slot before, true if successful, internally only updates the owner in the DB and modifies the arrays
 
@@ -273,6 +274,33 @@ function takeItemFromSlot(element, slot, nosqlupdate)
 		end
 	end
 	return false
+end
+
+-- updates the item value
+function updateItemValue(element, slot, itemValue)
+	loadItems( element )
+	
+	if saveditems[element][slot] then
+		local itemValue = tonumber(itemValue) or tostring(itemValue)
+		if itemValue then
+			local itemIndex = saveditems[element][slot][3]
+			local result = mysql_query( handler, "UPDATE items SET `itemValue` = '" .. mysql_escape_string( handler, tostring( itemValue ) ) .. "' WHERE `index` = " .. itemIndex )
+			if result then
+				mysql_free_result( result )
+				
+				saveditems[element][slot][2] = itemValue
+				notify( element )
+				return true
+			else
+				outputDebugString( mysql_error( handler ) )
+				return false, "MySQL-Query failed."
+			end
+		else
+			return false, "Invalid ItemValue"
+		end
+	else
+		return false, "Slot does not exist."
+	end
 end
 
 -- moves an item from any element to another element

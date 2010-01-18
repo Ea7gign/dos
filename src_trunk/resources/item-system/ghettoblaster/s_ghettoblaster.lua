@@ -1,4 +1,4 @@
-function updateItemValue(item, newvalue)
+local function updateWorldItemValue(item, newvalue)
 	setElementData(item, "itemValue", newvalue)
 	mysql_free_result(mysql_query(handler, "UPDATE worlditems SET itemvalue='" .. newvalue .. "' WHERE id=" .. getElementData(item, "id"))) 
 end
@@ -10,7 +10,7 @@ function toggleGhettoblaster(item)
 	else
 		exports.global:sendLocalMeAction(source, "turns the Ghettoblaster on.")
 	end
-	updateItemValue(item, -state)
+	updateWorldItemValue(item, -state)
 end
 
 addEvent("toggleGhettoblaster", true)
@@ -25,7 +25,7 @@ function changeTrack(item, step)
 		elseif current < 1 then
 			current = #tracks
 		end
-		updateItemValue(item, current)
+		updateWorldItemValue(item, current)
 		exports.global:sendLocalMeAction(source, "retunes the Ghettoblaster.")
 	end
 end
