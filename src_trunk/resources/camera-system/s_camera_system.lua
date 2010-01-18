@@ -84,7 +84,12 @@ function sendWarningToCops(vehicle, player, colshape, x, y, z, speed)
 		end
 		
 		exports.global:givePlayerAchievement(player, 13)
-		triggerClientEvent(player, "cameraEffect", player)
+		for i = 0, getVehicleMaxPassengers(vehicle) do
+			local p = getVehicleOccupant(vehicle, i)
+			if p then
+				triggerClientEvent(p, "cameraEffect", p)
+			end
+		end
 		
 		local theTeam = getTeamFromName("Los Santos Police Department")
 		local teamPlayers = getPlayersInTeam(theTeam)
