@@ -205,6 +205,7 @@ function spawnCharacter(charname, version)
 		local blindfold = tonumber(data["blindfold"])
 		local gender = tonumber(data["gender"])
 		local cellphonesecret = tonumber(data["cellphonesecret"])
+		local photos = tonumber(data["photos"])
 		
 		-- LANGUAGES
 		local lang1 = tonumber(data["lang1"])
@@ -516,6 +517,7 @@ function spawnCharacter(charname, version)
 			triggerClientEvent(source,"restoreTruckerJob",source)
 		end
 		triggerEvent("restoreJob", source)
+		triggerClientEvent(source, "updateCollectionValue", source, photos)
 		
 		-- Let's give them their weapons
 		triggerEvent("syncWeapons", source, weapons, ammo)
