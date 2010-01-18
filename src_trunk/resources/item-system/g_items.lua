@@ -102,7 +102,8 @@ g_items = {
 	{ "Eggnog", "Yum Yum.", 1, 2647, 0, 0, 0, 0.1 }, --91
 	{ "Turkey", "Yum Yum.", 1, 2222, 0, 0, 0, 0.1 },
 	{ "Christmas Pudding", "Yum Yum.", 1, 2222, 0, 0, 0, 0.1 },
-	{ "Christmas Present", "Yum Yum.", 4, 1220, 0, 0, 0, 0.1 },
+	{ "Christmas Present", "I know you want one.", 4, 1220, 0, 0, 0, 0.1 },
+	{ "Drink", "", 1, 1484, -15, 30, 0, 0.2 },
 	--Chairs = { 1663, 1671, 1720, 1721, 1810, 1811, 2079, 2120, 2121, 2125, 2777, 2788, 1369 }
 }
 
@@ -139,7 +140,7 @@ function getItemName(id, value)
 		return g_items[id][1] .. ( pickup and ( " (" .. getElementData( pickup, "name" ) .. ")" ) or "" )
 	elseif ( id == 80 ) and value then
 		return value
-	elseif ( id == 89 ) and value and value:find( ";" ) then
+	elseif ( id == 89 or id == 95 ) and value and value:find( ";" ) then
 		return value:sub( 1, value:find( ";" ) - 1 )
 	else
 		return g_items[id][1]
@@ -149,7 +150,7 @@ end
 function getItemValue(id, value)
 	if id == 80 then
 		return ""
-	elseif id == 89 then
+	elseif id == 89 or id == 95 then
 		return value:sub( value:find( ";" ) + 1 )
 	else
 		return value

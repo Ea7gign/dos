@@ -578,10 +578,9 @@ function useItem(itemSlot, additional)
 			exports.global:updateNametagColor(source)
 		elseif (itemID==88) then -- earpiece
 			outputChatBox("You can use this earpiece with an radio.", source, 255, 194, 14)
-		elseif (itemID==89) then -- sandwich
+		elseif (itemID==89) then -- Generic Food
 			giveHealth(source, tonumber(getItemValue(itemID, itemValue)))
 			exports.global:applyAnimation(source, "food", "eat_burger", 4000, false, true, true)
-			toggleAllControls(source, true, true, true)
 			exports.global:sendLocalMeAction(source, "eats a " .. itemName .. ".")
 			takeItemFromSlot(source, itemSlot)
 		elseif (itemID==90) then -- Helmet
@@ -627,8 +626,11 @@ function useItem(itemSlot, additional)
 			takeItemFromSlot(source, itemSlot)
 			giveItem(source, prizeID, 1)
 			exports.global:sendLocalMeAction(source, "opens a Christmas Present")
-			
-			
+		elseif (itemID==95) then -- Generic Drink
+			giveHealth(source, tonumber(getItemValue(itemID, itemValue)))
+			exports.global:applyAnimation(source, "VENDING", "VEND_Drink_P", 4000, false, true, true)
+			exports.global:sendLocalMeAction(source, "drinks some " .. itemName .. ".")
+			takeItemFromSlot(source, itemSlot)
 		else
 			outputChatBox("Error 800001 - Report on http://bugs.valhallagaming.net", source, 255, 0, 0)
 		end

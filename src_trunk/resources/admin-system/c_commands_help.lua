@@ -34,7 +34,7 @@ function commandsHelp()
 					{ "/w", "/w [player] [IC Text]", "Use this to whisper to a player close to you. Only the two of you can see it.", "/w Jack_Konstantine He's looking right at me." },
 					{ "/cw", "/cw [IC Text]", "Use this to whisper to all players in a vehicle with you. Only you and the other occupants can see it.", "/cw Keep an eye out. I'll be right back" },
 					{ "/c", "/c [IC Text]", "Use this to talk quietly to all the players around you.", "/c He is walking right over here." },
-					{ "/d or /department", "/d [IC Text]", "Department Radio for LSPD, LSES, BT&R and ANG.", "" },
+					{ "/d or /department", "/d [IC Text]", "Department Radio for LSPD, LSES and BT&R.", "" },
 					{ "/gov", "/gov [IC Text]", "In Character Government announcement and news.", "/gov Idlewood Gas is currently closed." },
 					{ "/district", "/district [IC Text]", "Use this to talk to players in the same area of the map.", "/district Don't come in the bank. The doors are locked." },
 				},
@@ -80,8 +80,7 @@ function commandsHelp()
 					{ "SAN", "/forecast", "Shows a weather forecast.", "/forecast" },
 					{ "SAN", "/pollresults", "Shows the results of the elections.", "/pollresults" },
 					{ "BTR", "/towtruck", "Calls a towtruck to your current location.", "/towtruck" },
-					{ "BTR", "/resettowbackup", "Removes the blip created with /towtruck.", "/resettowbackup" },
-					{ "ANG", "/combatduty", "Duty command for Air National Guard.", "/combatduty" },
+					{ "BTR", "/resettowbackup", "Removes the blip created with /towtruck.", "/resettowbackup" }
 				},
 				{
 					name = "Vehicles",

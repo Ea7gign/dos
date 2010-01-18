@@ -96,32 +96,6 @@ function changeDutySkin()
 		skins[5][2] = 1
 		
 		skincount = 5
-	elseif (factionid==35) then
-		-- Air National guard
-		team = 35
-		skins = { }
-		
-		skins[1] = { }
-		skins[1][1] = 287
-		skins[1][2] = 1
-		
-		skins[2] = { }
-		skins[2][1] = 61
-		skins[2][2] = 1
-		
-		skins[3] = { }
-		skins[3][1] = 16
-		skins[3][2] = 1
-		
-		skins[4] = { }
-		skins[4][1] = 96
-		skins[4][2] = 1
-		
-		skins[5] = { }
-		skins[5][1] = 50
-		skins[5][2] = 1	
-		
-		skincount = 5
 	else
 		return
 	end

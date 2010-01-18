@@ -33,8 +33,6 @@
 	<script src="FD Interior.lua" type="client"/>
 	<script src="Glen Park.lua" type="client"/>
 	<script src="CityHall.lua" type="client"/>
-	<script src="ANG.lua" type="client"/>
-	<script src="ANG_HQ.lua" type="client"/>
 	<script src="ES.lua" type="client"/>
 	<script src="ES Academy.lua" type="client"/>
 	<script src="court.lua" type="client"/>
