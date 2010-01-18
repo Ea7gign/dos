@@ -523,14 +523,14 @@ function talkPhone(thePlayer, commandName, ...)
 								
 								for key, value in ipairs(teamMembers) do
 									outputChatBox("[RADIO] This is dispatch, We've got an incident, Over.", value, 0, 183, 239)
-									outputChatBox("[RADIO] Situation: '" .. message .. "', Over. ((" .. getPlayerName(thePlayer) .. "))", value, 0, 183, 239)
-									outputChatBox("[RADIO] Location: '" .. tostring(location) .. "', Over. ((" .. getPlayerName(thePlayer) .. "))", value, 0, 183, 239)
+									outputChatBox("[RADIO] Situation: '" .. message .. "', Over. ((" .. getPlayerName(thePlayer):gsub("_"," ") .. "))", value, 0, 183, 239)
+									outputChatBox("[RADIO] Location: '" .. tostring(location) .. "', Over. ((" .. getPlayerName(thePlayer):gsub("_"," ") .. "))", value, 0, 183, 239)
 								end
 								
 								for key, value in ipairs(teamMembersES) do
 									outputChatBox("[RADIO] This is dispatch, We've got an incident, Over.", value, 0, 183, 239)
-									outputChatBox("[RADIO] Situation: '" .. message .. "', Over. ((" .. getPlayerName(thePlayer) .. "))", value, 0, 183, 239)
-									outputChatBox("[RADIO] Location: '" .. tostring(location) .. "', Over. ((" .. getPlayerName(thePlayer) .. "))", value, 0, 183, 239)
+									outputChatBox("[RADIO] Situation: '" .. message .. "', Over. ((" .. getPlayerName(thePlayer):gsub("_"," ") .. "))", value, 0, 183, 239)
+									outputChatBox("[RADIO] Location: '" .. tostring(location) .. "', Over. ((" .. getPlayerName(thePlayer):gsub("_"," ") .. "))", value, 0, 183, 239)
 								end
 								
 								removeElementData(thePlayer, "calling")
@@ -558,9 +558,9 @@ function talkPhone(thePlayer, commandName, ...)
 								local teamMembers = getPlayersInTeam(theTeam)
 								
 								for key, value in ipairs(teamMembers) do
-									outputChatBox("[RADIO] This is dispatch, We've got a report via the non-emergency line, Over.", value, 0, 220, 255)
-									outputChatBox("[RADIO] Situation: '" .. message .. "', Over. ((" .. getPlayerName(thePlayer) .. "))", value, 0, 220, 255)
-									outputChatBox("[RADIO] Location: '" .. tostring(location) .. "', Over. ((" .. getPlayerName(thePlayer) .. "))", value, 0, 220, 255)
+									outputChatBox("[RADIO] This is dispatch, We've got a report via the non-emergency line, Over.", value, 245, 40, 135)
+									outputChatBox("[RADIO] Situation: '" .. message .. "', Over. ((" .. getPlayerName(thePlayer):gsub("_"," ") .. "))", value, 245, 40, 135)
+									outputChatBox("[RADIO] Location: '" .. tostring(location) .. "', Over. ((" .. getPlayerName(thePlayer):gsub("_"," ") .. "))", value, 245, 40, 135)
 								end
 								
 								removeElementData(thePlayer, "calling")
@@ -589,8 +589,8 @@ function talkPhone(thePlayer, commandName, ...)
 								
 								for key, value in ipairs(teamMembers) do
 									outputChatBox("[RADIO] This is dispatch, We've got an incident, Over.", value, 0, 183, 239)
-									outputChatBox("[RADIO] Situation: '" .. message .. "', Over. ((" .. getPlayerName(thePlayer) .. "))", value, 0, 183, 239)
-									outputChatBox("[RADIO] Location: '" .. tostring(location) .. "', Over. ((" .. getPlayerName(thePlayer) .. "))", value, 0, 183, 239)
+									outputChatBox("[RADIO] Situation: '" .. message .. "', Over. ((" .. getPlayerName(thePlayer):gsub("_"," ") .. "))", value, 0, 183, 239)
+									outputChatBox("[RADIO] Location: '" .. tostring(location) .. "', Over. ((" .. getPlayerName(thePlayer):gsub("_"," ") .. "))", value, 0, 183, 239)
 								end
 								
 								removeElementData(thePlayer, "calling")
@@ -614,7 +614,7 @@ function talkPhone(thePlayer, commandName, ...)
 									if (job == 2) then
 										local car = getPedOccupiedVehicle(value)
 										if car and (getElementModel(car)==438 or getElementModel(car)==420) then
-											outputChatBox("[New Fare] " .. getPlayerName(thePlayer) .." Ph:" .. phoneNumber .. " Location: " .. message .."." , value, 0, 183, 239)
+											outputChatBox("[New Fare] " .. getPlayerName(thePlayer):gsub("_"," ") .." Ph:" .. phoneNumber .. " Location: " .. message .."." , value, 0, 183, 239)
 											founddriver = true
 										end
 									end
