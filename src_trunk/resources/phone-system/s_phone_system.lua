@@ -189,6 +189,16 @@ function callSomeone(thePlayer, commandName, phoneNumber, ...)
 						exports.global:applyAnimation(thePlayer, "ped", "phone_in", 3000, false)
 						setTimer(toggleAllControls, 150, 1, thePlayer, true, true, true)
 						setTimer(startPhoneAnim, 3050, 1, thePlayer)
+					elseif phoneNumber == "311" then
+						exports.global:sendLocalMeAction(thePlayer, msg)
+						outputChatBox("LSPD Operator says: 911 emergency. Please state your location.", thePlayer)
+						setElementData(thePlayer, "callprogress", 1, false)
+						setElementData(thePlayer, "phonestate", 1)
+						setElementData(thePlayer, "calling", 311)
+						
+						exports.global:applyAnimation(thePlayer, "ped", "phone_in", 3000, false)
+						setTimer(toggleAllControls, 150, 1, thePlayer, true, true, true)
+						setTimer(startPhoneAnim, 3050, 1, thePlayer)
 					elseif phoneNumber == "999" then
 						exports.global:sendLocalMeAction(thePlayer, msg)
 						outputChatBox("BT&R Operator says: Best's Towing and Recovery. Please state your location.", thePlayer)
@@ -534,7 +544,37 @@ function talkPhone(thePlayer, commandName, ...)
 								toggleAllControls(thePlayer, true, true, true)
 								return
 							end
-						elseif (tonumber(target)==999) then -- EMERGENCY SERVICES
+						elseif (tonumber(target)==311) then -- EMERGENCY SERVICES
+							if (callprogress==1) then -- Requesting the location
+								setElementData(thePlayer, "call.location", message)
+								setElementData(thePlayer, "callprogress", 2)
+								outputChatBox("LSPD Operator says: Can you describe your emergency please?", thePlayer)
+								return
+							elseif (callprogress==2) then -- Requesting the situation
+								outputChatBox("LSPD Operator says: Thanks for your call, we've dispatched a unit to your location.", thePlayer)
+								
+								local location = getElementData(thePlayer, "call.location")
+								local theTeam = getTeamFromName("Los Santos Police Department")
+								local teamMembers = getPlayersInTeam(theTeam)
+								
+								for key, value in ipairs(teamMembers) do
+									outputChatBox("[RADIO] This is dispatch, We've got a report via the non-emergency line, Over.", value, 0, 183, 239)
+									outputChatBox("[RADIO] Situation: '" .. message .. "', Over. ((" .. getPlayerName(thePlayer) .. "))", value, 0, 183, 239)
+									outputChatBox("[RADIO] Location: '" .. tostring(location) .. "', Over. ((" .. getPlayerName(thePlayer) .. "))", value, 0, 183, 239)
+								end
+								
+								removeElementData(thePlayer, "calling")
+								removeElementData(thePlayer, "caller")
+								removeElementData(thePlayer, "callprogress")
+								removeElementData(thePlayer, "call.location")
+								setElementData(thePlayer, "phonestate", 0, false)
+								exports.global:sendLocalMeAction(thePlayer, "hangs up their cellphone.")
+								
+								exports.global:applyAnimation(thePlayer, "ped", "phone_out", 1000, false, true, true)
+								toggleAllControls(thePlayer, true, true, true)
+								return
+							end
+						elseif (tonumber(target)==999) then -- TOWING
 							if (callprogress==1) then -- Requesting the location
 								setElementData(thePlayer, "call.location", message)
 								setElementData(thePlayer, "callprogress", 2)
