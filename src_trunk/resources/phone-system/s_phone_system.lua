@@ -191,7 +191,7 @@ function callSomeone(thePlayer, commandName, phoneNumber, ...)
 						setTimer(startPhoneAnim, 3050, 1, thePlayer)
 					elseif phoneNumber == "311" then
 						exports.global:sendLocalMeAction(thePlayer, msg)
-						outputChatBox("LSPD Operator says: 911 emergency. Please state your location.", thePlayer)
+						outputChatBox("LSPD Operator says: LSPD Hotline. Please state your location.", thePlayer)
 						setElementData(thePlayer, "callprogress", 1, false)
 						setElementData(thePlayer, "phonestate", 1)
 						setElementData(thePlayer, "calling", 311)
