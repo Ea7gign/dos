@@ -45,6 +45,8 @@ function logMessage(message, type)
 	fileWrite(file, "[" .. ("%04d-%02d-%02d %02d:%02d"):format(r.year+1900, r.month + 1, r.monthday, r.hour,r.minute) .. "] " .. message .. "\r\n")
 	fileFlush(file)
 	fileClose(file)
+	
+	return true
 end
 
 function createFileIfNotExists(filename)
