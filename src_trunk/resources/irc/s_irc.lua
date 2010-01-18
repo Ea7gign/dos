@@ -89,7 +89,6 @@ end
 function processCommands ( szChannel, szNick, szText )
 	-- asay, broadcast to /a
 	if string.find( szText, "!asay" ) == 1 then
-		outputDebugString ( source )
 		local message =  string.sub( szText, 7 )
 		exports.logs:logMessage("[Admin Chat FROM IRC] " .. szNick .. ": " .. message, 3)
 		sendAdminMessage("[IRC Admin Chat] " .. szNick .. ": " .. message)
