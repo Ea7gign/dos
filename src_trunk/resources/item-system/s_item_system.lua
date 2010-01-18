@@ -400,9 +400,9 @@ function useItem(itemSlot, additional)
 			if (retval == 0) then
 				exports.global:sendLocalMeAction(source, "Places a safe.")
 				takeItemFromSlot(source, itemSlot)
-			elseif (retval == 2 and dimension == 0) then
-				outputChatBox("You are not inside an interior.", source, 255, 0, 0)
 			elseif (retval == 2) then
+				outputChatBox("You are not inside an interior.", source, 255, 0, 0)
+			elseif (retval == 3) then
 				outputChatBox("You need to own the interior you are placing the safe in!", source, 255, 0, 0)
 			end
 		elseif (itemID==62) then

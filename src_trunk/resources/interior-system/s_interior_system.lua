@@ -928,23 +928,24 @@ function addSafeAtPosition( thePlayer, x, y, z, rotz )
 	local interior = getElementInterior( thePlayer )
 	if dbid == 0 or dbid > 19000 then -- vehicle interiors are 20k + dbid, so 19000 = temp -1000
 		return 2
-	elseif safeTable[dbid] then
-		outputChatBox("There is already a safe in this property. Type movesafe to move it.", thePlayer, 255, 0, 0)
-		return 1
-	end
 	if ((exports.global:hasItem( thePlayer, 5, dbid ) or exports.global:hasItem( thePlayer, 4, dbid))) then
-		z = z - 0.5
-		rotz = rotz + 180
-		local query = mysql_query(handler, "UPDATE interiors SET safepositionX='" .. x .. "', safepositionY='" .. y .. "', safepositionZ='" .. z .. "', safepositionRZ='" .. rotz .. "' WHERE id='" .. dbid .. "'") -- Update the name in the sql.
-		mysql_free_result(query)
-		local tempobject = createObject(2332, x, y, z, 0, 0, rotz)
-		setElementInterior(tempobject, interior)
-		setElementDimension(tempobject, dbid)
-		safeTable[dbid] = tempobject
-		call( getResourceFromName( "item-system" ), "clearItems", tempobject )
-		return 0
+		if safeTable[dbid] then
+			outputChatBox("There is already a safe in this property. Type /movesafe to move it.", thePlayer, 255, 0, 0)
+			return 1
+		else
+			z = z - 0.5
+			rotz = rotz + 180
+			local query = mysql_query(handler, "UPDATE interiors SET safepositionX='" .. x .. "', safepositionY='" .. y .. "', safepositionZ='" .. z .. "', safepositionRZ='" .. rotz .. "' WHERE id='" .. dbid .. "'") -- Update the name in the sql.
+			mysql_free_result(query)
+			local tempobject = createObject(2332, x, y, z, 0, 0, rotz)
+			setElementInterior(tempobject, interior)
+			setElementDimension(tempobject, dbid)
+			safeTable[dbid] = tempobject
+			call( getResourceFromName( "item-system" ), "clearItems", tempobject )
+			return 0
+		end
 	end
-	return 2
+	return 3
 end
 function moveSafe ( thePlayer, commandName )
 	local x,y,z = getElementPosition( thePlayer )
@@ -963,6 +964,8 @@ function moveSafe ( thePlayer, commandName )
 		else
 			outputChatBox("You need a safe to move!", thePlayer, 255, 0, 0)
 		end
+	else
+		outputChatBox("You need the keys of this interior to move the Safe.", thePlayer, 255, 0, 0)
 	end
 end
 
