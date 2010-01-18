@@ -11,9 +11,17 @@ function loadGlobal()
 	setTimer(displayCredits, 1000, 1)
 end
 
+function out(text)
+	local irc = getResourceFromName( "irc" )
+	if irc and getResourceState( irc ) == "running" then
+		exports.irc:sendMessage(text)
+	end
+	outputServerLog(text)
+end
+
 function displayCredits()
-	exports.irc:sendMessage("-------------------------------------------------------------")
-	exports.irc:sendMessage("--  VG MTA:RP Script V2 Loaded - By vG.MTA Scripting Team  --")
-	exports.irc:sendMessage("--              www.valhallagaming.net                     --")
-	exports.irc:sendMessage("-------------------------------------------------------------")
+	out("---------------------------------------------------------------")
+	out("--  VG MTA:RP Script V" .. exports.global:getScriptVersion() .. " Loaded - By vG.MTA Scripting Team  --")
+	out("--               www.valhallagaming.net                      --")
+	out("---------------------------------------------------------------")
 end
