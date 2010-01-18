@@ -558,9 +558,9 @@ function talkPhone(thePlayer, commandName, ...)
 								local teamMembers = getPlayersInTeam(theTeam)
 								
 								for key, value in ipairs(teamMembers) do
-									outputChatBox("[RADIO] This is dispatch, We've got a report via the non-emergency line, Over.", value, 0, 183, 239)
-									outputChatBox("[RADIO] Situation: '" .. message .. "', Over. ((" .. getPlayerName(thePlayer) .. "))", value, 0, 183, 239)
-									outputChatBox("[RADIO] Location: '" .. tostring(location) .. "', Over. ((" .. getPlayerName(thePlayer) .. "))", value, 0, 183, 239)
+									outputChatBox("[RADIO] This is dispatch, We've got a report via the non-emergency line, Over.", value, 0, 220, 255)
+									outputChatBox("[RADIO] Situation: '" .. message .. "', Over. ((" .. getPlayerName(thePlayer) .. "))", value, 0, 220, 255)
+									outputChatBox("[RADIO] Location: '" .. tostring(location) .. "', Over. ((" .. getPlayerName(thePlayer) .. "))", value, 0, 220, 255)
 								end
 								
 								removeElementData(thePlayer, "calling")
