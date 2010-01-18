@@ -2,10 +2,10 @@ job = 0
 localPlayer = getLocalPlayer()
 
 function playerSpawn()
-	local logged = getElementData(source, "loggedin")
+	local logged = getElementData(localPlayer, "loggedin")
 
 	if (logged==1) then
-		job = tonumber(getElementData(source, "job"))
+		job = tonumber(getElementData(localPlayer, "job"))
 		if (job==1) then -- TRUCKER
 			displayTruckerJob()
 		else
