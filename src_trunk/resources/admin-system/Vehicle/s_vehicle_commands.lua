@@ -569,6 +569,7 @@ function addUpgrade(thePlayer, commandName, target, upgradeID)
 					if (success) then
 						outputChatBox(getVehicleUpgradeSlotName(upgradeID) .. " upgrade added to " .. targetPlayerName .. "'s vehicle.", thePlayer)
 						outputChatBox("Admin " .. username .. " added upgrade " .. getVehicleUpgradeSlotName(upgradeID) .. " to your vehicle.", targetPlayer)
+						exports['savevehicle-system']:saveVehicle(theVehicle)
 					else
 						outputChatBox("Invalid Upgrade ID, or this vehicle doesn't support this upgrade.", thePlayer, 255, 0, 0)
 					end
@@ -601,6 +602,7 @@ function addPaintjob(thePlayer, commandName, target, paintjobID)
 						if (success) then
 							outputChatBox("Paintjob #" .. paintjobID .. " added to " .. targetPlayerName .. "'s vehicle.", thePlayer)
 							outputChatBox("Admin " .. username .. " added Paintjob #" .. paintjobID .. " to your vehicle.", targetPlayer)
+							exports['savevehicle-system']:saveVehicle(theVehicle)
 						else
 							outputChatBox("Invalid Paintjob ID, or this vehicle doesn't support this paintjob.", thePlayer, 255, 0, 0)
 						end
@@ -631,6 +633,7 @@ function resetUpgrades(thePlayer, commandName, target)
 					end
 					setVehiclePaintjob(theVehicle, 3)
 					outputChatBox("Removed all upgrades from " .. targetPlayerName .. "'s vehicles.", thePlayer, 0, 255, 0)
+					exports['savevehicle-system']:saveVehicle(theVehicle)
 				end
 			end
 		end
@@ -870,6 +873,7 @@ function setPlayerVehicleColor(thePlayer, commandName, target, col1, col2)
 						
 						if (color) then
 							outputChatBox("Vehicle's color was set.", thePlayer)
+							exports['savevehicle-system']:saveVehicle(veh)
 						else
 							outputChatBox("Invalid Color ID.", thePlayer, 255, 194, 14)
 						end

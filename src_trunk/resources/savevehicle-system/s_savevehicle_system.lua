@@ -30,11 +30,7 @@ function round(num, idp)
   return math.floor(num * mult + 0.5) / mult
 end
 
-function saveVehicleOnExit(thePlayer, seat, vehicle)
-	if (vehicle) then
-		source = vehicle
-	end
-	
+function saveVehicle(source)
 	local dbid = tonumber(getElementData(source, "dbid")) or -1
 	
 	if isElement(source) and getElementType(source) == "vehicle" and dbid >= 0 then -- Check it's a permanently spawned vehicle and not a job vehicle
@@ -133,5 +129,9 @@ function saveVehicleOnExit(thePlayer, seat, vehicle)
 			local timeTaken = (getTickCount() - tick)/1000
 		end
 	end
+end
+
+local function saveVehicleOnExit(thePlayer, seat)
+	saveVehicle(source)
 end
 addEventHandler("onVehicleExit", getRootElement(), saveVehicleOnExit)
