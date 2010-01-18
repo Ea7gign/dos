@@ -1,7 +1,7 @@
 local tyColSphere = createColSphere( 2532.8212890625, -2029.841796875, 13.546875, 1)
 exports.pool:allocateElement(tyColSphere)
 
-tyrese = createPed (28, 219.3525390625, 1242.6259765625, 1082.140625)
+tyrese = createPed (174, 219.3525390625, 1242.6259765625, 1082.140625)
 exports.pool:allocateElement(tyrese)
 
 setPedRotation(tyrese, 220)

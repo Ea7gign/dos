@@ -73,7 +73,7 @@ function rookStatement5_S()
 	-- Output the text from the last option to all player in radius
 	local name = string.gsub(getPlayerName(source), "_", " ")
 	exports.global:sendLocalText(source, name .. " whispers: Where's he at?", 255, 255, 255, 5)
-	exports.global:sendLocalText(source, "Rook whispers: His names Tyrese and lives over in Kennedy Apartments on Panoptican Avenue, apartment 3. Tell him Rook sent you.", 255, 255, 255, 5)
+	exports.global:sendLocalText(source, "Rook whispers: His names Tyrese and lives somewhere south-east where those chicanos live. Tell him Rook sent you.", 255, 255, 255, 5)
 end
 addEvent( "rookStatement5ServerEvent", true )
 addEventHandler( "rookStatement5ServerEvent", getRootElement(), rookStatement5_S )
