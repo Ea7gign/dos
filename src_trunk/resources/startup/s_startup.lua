@@ -20,8 +20,9 @@ function out(text)
 end
 
 function displayCredits()
-	out("---------------------------------------------------------------")
-	out("--  VG MTA:RP Script V" .. exports.global:getScriptVersion() .. " Loaded - By vG.MTA Scripting Team  --")
-	out("--               www.valhallagaming.net                      --")
-	out("---------------------------------------------------------------")
+	local ver = exports.global:getScriptVersion()
+	out("------------------------------------------------------------" .. ("-"):rep(#ver))
+	out("--  VG MTA:RP Script V" .. ver .. " Loaded - By vG.MTA Scripting Team  --")
+	out("--               www.valhallagaming.net                   " .. (" "):rep(#ver) .. "--")
+	out("------------------------------------------------------------" .. ("-"):rep(#ver))
 end
