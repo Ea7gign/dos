@@ -37,18 +37,8 @@ function toggleFlashers()
 			if (lights==2) then
 				if not (state) then
 					setElementData(veh, "flashers", true, true)
-					if blueRed or flashers then
-						setVehicleHeadLightColor(veh, 0, 0, 255)
-					else
-						setVehicleHeadLightColor(veh, 255, 90, 0)
-					end
-					setVehicleLightState(veh, 0, 1)
-					setVehicleLightState(veh, 1, 0)
 				else
 					setElementData(veh, "flashers", nil, true)
-					setVehicleLightState(veh, 0, 0)
-					setVehicleLightState(veh, 1, 0)
-					setVehicleHeadLightColor(veh, 255, 255, 255)
 				end
 			end
 		end
@@ -72,6 +62,8 @@ function streamOut()
 		if policevehicles[source] then
 			policevehicles[source] = nil
 			setVehicleHeadLightColor(source, 255, 255, 255)
+			setVehicleLightState(veh, 0, 0)
+			setVehicleLightState(veh, 1, 0)
 		end
 	end
 end
@@ -82,31 +74,27 @@ function doFlashes()
 		if not (isElement(veh)) then
 			policevehicles[veh] = nil
 		elseif (getElementData(veh, "flashers")) then
-			local state1 = getVehicleLightState(veh, 0)
-			local state2 = getVehicleLightState(veh, 1)
+			local state = getVehicleLightState(veh, 0)
 			
 			local modelid = getElementModel(veh)
-			--if governmentVehicle[modelid] or exports.global:hasItem(veh, 61) then
-
-			--end
 			local orange = orangeVehicle[modelid]
 			if orange then
 				setVehicleHeadLightColor(veh, 255, 90, 0)
 			else
-				if (state1==0) then
+				if (state==0) then
 					setVehicleHeadLightColor(veh, 0, 0, 255)
 				else
 					setVehicleHeadLightColor(veh, 255, 0, 0)
 				end
 			end
 			
-			setVehicleLightState(veh, 0, state2)
-			setVehicleLightState(veh, 1, state1)
+			setVehicleLightState(veh, 0, 1-state)
+			setVehicleLightState(veh, 1, state)
 		else
+			policevehicles[veh] = nil
 			setVehicleHeadLightColor(veh, 255, 255, 255)
 			setVehicleLightState(veh, 0, 0)
 			setVehicleLightState(veh, 1, 0)
-			policevehicles[veh] = nil
 		end
 	end
 end
