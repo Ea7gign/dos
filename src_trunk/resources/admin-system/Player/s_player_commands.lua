@@ -882,11 +882,11 @@ function hiddenOOC(thePlayer, commandName, ...)
 			local players = exports.pool:getPoolElementsByType("player")
 			local message = table.concat({...}, " ")
 			
-			exports.irc:sendMessage("[OOC: Global Chat] Hidden Admin: " .. message)
+			exports.irc:sendMessage("[OOC: Global Chat] Hidden Admin " .. getPlayerName(thePlayer) .. ": " .. message)
 			for index, arrayPlayer in ipairs(players) do
 				local logged = getElementData(arrayPlayer, "loggedin")
 			
-				if (logged==1) then
+				if (logged==1) and getElementData(arrayPlayer, "globalooc") == 1 then
 					outputChatBox("(( Hidden Admin: " .. message .. " ))", arrayPlayer, 255, 255, 255)
 				end
 			end
