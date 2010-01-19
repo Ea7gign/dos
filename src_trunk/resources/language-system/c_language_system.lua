@@ -23,6 +23,7 @@ addEvent("increaseInSkill", true)
 addEventHandler("increaseInSkill", getRootElement(), increaseInSkill)
 
 function renderText()
+	if not sx or not sy then return end
 	count = count + 1
 	dxDrawText(text, sx-150, sy, sx+200, sy+50, tocolor(255, 255, 255, alpha), 1, "diploma", "center", "center")
 	
