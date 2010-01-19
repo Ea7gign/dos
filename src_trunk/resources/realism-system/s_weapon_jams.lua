@@ -14,8 +14,10 @@ function resourceStart(res)
 	end
 	
 	-- garage fix
-	for i = 1, 50 do
-		setGarageOpen(i-1, true)
+	for i = 0, 49 do
+		if i ~= 13 then
+			setGarageOpen(i, true)
+		end
 	end
 end
 addEventHandler("onResourceStart", getResourceRootElement(), resourceStart)
