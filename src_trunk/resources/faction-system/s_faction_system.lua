@@ -377,9 +377,7 @@ function callbackToggleLeader(playerName, isLeader)
 			local theTeam = getPlayerTeam(source)
 			local teamPlayers = getPlayersInTeam(theTeam)
 			for k, v in ipairs(teamPlayers) do
-				if (v~=source) then
-					outputChatBox(username .. " promoted " .. playerName .. " to leader.", v)
-				end
+				outputChatBox(username .. " promoted " .. playerName .. " to leader.", v)
 			end
 		else
 			outputChatBox("Failed to promote " .. removedPlayerName .. " to faction leader, Contact an admin.", source, 255, 0, 0)
@@ -405,9 +403,7 @@ function callbackToggleLeader(playerName, isLeader)
 			local theTeam = getPlayerTeam(source)
 			local teamPlayers = getPlayersInTeam(theTeam)
 			for k, v in ipairs(teamPlayers) do
-				if (v~=thePlayer) then
-					outputChatBox(username .. " demoted " .. playerName .. " to member.", v)
-				end
+				outputChatBox(username .. " demoted " .. playerName .. " to member.", v)
 			end
 		else
 			outputChatBox("Failed to demote " .. removedPlayerName .. " from faction leader, Contact an admin.", source, 255, 0, 0)
@@ -435,9 +431,7 @@ function callbackPromotePlayer(playerName, rankNum, oldRank, newRank)
 		if (theTeam) then
 			local teamPlayers = getPlayersInTeam(theTeam)
 			for k, v in ipairs(teamPlayers) do
-				if (v~=thePlayer) then
-					outputChatBox(username .. " promoted " .. playerName .. " from '" .. oldRank .. "' to '" .. newRank .. "'.", v)
-				end
+				outputChatBox(username .. " promoted " .. playerName .. " from '" .. oldRank .. "' to '" .. newRank .. "'.", v)
 			end
 		end
 	else
@@ -465,9 +459,7 @@ function callbackDemotePlayer(playerName, rankNum, oldRank, newRank)
 		if (theTeam) then
 			local teamPlayers = getPlayersInTeam(theTeam)
 			for k, v in ipairs(teamPlayers) do
-				if (v~=thePlayer) then
-					outputChatBox(username .. " demoted " .. playerName .. " from '" .. oldRank .. "' to '" .. newRank .. "'.", v)
-				end
+				outputChatBox(username .. " demoted " .. playerName .. " from '" .. oldRank .. "' to '" .. newRank .. "'.", v)
 			end
 		end
 	else
