@@ -291,7 +291,7 @@ function handleReport(reportedPlayer, reportedReason)
 	end
 	
 	outputChatBox("[" .. timestring .. "] Thank you for submitting your admin report, Your report reference number is #" .. tostring(slot) .. ".", source, 255, 194, 14)
-	outputChatBox("[" .. timestring .. "] An admin will respond to your report ASAP. Currently there are " .. count .. " admin(s) available.", source, 255, 194, 14)
+	outputChatBox("[" .. timestring .. "] An admin will respond to your report ASAP. Currently there are " .. count .. " admin" .. ( count == 1 and "" or "s" ) .. " available.", source, 255, 194, 14)
 	outputChatBox("[" .. timestring .. "] You can close this report at any time by typing /endreport.", source, 255, 194, 14)
 	
 	updateReportCount()
