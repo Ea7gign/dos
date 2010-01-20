@@ -24,25 +24,36 @@ local pdgates =
 		{ createObject(3089,232.9,110.55,1010.5477294922,0,0,270), 90 },
 		{ createObject(3089,232.9,107.65,1010.5477294922,0,0,90), -90 }
 	},
---[[	{
-		{ createObject(1495,213.78079223633,123.9891204834,998.015625,0,0,0), 90 }
-	},
-	{
-		{ createObject(1495,215.49610900879,123.78,998.015625,0,0,269.72082519531), 90 }
-	},
-	{
-		{ createObject(1495,213.6,118.73033905029,998.015625,0,0,358.8828125), -88 }
-	},
-	{
-		{ createObject(1495,216.30,116.5,998.03,0,0,0), -90 },
-		{ createObject(1495,219.28,116.51,998.03,0,0,180), 90 }
-	},]]
 	{
 		{ createObject(3089,222.1875,119.51522064209,1010.5477294922,0,0,0), 90 }
+	},
+	{
+		{ createObject(3089,275.77990722656,121.38358306885,1004.9461669922,0,0,90), -90 }
+	},
+	{
+		{ createObject(3089,275.79528808594,115.92472839355,1004.9461669922,0,0,90), -90 },
+		{ createObject(3089,275.80328369141,118.91221618652,1004.9461669922,0,0,270), 90 }
+	},
+	{
+		{ createObject(3089,267.43103027344,115.82251739502,1004.9461669922,0,0,180), -90 },
+		{ createObject(3089,264.44378662109,115.8176574707,1004.9461669922), 90 }
+	},
+	{
+		{ createObject(3089,267.32672119141,112.51244354248,1004.9461669922,0,0,180), 90 },
+		{ createObject(3089,264.34057617188,112.52392578125,1004.9461669922), -90 }
+	},
+	{
+		{ createObject(1495,213.62786865234,124.80812835693,998.015625), -90 }
+	},
+	{
+		{ createObject(1495,222.47738647461,118.22347259521,998.01574707031,0,0,90), 90 }
+	},
+	{
+		{ createObject(14843,213.48028564453,116.57857513428,999.25439453125,0,0,180), -2.1, true }
 	}
 }
 
-for _, group in pairs(pdgates) do
+for _, group in ipairs(pdgates) do
 	for _, gate in ipairs(group) do
 		setElementInterior(gate[1], 10)
 		setElementDimension(gate[1], 1)
@@ -57,7 +68,7 @@ local function closeDoor( shortestID )
 	group = pdgates[ shortestID ]
 	for _, gate in ipairs(group) do
 		local nx, ny, nz = getElementPosition( gate[1] )
-		moveObject( gate[1], 1000, nx, ny, nz, 0, 0, -gate[2] )
+		moveObject( gate[1], 1000, nx + ( gate[3] and -gate[2] or 0 ), ny, nz, 0, 0, gate[3] and 0 or -gate[2] )
 	end
 	group.busy = true
 	group.timer = nil
@@ -90,7 +101,7 @@ local function openDoor(thePlayer)
 			else
 				for _, gate in ipairs(shortest) do
 					local nx, ny, nz = getElementPosition( gate[1] )
-					moveObject( gate[1], 1000, nx, ny, nz, 0, 0, gate[2] )
+					moveObject( gate[1], 1000, nx + ( gate[3] and gate[2] or 0 ), ny, nz, 0, 0, gate[3] and 0 or gate[2] )
 				end
 				outputChatBox( "You opened the door!", thePlayer, 0, 255, 0 )
 			end
