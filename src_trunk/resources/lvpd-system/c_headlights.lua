@@ -62,8 +62,8 @@ function streamOut()
 		if policevehicles[source] then
 			policevehicles[source] = nil
 			setVehicleHeadLightColor(source, 255, 255, 255)
-			setVehicleLightState(veh, 0, 0)
-			setVehicleLightState(veh, 1, 0)
+			setVehicleLightState(source, 0, 0)
+			setVehicleLightState(source, 1, 0)
 		end
 	end
 end
@@ -102,5 +102,18 @@ setTimer(doFlashes, 250, 0)
 
 function vehicleBlown()
 	setVehicleHeadLightColor(source, 255, 255, 255)
+	setVehicleLightState(source, 0, 0)
+	setVehicleLightState(source, 1, 0)
 end
 addEventHandler("onClientVehicleRespawn", getRootElement(), vehicleBlown)
+
+addEventHandler("onClientResourceStop", getRootElement(),
+	function()
+		for veh in pairs(policevehicles) do
+			setVehicleHeadLightColor(veh, 255, 255, 255)
+			setVehicleLightState(veh, 0, 0)
+			setVehicleLightState(veh, 1, 0)
+		end
+		policevehicles = {}
+	end
+)
