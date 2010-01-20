@@ -44,4 +44,6 @@
 	<script src="lmc-resto.lua" type="client"/>
 	<script src="lmc-backroom.lua" type="client"/>
 	<script src="lmc-interiors.lua" type="client"/>
+	
+	<script src="Yakuza Little Tokyo.lua" type="client"/>
 </meta>
