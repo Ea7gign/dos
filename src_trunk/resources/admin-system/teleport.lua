@@ -4,6 +4,8 @@ function AdminLoungeTeleport(sourcePlayer)
 		triggerClientEvent(sourcePlayer, "usedElevator", sourcePlayer)
 		setPedFrozen(sourcePlayer, true)
 		setPedGravity(sourcePlayer, 0)
+		setElementDimension(sourcePlayer, 0)
+		setElementInterior(sourcePlayer, 0)
 	end
 end
 
