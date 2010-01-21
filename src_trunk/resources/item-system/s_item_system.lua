@@ -340,7 +340,7 @@ function useItem(itemSlot, additional)
 			triggerEvent("dropItem", source, itemSlot, x, y, z+0.3)
 		elseif (itemID==55) then -- Stevie's business card
 			exports.global:sendLocalMeAction(source, "looks at a piece of paper.")
-			outputChatBox("The card reads: 'Steven Pullman - L.V. Freight Depot, Tel: 081016'", source, 255, 51, 102)
+			outputChatBox("The card reads: 'Steven Pullman - L.V. Freight Depot, Tel: 12555'", source, 255, 51, 102)
 		elseif (itemID==56) then -- MASK
 			local mask = getElementData(source, "mask")
 			
