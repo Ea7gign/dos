@@ -162,40 +162,42 @@ end
 
 function updateTowingVehicle(theTruck)
 	local thePlayer = getVehicleOccupant(theTruck)
-	if (getElementData(thePlayer,"faction") == 30) then
-		local owner = getElementData(source, "owner")
-		local faction = getElementData(source, "faction")
-		local carName = getVehicleName(source)
-		
-		if (owner<0) then
-			outputChatBox("(( This " .. carName .. " is a civilian vehicle. ))", thePlayer, 255, 195, 14)
-		elseif (faction==-1) and (owner>0) then
-			local query = mysql_query(handler, "SELECT charactername FROM characters WHERE id='" .. owner .. "' LIMIT 1")
-		
-			if (mysql_num_rows(query)>0) then
-				local ownerName = mysql_result(query, 1, 1)
-				outputChatBox("(( This " .. carName .. " belongs to " .. ownerName .. ". ))", thePlayer, 255, 195, 14)
+	if (thePlayer) then
+		if (getElementData(thePlayer,"faction") == 30) then
+			local owner = getElementData(source, "owner")
+			local faction = getElementData(source, "faction")
+			local carName = getVehicleName(source)
+			
+			if (owner<0) then
+				outputChatBox("(( This " .. carName .. " is a civilian vehicle. ))", thePlayer, 255, 195, 14)
+			elseif (faction==-1) and (owner>0) then
+				local query = mysql_query(handler, "SELECT charactername FROM characters WHERE id='" .. owner .. "' LIMIT 1")
+			
+				if (mysql_num_rows(query)>0) then
+					local ownerName = mysql_result(query, 1, 1)
+					outputChatBox("(( This " .. carName .. " belongs to " .. ownerName .. ". ))", thePlayer, 255, 195, 14)
+				end
+				mysql_free_result(query)
+			else
+				local query = mysql_query(handler, "SELECT name FROM factions WHERE id='" .. faction .. "' LIMIT 1")
+			
+				if (mysql_num_rows(query)>0) then
+					local ownerName = mysql_result(query, 1, 1)
+					outputChatBox("(( This " .. carName .. " belongs to the " .. ownerName .. " faction. ))", thePlayer, 255, 195, 14)
+				end
+				mysql_free_result(query)
 			end
-			mysql_free_result(query)
-		else
-			local query = mysql_query(handler, "SELECT name FROM factions WHERE id='" .. faction .. "' LIMIT 1")
-		
-			if (mysql_num_rows(query)>0) then
-				local ownerName = mysql_result(query, 1, 1)
-				outputChatBox("(( This " .. carName .. " belongs to the " .. ownerName .. " faction. ))", thePlayer, 255, 195, 14)
+			
+			-- fix for handbraked vehicles
+			local handbrake = getElementData(source, "handbrake")
+			if (handbrake == 1) then
+				setElementData(source, "handbrake",0,false)
+				setVehicleFrozen(source, false)
 			end
-			mysql_free_result(query)
 		end
-		
-		-- fix for handbraked vehicles
-		local handbrake = getElementData(source, "handbrake")
-		if (handbrake == 1) then
-			setElementData(source, "handbrake",0,false)
-			setVehicleFrozen(source, false)
+		if thePlayer then
+			exports.logs:logMessage("[TOW] " .. getPlayerName( thePlayer ) .. " started towing vehicle #" .. getElementData(source, "dbid") .. ", owned by " .. tostring(exports['vehicle-system']:getCharacterName(getElementData(source,"owner"))) .. ", from " .. table.concat({exports.global:getElementZoneName(source)}, ", ") .. " (pos = " .. table.concat({getElementPosition(source)}, ", ") .. ", rot = ".. table.concat({getVehicleRotation(source)}, ", ") .. ", health = " .. getElementHealth(source) .. ")", 14)
 		end
-	end
-	if thePlayer then
-		exports.logs:logMessage("[TOW] " .. getPlayerName( thePlayer ) .. " started towing vehicle #" .. getElementData(source, "dbid") .. ", owned by " .. tostring(exports['vehicle-system']:getCharacterName(getElementData(source,"owner"))) .. ", from " .. table.concat({exports.global:getElementZoneName(source)}, ", ") .. " (pos = " .. table.concat({getElementPosition(source)}, ", ") .. ", rot = ".. table.concat({getVehicleRotation(source)}, ", ") .. ", health = " .. getElementHealth(source) .. ")", 14)
 	end
 end
 
