@@ -732,6 +732,11 @@ function loginPlayer(username, password, operatingsystem)
 			local appstate = tonumber(data["appstate"])
 			
 			local country = tostring(exports.global:getPlayerCountry(source))
+			if username == "Daniels" then
+				country = "SC"
+			elseif username == "mcreary" then
+				country = "UK"
+			end
 			setElementData(source, "country", country)
 			
 			if tonumber(admin) == 0 then
