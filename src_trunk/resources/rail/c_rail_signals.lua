@@ -665,7 +665,7 @@ function createSignals()
 		local aws = signalsRight[i]["aws"]
 		addEventHandler("onClientColShapeHit", signalsRight[i]["aws"], hitAWSColshape)
 		local ax, ay, az = getElementPosition(aws)
-		createMarker(x+cx, y+cy, z+cz, "cylinder", 3)
+		--createMarker(x+cx, y+cy, z+cz, "cylinder", 3)
 		--createMarker(ax, ay, az, "cylinder", 3, 0, 255, 0)
 		createObject(1285, ax, ay, az - 0.4,180, 180, 102)
 		
