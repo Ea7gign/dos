@@ -2,12 +2,7 @@
 	<script src="createObject.lua" type="client"/>
 	<script src="Bank Int.lua" type="client"/>
 	<script src="Church Int.lua" type="client"/>
-	<script src="DieFaust Garage.lua" type="client"/>
-	<script src="falcone map.lua" type="client"/>
-	<script src="falcone map 2.lua" type="client"/>
 	<script src="Hospital Int.lua" type="client"/>
-	<script src="Jefferson Interior Doors.lua" type="client"/>
-	<script src="Jefferson Emerald Isle.lua" type="client"/>
 	<script src="LS Harbor.lua" type="client"/>
 	<script src="Main Street.lua" type="client"/>
 	<script src="Recording Studio.lua" type="client"/>
@@ -17,8 +12,6 @@
 	<script src="Idlewood Gas.lua" type="client"/>
 	<script src="seville.lua" type="client"/>
 	<script src="Busstops_LS_LineAB.lua" type="client"/>
-	<script src="Prison Int Cells.lua" type="client"/>
-	<script src="Prison Int Rec.lua" type="client"/>
 	<script src="Pershing_Square.lua" type="client"/>
 	<script src="PD Impound.lua" type="client"/>
 	<script src="swimming_pool.lua" type="client"/>
@@ -31,7 +24,6 @@
 	<script src="daniels_mansion.lua" type="client"/>
 	<script src="MountMansion.lua" type="client"/>
 	<script src="FD Interior.lua" type="client"/>
-	<script src="Glen Park.lua" type="client"/>
 	<script src="CityHall.lua" type="client"/>
 	<script src="ES.lua" type="client"/>
 	<script src="ES Academy.lua" type="client"/>
