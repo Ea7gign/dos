@@ -70,6 +70,8 @@ function render()
 			else
 				chatters[key] = nil
 			end
+		else
+			chatters[key] = nil
 		end
 	end
 end
