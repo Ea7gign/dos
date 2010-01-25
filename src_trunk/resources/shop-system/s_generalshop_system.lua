@@ -261,8 +261,20 @@ addEvent("onClickStoreKeeper", true)
 addEventHandler("onClickStoreKeeper", getRootElement(), clickStoreKeeper)
 
 
+function calcSupplyCosts(thePlayer, itemID, isWeapon, supplyCost)
+	if not isweapon and id ~= 68 then
+		if exports.global:isPlayerPearlDonator(thePlayer) then
+			return math.ceil( 0.5 * supplyCost )
+		elseif exports.global:isPlayerSilverDonator(thePlayer) then
+			return math.ceil( 0.75 * supplyCost )
+		end
+	end
+	return supplyCost
+end
+
 
 function givePlayerBoughtItem(itemID, itemValue, theCost, isWeapon, name, supplyCost)
+	supplyCost = calcSupplyCosts(source, itemID, isWeapon, supplyCost)
 	local interior = getElementDimension(source)
 	
 	if (itemID==48) then -- BACKPACK = UNIQUE
@@ -402,7 +414,7 @@ function givePlayerBoughtItem(itemID, itemValue, theCost, isWeapon, name, supply
 			end
 			
 			if inttype == 1 then
-				local query = mysql_query(handler, "UPDATE interiors SET supplies = supplies-1 WHERE id='" .. interior .. "'")
+				local query = mysql_query(handler, "UPDATE interiors SET supplies = supplies - " .. ( tonumber(supplyCost) or 1 ) .. " WHERE id='" .. interior .. "'")
 				mysql_free_result(query)
 				-- give the money to the shop owner
 				local owner = getElementData(thePickup, "owner")

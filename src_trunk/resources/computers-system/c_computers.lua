@@ -32,28 +32,14 @@ function createComputerGUI( )
 		showCursor(true)	
 	end
 end
-addCommandHandler("turnon",createComputerGUI)
 
 function closeComputerWindow()
 	if(wInternet)then -- Internet window
-		destroyElement(bg)
-		destroyElement(shadow_left)
-		destroyElement(shadow_bottom)
-		destroyElement(shadow_top)
-		destroyElement(internet_pane)
-		destroyElement(go_button)
-		destroyElement(address_bar)
-		destroyElement(internet_address_label)
-		destroyElement(internet_close_button)
-		destroyElement(wInternet_bg)
 		destroyElement(wInternet)
 		wInternet, wInternet_bg, internet_close_button, internet_address_label, address_bar, go_button, internet_pane, shadow_top, shadow_left, shadow_bottom, bg = nil
 	end
 	-- Computer Desktop GUI.
 	destroyElement(wComputer)
-	destroyElement(desktopImage)
-	destroyElement(internetButton)
-	destroyElement(shutdownButton)
 	wComputer,desktopImage,internetButton,shutdownButton = nil
 	
 	showCursor(false)	
@@ -76,7 +62,7 @@ function openInternetWindow()
 		wInternet_bg = guiCreateStaticImage(0.02,0.02,0.96,0.96,"websites/colours/14.png",true,wInternet)
 		internet_close_button = guiCreateButton(462,11,20,20,"x",false,wInternet_bg)
 		addEventHandler("onClientGUIClick",internet_close_button,closeInternetWindow,false)
-		internet_address_label = guiCreateLabel(5,15,490,20,"",false,wInternet_bg)
+		internet_address_label = guiCreateLabel(5,15,455,20,"",false,wInternet_bg)
 		guiLabelSetColor(internet_address_label,28,28,28)
 		address_bar = guiCreateEdit(5,40,320,24,"",false,wInternet_bg)
 		go_button = guiCreateButton(337,40,24,24,"Go",false,wInternet_bg)

@@ -729,6 +729,9 @@ function useItem(button)
 						setElementData(getLocalPlayer(), "alcohollevel", ( getElementData(getLocalPlayer(), "alcohollevel") or 0 ) + 0.35, false)
 					end, 15000, 1
 				)
+			elseif (itemID==96) then
+				exports['computers-system']:createComputerGUI()
+				hideInventory()
 			end
 
 			

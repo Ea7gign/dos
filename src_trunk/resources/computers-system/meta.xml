@@ -7,6 +7,8 @@
 	<file src="email_icon.png" />
 	<file src="shutdown_icon.png" />
 	
+	<export function="createComputerGUI" type="client"/>
+	
 	<!-- Images -->
 	<file src="websites/images/ad_space_box.png" />
 	<file src="websites/images/ad_space_h.png" />

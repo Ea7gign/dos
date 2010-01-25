@@ -631,6 +631,8 @@ function useItem(itemSlot, additional)
 			exports.global:applyAnimation(source, "VENDING", "VEND_Drink_P", 4000, false, true, true)
 			exports.global:sendLocalMeAction(source, "drinks some " .. itemName .. ".")
 			takeItemFromSlot(source, itemSlot)
+		elseif (itemID==96) then -- Computer
+			exports.global:sendLocalMeAction(source, "turns their computer on.")
 		else
 			outputChatBox("Error 800001 - Report on http://bugs.valhallagaming.net", source, 255, 0, 0)
 		end
