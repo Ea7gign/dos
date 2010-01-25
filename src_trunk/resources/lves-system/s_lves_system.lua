@@ -99,7 +99,8 @@ function respawnPlayer(thePlayer)
 
 		spawnPlayer(thePlayer, 1183.291015625, -1323.033203125, 13.577140808105, 267.4580078125, theSkin, 0, 0, theTeam)
 		
-		fadeCamera(thePlayer, true, 2)
+		fadeCamera(thePlayer, true, 6)
+		triggerClientEvent(thePlayer, "fadeCameraOnSpawn", thePlayer)
 	end
 end
 

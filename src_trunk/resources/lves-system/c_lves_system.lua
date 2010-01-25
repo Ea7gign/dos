@@ -131,3 +131,29 @@ function checkWeapons()
 	triggerServerEvent("onDeathRemovePlayerWeapons", getLocalPlayer(), weapons, removedWeapons, removedWeapons2)
 end
 addEventHandler("onClientPlayerWasted", getLocalPlayer(), checkWeapons)
+
+--
+
+local sx, sy = guiGetScreenSize()
+local start = 0
+local fadeTime = 6000
+
+addEvent("fadeCameraOnSpawn", true)
+addEventHandler("fadeCameraOnSpawn", getLocalPlayer(),
+	function()
+		start = getTickCount()
+	end
+)
+
+addEventHandler("onClientRender",getRootElement(),
+	function()
+		local currTime = getTickCount() - start
+		if currTime < fadeTime then
+			local height = ( sx / 2 ) * ( 1 - currTime / fadeTime )
+			local alpha = 255 * ( 1 - currTime / fadeTime )
+			dxDrawRectangle( 0, 0, sx, height, tocolor( 0, 0, 0, 255 ) )
+			dxDrawRectangle( 0, sy - height, sx, height, tocolor( 0, 0, 0, 255 ) )
+			dxDrawRectangle( 0, 0, sx, sy, tocolor( 0, 0, 0, alpha ) )
+		end
+	end
+)
