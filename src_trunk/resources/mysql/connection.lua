@@ -1,5 +1,14 @@
--- some ideas jacked off the database resource
--- remade for vg's most used functions
+--[[
+example usage:
+
+mysql = exports.mysql
+local query = "SELECT * FROM `players` WHERE `username` = '" .. mysql:escape_string(username) .. "'"
+local result = mysql:query(query)
+local row = mysql:fetch_assoc(result)
+local bankmoney = row["bankmoney"]
+mysql:freeResult(result)
+
+]]
 
 -- connection settings
 local hostname = "localhost"
@@ -29,7 +38,7 @@ function connectToDatabase(res)
 	return nil
 end
 addEventHandler("onResourceStart", getResourceRootElement(getThisResource()), connectToDatabase, false)
-
+	
 -- destroyDatabaseConnection - Internal function, kill the connection if theres one.
 function destroyDatabaseConnection()
 	if (not MySQLConnection) then
@@ -60,16 +69,6 @@ function getFreeResultPoolID()
 end
 
 ------------ EXPORTED FUNCTIONS ---------------
-
--- ping()
--- escape_string(str)
--- query(str)			returns handle
--- query_free(str)
--- fetch_assoc(handle)
--- rows_assoc(handle)
--- free_result(handle)
--- result(handle, row_offset, field_offset)
--- num_rows(handle)
 
 function ping()
 	if (mysql_ping(MySQLConnection) == false) then
