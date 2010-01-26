@@ -58,3 +58,21 @@ local function openDoor(thePlayer, commandName, pass)
 	end
 end
 addCommandHandler( "gate", openDoor)
+
+-- 
+
+local gates2 =
+{
+	createObject(1533,507.33889770508,-3.5551257133484,999.60827636719,0,0,270),
+	createObject(1533,504.04867553711,-10.92481136322,999.6796875,0,0,90),
+	createObject(1533,504.0524597168,-10.423944473267,1002.1549072266,2,270,90),
+	createObject(1533,504.05889892578,-13.850741386414,999.6796875,0,0,90),
+	createObject(1533,504.0517578125,-10.423828125,1002.3050537109,1.99951171875,270,90),
+	createObject(1533,504.0478515625,-10.875,999.6796875,0,0,270),
+	createObject(1533,474.45993041992,-10.360939025879,1002.6777954102)
+}
+
+for _, gate in pairs(gates2) do
+	setElementInterior(gate, 17)
+	setElementDimension(gate, 9717)
+end
