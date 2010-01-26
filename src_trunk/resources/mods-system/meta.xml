@@ -4,14 +4,11 @@
 	<script src="c_mods_system.lua" type="client"/>
 	<script src="c_show_fps.lua" type="client"/>
 	
-	<file src="lv/lee_stripclub.txd"/>
-	<file src="lv/lee_stripclub1.txd"/>
-	<file src="lv/bustopm.txd"/>
-	<file src="lv/airport3_las.txd"/>
-	<file src="lv/ground3_las.txd"/>
-	<file src="lv/eastbeach3c_lae2.txd"/>
-	<file src="lv/billbrd01_lan.txd"/>
-	<file src="lv/gangblok1_lae2.txd"/>
+	<file src="ls/lee_stripclub.txd"/>
+	<file src="ls/lee_stripclub1.txd"/>
+	<file src="ls/bustopm.txd"/>
+	<file src="ls/eastbeach3c_lae2.txd"/>
+	<file src="ls/gangblok1_lae2.txd"/>
 	
 	<file src="tags/tags_lafront.txd"/>
 	<file src="tags/tags_lakilo.txd"/>

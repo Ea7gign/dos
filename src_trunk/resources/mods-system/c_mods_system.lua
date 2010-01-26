@@ -1,5 +1,3 @@
-local club420 = nil
-
 function applyMods()
 	----------------------
 	-- Pig Pen Interior --
@@ -21,46 +19,11 @@ function applyMods()
 	engineImportTXD(pigpen2, 14838)	
 	
 	------------------------
-	--		 Cop Cars     --
-	------------------------
-	--copcarvg = engineLoadTXD ( "copcarvg.txd" )
-	--engineImportTXD ( copcarvg, 596 )
-	--copcarvgdff = engineLoadDFF ( "copcarvg.dff", 596 )
-	--engineReplaceModel ( copcarvgdff, 596 )
-	
-	--copcarvgswat = engineLoadTXD ( "copcarvg.txd" )
-	--engineImportTXD ( copcarvgswat, 597 )
-	--copcarvgswatdff = engineLoadDFF ( "copcarvg.dff", 597 )
-	--engineReplaceModel ( copcarvgswatdff, 597 )
-	------------------------
 	-- bus Stop --
 	------------------------
 	busStop = engineLoadTXD("lv/bustopm.txd")
 	engineImportTXD(busStop, 1257)
 			
-	----------------
-	-- Billboards --
-	----------------
-	
-	------------------
-	-- Police Skins --
-	------------------
-	-- LSPD
-	--lspd = engineLoadTXD("skins/lvpd/lapd1.txd")
-	--engineImportTXD(lspd, 280)
-	
-	-- SFPD
-	--sfpd = engineLoadTXD("skins/lvpd/sfpd1.txd")
-	--engineImportTXD(sfpd, 281)
-	
-	-- SWAT
-	--swatCop = engineLoadTXD("skins/lvpd/swat.txd")
-	--engineImportTXD(swatCop, 285)
-	
-	-- Cadet
-	--cadet = engineLoadTXD("skins/lvpd/wmysgrd.txd")
-	--engineImportTXD(cadet, 71)
-	
 	----------------
 	-- Gang Tags --
 	----------------
@@ -88,58 +51,11 @@ function applyMods()
 	tag8 = engineLoadTXD ( "tags/tags_laazteca.txd" ) -- Los Malvados
 	engineImportTXD ( tag8, 1531 )
 	
-	----------------------------
-	-- Pacific Flight Company --
-	----------------------------
-	pfc = engineLoadTXD ( "lv/airport3_las.txd" )
-	engineImportTXD ( pfc, 4828 )
-	
-	ground3_las = engineLoadTXD ( "lv/ground3_las.txd" )
-	engineImportTXD ( ground3_las, 1267 )
-	engineImportTXD ( ground3_las, 5017 )
-
+	---------
+	-- BTR --
+	---------
 	towing = engineLoadTXD ( "lv/eastbeach3c_lae2.txd" )
 	engineImportTXD ( towing, 17555 )
-	
-	------------
-	-- PRO LS --
-	------------
-	-- proLS = engineLoadTXD ( "lv/sunset02_law2.txd" )
-	-- engineImportTXD ( proLS, 6364 )
-	
-	----------
-	-- Fitz --
-	----------
-	lautner = engineLoadTXD( "lv/billbrd01_lan.txd" )
-	engineImportTXD ( lautner, 4239 )
-	
-	--[[--------------
-	-- Club 420 --
-	--------------
-	club420col = createColSphere( -2658.7900390625, 1410.015625, 910.17034912109, 100 )
-	setElementDimension( club420col, 1355 )
-	setElementInterior( club420col, 3 )
-	
-	addEventHandler( "onClientColShapeHit", club420col,
-		function( p, d )
-			if p == getLocalPlayer( ) and d and not club420 then
-				club420 = engineLoadTXD( "lv/pdomes_logo.txd" )
-				engineImportTXD ( club420, 14539 )
-			end
-		end
-	)
-	
-	addEventHandler( "onClientColShapeLeave", club420col,
-		function( p )
-			if p == getLocalPlayer( ) and club420 then
-				destroyElement( club420 )
-				club420 = nil
-			end
-		end
-	)
-	club420b = engineLoadTXD( "lv/lanlacmab_lan2.txd" )
-	engineImportTXD ( club420b, 4594 )
-	]]
 	
 	---------------
 	-- Moscovian --
