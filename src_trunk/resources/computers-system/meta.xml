@@ -1,6 +1,7 @@
 <meta>
 	<info author="Chamberlain" type="script" name="Computers" showInResourceBrowser="true" version="0.0.1" />
 	<script src="c_computers.lua" type="client"/>
+	<script src="s_computers.lua" type="server"/>
 	
 	<file src="desktop.png" />
 	<file src="internet_icon.png" />
@@ -177,6 +178,9 @@
 	<script src="websites/lossantos.lua" type="client"/>	
 	<script src="websites/lses.lua" type="client"/>
 	<script src="websites/lspd.lua" type="client"/>
+	
+	<!-- P -->
+	<script src="websites/preview.lua" type="client"/>
 	
 	<!-- S -->
 	<script src="websites/sanetwork.lua" type="client"/>

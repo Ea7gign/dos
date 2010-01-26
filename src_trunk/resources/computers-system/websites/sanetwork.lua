@@ -5,6 +5,9 @@
 -- Website owner's forum name:
 -- Website owner's Character's name:
 
+-------------------
+-- SAN Home Page --
+-------------------
 function www_sanetwork_sa()
 	
 	-- Webpage Properties
@@ -97,9 +100,9 @@ function www_sanetwork_sa()
 	guiSetFont(top_story_date,"default-bold-small")
 	guiLabelSetColor(top_story_date,38,38,38)
 	-- Summary
-	local top_story_summary =  guiCreateLabel(10,238,280,48,"Scottish residence in Los Santos are in a state of\
-															panic due to haggis shortages.",false,bg)
+	local top_story_summary =  guiCreateLabel(10,238,280,48,"Scottish residence in Los Santos are in a state of panic due to haggis shortages.",false,bg)
 	guiLabelSetColor(top_story_summary,38,38,38)
+	guiLabelSetHorizontalAlign(top_story_summary,"left",true)
 	
 	------------- Other News -------------
 	local other_news_header_bg = guiCreateStaticImage(0,290,295,22,"websites/colours/7.png",false,bg)
@@ -123,7 +126,7 @@ function www_sanetwork_sa()
 		-- first line
 		local story_2_summary = guiCreateLabel(18,349,270,16,"The first line of story 2...",false,bg)
 		guiLabelSetColor(story_2_summary,38,38,38)
-	
+		guiLabelSetHorizontalAlign(story_2_summary,"left",true)
 	
 	-- Article 3
 		-- bullet point
@@ -142,6 +145,7 @@ function www_sanetwork_sa()
 		-- first line
 		local story_3_summary = guiCreateLabel(20,413,270,16,"The first line of story 3...",false,bg)
 		guiLabelSetColor(story_3_summary,38,38,38)
+		guiLabelSetHorizontalAlign(story_3_summary,"left",true)
 		
 	-- Article 4
 		-- bullet point
@@ -160,6 +164,7 @@ function www_sanetwork_sa()
 		-- first line
 		local story_4_summary = guiCreateLabel(20,477,270,16,"The first line of story 4...",false,bg)
 		guiLabelSetColor(story_4_summary,38,38,38)
+		guiLabelSetHorizontalAlign(story_4_summary,"left",true)
 		
 	-- Article 5
 		-- bullet point
@@ -178,6 +183,7 @@ function www_sanetwork_sa()
 		-- first line
 		local story_5_summary = guiCreateLabel(20,541,270,16,"The first line of story 5...",false,bg)
 		guiLabelSetColor(story_5_summary,38,38,38)
+		guiLabelSetHorizontalAlign(story_5_summary,"left",true)
 	
 	-- Right Column
 	--------------------------- Top Links ---------------------------
@@ -230,4 +236,9 @@ function www_sanetwork_sa()
 		guiScrollPaneSetScrollBars(internet_pane, false, false)
 	end
 	
+end
+
+-- SAN story: "Haggis stock depleting"
+function www_sanetwork_sa_Haggis_stocks_depleting()
+
 end
