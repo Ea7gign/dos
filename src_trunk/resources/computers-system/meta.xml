@@ -8,8 +8,6 @@
 	<file src="email_icon.png" />
 	<file src="shutdown_icon.png" />
 	
-	<export function="createComputerGUI" type="client"/>
-	
 	<!-- Images -->
 	<file src="websites/images/ad_space_box.png" />
 	<file src="websites/images/ad_space_h.png" />
@@ -166,8 +164,7 @@
 	<file src="websites/colours/126.png" />
 	
 	<!-- Websites -->
-	<script src="websites/site list.lua" type="client"/>
-	
+
 	<!-- B -->
 	<script src="websites/bankofsa.lua" type="client"/>
 
@@ -178,9 +175,6 @@
 	<script src="websites/lossantos.lua" type="client"/>	
 	<script src="websites/lses.lua" type="client"/>
 	<script src="websites/lspd.lua" type="client"/>
-	
-	<!-- P -->
-	<script src="websites/preview.lua" type="client"/>
 	
 	<!-- S -->
 	<script src="websites/sanetwork.lua" type="client"/>

@@ -631,8 +631,14 @@ function useItem(itemSlot, additional)
 			exports.global:applyAnimation(source, "VENDING", "VEND_Drink_P", 4000, false, true, true)
 			exports.global:sendLocalMeAction(source, "drinks some " .. itemName .. ".")
 			takeItemFromSlot(source, itemSlot)
-		elseif (itemID==96) then -- Computer
-			exports.global:sendLocalMeAction(source, "turns their computer on.")
+		elseif (itemID==96) then -- PDA
+			exports.global:sendLocalMeAction(source, "turns their PDA on.")
+			triggerClientEvent(source, "useCompItem", source)
+		elseif (itemID==97) then -- LSES Procedures Manual (book)
+			local bookTitle = "LSES Procedure Manual"
+			local bookName = "LSESProcedureManual"
+			exports.global:sendLocalMeAction(source, "reads ".. bookTitle ..".")
+			triggerClientEvent( source, "showBook", source, bookName, bookTitle )
 		else
 			outputChatBox("Error 800001 - Report on http://bugs.valhallagaming.net", source, 255, 0, 0)
 		end

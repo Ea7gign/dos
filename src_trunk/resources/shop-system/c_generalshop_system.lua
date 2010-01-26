@@ -338,7 +338,7 @@ function getItemsForSale(shop_type, race, gender)
 			{"Chemistry Set", "A small chemistry set.", "2000", 44, 1,1,false,15},
 			{"Safe", "A Safe to store your items in.", "300", 60, 1,1,false,0},
 			{"GPS", "A GPS Satnav for a car.", "300", 67, 1,1,false,0},
-			{"Laptop", "A Laptop to browse the internet while you're bored.", "1500", 96, 1, 1, false, 400}
+			{"PDA", "A top of the range PDA to view e-mails and browse the internet.", "1500", 96, 1, 1, false, 400}
 		}
 	-- alcohol shop
 	elseif(shop_type == 9) then

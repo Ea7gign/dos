@@ -5,9 +5,6 @@
 -- Website owner's forum name:
 -- Website owner's Character's name:
 
--------------------
--- SAN Home Page --
--------------------
 function www_sanetwork_sa()
 	
 	-- Webpage Properties
@@ -236,9 +233,4 @@ function www_sanetwork_sa()
 		guiScrollPaneSetScrollBars(internet_pane, false, false)
 	end
 	
-end
-
--- SAN story: "Haggis stock depleting"
-function www_sanetwork_sa_Haggis_stocks_depleting()
-
 end

@@ -104,7 +104,8 @@ g_items = {
 	{ "Christmas Pudding", "Yum Yum.", 1, 2222, 0, 0, 0, 0.1 },
 	{ "Christmas Present", "I know you want one.", 4, 1220, 0, 0, 0, 0.1 },
 	{ "Drink", "", 1, 1484, -15, 30, 0, 0.2 },
-	{ "Laptop", "A laptop to browse the internet while you're bored.", 6, 2886, 270, 0, 0, 0.1 },
+	{ "PDA", "A top of the range PDA to view e-mails and browse the internet.", 6, 2886, 270, 0, 0, 0.1 },
+	{ "LSES Procedures Manual", "The Los Santos Emergency Service procedures handbook.", 5, 2824, 0, 0, 0, -0.01 },
 	--Chairs = { 1663, 1671, 1720, 1721, 1810, 1811, 2079, 2120, 2121, 2125, 2777, 2788, 1369 }
 }
 

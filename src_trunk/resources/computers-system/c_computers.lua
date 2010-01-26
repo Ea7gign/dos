@@ -1,30 +1,28 @@
--- Still needs a Computer item (which is dropped like a safe) and a PDA item which can be used at any time. For now /turnon to test.
-
 -- Computer window
 local wComputer,desktopImage,internetButton, emailButton, shutdownButton = nil
 	-- Internet window
 	wInternet, internet_close_button, internet_address_label, address_bar, go_button, internet_pane, shadow_top, shadow_left, shadow_bottom = nil
 	-- Email Login
-	local email_close_button, email_error_label, username_label, username_input, address_label, address_1, address_2,	address_f,	password_label,	password_input,	email_login_button,	email_register_button, wEmail = nil
-
+	local email_close_button, email_error_label, username_label, username_input, address_label, address_1, address_2, address_f, password_label, password_input, email_login_button, email_register_button, wEmail = nil
+	-- Email Main
+	local wEmail, email_tab_panel, inbox_tab, outbox_tab, send_tab = nil
+		-- Inbox
+		local inbox_grid, inbox_grid_date, inbox_grid_sender, inbox_grid_subject, inbox_message_datetitle_label, inbox_message_date_label, inbox_message_fromtitle_label, inbox_message_from_label, inbox_message_subjecttitle_label, inbox_message_subject_label, inbox_message_display, inbox_message_label, check_mail_button = nil
+		-- Outbox
+		local outbox_grid, outbox_grid_date, outbox_grid_sender, outbox_grid_subject, outbox_message_datetitle_label, outbox_message_date_label, outbox_message_totitle_label, outbox_message_from_label, outbox_message_subjecttitle_label, outbox_message_subject_label, outbox_message_display, outbox_message_label
+		-- New message
+		local new_message_to_label, new_message_to_input, new_message_subject_label, new_message_subject_input, new_message_content_label, new_message_content, send_button = nil
 ------------------------------------------------------------------
 ------------------------ Computer desktop ------------------------
 ------------------------------------------------------------------
 
-function createComputerGUI( )
-	if not exports.global:hasItem(getLocalPlayer(), 96) then
-		outputChatBox("You need to buy a computer first.", 255, 0, 0)
-		return
-	end
-	-- Window variables
+function createComputerGUI()
 	local Width = 700
 	local Height = 500
 	local screenwidth, screenheight = guiGetScreenSize()
 	local X = (screenwidth - Width)/2
 	local Y = (screenheight - Height)/2
 	if not (wComputer) then
-		--Freeze the player so they can't move while using a computer.
-		
 		wComputer = guiCreateWindow(X, Y, Width, Height, "Computer", false)
 		desktopImage = guiCreateStaticImage(0.0,0.05,1,0.95,"desktop.png",true,wComputer)
 		internetButton = guiCreateStaticImage (100,105,56,66,"internet_icon.png",false,desktopImage)
@@ -37,7 +35,9 @@ function createComputerGUI( )
 		guiSetInputEnabled(true)		
 	end
 end
-addCommandHandler("turnon",createComputerGUI)
+--addCommandHandler("computer",createComputerGUI)
+addEvent("useCompItem",true)
+addEventHandler("useCompItem",getRootElement(),createComputerGUI)
 
 function closeComputerWindow()
 	if(wInternet)then -- Internet window
@@ -70,6 +70,50 @@ function closeComputerWindow()
 		destroyElement(email_register_button)
 		destroyElement(wEmail)
 		email_close_button,	email_error_label, username_label, username_input, address_label, address_1, address_2,	address_f,	password_label,	password_input,	email_login_button,	email_register_button, wEmail = nil
+	
+	elseif (inbox_grid) then
+	
+		destroyElement(inbox_grid)
+		destroyElement(inbox_message_datetitle_label)
+		destroyElement(inbox_message_date_label)
+		destroyElement(inbox_message_fromtitle_label)
+		destroyElement(inbox_message_from_label)
+		destroyElement(inbox_message_subjecttitle_label)
+		destroyElement(inbox_message_subject_label)
+		destroyElement(inbox_message_label)
+		destroyElement(inbox_message_display)
+		destroyElement(check_mail_button)
+		
+		destroyElement(outbox_grid)
+		destroyElement(outbox_message_datetitle_label)
+		destroyElement(outbox_message_date_label)
+		destroyElement(outbox_message_totitle_label)
+		destroyElement(outbox_message_from_label)
+		destroyElement(outbox_message_subjecttitle_label)
+		destroyElement(outbox_message_subject_label)
+		destroyElement(outbox_message_label)
+		destroyElement(outbox_message_display)
+		
+		destroyElement(new_message_to_label)
+		destroyElement(new_message_to_input)
+		destroyElement(new_message_subject_label)
+		destroyElement(new_message_subject_input)
+		destroyElement(new_message_content_label)
+		destroyElement(new_message_content)
+		destroyElement(send_button)
+		
+		destroyElement(email_close_button)
+		destroyElement(inbox_tab)
+		destroyElement(outbox_tab)
+		destroyElement(send_tab)
+		destroyElement(email_tab_panel)
+		destroyElement(wEmail)
+		
+		inbox_grid, inbox_grid_date, inbox_grid_sender, inbox_grid_subject, inbox_message_datetitle_label, inbox_message_date_label, inbox_message_fromtitle_label, inbox_message_from_label, inbox_message_subjecttitle_label, inbox_message_subject_label, inbox_message_display, inbox_message_label, check_mail_button = nil
+		outbox_grid, outbox_grid_date, outbox_grid_sender, outbox_grid_subject, outbox_message_datetitle_label, outbox_message_date_label, outbox_message_totitle_label, outbox_message_from_label, outbox_message_subjecttitle_label, outbox_message_subject_label, outbox_message_display, outbox_message_label = nil
+		new_message_to_label, new_message_to_input, new_message_subject_label, new_message_subject_input, new_message_content_label, new_message_content, send_button = nil
+		email_close_button, inbox_tab, outbox_tab, send_tab, email_tab_panel, wEmail = nil
+	
 	end
 	-- Computer Desktop GUI.
 	destroyElement(internetButton)
@@ -83,11 +127,11 @@ function closeComputerWindow()
 	showCursor(false)	
 	
 end
-addCommandHandler("ctl+alt+del",closeComputerWindow)
+addCommandHandler("ctl+alt+del",closeComputerWindow) -- Emergency close command.
 
-------------------------------------------------------------
------------------------- Internet   ------------------------
-------------------------------------------------------------
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+-------------------------------------------------------------------------------- Internet   --------------------------------------------------------------------------------
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 function openInternetWindow()
 	local Width = 504
@@ -97,7 +141,7 @@ function openInternetWindow()
 	local Y = (screenheight - Height)/2
 	if not (wInternet) then
 		wInternet = guiCreateWindow(X, Y, Width, Height, "Internet", false,wComputer)
-		internet_close_button = guiCreateButton(462,22,22,22,"x",false,wInternet)
+		internet_close_button = guiCreateButton(470,22,22,22,"x",false,wInternet)
 		addEventHandler("onClientGUIClick",internet_close_button,closeInternetWindow,false)
 		internet_address_label = guiCreateLabel(10,20,470,20,"",false,wInternet)
 		address_bar = guiCreateEdit(5,45,320,24,"",false,wInternet)
@@ -117,9 +161,23 @@ function openInternetWindow()
 	end
 end
 
+function get_page(new_page)
+	destroyElement(bg)
+	bg = nil
+	guiSetText(address_bar,new_page)
+	if new_page ~= "" then
+		if new_page:sub(-1) == "/" then
+			new_page = new_page:sub(0,-2)
+		end
+		local fn = new_page:gsub("%.", "_"):gsub("/","_"):gsub("[^a-zA-Z0-9_]", "")
+		if string.find(new_page, "www%.") ~= 1 or not pcall(loadstring( "return " .. fn .. "()" ) ) then
+			error_404()
+		end
+	end
+end
+
 function closeInternetWindow()
 	if(wInternet) then
-		guiSetInputEnabled(false)
 		destroyElement(shadow_left)
 		destroyElement(shadow_bottom)
 		destroyElement(shadow_top)
@@ -133,9 +191,9 @@ function closeInternetWindow()
 	end
 end
 
---------------------------------------------------------
------------------------- E-mail ------------------------
---------------------------------------------------------
+------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+-------------------------------------------------------------------------------- E-mail --------------------------------------------------------------------------------
+------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 function openEmailWindow()
 	-- Window variables
@@ -146,7 +204,7 @@ function openEmailWindow()
 	local Y = (screenheight - Height)/2
 	if not (wEmail) then
 		-- Create the window
-		wEmail = guiCreateWindow(X,Y,Width,Height,"Email",false,wComputer)
+		wEmail = guiCreateWindow(X,Y,Width,Height,"E-mail",false,wComputer)
 		-- Close button
 		email_close_button = guiCreateButton(272,23,22,22,"x",false,wEmail)
 		addEventHandler("onClientGUIClick",email_close_button,close_email_window,false)
@@ -297,6 +355,49 @@ function close_email_window()
 		destroyElement(email_register_button)
 		destroyElement(wEmail)
 		email_close_button,	email_error_label, username_label, username_input, address_label, address_1, address_2,	address_f,	password_label,	password_input,	email_login_button,	email_register_button, wEmail = nil
+	
+	elseif (inbox_grid) then
+	
+		destroyElement(inbox_grid)
+		destroyElement(inbox_message_datetitle_label)
+		destroyElement(inbox_message_date_label)
+		destroyElement(inbox_message_fromtitle_label)
+		destroyElement(inbox_message_from_label)
+		destroyElement(inbox_message_subjecttitle_label)
+		destroyElement(inbox_message_subject_label)
+		destroyElement(inbox_message_label)
+		destroyElement(inbox_message_display)
+		destroyElement(check_mail_button)
+		
+		destroyElement(outbox_grid)
+		destroyElement(outbox_message_datetitle_label)
+		destroyElement(outbox_message_date_label)
+		destroyElement(outbox_message_totitle_label)
+		destroyElement(outbox_message_from_label)
+		destroyElement(outbox_message_subjecttitle_label)
+		destroyElement(outbox_message_subject_label)
+		destroyElement(outbox_message_label)
+		destroyElement(outbox_message_display)
+		
+		destroyElement(new_message_to_label)
+		destroyElement(new_message_to_input)
+		destroyElement(new_message_subject_label)
+		destroyElement(new_message_subject_input)
+		destroyElement(new_message_content_label)
+		destroyElement(new_message_content)
+		destroyElement(send_button)
+		
+		destroyElement(email_close_button)
+		destroyElement(inbox_tab)
+		destroyElement(outbox_tab)
+		destroyElement(send_tab)
+		destroyElement(email_tab_panel)
+		destroyElement(wEmail)
+		
+		inbox_grid, inbox_message_datetitle_label, inbox_message_date_label, inbox_message_fromtitle_label, inbox_message_from_label, inbox_message_subjecttitle_label, inbox_message_subject_label, inbox_message_display, inbox_message_label, check_mail_button = nil
+		outbox_grid, outbox_message_datetitle_label, outbox_message_date_label, outbox_message_totitle_label, outbox_message_from_label, outbox_message_subjecttitle_label, outbox_message_subject_label, outbox_message_display, outbox_message_label = nil
+		new_message_to_label, new_message_to_input, new_message_subject_label, new_message_subject_input, new_message_content_label, new_message_content, send_button = nil
+		email_close_button, inbox_tab, outbox_tab, send_tab, email_tab_panel, wEmail = nil
 	end
 end
 addEvent("closeEmailLogin",true)
@@ -311,28 +412,14 @@ function show_inbox(inbox_table, accountName)
 		local Y = (screenheight - Height)/2
 	
 		-- Create the window
-		wEmail = guiCreateWindow(X,Y,Width,Height,"Email",false,wComputer)
+		wEmail = guiCreateWindow(X,Y,Width,Height,"E-mail",false,wComputer)
 		
 		-- Tabs (Inbox, Outbox, Send Message)
 		email_tab_panel = guiCreateTabPanel(0.0,0.06,1.0,1.0,true,wEmail)
 		inbox_tab = guiCreateTab("Inbox",email_tab_panel)
 		outbox_tab = guiCreateTab("Outbox",email_tab_panel)
 		send_tab = guiCreateTab("Compose Message",email_tab_panel)
-		account_tab = guiCreateTab("Account Settings",email_tab_panel)
-		
-		-----------
-		-- Inbox --
-		-----------
-		check_mail_button = guiCreateButton(0.3,0.9,0.2,0.08,"Check Mail",true,inbox_tab)
-		--addEventHandler("onClientGUIClick",check_mail_button,triggerServerEvent("s_getInbox"),false)	
-		inbox_delete_mail_button = guiCreateButton(0.5,0.9,0.2,0.08,"Delete",true,inbox_tab)
-		--addEventHandler("onClientGUIClick",inbox_delete_mail_button,delete_message,false)
-		
-		------------
-		-- Outbox --
-		------------
-		outbox_delete_mail_button = guiCreateButton(0.4,0.9,0.2,0.08,"Delete",true,outbox_tab)
-		--addEventHandler("onClientGUIClick",outbox_delete_mail_button,delete_message,false)
+		--account_tab = guiCreateTab("Account Settings",email_tab_panel)
 		
 		------------------
 		-- Send Message --
@@ -356,6 +443,7 @@ function show_inbox(inbox_table, accountName)
 			triggerServerEvent("sendMessage",getLocalPlayer(),accountName,to,subject,message)
 		end,false)
 		
+		--[[
 		---------------------
 		-- Account Options --
 		---------------------
@@ -382,56 +470,112 @@ function show_inbox(inbox_table, accountName)
 		delete_account_input = guiCreateEdit(0.1,0.7,0.3,0.05,"",true,account_tab)
 		guiEditSetMasked(delete_account_input,true)
 		--button
-		delete_account_button = guiCreateButton(0.4,0.8,0.2,0.08,"Delete Account",true,account_tab)
+		delete_account_button = guiCreateButton(0.4,0.8,0.2,0.08,"Delete Account",true,account_tab)]]
 		
 		-- Close button
 		email_close_button = guiCreateButton(0.94,0.05,0.06,0.05,"x",true,wEmail)
 		addEventHandler("onClientGUIClick",email_close_button,close_email_window,false)
-	end	
+	end
 	
+	-----------
+	-- Inbox --
+	-----------
+	
+	if (inbox_grid) then
+		guiGridListClear(inbox_grid)
+		destroyElement(inbox_grid)
+		inbox_grid = nil
+	end	
 	-- Create the grid list of received messages
 	inbox_grid = guiCreateGridList (0.01,0.02,0.98,0.36,true,inbox_tab)
 	inbox_grid_date = guiGridListAddColumn(inbox_grid,"Date",0.16)
 	inbox_grid_sender = guiGridListAddColumn(inbox_grid,"From",0.3)
 	inbox_grid_subject = guiGridListAddColumn(inbox_grid,"Subject",0.5)
-	--addEventHandler("onClientGUIDoubleClick",getRootElement(),update_displayed_message)
-		
+	guiGridListSetSortingEnabled(inbox_grid,false)
 	for key, value in pairs(inbox_table) do
-	
-		local i_message_date = inbox_table[key][2]
-		local i_message_sender = inbox_table[key][3]
-		local i_message_subject = inbox_table[key][4]
-		
-		local inbox_row = guiGridListAddRow(inbox_grid)
+		i_message_date = inbox_table[key][2]
+		i_message_sender = inbox_table[key][3]
+		i_message_subject = inbox_table[key][4]
+		inbox_row = guiGridListAddRow(inbox_grid)
 		guiGridListSetItemText(inbox_grid, inbox_row, inbox_grid_date, i_message_date, false, false) -- Date Sent
 		guiGridListSetItemText(inbox_grid, inbox_row, inbox_grid_sender, i_message_sender, false, false) -- Sender
-		guiGridListSetItemText(inbox_grid, inbox_row, inbox_grid_subject, i_message_subject, false, false) -- Subject
-		
+		guiGridListSetItemText(inbox_grid, inbox_row, inbox_grid_subject, i_message_subject, false, false) -- Subject	
 	end
+	if not(inbox_message_datetitle_label) then
+		-- Static labels showing date and sender
+		inbox_message_datetitle_label = guiCreateLabel(0.02,0.4,0.96,0.1,"Date received:",true,inbox_tab)
+		guiSetFont(inbox_message_datetitle_label,"default-bold-small")
+		inbox_message_date_label = guiCreateLabel(0.185,0.4,0.96,0.1,tostring(inbox_table[1][2]),true,inbox_tab)
+		
+		inbox_message_fromtitle_label = guiCreateLabel(0.5,0.4,0.96,0.1,"From:",true,inbox_tab)
+		guiSetFont(inbox_message_fromtitle_label,"default-bold-small")
+		inbox_message_from_label = guiCreateLabel(0.575,0.4,0.45,0.1,tostring(inbox_table[1][3]),true,inbox_tab)
+		
+		inbox_message_subjecttitle_label = guiCreateLabel(0.02,0.45,0.96,0.1,"Subject:",true,inbox_tab)
+		guiSetFont(inbox_message_subjecttitle_label,"default-bold-small")
+		inbox_message_subject_label = guiCreateLabel(0.115,0.45,0.8,0.1,tostring(inbox_table[1][4]),true,inbox_tab)
+		
+		-- Scroll pane displaying selected message
+		inbox_message_display = guiCreateScrollPane(0.02,0.52,0.96,0.34,true,inbox_tab)
+		guiScrollPaneSetScrollBars(inbox_message_display, false, true)
+		-- Display first message in text label
+		inbox_message_label = guiCreateLabel(0.02,0.05,0.96,2.0, tostring(inbox_table[1][5]),true,inbox_message_display)
+		guiLabelSetHorizontalAlign(inbox_message_label,"left",true)
+	else
+		guiSetText(inbox_message_date_label,tostring(inbox_table[1][2]))
+		guiSetText(inbox_message_from_label,tostring(inbox_table[1][3]))
+		guiSetText(inbox_message_subject_label,tostring(inbox_table[1][4]))
+		guiSetText(inbox_message_label,tostring(inbox_table[1][5]))
+	end
+	addEventHandler("onClientGUIDoubleClick",inbox_grid,function(button, state)
+		if(button == "left") then
+			
+			local row = nil
+			local row = tonumber(guiGridListGetSelectedItem(inbox_grid)+1)
+			
+			guiSetText(inbox_message_date_label,tostring(inbox_table[row][2]))
+			guiSetText(inbox_message_from_label,tostring(inbox_table[row][3]))
+			guiSetText(inbox_message_subject_label,tostring(inbox_table[row][4]))
+			guiSetText(inbox_message_label,tostring(inbox_table[row][5]))
+		end
+	end,false)
 	
-	-- Static labels showing date and sender
-	inbox_message_date_label = guiCreateLabel(0.02,0.4,0.96,0.1,"Date received: ".. tostring(inbox_table[1][2]),true,inbox_tab)
-	inbox_message_from_label = guiCreateLabel(0.5,0.4,0.96,0.1,"From: ".. tostring(inbox_table[1][3]),true,inbox_tab)
-	inbox_message_subject_label = guiCreateLabel(0.02,0.45,0.96,0.1,"Subject: ".. tostring(inbox_table[1][4]),true,inbox_tab)
-	-- Scroll pane displaying selected message
-	inbox_message_display = guiCreateScrollPane(0.02,0.52,0.96,0.34,true,inbox_tab)
-	guiScrollPaneSetScrollBars(inbox_message_display, false, true)
-	-- Display first message in text label
-	inbox_message_label = guiCreateLabel(0.02,0.05,0.96,2.0, tostring(inbox_table[1][5]),true,inbox_message_display)
-	
+	if not (check_mail_button) then
+		check_mail_button = guiCreateButton(0.3,0.9,0.2,0.08,"Check Mail",true,inbox_tab)
+		addEventHandler("onClientGUIClick",check_mail_button, function()
+			triggerServerEvent("s_getInbox",getRootElement(),accountName)
+		end,false)	
+		
+		--[[DELETE FUNCTION (INBOX)
+		inbox_delete_mail_button = guiCreateButton(0.5,0.9,0.2,0.08,"Delete",true,inbox_tab)
+		addEventHandler("onClientGUIClick",inbox_delete_mail_button,function()
+			local del_row = nil
+			del_row = tonumber(guiGridListGetSelectedItem(inbox_grid)+1)
+			local id = inbox_table[del_row][1]
+			triggerServerEvent("deleteInboxMessage",getLocalPlayer(),id,accountName)
+		end,false)]]
+	end
 end
 addEvent("showInbox",true)
 addEventHandler("showInbox",getRootElement(),show_inbox)
+
+function show_outbox(outbox_table,accountName)
+	------------
+	-- Outbox --
+	------------
 	
-function show_outbox(outbox_table)
-	
+	if (outbox_grid) then
+		destroyElement(outbox_grid)
+		outbox_grid = nil
+	end
+
 	-- Create the grid list of received messages
 	outbox_grid = guiCreateGridList (0.01,0.02,0.98,0.36,true,outbox_tab)
 	outbox_grid_date = guiGridListAddColumn(outbox_grid,"Date",0.16)
 	outbox_grid_sender = guiGridListAddColumn(outbox_grid,"From",0.3)
 	outbox_grid_subject = guiGridListAddColumn(outbox_grid,"Subject",0.5)
-	--addEventHandler("onClientGUIDoubleClick",getRootElement(),update_displayed_message)
-		
+	guiGridListSetSortingEnabled(outbox_grid,false)
+	
 	for key, value in pairs(outbox_table) do
 
 		local o_message_date = outbox_table[key][2]
@@ -441,8 +585,59 @@ function show_outbox(outbox_table)
 		local outbox_row = guiGridListAddRow(outbox_grid)
 		guiGridListSetItemText(outbox_grid, outbox_row, outbox_grid_date, o_message_date, false, false) -- Date Sent
 		guiGridListSetItemText(outbox_grid, outbox_row, outbox_grid_sender, o_message_sender, false, false) -- Sender
-		guiGridListSetItemText(outbox_grid, outbox_row, outbox_grid_subject, o_message_subject, false, false) -- Subject
+		guiGridListSetItemText(outbox_grid, outbox_row, outbox_grid_subject, o_message_subject, false, false) -- Subject	
+	end
+	
+	if not(outbox_message_datetitle_label) then
+		-- Static labels showing date and sender
+		outbox_message_datetitle_label = guiCreateLabel(0.02,0.4,0.96,0.1,"Date received:",true,outbox_tab)
+		guiSetFont(outbox_message_datetitle_label,"default-bold-small")
+		outbox_message_date_label = guiCreateLabel(0.185,0.4,0.96,0.1,tostring(outbox_table[1][2]),true,outbox_tab)
+		
+		outbox_message_totitle_label = guiCreateLabel(0.5,0.4,0.96,0.1,"To:",true,outbox_tab)
+		guiSetFont(outbox_message_totitle_label,"default-bold-small")
+		outbox_message_from_label = guiCreateLabel(0.575,0.4,0.45,0.1,tostring(outbox_table[1][3]),true,outbox_tab)
+		
+		outbox_message_subjecttitle_label = guiCreateLabel(0.02,0.45,0.96,0.1,"Subject:",true,outbox_tab)
+		guiSetFont(outbox_message_subjecttitle_label,"default-bold-small")
+		outbox_message_subject_label = guiCreateLabel(0.115,0.45,0.8,0.1,tostring(outbox_table[1][4]),true,outbox_tab)
+		
+		-- Scroll pane displaying selected message
+		outbox_message_display = guiCreateScrollPane(0.02,0.52,0.96,0.34,true,outbox_tab)
+		guiScrollPaneSetScrollBars(outbox_message_display, false, true)
+		-- Display first message in text label
+		outbox_message_label = guiCreateLabel(0.02,0.05,0.96,2.0, tostring(outbox_table[1][5]),true,outbox_message_display)
+		guiLabelSetHorizontalAlign(outbox_message_label,"left",true)
+	else
+		guiSetText(outbox_message_date_label,tostring(outbox_table[1][2]))
+		guiSetText(outbox_message_from_label,tostring(outbox_table[1][3]))
+		guiSetText(outbox_message_subject_label,tostring(outbox_table[1][4]))
+		guiSetText(outbox_message_label,tostring(outbox_table[1][5]))
+	end
+	
+	addEventHandler("onClientGUIDoubleClick",outbox_grid,function(button, state)
+		if(button == "left") then
+		
+			local row = nil
+			local row = tonumber(guiGridListGetSelectedItem(outbox_grid)+1)
 			
+			guiSetText(outbox_message_date_label,tostring(outbox_table[row][2]))
+			guiSetText(outbox_message_from_label,tostring(outbox_table[row][3]))
+			guiSetText(outbox_message_subject_label,tostring(outbox_table[row][4]))
+			guiSetText(outbox_message_label,tostring(outbox_table[row][5]))
+		end
+	end,false)
+	
+	if not (outbox_delete_mail_button) then
+		
+		--[[ DELETE FUNCTION (OUTBOX)
+		outbox_delete_mail_button = guiCreateButton(0.4,0.9,0.2,0.08,"Delete",true,outbox_tab)
+		addEventHandler("onClientGUIClick",outbox_delete_mail_button,function()
+			local o_del_row = nil
+			o_del_row = tonumber(guiGridListGetSelectedItem(outbox_grid)+1)
+			local id = outbox_table[o_del_row][1]
+			triggerServerEvent("deleteOutboxMessage",getLocalPlayer(),id, accountName)
+		end,false)]]
 	end
 end
 addEvent("showOutbox",true)
@@ -454,3 +649,9 @@ function invalid_address()
 end
 addEvent("invalidAddress",true)
 addEventHandler("invalidAddress",getRootElement(),invalid_address)
+
+function c_send_message()
+	guiSetSelectedTab(email_tab_panel,outbox_tab)
+end
+addEvent("c_sendMessage",true)
+addEventHandler("c_sendMessage",getRootElement(),c_send_message)
