@@ -19,6 +19,11 @@ setTimer(checkForChat, 100, 0)
 
 
 function addChatter()
+	for key, value in ipairs(chatters) do
+		if ( value == source ) then
+			return
+		end
+	end
 	table.insert(chatters, source)
 end
 addEvent("addChatter", true)
