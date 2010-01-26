@@ -16,4 +16,5 @@
 	<script src="custom/createObject.lua" type="client"/>
 	<script src="custom/trailer.lua" type="client"/>
 	<script src="custom/smallwarehouse.lua" type="client"/>
+	<script src="custom/restroom.lua" type="client"/>
 </meta>
