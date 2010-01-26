@@ -12,6 +12,10 @@ local wComputer,desktopImage,internetButton, emailButton, shutdownButton = nil
 ------------------------------------------------------------------
 
 function createComputerGUI( )
+	if not exports.global:hasItem(getLocalPlayer(), 96) then
+		outputChatBox("You need to buy a computer first.", 255, 0, 0)
+		return
+	end
 	-- Window variables
 	local Width = 700
 	local Height = 500

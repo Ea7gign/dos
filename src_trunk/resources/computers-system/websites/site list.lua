@@ -7,7 +7,7 @@ function get_page(new_page)
 	if new_page ~= "" then
 		-- strip the last /
 		if new_page:sub(-1) == "/" then
-			new_page = new_page::sub(0,-2)
+			new_page = new_page:sub(0,-2)
 		end
 		
 		-- function to get urls->actual functions, such as www.bankofsa.sa/jobs -> www_bankofsa_sa_jobs
