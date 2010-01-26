@@ -3,11 +3,11 @@ function applyMods()
 	-- Pig Pen Interior --
 	----------------------
 	-- Bar
-	pigpen1 = engineLoadTXD("lv/lee_stripclub1.txd")
+	pigpen1 = engineLoadTXD("ls/lee_stripclub1.txd")
 	engineImportTXD(pigpen1, 14831)
 	
 	-- corver stage + seat
-	pigpen2 = engineLoadTXD("lv/lee_stripclub.txd")
+	pigpen2 = engineLoadTXD("ls/lee_stripclub.txd")
 	engineImportTXD(pigpen2, 14832)
 	-- Backwall seats
 	engineImportTXD(pigpen2, 14833)
@@ -21,7 +21,7 @@ function applyMods()
 	------------------------
 	-- bus Stop --
 	------------------------
-	busStop = engineLoadTXD("lv/bustopm.txd")
+	busStop = engineLoadTXD("ls/bustopm.txd")
 	engineImportTXD(busStop, 1257)
 			
 	----------------
@@ -54,13 +54,13 @@ function applyMods()
 	---------
 	-- BTR --
 	---------
-	towing = engineLoadTXD ( "lv/eastbeach3c_lae2.txd" )
+	towing = engineLoadTXD ( "ls/eastbeach3c_lae2.txd" )
 	engineImportTXD ( towing, 17555 )
 	
 	---------------
 	-- Moscovian --
 	---------------
-	moscovian = engineLoadTXD( "lv/gangblok1_lae2.txd" )
+	moscovian = engineLoadTXD( "ls/gangblok1_lae2.txd" )
 	engineImportTXD ( moscovian, 17700 )
 end
 addEventHandler("onClientResourceStart", getResourceRootElement(), applyMods)
