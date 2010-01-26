@@ -33,6 +33,7 @@ function delChatter()
 end
 addEvent("delChatter", true)
 addEventHandler("delChatter", getRootElement(), delChatter)
+addEventHandler("onClientPlayerQuit", getRootElement(), delChatter)
 
 function render()
 	local x, y, z = getElementPosition(getLocalPlayer())
