@@ -72,7 +72,7 @@ for _, node in ipairs( speedlimits90 ) do
 	local path = calculatePathByNodeIDs( node[1], node[2] )
 	for key, value in ipairs(path) do
 		value.speedlimit = 90
-		createBlip( value.x, value.y, value.z, 0, 1, 0, 255, 0 )
+		-- createBlip( value.x, value.y, value.z, 0, 1, 0, 255, 0 )
 	end
 end
 
@@ -115,7 +115,7 @@ for _, node in ipairs( speedlimits120 ) do
 	local path = calculatePathByNodeIDs( node[1], node[2] )
 	for key, value in ipairs(path) do
 		value.speedlimit = 120
-		createBlip( value.x, value.y, value.z, 0, 1 )
+		-- createBlip( value.x, value.y, value.z, 0, 1 )
 	end
 end
 
