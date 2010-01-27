@@ -379,7 +379,7 @@ function departmentradio(thePlayer, commandName, ...)
 	if (theTeam) then
 		local teamID = tonumber(getElementData(theTeam, "id"))
 
-		if (teamID==1 or teamID==2 or teamID=3 or teamID == 30) then
+		if (teamID==1 or teamID==2 or teamID==3 or teamID == 30) then
 			if (...) then
 				local message = trunklateText( thePlayer, table.concat({...}, " ") )
 				local PDFaction = getPlayersInTeam(getTeamFromName("Los Santos Police Department"))
