@@ -64,6 +64,7 @@ local speedlimits90 =
 	{ 327681, 852153 },
 	{ 327821, 327818 },
 	{ 327695, 327841 },
+	{ 1376521, 1376589 },
 	-- country road leading out of LS, near madd dogg's
 	{ 1376948, 1835431 }
 }
