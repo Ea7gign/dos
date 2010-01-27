@@ -64,6 +64,15 @@ function drawFuel()
 			movingx = x + math.sin(math.rad(-(fuel)-50)) * 50
 			movingy = y + math.cos(math.rad(-(fuel)-50)) * 50
 			dxDrawLine(x-215, y-115, movingx-210, movingy-115, tocolor(255, 0, 0, 255), 2, true)
+			
+			if fuel < 10 then
+				local ax, ay = x - 274, y - 202
+				if getTickCount() % 1000 < 500 then
+					dxDrawImage(ax,ay,32,37,"images/fuel.png")
+				else
+					dxDrawImage(ax,ay,32,37,"images/fuel2.png")
+				end
+			end
 		end
 	end
 end
