@@ -11,15 +11,33 @@
 	<!-- Images -->
 	<file src="websites/images/ad_space_box.png" />
 	<file src="websites/images/ad_space_h.png" />
+	<file src="websites/images/banshee.png" />
+	<file src="websites/images/bike.png" />
+	<file src="websites/images/bullet.png" />
+	<file src="websites/images/chase.png" />
+	<file src="websites/images/copyright.png" />
 	<file src="websites/images/city_hall.png" />
+	<file src="websites/images/court-logo.png" />
 	<file src="websites/images/graffiti.png" />
 	<file src="websites/images/grove.png" />
+	<file src="websites/images/jester.png" />
 	<file src="websites/images/ls_harbour.png" />
+	<file src="websites/images/lses-logo.png" />
+	<file src="websites/images/lsgov-logo.png" />
+	<file src="websites/images/lspd-logo.png" />
 	<file src="websites/images/pershing_fountain.png" />
 	<file src="websites/images/remington.png" />
-	<file src="websites/images/road_sign.png" />
+	<file src="websites/images/rodeo.png" />
+	<file src="websites/images/running.png" />
+	<file src="websites/images/san-logo.png" />
+	<file src="websites/images/skyline.png" />
+	<file src="websites/images/slamdunk.png" />
+	<file src="websites/images/slamvan.png" />
+	<file src="websites/images/spotlight.png" />
 	<file src="websites/images/strip_club.png" />
-	<file src="websites/images/vinewood_sign.png" />
+	<file src="websites/images/theatre.png" />
+	<file src="websites/images/vinewood-sign.png" />
+	<file src="websites/images/vinewood-sign2.png" />
 	
 	<!-- Dots -->
 	<file src="websites/images/dots/black_dot.png" />
@@ -170,6 +188,9 @@
 
 	<!-- E -->
 	<script src="websites/error.lua" type="client"/>
+	
+	<!-- F -->
+	<script src="websites/fields.lua" type="client"/>
 	
 	<!-- L -->
 	<script src="websites/lossantos.lua" type="client"/>	

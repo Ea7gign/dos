@@ -26,6 +26,20 @@ addEventHandler("onResourceStop", getResourceRootElement(getThisResource()), clo
 -- //			MYSQL END			 //
 -- ////////////////////////////////////
 
+function leader_check (accountName, password)
+	local query = mysql_query(handler, "SELECT faction_leader FROM characters WHERE id='" .. getElementData(source, "dbid") .. "'")
+	local leader = tonumber(mysql_result(query, 1, 1))
+	mysql_free_result(query)
+		
+	if not (tonumber(leader)==1) then -- If the player is not the leader
+		triggerClientEvent("notLeader",getRootElement())
+	else
+		register_email(accountName, password)
+	end
+end
+addEvent("leaderCheck",true)
+addEventHandler("leaderCheck",getRootElement(),leader_check)
+
 function register_email(accountName, password)
 	local result = mysql_query(handler, "SELECT username FROM emailaccounts WHERE username='" .. mysql_escape_string(handler, accountName) .."'")
 	if (mysql_num_rows(result)>0) then

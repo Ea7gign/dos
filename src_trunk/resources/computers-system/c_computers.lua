@@ -46,11 +46,12 @@ function closeComputerWindow()
 		destroyElement(shadow_top)
 		destroyElement(internet_pane)
 		destroyElement(go_button)
+		destroyElement(back_button)
 		destroyElement(address_bar)
 		destroyElement(internet_address_label)
 		destroyElement(internet_close_button)
 		destroyElement(wInternet)
-		wInternet, internet_close_button, internet_address_label, address_bar, go_button, internet_pane, shadow_top, shadow_left, shadow_bottom, bg = nil
+		wInternet, internet_close_button, internet_address_label, address_bar, go_button, back_button, internet_pane, shadow_top, shadow_left, shadow_bottom, bg = nil
 	end
 	if (username_input) then -- email
 		if (address_f) then
@@ -132,29 +133,35 @@ addCommandHandler("ctl+alt+del",closeComputerWindow) -- Emergency close command.
 ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 -------------------------------------------------------------------------------- Internet   --------------------------------------------------------------------------------
 ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+local now = tostring("www.sanetwork.sa")
+local previous = tostring("www.sanetwork.sa")
 
 function openInternetWindow()
-	local Width = 504
+	local Width = 700
 	local Height = 500
 	local screenwidth, screenheight = guiGetScreenSize()
 	local X = (screenwidth - Width)/2
 	local Y = (screenheight - Height)/2
 	if not (wInternet) then
 		wInternet = guiCreateWindow(X, Y, Width, Height, "Internet", false,wComputer)
-		internet_close_button = guiCreateButton(470,22,22,22,"x",false,wInternet)
+		internet_close_button = guiCreateButton(670,22,22,22,"x",false,wInternet)
 		addEventHandler("onClientGUIClick",internet_close_button,closeInternetWindow,false)
-		internet_address_label = guiCreateLabel(10,20,470,20,"",false,wInternet)
-		address_bar = guiCreateEdit(5,45,320,24,"",false,wInternet)
-		go_button = guiCreateButton(337,45,24,24,"Go",false,wInternet)
+		internet_address_label = guiCreateLabel(10,20,670,20,"",false,wInternet)
+		address_bar = guiCreateEdit(40,45,320,24,"",false,wInternet)
+		back_button = guiCreateButton(5,45,24,24,"<",false,wInternet)
+		addEventHandler("onClientGUIClick",back_button,function()
+			get_page(previous)
+		end,false)
+		go_button = guiCreateButton(365,45,24,24,"Go",false,wInternet)
 		addEventHandler("onClientGUIClick",go_button,function()
 			local new_page = guiGetText(address_bar)
 			get_page(new_page)
 		end,false)		
-		internet_pane = guiCreateScrollPane(2,85,480,397,false,wInternet)
+		internet_pane = guiCreateScrollPane(2,85,678,397,false,wInternet)
 		guiScrollPaneSetScrollBars(internet_pane, false, true)			
-		shadow_top = guiCreateStaticImage(2,84,476,1,"websites/colours/13.png",false,wInternet)
+		shadow_top = guiCreateStaticImage(2,84,676,1,"websites/colours/13.png",false,wInternet)
 		shadow_left = guiCreateStaticImage(2,85,1,397,"websites/colours/13.png",false,wInternet)
-		shadow_bottom = guiCreateStaticImage(4,503,476,1,"websites/colours/1.png",false,wInternet)
+		shadow_bottom = guiCreateStaticImage(4,482,676,1,"websites/colours/1.png",false,wInternet)
 		www_sanetwork_sa()
 	else
 		guiBringToFront(wInternet)
@@ -162,6 +169,8 @@ function openInternetWindow()
 end
 
 function get_page(new_page)
+	previous = now
+	now = tostring(guiGetText(address_bar))
 	destroyElement(bg)
 	bg = nil
 	guiSetText(address_bar,new_page)
@@ -183,11 +192,12 @@ function closeInternetWindow()
 		destroyElement(shadow_top)
 		destroyElement(internet_pane)
 		destroyElement(go_button)
+		destroyElement(back_button)
 		destroyElement(address_bar)
 		destroyElement(internet_address_label)
 		destroyElement(internet_close_button)
 		destroyElement(wInternet)
-		wInternet, internet_close_button, internet_address_label, address_bar, go_button, internet_pane, shadow_top, shadow_left, shadow_bottom, bg = nil
+		wInternet, internet_close_button, internet_address_label, address_bar, go_button, back_button, internet_pane, shadow_top, shadow_left, shadow_bottom, bg = nil
 	end
 end
 
@@ -210,7 +220,7 @@ function openEmailWindow()
 		addEventHandler("onClientGUIClick",email_close_button,close_email_window,false)
 		
 		-- Error Label
-		email_error_label = guiCreateLabel(13,25,175,16,"",false,wEmail)
+		email_error_label = guiCreateLabel(13,25,250,16,"",false,wEmail)
 		guiLabelSetColor(email_error_label,255,0,0)
 		guiSetFont(email_error_label,"default-bold-small")
 		
@@ -297,8 +307,10 @@ function openEmailWindow()
 				
 				if (guiRadioButtonGetSelected(address_1)==true) then
 					full_username = tostring(username.. "@saonline.sa")
+					triggerServerEvent("registerEmail",getLocalPlayer(),full_username,password)
 				elseif (guiRadioButtonGetSelected(address_2)==true) then
 					full_username = tostring(username.. "@whiz.sa")
+					triggerServerEvent("registerEmail",getLocalPlayer(),full_username,password)	
 				elseif (guiRadioButtonGetSelected(address_f)==true) then
 					
 					if (teamName=="Los Santos Police Department") then
@@ -314,9 +326,8 @@ function openEmailWindow()
 					elseif (teamName=="First Court of San Andreas") then
 						full_username = tostring(username.."@justice.gov")
 					end
+					triggerServerEvent("leaderCheck",getLocalPlayer(),full_username,password)
 				end
-				triggerServerEvent("registerEmail",getLocalPlayer(),full_username,password)				
-
 			end			
 		end,false)
 	else
@@ -335,6 +346,12 @@ function login_error()
 end
 addEvent("loginError",true)
 addEventHandler("loginError", getLocalPlayer(),login_error)
+
+function not_leader()
+	guiSetText(email_error_label, "You can't register with this provider!")
+end
+addEvent("notLeader",true)
+addEventHandler("notLeader", getLocalPlayer(),not_leader)
 
 function close_email_window()
 	if (username_input) then
@@ -519,7 +536,7 @@ function show_inbox(inbox_table, accountName)
 		inbox_message_display = guiCreateScrollPane(0.02,0.52,0.96,0.34,true,inbox_tab)
 		guiScrollPaneSetScrollBars(inbox_message_display, false, true)
 		-- Display first message in text label
-		inbox_message_label = guiCreateLabel(0.02,0.05,0.96,2.0, tostring(inbox_table[1][5]),true,inbox_message_display)
+		inbox_message_label = guiCreateLabel(0.02,0.05,0.96,4.0, tostring(inbox_table[1][5]),true,inbox_message_display)
 		guiLabelSetHorizontalAlign(inbox_message_label,"left",true)
 	else
 		guiSetText(inbox_message_date_label,tostring(inbox_table[1][2]))
