@@ -198,7 +198,9 @@ function showFactionMenu(source)
 						local targetPlayer = getPlayerFromName(tostring(playerName))
 						if (targetPlayer) then
 							memberOnline[i] = true
-							if getElementData(targetPlayer, "loggedin") == 1 then
+							if getElementData(targetPlayer, "hideF3Location") then
+								memberLocation[i] = "N/A"
+							elseif getElementData(targetPlayer, "loggedin") == 1 then
 								local zone, city = exports.global:getElementZoneName(targetPlayer)
 								
 								if(zone~=city) and (city~=nil) then
