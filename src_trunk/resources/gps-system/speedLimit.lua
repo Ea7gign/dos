@@ -1,6 +1,8 @@
-addCommandHandler("node",
+addCommandHandler("speednode",
 	function()
-		outputChatBox(findNodeClosestToPoint(vehicleNodes, getElementPosition(getLocalPlayer())).id)
+		if exports.global:isPlayerScripter(getLocalPlayer()) then
+			outputChatBox(findNodeClosestToPoint(vehicleNodes, getElementPosition(getLocalPlayer())).id)
+		end
 	end
 )
 
