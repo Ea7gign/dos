@@ -16,6 +16,23 @@ function drawSpeedo()
 			
 			dxDrawImage(x-210, y-275, 200, 200, "disc.png", 0, 0, 0, tocolor(255, 255, 255, 200), false)
 			--outputChatBox(tostring(speed))
+			local speedlimit = getElementData(getLocalPlayer(), "speedo:limit")
+			if speedlimit and getElementType(vehicle) ~= "Boat" and getElementType(vehicle) ~= "Helicopter" and getElementType(vehicle) ~= "Plane" then
+				local ax, ay = x - 243, y - 202
+				
+				dxDrawImage(ax,ay,32,37,"images/speed" .. speedlimit .. ".png")
+				ay = ay - 32
+				
+				if speedlimit >= 120 then
+					dxDrawImage(ax,ay,32,37,"images/highway.png")
+					ay = ay - 32
+				end
+				
+				if speed > speedlimit then
+					dxDrawImage(ax,ay,32,37,"images/accident.png")
+				end
+			end
+			
 			speed = speed - 100
 			nx = x + math.sin(math.rad(-(speed)-150)) * 90
 			ny = y + math.cos(math.rad(-(speed)-150)) * 90

@@ -81,4 +81,10 @@
 	<script src="s_police_radar.lua" type="server"/>
 	<script src="c_police_radar.lua" type="client"/>
 	<file src="policebeep.mp3"/>
+	
+	<file src="images/accident.png"/>
+	<file src="images/highway.png"/>
+	<file src="images/speed60.png"/>
+	<file src="images/speed90.png"/>
+	<file src="images/speed120.png"/>
 </meta>

@@ -13,4 +13,6 @@
 	
 	<file src="Left.wav"/>
 	<file src="Right.wav"/>
+	
+	<script src="speedLimit.lua" type="client"/>
 </meta>
