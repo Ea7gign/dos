@@ -632,7 +632,7 @@ function useItem(itemSlot, additional)
 			exports.global:sendLocalMeAction(source, "drinks some " .. itemName .. ".")
 			takeItemFromSlot(source, itemSlot)
 		elseif (itemID==96) then -- PDA
-			exports.global:sendLocalMeAction(source, "turns their PDA on.")
+			exports.global:sendLocalMeAction(source, "turns their " .. ( itemValue == 1 and "PDA" or itemValue ) .. " on.")
 			triggerClientEvent(source, "useCompItem", source)
 		elseif (itemID==97) then -- LSES Procedures Manual (book)
 			local bookTitle = "LSES Procedure Manual"

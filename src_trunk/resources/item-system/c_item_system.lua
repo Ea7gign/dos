@@ -541,7 +541,7 @@ function showDescription(button, state)
 					guiSetEnabled(bShowItem, false)
 					guiSetEnabled(bDestroyItem, false)
 				else
-					local desc = tostring( getItemDescription( items[slot][1] ) )
+					local desc = tostring( getItemDescription( items[slot][1], items[slot][2] ) )
 					local value = items[slot][2]
 					
 					-- percent operators

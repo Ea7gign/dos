@@ -142,6 +142,8 @@ function getItemName(id, value)
 		return g_items[id][1] .. ( pickup and ( " (" .. getElementData( pickup, "name" ) .. ")" ) or "" )
 	elseif ( id == 80 ) and value then
 		return value
+	elseif ( id == 96 ) and value and value ~= 1 then
+		return value
 	elseif ( id == 89 or id == 95 ) and value and value:find( ";" ) then
 		return value:sub( 1, value:find( ";" ) - 1 )
 	else
@@ -152,6 +154,8 @@ end
 function getItemValue(id, value)
 	if id == 80 then
 		return ""
+	elseif id == 96 then
+		return 1
 	elseif id == 89 or id == 95 then
 		return value:sub( value:find( ";" ) + 1 )
 	else
@@ -159,7 +163,10 @@ function getItemValue(id, value)
 	end
 end
 
-function getItemDescription(id)
+function getItemDescription(id, value)
+	if id == 96 and value ~= 1 then
+		return g_items[id][2]:gsub("PDA","Laptop")
+	end
 	return ( g_items[id] or { nil, "?" } )[2]
 end
 
