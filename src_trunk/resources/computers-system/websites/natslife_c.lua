@@ -35,7 +35,8 @@ local function showSinglePage( i, x )
 				if button == "left" then
 					showSinglePage( i, x - 1 )
 				end
-			end
+			end,
+			false
 		)
 	end
 	
@@ -46,7 +47,8 @@ local function showSinglePage( i, x )
 				if button == "left" then
 					showSinglePage( i, x + 1 )
 				end
-			end
+			end,
+			false
 		)
 	end
 	
@@ -58,7 +60,8 @@ local function showSinglePage( i, x )
 				if button == "left" then
 					showSinglePage( i - 1, 1 )
 				end
-			end
+			end,
+			false
 		)
 	end
 	
@@ -69,7 +72,8 @@ local function showSinglePage( i, x )
 				if button == "left" then
 					showSinglePage( i + 1, 1 )
 				end
-			end
+			end,
+			false
 		)
 	end
 	

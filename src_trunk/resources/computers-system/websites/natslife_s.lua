@@ -1,3 +1,10 @@
+----------------------------
+-- natslife.net (IC blog) --
+----------------------------
+
+-- Website owner's forum name: mabako
+-- Website owner's Character's name: Natalie Stafford
+
 local function returnPosts( result, ... )
 	if result ~= "ERROR" then
 		result = { result, ... }
