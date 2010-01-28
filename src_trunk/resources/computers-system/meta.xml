@@ -197,6 +197,10 @@
 	<script src="websites/lses.lua" type="client"/>
 	<script src="websites/lspd.lua" type="client"/>
 	
+	<!-- N -->
+	<script src="websites/natslife_s.lua" type="server"/>
+	<script src="websites/natslife_c.lua" type="client"/>
+	
 	<!-- S -->
 	<script src="websites/sanetwork.lua" type="client"/>
 	
