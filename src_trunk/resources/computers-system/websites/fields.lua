@@ -6,7 +6,7 @@
 -- Website owner's Character's name: James Fields
 
 
-function www_Fields_sa()
+function www_fields_sa()
 	---------------------
 	-- Page Properties --
 	---------------------
@@ -330,7 +330,7 @@ function www_fields_sa_fieldslapdanceclub()
 end
 
 --=================================================================================================== electricals
-function www_Fields_sa_fieldselectricals()
+function www_fields_sa_fieldselectricals()
 	---------------------
 	-- Page Properties --
 	---------------------
