@@ -336,7 +336,7 @@ function www_sanetwork_sa_fortunate_escape_in_mysterious_plane_crash()
 	-- Article
 	local article =  guiCreateLabel(10,318,440,410,"Shortly after three forty-five explosions were heard in the El Corona district of Los Santos after a light aircraft plummeted in Unity Station exploding in a chorus of flames.\
 	\
-	Police and fire services were quick to respond to the scene setting up a perimeter along the stations parking lot. At the scene police had not been able to recover a body and fortunately reported there being victims in the crash. Police were also quick to dismiss speculation that this was in any way linked to a terrorist attack.\
+	Police and fire services were quick to respond to the scene setting up a perimeter along the stations parking lot. At the scene police had not been able to recover a body and fortunately reported there being no victims in the crash. Police were also quick to dismiss speculation that this was in any way linked to a terrorist attack.\
 	\
 	The aircraft in question, a Dodo S34, is commonly used by recreational pilots in Los Santos air space. It is heralded by many in the aviation industry for its robustness and reliability questioning whether this was down to mechanical fault or human error. It is currently unclear who the pilot of the aircraft was, where it was headed or who the aircraft belong to.\
 	\
