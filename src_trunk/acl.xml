@@ -38,6 +38,7 @@
 	<object name="resource.carshop-system"/>
 	<object name="resource.camera-system"/>
 	<object name="resource.chat-system"/>
+	<object name="resource.computers-system"/>
 	
 	<object name="resource.elevator-system"/>
 	
