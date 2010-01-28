@@ -7,12 +7,16 @@
 	<script src="s_player_rightclick.lua" type="server"/>
 	<script src="c_player_rightclick.lua" type="client"/>
 	
+	<script src="c_overlay.lua" type="client"/>
+	
 	<file src="images/red.png" />
 	<file src="images/grn.png" />
 	
 	
 	
 	<!--Country flags-->
+  <file src="images/flags/kr.png" />
+  <file src="images/flags/my.png" />
   <file src="images/flags/sc.png" />
   <file src="images/flags/ac.png" />
   <file src="images/flags/ad.png" />
