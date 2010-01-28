@@ -19,7 +19,7 @@ function www_fields_sa()
 	----------------------------
 	-- Page Background Colour --
 	----------------------------
-	bg = guiCreateStaticImage(0,0,460,page_length,"websites/colours/10.png",false,internet_pane) -- DO NOT REMOVE THE BACKGROUND
+	bg = guiCreateStaticImage(0,0,660,page_length,"websites/colours/10.png",false,internet_pane) -- DO NOT REMOVE THE BACKGROUND
 
 	------------
 	-- Header --
@@ -248,6 +248,10 @@ function www_fields_sa_fieldslapdanceclub()
 	guiSetText(address_bar,"www.fields.sa/fieldslapdanceclub") -- The url of the page. This should be the same as the function name but with the original "."s and "/". Example www.google.com.	
 	
 	---------------------------------------------- Start of webpage design ----------------------------------------------
+	----------------------------
+	-- Page Background Colour --
+	----------------------------
+	bg = guiCreateStaticImage(0,0,660,page_length,"websites/colours/10.png",false,internet_pane) -- DO NOT REMOVE THE BACKGROUND
 	
 	------------
 	-- Header --
