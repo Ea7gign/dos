@@ -26,7 +26,7 @@ function www_fields_sa()
 	------------
 	local link_1_bg = guiCreateStaticImage(0,4,76,24,"websites/colours/7.png",false,bg)
 	local link_1_hl = guiCreateStaticImage(12,6,50,2,"websites/colours/1.png",false,bg)
-	local link_1 = guiCreateLabel(2,10,72,16,"Club 1",false,bg)
+	local link_1 = guiCreateLabel(2,10,72,16,"Home",false,bg)
 	guiLabelSetColor(link_1,255,255,255)
 	guiLabelSetHorizontalAlign(link_1,"center")
 	addEventHandler("onClientGUIClick",link_1,function()
@@ -36,7 +36,7 @@ function www_fields_sa()
 	
 	local link_2_bg = guiCreateStaticImage(78,4,76,24,"websites/colours/54.png",false,bg)
 	local link_2_hl = guiCreateStaticImage(90,6,50,2,"websites/colours/0.png",false,bg)
-	local link_2 = guiCreateLabel(80,10,72,16,"Electricals 2",false,bg)
+	local link_2 = guiCreateLabel(80,10,72,16,"Electricals",false,bg)
 	guiLabelSetColor(link_2,255,255,255)
 	guiLabelSetHorizontalAlign(link_2,"center")
 	addEventHandler("onClientGUIClick",link_2,function()
@@ -51,6 +51,16 @@ function www_fields_sa()
 	guiLabelSetHorizontalAlign(link_3,"center")
 	addEventHandler("onClientGUIClick",link_3,function()
 		local url = tostring("www.fields.sa/sexshop") -- Put hyperlink url in quotation marks
+		get_page(url)
+	end,false)
+	
+	local link_1_bg = guiCreateStaticImage(234,4,76,24,"websites/colours/54.png",false,bg)
+	local link_1_hl = guiCreateStaticImage(246,6,50,2,"websites/colours/1.png",false,bg)
+	local link_1 = guiCreateLabel(236,10,72,16,"Club",false,bg)
+	guiLabelSetColor(link_1,255,255,255)
+	guiLabelSetHorizontalAlign(link_1,"center")
+	addEventHandler("onClientGUIClick",link_1,function()
+		local url = tostring("www.Fields.sa/fieldslapdanceclub") -- Put hyperlink url in quotation marks
 		get_page(url)
 	end,false)
 	
@@ -93,7 +103,7 @@ function www_fields_sa()
 	local header_2_bg = guiCreateStaticImage(108,166,353,25,"websites/colours/7.png",false,bg)
 	local header_2_ul = guiCreateStaticImage(108,166,353,1,"websites/colours/1.png",false,bg)
 	local header_2 = guiCreateLabel(131,170,200,16,"Ways to Contact us",false,bg)
-	local para2 = guiCreateLabel(128,94,329,70,"The best way to contact Fields Incorporated will be by email, please leave you contact details and if we are intrested in your business plan we will be in touch",false,bg) 
+	local para2 = guiCreateLabel(128,194,329,70,"The best way to contact Fields Incorporated will be by email, please leave you contact details and if we are intrested in your business plan we will be in touch",false,bg) 
 	guiLabelSetHorizontalAlign(para2,"left",true)	
 	
 	----------------------------------------------- End of webpage -- Do not edit below this line. -----------------------------------------------
@@ -126,9 +136,9 @@ function www_fields_sa_sexshop()
 	------------
 	-- Header --
 	------------
-	local link_1_bg = guiCreateStaticImage(0,4,76,24,"websites/colours/7.png",false,bg)
+	local link_1_bg = guiCreateStaticImage(0,4,76,24,"websites/colours/54.png",false,bg)
 	local link_1_hl = guiCreateStaticImage(12,6,50,2,"websites/colours/1.png",false,bg)
-	local link_1 = guiCreateLabel(2,10,72,16,"Club 1",false,bg)
+	local link_1 = guiCreateLabel(2,10,72,16,"Home",false,bg)
 	guiLabelSetColor(link_1,255,255,255)
 	guiLabelSetHorizontalAlign(link_1,"center")
 	addEventHandler("onClientGUIClick",link_1,function()
@@ -138,7 +148,7 @@ function www_fields_sa_sexshop()
 	
 	local link_2_bg = guiCreateStaticImage(78,4,76,24,"websites/colours/54.png",false,bg)
 	local link_2_hl = guiCreateStaticImage(90,6,50,2,"websites/colours/0.png",false,bg)
-	local link_2 = guiCreateLabel(80,10,72,16,"Electricals 2",false,bg)
+	local link_2 = guiCreateLabel(80,10,72,16,"Electricals",false,bg)
 	guiLabelSetColor(link_2,255,255,255)
 	guiLabelSetHorizontalAlign(link_2,"center")
 	addEventHandler("onClientGUIClick",link_2,function()
@@ -146,13 +156,23 @@ function www_fields_sa_sexshop()
 		get_page(url)
 	end,false)
 	
-	local link_3_bg = guiCreateStaticImage(156,4,76,24,"websites/colours/54.png",false,bg)
+	local link_3_bg = guiCreateStaticImage(156,4,76,24,"websites/colours/7.png",false,bg)
 	local link_3_hl = guiCreateStaticImage(168,6,50,2,"websites/colours/0.png",false,bg)
 	local link_3 = guiCreateLabel(158,10,72,16,"Sex Shop",false,bg)
 	guiLabelSetColor(link_3,255,255,255)
 	guiLabelSetHorizontalAlign(link_3,"center")
 	addEventHandler("onClientGUIClick",link_3,function()
 		local url = tostring("www.fields.sa/sexshop") -- Put hyperlink url in quotation marks
+		get_page(url)
+	end,false)
+	
+	local link_1_bg = guiCreateStaticImage(234,4,76,24,"websites/colours/54.png",false,bg)
+	local link_1_hl = guiCreateStaticImage(246,6,50,2,"websites/colours/1.png",false,bg)
+	local link_1 = guiCreateLabel(236,10,72,16,"Club",false,bg)
+	guiLabelSetColor(link_1,255,255,255)
+	guiLabelSetHorizontalAlign(link_1,"center")
+	addEventHandler("onClientGUIClick",link_1,function()
+		local url = tostring("www.Fields.sa/fieldslapdanceclub") -- Put hyperlink url in quotation marks
 		get_page(url)
 	end,false)
 	
@@ -165,7 +185,7 @@ function www_fields_sa_sexshop()
 	guiLabelSetHorizontalAlign(url_label,"center")
 	
 	local header_bg = guiCreateStaticImage(0,28,460,34,"websites/colours/7.png",false,bg)
-	local header_label = guiCreateLabel(15,38,122,16,"Fields Sexshop",false,bg)
+	local header_label = guiCreateLabel(15,38,122,16,"Fields Sex Shop",false,bg)
 	guiSetFont(header_label,"default-bold-smal")
 	guiLabelSetColor(header_label,255,255,255)
 	
@@ -195,7 +215,7 @@ function www_fields_sa_sexshop()
 	local header_2_bg = guiCreateStaticImage(108,166,353,25,"websites/colours/7.png",false,bg)
 	local header_2_ul = guiCreateStaticImage(108,166,353,1,"websites/colours/1.png",false,bg)
 	local header_2 = guiCreateLabel(131,170,200,16,"What we offer?",false,bg)
-	local para2 = guiCreateLabel(128,94,329,70,"We offer lots and lots of fun in the bedroom, we are current stockists of Anna Winters sex toys and Lingerie, we sell dildos and double headed dildos to handcuffs, let your wild dreams come true",false,bg) 
+	local para2 = guiCreateLabel(128,194,329,70,"We offer lots and lots of fun in the bedroom, we are current stockists of Anna Winters sex toys and Lingerie, we sell dildos and double headed dildos to handcuffs, let your wild dreams come true",false,bg) 
 	guiLabelSetHorizontalAlign(para2,"left",true)
 
 	-- Header 3
@@ -203,7 +223,7 @@ function www_fields_sa_sexshop()
 	local header_3_bg = guiCreateStaticImage(108,266,353,25,"websites/colours/7.png",false,bg)
 	local header_3_ul = guiCreateStaticImage(108,266,353,1,"websites/colours/1.png",false,bg)
 	local header_3 = guiCreateLabel(131,270,200,16,"Where are we?",false,bg)
-	local para3 = guiCreateLabel(128,94,329,70,"Fields Sexshop is currently located at Jefferson Shopping center, it offers free off street parking and complete descretion",false,bg) 
+	local para3 = guiCreateLabel(128,294,329,70,"Fields Sexshop is currently located at Jefferson Shopping center, it offers free off street parking and complete descretion",false,bg) 
 	guiLabelSetHorizontalAlign(para3,"left",true)		
 	
 	----------------------------------------------- End of webpage -- Do not edit below this line. -----------------------------------------------
@@ -229,17 +249,12 @@ function www_fields_sa_fieldslapdanceclub()
 	
 	---------------------------------------------- Start of webpage design ----------------------------------------------
 	
-	----------------------------
-	-- Page Background Colour --
-	----------------------------
-	bg = guiCreateStaticImage(0,0,660,page_length,"websites/colours/10.png",false,internet_pane) -- DO NOT REMOVE THE BACKGROUND
-
 	------------
 	-- Header --
 	------------
-	local link_1_bg = guiCreateStaticImage(0,4,76,24,"websites/colours/7.png",false,bg)
+	local link_1_bg = guiCreateStaticImage(0,4,76,24,"websites/colours/54.png",false,bg)
 	local link_1_hl = guiCreateStaticImage(12,6,50,2,"websites/colours/1.png",false,bg)
-	local link_1 = guiCreateLabel(2,10,72,16,"Club 1",false,bg)
+	local link_1 = guiCreateLabel(2,10,72,16,"Home",false,bg)
 	guiLabelSetColor(link_1,255,255,255)
 	guiLabelSetHorizontalAlign(link_1,"center")
 	addEventHandler("onClientGUIClick",link_1,function()
@@ -249,7 +264,7 @@ function www_fields_sa_fieldslapdanceclub()
 	
 	local link_2_bg = guiCreateStaticImage(78,4,76,24,"websites/colours/54.png",false,bg)
 	local link_2_hl = guiCreateStaticImage(90,6,50,2,"websites/colours/0.png",false,bg)
-	local link_2 = guiCreateLabel(80,10,72,16,"Electricals 2",false,bg)
+	local link_2 = guiCreateLabel(80,10,72,16,"Electricals",false,bg)
 	guiLabelSetColor(link_2,255,255,255)
 	guiLabelSetHorizontalAlign(link_2,"center")
 	addEventHandler("onClientGUIClick",link_2,function()
@@ -267,6 +282,16 @@ function www_fields_sa_fieldslapdanceclub()
 		get_page(url)
 	end,false)
 	
+	local link_1_bg = guiCreateStaticImage(234,4,76,24,"websites/colours/7.png",false,bg)
+	local link_1_hl = guiCreateStaticImage(246,6,50,2,"websites/colours/1.png",false,bg)
+	local link_1 = guiCreateLabel(236,10,72,16,"Club",false,bg)
+	guiLabelSetColor(link_1,255,255,255)
+	guiLabelSetHorizontalAlign(link_1,"center")
+	addEventHandler("onClientGUIClick",link_1,function()
+		local url = tostring("www.Fields.sa/fieldslapdanceclub") -- Put hyperlink url in quotation marks
+		get_page(url)
+	end,false)
+	
 	local link_end_bg = guiCreateStaticImage(312,4,148,24,"websites/colours/7.png",false,bg)
 	local url_label_shadow = guiCreateLabel(325,11,130,16,"www.Fields.sa",false,bg)
 	guiLabelSetColor(url_label_shadow,28,28,28)
@@ -276,7 +301,7 @@ function www_fields_sa_fieldslapdanceclub()
 	guiLabelSetHorizontalAlign(url_label,"center")
 	
 	local header_bg = guiCreateStaticImage(0,28,460,34,"websites/colours/7.png",false,bg)
-	local header_label = guiCreateLabel(15,38,122,16,"Fields Lapdance Club",false,bg)
+	local header_label = guiCreateLabel(15,38,122,16,"Fields Lap Dancing Club",false,bg)
 	guiSetFont(header_label,"default-bold-smal")
 	guiLabelSetColor(header_label,255,255,255)
 	
@@ -306,7 +331,7 @@ function www_fields_sa_fieldslapdanceclub()
 	local header_2_bg = guiCreateStaticImage(108,166,353,25,"websites/colours/7.png",false,bg)
 	local header_2_ul = guiCreateStaticImage(108,166,353,1,"websites/colours/1.png",false,bg)
 	local header_2 = guiCreateLabel(131,170,200,16,"Employment",false,bg)
-	local para2 = guiCreateLabel(128,94,329,70,"We are always looking for new talent, if you are female and intrested then drop us a email and we will be intouch",false,bg) 
+	local para2 = guiCreateLabel(128,194,329,70,"We are always looking for new talent, if you are female and intrested then drop us a email and we will be intouch",false,bg) 
 	guiLabelSetHorizontalAlign(para2,"left",true)
 
 	-- Header 3
@@ -314,7 +339,7 @@ function www_fields_sa_fieldslapdanceclub()
 	local header_3_bg = guiCreateStaticImage(108,266,353,25,"websites/colours/7.png",false,bg)
 	local header_3_ul = guiCreateStaticImage(108,266,353,1,"websites/colours/1.png",false,bg)
 	local header_3 = guiCreateLabel(131,270,200,16,"Where are we?",false,bg)
-	local para3 = guiCreateLabel(128,94,329,70,"We are curently Located Next to Fire Department Near St Lawerence",false,bg) 
+	local para3 = guiCreateLabel(128,294,329,70,"We are curently Located Next to Fire Department Near St Lawerence",false,bg) 
 	guiLabelSetHorizontalAlign(para3,"left",true)		
 	
 	----------------------------------------------- End of webpage -- Do not edit below this line. -----------------------------------------------
@@ -350,7 +375,7 @@ function www_fields_sa_fieldselectricals()
 	------------
 	local link_1_bg = guiCreateStaticImage(0,4,76,24,"websites/colours/7.png",false,bg)
 	local link_1_hl = guiCreateStaticImage(12,6,50,2,"websites/colours/1.png",false,bg)
-	local link_1 = guiCreateLabel(2,10,72,16,"Club 1",false,bg)
+	local link_1 = guiCreateLabel(2,10,72,16,"Home",false,bg)
 	guiLabelSetColor(link_1,255,255,255)
 	guiLabelSetHorizontalAlign(link_1,"center")
 	addEventHandler("onClientGUIClick",link_1,function()
@@ -358,9 +383,9 @@ function www_fields_sa_fieldselectricals()
 		get_page(url)
 	end,false)
 	
-	local link_2_bg = guiCreateStaticImage(78,4,76,24,"websites/colours/54.png",false,bg)
+	local link_2_bg = guiCreateStaticImage(78,4,76,24,"websites/colours/7.png",false,bg)
 	local link_2_hl = guiCreateStaticImage(90,6,50,2,"websites/colours/0.png",false,bg)
-	local link_2 = guiCreateLabel(80,10,72,16,"Electricals 2",false,bg)
+	local link_2 = guiCreateLabel(80,10,72,16,"Electricals",false,bg)
 	guiLabelSetColor(link_2,255,255,255)
 	guiLabelSetHorizontalAlign(link_2,"center")
 	addEventHandler("onClientGUIClick",link_2,function()
@@ -378,7 +403,17 @@ function www_fields_sa_fieldselectricals()
 		get_page(url)
 	end,false)
 	
-	local link_end_bg = guiCreateStaticImage(312,4,148,24,"websites/colours/7.png",false,bg)
+	local link_1_bg = guiCreateStaticImage(234,4,76,24,"websites/colours/54.png",false,bg)
+	local link_1_hl = guiCreateStaticImage(246,6,50,2,"websites/colours/1.png",false,bg)
+	local link_1 = guiCreateLabel(236,10,72,16,"Club",false,bg)
+	guiLabelSetColor(link_1,255,255,255)
+	guiLabelSetHorizontalAlign(link_1,"center")
+	addEventHandler("onClientGUIClick",link_1,function()
+		local url = tostring("www.Fields.sa/fieldslapdanceclub") -- Put hyperlink url in quotation marks
+		get_page(url)
+	end,false)
+	
+	local link_end_bg = guiCreateStaticImage(312,4,148,24,"websites/colours/54.png",false,bg)
 	local url_label_shadow = guiCreateLabel(325,11,130,16,"www.Fields.sa",false,bg)
 	guiLabelSetColor(url_label_shadow,28,28,28)
 	guiLabelSetHorizontalAlign(url_label_shadow,"center")
@@ -387,7 +422,7 @@ function www_fields_sa_fieldselectricals()
 	guiLabelSetHorizontalAlign(url_label,"center")
 	
 	local header_bg = guiCreateStaticImage(0,28,460,34,"websites/colours/7.png",false,bg)
-	local header_label = guiCreateLabel(15,38,122,16,"Fields Electricals Outlets",false,bg)
+	local header_label = guiCreateLabel(15,38,122,16,"Fields Electricals Outlet",false,bg)
 	guiSetFont(header_label,"default-bold-smal")
 	guiLabelSetColor(header_label,255,255,255)
 	
@@ -417,7 +452,7 @@ function www_fields_sa_fieldselectricals()
 	local header_2_bg = guiCreateStaticImage(108,166,353,25,"websites/colours/7.png",false,bg)
 	local header_2_ul = guiCreateStaticImage(108,166,353,1,"websites/colours/1.png",false,bg)
 	local header_2 = guiCreateLabel(131,170,200,16,"What we offer",false,bg)
-	local para2 = guiCreateLabel(128,94,329,70,"We can supply you with the modern electricals, from radios to cellphones, MP3 players to ghetto blasters, from satnavs to safes, Laptops to katanas, we are fairly sure that when you visit our stores that you wont be disapointed",false,bg) 
+	local para2 = guiCreateLabel(128,194,329,70,"We can supply you with the modern electricals, from radios to cellphones, MP3 players to ghetto blasters, from satnavs to safes, Laptops to katanas, we are fairly sure that when you visit our stores that you wont be disapointed",false,bg) 
 	guiLabelSetHorizontalAlign(para2,"left",true)
 
 	-- Header 3
@@ -425,7 +460,7 @@ function www_fields_sa_fieldselectricals()
 	local header_3_bg = guiCreateStaticImage(108,266,353,25,"websites/colours/7.png",false,bg)
 	local header_3_ul = guiCreateStaticImage(108,266,353,1,"websites/colours/1.png",false,bg)
 	local header_3 = guiCreateLabel(131,270,200,16,"Where are we?",false,bg)
-	local para3 = guiCreateLabel(128,94,329,70,"We currently have 3 stores situated over Los Santos, we have branches at Unity, Market and West Broadway ",false,bg) 
+	local para3 = guiCreateLabel(128,294,329,70,"We currently have 3 stores situated over Los Santos, we have branches at Unity, Market and West Broadway ",false,bg) 
 	guiLabelSetHorizontalAlign(para3,"left",true)		
 	
 	----------------------------------------------- End of webpage -- Do not edit below this line. -----------------------------------------------
