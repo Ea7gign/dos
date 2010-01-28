@@ -74,7 +74,7 @@ function www_sanetwork_sa()
 
 	-- Left Column
 	------------- Latest News -------------
-	local top_story_image = guiCreateStaticImage(95,90,280,189,"websites/images/skyline.png",false,bg)
+	local top_story_image = guiCreateStaticImage(95,90,280,189,"websites/images/plane_crash.png",false,bg)
 	local top_story_mask_t = guiCreateStaticImage(5,112,450,5,"websites/colours/1.png",false,bg)
 	local top_story_mask_b = guiCreateStaticImage(5,290,450,26,"websites/colours/1.png",false,bg)
 	
@@ -83,18 +83,18 @@ function www_sanetwork_sa()
 	guiSetFont(latest_news_title,"default-bold-small")
 	
 	--------------- headline ------------
-	local top_story_headline =  guiCreateLabel(10,279,440,16,"TRAGEDY ON THE TRACKS",false,bg)
+	local top_story_headline =  guiCreateLabel(10,279,440,16,"FORTUNATE ESCAPE IN MYSTERIOUS PLANE CRASH",false,bg)
 	guiLabelSetColor(top_story_headline,0,0,0)
 	addEventHandler("onClientGUIClick",top_story_headline,function()
-			local url = tostring("www.sanetwork.sa/tragedy_on_the_tracks")
+			local url = tostring("www.sanetwork.sa/fortunate_escape_in_mysterious_plane_crash")
 			get_page(url)
 		end,false)
 	-- date
-	local top_story_date =  guiCreateLabel(10,292,440,16,"Tuesday, January 26th, 2010",false,bg)
+	local top_story_date =  guiCreateLabel(10,292,440,16,"Thursday, January 28th, 2010",false,bg)
 	guiSetFont(top_story_date,"default-bold-small")
 	guiLabelSetColor(top_story_date,132,5,16)
 	-- Summary
-	local top_story_summary =  guiCreateLabel(10,306,440,64,"The sight and sound of a train is rarely heard around the city of Los Santos these days.",false,bg)
+	local top_story_summary =  guiCreateLabel(10,306,440,64,"Shortly after three forty-five explosions were heard in the El Corona district of Los Santos after a light aircraft plummeted in Unity Station exploding in a chorus of flames.",false,bg)
 	guiLabelSetColor(top_story_summary,38,38,38)
 	guiLabelSetHorizontalAlign(top_story_summary,"left",true)
 	
@@ -107,18 +107,18 @@ function www_sanetwork_sa()
 		-- bullet point
 		local  story_2_bp = guiCreateStaticImage(10,405,6,6,"websites/images/dots/red_dot.png",false,bg)
 		-- headline
-		local story_2_hl = guiCreateLabel(20,388,435,16,"IMPOUND LOT AUCTION",false,bg)
+		local story_2_hl = guiCreateLabel(20,388,435,16,"TRAGEDY ON THE TRACKS",false,bg)
 		guiLabelSetColor(story_2_hl,0,0,0)
 		addEventHandler("onClientGUIClick",story_2_hl,function()
-			local url = tostring("www.sanetwork.sa/impound_lot_auction") -- Put hyperlink url in quotation marks
+			local url = tostring("www.sanetwork.sa/tragedy_on_the_tracks") -- Put hyperlink url in quotation marks
 			get_page(url)
 		end,false)
 		--date
-		local story_2_date = guiCreateLabel(20,400,435,16,"Monday, January 25th, 2010",false,bg)
+		local story_2_date = guiCreateLabel(20,400,435,16,"Tuesday, January 26th, 2010",false,bg)
 		guiLabelSetColor(story_2_date,132,5,16)
 		guiSetFont(story_2_date,"default-bold-small")
 		-- first line
-		local story_2_summary = guiCreateLabel(18,412,435,16,"Today, an auction was held at Best's Towing and Recovery.",false,bg)
+		local story_2_summary = guiCreateLabel(18,412,435,16,"The sight and sound of a train is rarely heard around the city of Los Santos these days.",false,bg)
 		guiLabelSetColor(story_2_summary,38,38,38)
 		guiLabelSetHorizontalAlign(story_2_summary,"left",true)
 	
@@ -126,18 +126,18 @@ function www_sanetwork_sa()
 		-- bullet point
 		local  story_3_bp = guiCreateStaticImage(10,455,6,6,"websites/images/dots/red_dot.png",false,bg)
 		-- headline
-		local story_3_hl = guiCreateLabel(20,438,435,16,"CORRUPTION IN BEST'S TOWING & RECOVERY",false,bg)
+		local story_3_hl = guiCreateLabel(20,438,435,16,"IMPOUND LOT AUCTION",false,bg)
 		guiLabelSetColor(story_3_hl,0,0,0)
 		addEventHandler("onClientGUIClick",story_3_hl,function()
-			local url = tostring("www.sanetwork.sa/corruption_in_bt_and_r") -- Put hyperlink url in quotation marks
+			local url = tostring("www.sanetwork.sa/impound_lot_auction") -- Put hyperlink url in quotation marks
 			get_page(url)
 		end,false)
 		--date
-		local story_3_date = guiCreateLabel(20,450,435,16,"Sunday, January 24th, 2010",false,bg)
+		local story_3_date = guiCreateLabel(20,450,435,16,"Monday, January 25th, 2010",false,bg)
 		guiLabelSetColor(story_3_date,132,5,16)
 		guiSetFont(story_3_date,"default-bold-small")
 		-- first line
-		local story_3_summary = guiCreateLabel(20,462,435,16,"Bests’ Towing and Recovery, or better known as “BT&R”, is the only towing",false,bg)
+		local story_3_summary = guiCreateLabel(20,462,435,16,"Today, an auction was held at Best's Towing and Recovery.",false,bg)
 		guiLabelSetColor(story_3_summary,38,38,38)
 		guiLabelSetHorizontalAlign(story_3_summary,"left",true)
 		
@@ -145,10 +145,10 @@ function www_sanetwork_sa()
 		-- bullet point
 		local  story_4_bp = guiCreateStaticImage(9,505,6,6,"websites/images/dots/red_dot.png",false,bg)
 		-- headline
-		local story_4_hl = guiCreateLabel(20,488,435,16,"CARELESS CITIZENS BURDEN EACHOTHER TO IMPROVE CITY",false,bg)
+		local story_4_hl = guiCreateLabel(20,488,435,16,"CORRUPTION IN BEST'S TOWING & RECOVERY",false,bg)
 		guiLabelSetColor(story_4_hl,0,0,0)
 		addEventHandler("onClientGUIClick",story_4_hl,function()
-			local url = tostring("www.sanetwork.sa/careless_citizens_burden_each_other_to_improve_city") -- Put hyperlink url in quotation marks
+			local url = tostring("www.sanetwork.sa/corruption_in_bt_and_r") -- Put hyperlink url in quotation marks
 			get_page(url)
 		end,false)
 		--date
@@ -156,7 +156,7 @@ function www_sanetwork_sa()
 		guiLabelSetColor(story_4_date,132,5,16)
 		guiSetFont(story_4_date,"default-bold-small")
 		-- first line
-		local story_4_summary = guiCreateLabel(20,512,435,16,"The belief that the city of Los Santos is riddled with crime, poverty, and",false,bg)
+		local story_4_summary = guiCreateLabel(20,512,435,16,"Bests’ Towing and Recovery, or better known as “BT&R”, is the only towing",false,bg)
 		guiLabelSetColor(story_4_summary,38,38,38)
 		guiLabelSetHorizontalAlign(story_4_summary,"left",true)
 		
@@ -164,10 +164,10 @@ function www_sanetwork_sa()
 		-- bullet point
 		local  story_5_bp = guiCreateStaticImage(9,555,6,6,"websites/images/dots/red_dot.png",false,bg)
 		-- headline
-		local story_5_hl = guiCreateLabel(20,538,435,16,"LSES HITTING THE FLOOR?",false,bg)
+		local story_5_hl = guiCreateLabel(20,538,435,16,"CARELESS CITIZENS BURDEN EACHOTHER TO IMPROVE CITY",false,bg)
 		guiLabelSetColor(story_5_hl,0,0,0)
 		addEventHandler("onClientGUIClick",story_5_hl,function()
-			local url = tostring("www.sanetwork.sa/los_santos_emergency_services_hitting_the_floor") -- Put hyperlink url in quotation marks
+			local url = tostring("www.sanetwork.sa/careless_citizens_burden_each_other_to_improve_city") -- Put hyperlink url in quotation marks
 			get_page(url)
 		end,false)
 		--date
@@ -175,7 +175,7 @@ function www_sanetwork_sa()
 		guiLabelSetColor(story_5_date,132,5,16)
 		guiSetFont(story_5_date,"default-bold-small")
 		-- first line
-		local story_5_summary = guiCreateLabel(20,562,435,16,"It seems that the Los Santos Emergency Services are facing a demise due",false,bg)
+		local story_5_summary = guiCreateLabel(20,562,435,16,"The belief that the city of Los Santos is riddled with crime, poverty, and",false,bg)
 		guiLabelSetColor(story_5_summary,38,38,38)
 		guiLabelSetHorizontalAlign(story_5_summary,"left",true)
 	
@@ -244,6 +244,169 @@ end
 ---------------------------------------------------------------
 --------------------------- Stories ---------------------------
 ---------------------------------------------------------------
+--------------------------------------------------------------------------------------------------------------------------- LOS SANTOS EMERGENCY SERVICES HITTING THE FLOOR?
+
+function www_sanetwork_sa_fortunate_escape_in_mysterious_plane_crash()
+	
+	-- Webpage Properties
+	---------------------
+	local page_length = 764
+	guiSetText(internet_address_label, "SANetwork.sa - Fortunate Escape In Mysterious Plane Crash - Waterwolf")
+	guiSetText(address_bar,"www.sanetwork.sa/fortunate_escape_in_mysterious_plane_crash")
+	
+	-- Page Background Colour
+	-------------------------
+	bg = guiCreateStaticImage(0,0,660,page_length,"websites/colours/14.png",false,internet_pane)
+	
+	------------
+	-- Header --
+	------------
+	local san_logo = guiCreateStaticImage(5,0,659,73,"websites/images/san-logo.png",false,bg)
+	
+	-- Nav Links
+		-- Home
+		--local news_link_bg = guiCreateStaticImage(369,49,62,22,"websites/colours/1.png",false,bg)
+		local news_link = guiCreateLabel(369,52,62,22,"Home",false,bg)
+		--guiLabelSetColor(news_link,132,5,16)
+		guiSetFont(news_link,"default-bold-small")
+		guiLabelSetHorizontalAlign(news_link,"center")
+		addEventHandler("onClientGUIClick",news_link,function()
+			local url = tostring("www.sanetwork.sa") -- Put hyperlink url in quotation marks
+			get_page(url)
+		end,false)
+	
+		-- Jobs
+		--local jobs_link_bg = guiCreateStaticImage(443,49,62,22,"websites/colours/1.png",false,san_logo)
+		local jobs_link = guiCreateLabel(443,52,62,22,"Jobs",false,bg)
+		guiSetFont(jobs_link,"default-bold-small")
+		guiLabelSetHorizontalAlign(jobs_link,"center")
+		addEventHandler("onClientGUIClick",jobs_link,function()
+			local url = tostring("www.sanetwork.sa/jobs") -- Put hyperlink url in quotation marks
+			get_page(url)
+		end,false)
+		
+		-- Places
+		--local places_link_bg = guiCreateStaticImage(517,49,62,22,"websites/colours/1.png",false,san_logo)
+		local places_link = guiCreateLabel(517,52,62,22,"Places",false,bg)
+		guiSetFont(places_link,"default-bold-small")
+		guiLabelSetHorizontalAlign(places_link,"center")
+		addEventHandler("onClientGUIClick",places_link,function()
+			local url = tostring("www.sanetwork.sa/places")
+			get_page(url)
+		end,false)
+		
+		-- Corporate
+		--local corporate_link_bg = guiCreateStaticImage(599,49,62,22,"websites/colours/1.png",false,san_logo)
+		local corporate_link = guiCreateLabel(599,52,62,22,"Corporate",false,bg)
+		guiSetFont(corporate_link,"default-bold-small")
+		guiLabelSetHorizontalAlign(corporate_link,"center")
+		addEventHandler("onClientGUIClick",corporate_link,function()
+			local url = tostring("www.sanetwork.sa/corporate")
+			get_page(url)
+		end,false)
+	
+	-------------
+	-- Content --
+	-------------
+	
+	local left_content_bg = guiCreateStaticImage(5,112,450,600,"websites/colours/1.png",false,bg)
+	local right_content_bg = guiCreateStaticImage(470,112,190,210,"websites/colours/1.png",false,bg)
+
+	-- Left Column
+	------------- Latest News -------------
+	local top_story_image = guiCreateStaticImage(95,90,280,189,"websites/images/plane_crash.png",false,bg)
+	local top_story_mask_t = guiCreateStaticImage(5,112,450,5,"websites/colours/1.png",false,bg)
+	local top_story_mask_b = guiCreateStaticImage(5,290,450,26,"websites/colours/1.png",false,bg)
+	
+	-- Title
+	local title_header_bg = guiCreateStaticImage(0,90,455,22,"websites/colours/3.png",false,bg)
+	local title = guiCreateLabel(10,92,450,20,"Fortunate Escape In Mysterious Plane Crash",false,bg)
+	guiSetFont(title,"default-bold-small")
+	
+	-- Date
+	local article_date =  guiCreateLabel(10,290,440,16,"Thursday, January 28th, 2010",false,bg)
+	guiLabelSetColor(article_date,132,5,16)
+	guiSetFont(article_date,"default-bold-small")
+	
+	-- Author
+	local author =  guiCreateLabel(10,304,440,16,"- Michel Bourgeois",false,bg)
+	guiSetFont(author,"default-small")
+	guiLabelSetColor(author,38,38,38)
+	
+	-- Article
+	local article =  guiCreateLabel(10,318,440,410,"Shortly after three forty-five explosions were heard in the El Corona district of Los Santos after a light aircraft plummeted in Unity Station exploding in a chorus of flames.\
+	\
+	Police and fire services were quick to respond to the scene setting up a perimeter along the stations parking lot. At the scene police had not been able to recover a body and fortunately reported there being victims in the crash. Police were also quick to dismiss speculation that this was in any way linked to a terrorist attack.\
+	\
+	The aircraft in question, a Dodo S34, is commonly used by recreational pilots in Los Santos air space. It is heralded by many in the aviation industry for its robustness and reliability questioning whether this was down to mechanical fault or human error. It is currently unclear who the pilot of the aircraft was, where it was headed or who the aircraft belong to.\
+	\
+	Police are appealing for witnesses to aid in their investigations.",false,bg)
+	guiLabelSetColor(article,38,38,38)
+	guiLabelSetHorizontalAlign(article,"left",true)
+
+	
+	-- Right Column
+	--------------------------- Top Links ---------------------------
+	local top_links_header_bg = guiCreateStaticImage(465,90,195,22,"websites/colours/3.png",false,bg)
+	local top_links_title = guiCreateLabel(480,92,180,20,"Top Links",false,bg)
+	guiSetFont(top_links_title,"default-bold-small")
+		
+		-- LS Government
+		local top_link_1_bp = guiCreateStaticImage(474,121,6,6,"websites/images/dots/red_dot.png",false,bg)
+		local top_link_1 = guiCreateLabel(490,114,142,16,"Los Santos Government",false,bg)
+		guiLabelSetColor(top_link_1,38,38,38)
+		addEventHandler("onClientGUIClick",top_link_1,function()
+				local url = tostring("www.lossantos.gov")
+				get_page(url)
+			end,false)
+		
+		-- LSPD
+		local top_link_2_bp = guiCreateStaticImage(474,137,6,6,"websites/images/dots/red_dot.png",false,bg)
+		local top_link_2 = guiCreateLabel(490,129,142,16,"LS Police Department",false,bg)
+		guiLabelSetColor(top_link_2,38,38,38)
+		addEventHandler("onClientGUIClick",top_link_2,function()
+				local url = tostring("www.lspd.gov")
+				get_page(url)
+			end,false)
+
+		-- LSES
+		local top_link_3_bp = guiCreateStaticImage(474,153,6,6,"websites/images/dots/red_dot.png",false,bg)
+		local top_link_3 = guiCreateLabel(490,146,142,16,"LS Emergency Service",false,bg)
+		guiLabelSetColor(top_link_3,38,38,38)
+		addEventHandler("onClientGUIClick",top_link_3,function()
+				local url = tostring("www.lses.gov")
+				get_page(url)
+			end,false)
+	
+		-- C&C Bank of San Andreas
+		local top_link_4_bp = guiCreateStaticImage(474,169,6,6,"websites/images/dots/red_dot.png",false,bg)
+		local top_link_4 = guiCreateLabel(490,162,142,16,"Bank of San Andreas",false,bg)
+		guiLabelSetColor(top_link_4,38,38,38)
+		addEventHandler("onClientGUIClick",top_link_4,function()
+				local url = tostring("www.bankofsa.sa")
+				get_page(url)
+			end,false)
+			
+	------------
+	-- Footer --
+	------------
+	
+	local footer_bg = guiCreateStaticImage(0,725,660,40,"websites/colours/3.png",false,bg)
+	local footer_text = guiCreateLabel(14,739,254,14,"SAN       2010 San Andreas Network. All Rights Reserved.",false,bg)
+	guiSetFont(footer_text,"default-small")
+	
+	local copyright = guiCreateStaticImage(38,739,12,12,"websites/images/copyright.png",false,bg)
+	
+----------------------------------------------------------------------
+	if(page_length>=397)then
+		guiScrollPaneSetScrollBars(internet_pane,false,true)
+		guiScrollPaneSetVerticalScrollPosition(internet_pane,0)
+	else
+		guiSetSize(bg,660,397,false)
+		guiScrollPaneSetScrollBars(internet_pane, false, false)
+	end
+end
+
 
 --------------------------------------------------------------------------------------------------------------------------- Tragedy on the tracks
 
@@ -1178,171 +1341,6 @@ function www_sanetwork_sa_careless_citizens_burden_each_other_to_improve_city()
 	local article =  guiCreateLabel(10,318,440,410,"The belief that the city of Los Santos is riddled with crime, poverty, and corruption is just another piece to the puzzle that leads to the carelessness of some citizens for themselves and their belongings. Because a fine line divides the rich and poor in Los Santos, there is virtually no developing middle class. Many homes have been left effortlessly abandoned for a home in the hills.\
 	\
 	With such a thin border between extreme affluence and complete destitute, it brings a very sharp question to mind. Why; when a majority of citizens in Los Santos is in such a financial crisis; would people leave their expensive posessions in the middle of the street?",false,bg)
-	guiLabelSetColor(article,38,38,38)
-	guiLabelSetHorizontalAlign(article,"left",true)
-
-	
-	-- Right Column
-	--------------------------- Top Links ---------------------------
-	local top_links_header_bg = guiCreateStaticImage(465,90,195,22,"websites/colours/3.png",false,bg)
-	local top_links_title = guiCreateLabel(480,92,180,20,"Top Links",false,bg)
-	guiSetFont(top_links_title,"default-bold-small")
-		
-		-- LS Government
-		local top_link_1_bp = guiCreateStaticImage(474,121,6,6,"websites/images/dots/red_dot.png",false,bg)
-		local top_link_1 = guiCreateLabel(490,114,142,16,"Los Santos Government",false,bg)
-		guiLabelSetColor(top_link_1,38,38,38)
-		addEventHandler("onClientGUIClick",top_link_1,function()
-				local url = tostring("www.lossantos.gov")
-				get_page(url)
-			end,false)
-		
-		-- LSPD
-		local top_link_2_bp = guiCreateStaticImage(474,137,6,6,"websites/images/dots/red_dot.png",false,bg)
-		local top_link_2 = guiCreateLabel(490,129,142,16,"LS Police Department",false,bg)
-		guiLabelSetColor(top_link_2,38,38,38)
-		addEventHandler("onClientGUIClick",top_link_2,function()
-				local url = tostring("www.lspd.gov")
-				get_page(url)
-			end,false)
-
-		-- LSES
-		local top_link_3_bp = guiCreateStaticImage(474,153,6,6,"websites/images/dots/red_dot.png",false,bg)
-		local top_link_3 = guiCreateLabel(490,146,142,16,"LS Emergency Service",false,bg)
-		guiLabelSetColor(top_link_3,38,38,38)
-		addEventHandler("onClientGUIClick",top_link_3,function()
-				local url = tostring("www.lses.gov")
-				get_page(url)
-			end,false)
-	
-		-- C&C Bank of San Andreas
-		local top_link_4_bp = guiCreateStaticImage(474,169,6,6,"websites/images/dots/red_dot.png",false,bg)
-		local top_link_4 = guiCreateLabel(490,162,142,16,"Bank of San Andreas",false,bg)
-		guiLabelSetColor(top_link_4,38,38,38)
-		addEventHandler("onClientGUIClick",top_link_4,function()
-				local url = tostring("www.bankofsa.sa")
-				get_page(url)
-			end,false)
-			
-	------------
-	-- Footer --
-	------------
-	
-	local footer_bg = guiCreateStaticImage(0,725,660,40,"websites/colours/3.png",false,bg)
-	local footer_text = guiCreateLabel(14,739,254,14,"SAN       2010 San Andreas Network. All Rights Reserved.",false,bg)
-	guiSetFont(footer_text,"default-small")
-	
-	local copyright = guiCreateStaticImage(38,739,12,12,"websites/images/copyright.png",false,bg)
-	
-----------------------------------------------------------------------
-	if(page_length>=397)then
-		guiScrollPaneSetScrollBars(internet_pane,false,true)
-		guiScrollPaneSetVerticalScrollPosition(internet_pane,0)
-	else
-		guiSetSize(bg,660,397,false)
-		guiScrollPaneSetScrollBars(internet_pane, false, false)
-	end
-end
-
---------------------------------------------------------------------------------------------------------------------------- LOS SANTOS EMERGENCY SERVICES HITTING THE FLOOR?
-
-function www_sanetwork_sa_los_santos_emergency_services_hitting_the_floor()
-	
-	-- Webpage Properties
-	---------------------
-	local page_length = 764
-	guiSetText(internet_address_label, "SANetwork.sa - Los Santos Emergency Services Hitting the Florr? - Waterwolf")
-	guiSetText(address_bar,"www.sanetwork.sa/los_santos_emergency_services_hitting_the_floor")
-	
-	-- Page Background Colour
-	-------------------------
-	bg = guiCreateStaticImage(0,0,660,page_length,"websites/colours/14.png",false,internet_pane)
-	
-	------------
-	-- Header --
-	------------
-	local san_logo = guiCreateStaticImage(5,0,659,73,"websites/images/san-logo.png",false,bg)
-	
-	-- Nav Links
-		-- Home
-		--local news_link_bg = guiCreateStaticImage(369,49,62,22,"websites/colours/1.png",false,bg)
-		local news_link = guiCreateLabel(369,52,62,22,"Home",false,bg)
-		--guiLabelSetColor(news_link,132,5,16)
-		guiSetFont(news_link,"default-bold-small")
-		guiLabelSetHorizontalAlign(news_link,"center")
-		addEventHandler("onClientGUIClick",news_link,function()
-			local url = tostring("www.sanetwork.sa") -- Put hyperlink url in quotation marks
-			get_page(url)
-		end,false)
-	
-		-- Jobs
-		--local jobs_link_bg = guiCreateStaticImage(443,49,62,22,"websites/colours/1.png",false,san_logo)
-		local jobs_link = guiCreateLabel(443,52,62,22,"Jobs",false,bg)
-		guiSetFont(jobs_link,"default-bold-small")
-		guiLabelSetHorizontalAlign(jobs_link,"center")
-		addEventHandler("onClientGUIClick",jobs_link,function()
-			local url = tostring("www.sanetwork.sa/jobs") -- Put hyperlink url in quotation marks
-			get_page(url)
-		end,false)
-		
-		-- Places
-		--local places_link_bg = guiCreateStaticImage(517,49,62,22,"websites/colours/1.png",false,san_logo)
-		local places_link = guiCreateLabel(517,52,62,22,"Places",false,bg)
-		guiSetFont(places_link,"default-bold-small")
-		guiLabelSetHorizontalAlign(places_link,"center")
-		addEventHandler("onClientGUIClick",places_link,function()
-			local url = tostring("www.sanetwork.sa/places")
-			get_page(url)
-		end,false)
-		
-		-- Corporate
-		--local corporate_link_bg = guiCreateStaticImage(599,49,62,22,"websites/colours/1.png",false,san_logo)
-		local corporate_link = guiCreateLabel(599,52,62,22,"Corporate",false,bg)
-		guiSetFont(corporate_link,"default-bold-small")
-		guiLabelSetHorizontalAlign(corporate_link,"center")
-		addEventHandler("onClientGUIClick",corporate_link,function()
-			local url = tostring("www.sanetwork.sa/corporate")
-			get_page(url)
-		end,false)
-	
-	-------------
-	-- Content --
-	-------------
-	
-	local left_content_bg = guiCreateStaticImage(5,112,450,600,"websites/colours/1.png",false,bg)
-	local right_content_bg = guiCreateStaticImage(470,112,190,210,"websites/colours/1.png",false,bg)
-
-	-- Left Column
-	------------- Latest News -------------
-	local top_story_image = guiCreateStaticImage(95,90,280,189,"websites/images/spotlight.png",false,bg)
-	local top_story_mask_t = guiCreateStaticImage(5,112,450,5,"websites/colours/1.png",false,bg)
-	local top_story_mask_b = guiCreateStaticImage(5,290,450,26,"websites/colours/1.png",false,bg)
-	
-	-- Title
-	local title_header_bg = guiCreateStaticImage(0,90,455,22,"websites/colours/3.png",false,bg)
-	local title = guiCreateLabel(10,92,450,20,"Los Santos Emergency Services Hitting the Florr?",false,bg)
-	guiSetFont(title,"default-bold-small")
-	
-	-- Date
-	local article_date =  guiCreateLabel(10,290,440,16,"Tuesday, January 26th, 2010",false,bg)
-	guiLabelSetColor(article_date,132,5,16)
-	guiSetFont(article_date,"default-bold-small")
-	addEventHandler("onClientGUIClick",top_story_headline,function()
-			local url = tostring("www.sanetwork.sa/tragedy_on_the_tracks")
-			get_page(url)
-		end,false)
-	
-	-- Author
-	local author =  guiCreateLabel(10,304,440,16,"- Megan Thorne (m.thorne@sanetwork.sa)",false,bg)
-	guiSetFont(author,"default-small")
-	guiLabelSetColor(author,38,38,38)
-	
-	-- Article
-	local article =  guiCreateLabel(10,318,440,410,"It seems that the Los Santos Emergency Services are facing a demise due their underworking employees. At the moment, Emergency Services are not hiring, meaning the Emergency Services are not allowing a solution to this problem.\
-\
-On January 2, 2010, Medical Lietunant Jacob Washington went on air. He had announced that the company is currently unstaffed with only two employees working. He also added that they can't take all calls, so they are forced to prioritize, leaving many in the dust.\
-\
-So what is there to think? Is the company declining, or is there another reason why the Emergency Services struggles so much? The most important outlook into the future is that medical care is critical and it needs to be readily available in the future.",false,bg)
 	guiLabelSetColor(article,38,38,38)
 	guiLabelSetHorizontalAlign(article,"left",true)
 
