@@ -320,11 +320,7 @@ function getTransactionReason(type, reason, from)
 	elseif type == 1 or type == 5 then
 		return "Deposit"
 	elseif type == 6 then
-		if from == "Government" then
-			return "State Benefits"
-		else
-			return "Wage"
-		end
+		return tostring(reason or "")
 	elseif type == 7 then
 		return "Payday (Biz+Interest+Donator)"
 	elseif type == 8 then

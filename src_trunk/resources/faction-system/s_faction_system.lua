@@ -1002,6 +1002,7 @@ function payWage(player, pay, faction, tax)
 	end
 	
 	local interest = math.ceil(interestrate * bankmoney)
+	mysql_free_result( mysql_query( handler, "INSERT INTO wiretransfers (`from`, `to`, `amount`, `reason`, `type`) VALUES (-57, " .. getElementData(player, "dbid") .. ", " .. interest .. ", 'BANKINTEREST', 6)" ) )
 	
 	local incomeTax = exports.global:getIncomeTaxAmount()
 	
@@ -1026,7 +1027,7 @@ function payWage(player, pay, faction, tax)
 	if not faction then
 		if pay >= 0 then
 			governmentIncome = governmentIncome - pay
-			mysql_free_result( mysql_query( handler, "INSERT INTO wiretransfers (`from`, `to`, `amount`, `reason`, `type`) VALUES (0, " .. getElementData(player, "dbid") .. ", " .. pay .. ", '', 6)" ) )
+			mysql_free_result( mysql_query( handler, "INSERT INTO wiretransfers (`from`, `to`, `amount`, `reason`, `type`) VALUES (-3, " .. getElementData(player, "dbid") .. ", " .. pay .. ", 'STATEBENEFITS', 6)" ) )
 		else
 			pay = 0
 		end
@@ -1038,7 +1039,7 @@ function payWage(player, pay, faction, tax)
 			else
 				teamid = -teamid
 			end
-			mysql_free_result( mysql_query( handler, "INSERT INTO wiretransfers (`from`, `to`, `amount`, `reason`, `type`) VALUES (" .. teamid .. ", " .. getElementData(player, "dbid") .. ", " .. pay-tax .. ", '', 6)" ) )
+			mysql_free_result( mysql_query( handler, "INSERT INTO wiretransfers (`from`, `to`, `amount`, `reason`, `type`) VALUES (" .. teamid .. ", " .. getElementData(player, "dbid") .. ", " .. pay .. ", 'WAGE', 6)" ) )
 		else
 			pay = 0
 		end
@@ -1048,6 +1049,7 @@ function payWage(player, pay, faction, tax)
 		pay = pay - tax
 		bankmoney = bankmoney - tax
 		governmentIncome = governmentIncome + tax
+		mysql_free_result( mysql_query( handler, "INSERT INTO wiretransfers (`from`, `to`, `amount`, `reason`, `type`) VALUES (" .. getElementData(player, "dbid") .. ", -3, " .. tax .. ", 'INCOMETAX', 6)" ) )
 	end
 	
 	local vtax = taxVehicles[ getElementData(player, "dbid") ] or 0
@@ -1059,6 +1061,9 @@ function payWage(player, pay, faction, tax)
 			exports.global:givePlayerAchievement(player, 19)
 		end
 		
+		mysql_free_result( mysql_query( handler, "INSERT INTO wiretransfers (`from`, `to`, `amount`, `reason`, `type`) VALUES (" .. getElementData(player, "dbid") .. ", -3, " .. vtax .. ", 'VEHICLETAX', 6)" ) )
+
+		
 		governmentIncome = governmentIncome + vtax
 	end
 	
@@ -1068,6 +1073,7 @@ function payWage(player, pay, faction, tax)
 		ptax = math.min( ptax, bankmoney )
 		bankmoney = bankmoney - ptax
 		governmentIncome = governmentIncome + ptax
+		mysql_free_result( mysql_query( handler, "INSERT INTO wiretransfers (`from`, `to`, `amount`, `reason`, `type`) VALUES (" .. getElementData(player, "dbid") .. ", -3, " .. ptax .. ", 'PROPERTYTAX', 6)" ) )
 	end
 	
 	if (rent > 0) then
@@ -1077,7 +1083,10 @@ function payWage(player, pay, faction, tax)
 		else
 			exports.global:givePlayerAchievement(player, 11)
 			bankmoney = bankmoney - rent
-			governmentIncome = governmentIncome + rent
+			
+			-- gov shouldnt get anything of this
+			--governmentIncome = governmentIncome + rent
+			mysql_free_result( mysql_query( handler, "INSERT INTO wiretransfers (`from`, `to`, `amount`, `reason`, `type`) VALUES (" .. getElementData(player, "dbid") .. ", 0, " .. rent .. ", 'HOUSERENT', 6)" ) )
 		end
 	end
 
@@ -1090,7 +1099,12 @@ function payWage(player, pay, faction, tax)
 	triggerClientEvent(player, "cPayDay", player, faction, pay, profit, interest, donatormoney, tax, incomeTax, vtax, ptax, rent, grossincome)
 	
 	-- Insert in Transactions
-	mysql_free_result( mysql_query( handler, "INSERT INTO wiretransfers (`from`, `to`, `amount`, `reason`, `type`) VALUES (0, " .. getElementData(player, "dbid") .. ", " .. grossincome .. ", '', 7)" ) )
+	
+	-- 0 is government
+	-- -3 is faction government
+	
+	
+	--mysql_free_result( mysql_query( handler, "INSERT INTO wiretransfers (`from`, `to`, `amount`, `reason`, `type`) VALUES (0, " .. getElementData(player, "dbid") .. ", " .. grossincome .. ", '', 7)" ) )
 	return governmentIncome
 end
 
