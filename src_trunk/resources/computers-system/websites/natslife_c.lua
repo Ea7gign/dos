@@ -6,7 +6,7 @@
 -- Website owner's Character's name: Natalie Stafford
 
 local p = false
-local height = 600
+local height = 397
 local width = 660
 
 local function showSinglePage( i, x )
@@ -92,12 +92,11 @@ local function showSinglePage( i, x )
 		false
 	)
 	
-	guiScrollPaneSetScrollBars(internet_pane,false,true)
-	guiScrollPaneSetVerticalScrollPosition(internet_pane,0)
+	guiScrollPaneSetScrollBars(internet_pane,false,false)
+	guiSetSize(bg,width,height,false)
 end
 
 local function buildPages( )
-	p = getElementData( getResourceRootElement( ), "page:natslife.net" )
 	if p then
 		-- build pages
 		for i = #p, 1, -1 do
@@ -105,7 +104,7 @@ local function buildPages( )
 			-- split up in pieces
 			local content = p[i].content
 			while true do
-				local pos = content:find("%s", 3000)
+				local pos = content:find("%s", 1750)
 				if pos then
 					local newindex = #p[i]+1
 					p[i][newindex] = content:sub( 1, pos )
@@ -125,16 +124,23 @@ local function buildPages( )
 	end
 end
 
-addEventHandler( "onClientElementDataChange", getResourceRootElement( ),
-	function( name )
-		if name == "page:natslife.net" then
-			buildPages( )
-		end
-	end
-)
-
 addEventHandler( "onClientResourceStart", getResourceRootElement( ), 
 	function( )
-		buildPages( )
+		cache = xmlLoadFile( "websites/natslife.xml" )
+		if cache then
+			p = {}
+			for key, value in ipairs( xmlNodeGetChildren( cache ) ) do
+				p[tonumber( xmlNodeGetAttribute( value, "id" ) )] =
+				{
+					date = xmlNodeGetAttribute( value, "date" ),
+					title = xmlNodeGetAttribute( value, "title" ),
+					content = xmlNodeGetValue( value )
+				}
+			end
+			xmlUnloadFile( cache )
+			buildPages( )
+		else
+			outputDebugString( "Couldn't load file websites/natslife.xml" )
+		end
 	end
 )

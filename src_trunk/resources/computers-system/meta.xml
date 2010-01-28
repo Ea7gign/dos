@@ -200,6 +200,7 @@
 	<!-- N -->
 	<script src="websites/natslife_s.lua" type="server"/>
 	<script src="websites/natslife_c.lua" type="client"/>
+	<file src="websites/natslife.xml"/>
 	
 	<!-- S -->
 	<script src="websites/sanetwork.lua" type="client"/>

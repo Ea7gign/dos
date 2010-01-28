@@ -8,16 +8,16 @@
 local function returnPosts( result, ... )
 	if result ~= "ERROR" then
 		result = { result, ... }
-		local pages = { }
+		local file = xmlCreateFile( "websites/natslife.xml", "cache" )
 		for key, value in pairs( result ) do
-			pages[ key ] =
-			{
-				title = value.post_title,
-				content = value.post_content,
-				date = value.post_date_gmt
-			}
+			local node = xmlCreateChild( file, "entry" )
+			xmlNodeSetAttribute( node, "id", key )
+			xmlNodeSetAttribute( node, "title", value.post_title )
+			xmlNodeSetValue( node, value.post_content )
+			xmlNodeSetAttribute( node, "date", value.post_date_gmt )
 		end
-		setElementData( getResourceRootElement(), "page:natslife.net", pages )
+		xmlSaveFile( file )
+		xmlUnloadFile( file )
 	end
 end
 
