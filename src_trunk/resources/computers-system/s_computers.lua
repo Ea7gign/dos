@@ -47,7 +47,7 @@ function register_email(accountName, password)
 	else
 		triggerClientEvent("closeEmailLogin",getRootElement())
 		local dbid = getElementData(source, "dbid")
-		local query = mysql_query(handler, "INSERT INTO emailaccounts SET username='" .. mysql_escape_string(handler, accountName) .. "', password='" .. mysql_escape_string(handler, password) .. "', creator='"..dbid.."'") -- Create the account.
+		local query = mysql_query(handler, "INSERT INTO emailaccounts SET username='" .. mysql_escape_string(handler, accountName) .. "', password=MD5('" .. mysql_escape_string(handler, password) .. "'), creator='"..dbid.."'") -- Create the account.
 		local query = mysql_query(handler, "INSERT INTO emails SET date= NOW(), sender='Customer Services', receiver='" .. mysql_escape_string(handler, accountName) .. "', subject='Welcome', inbox='1',outbox='0', message='Welcome,\
 \
 Your email account has been registered.\
@@ -65,7 +65,7 @@ addEvent("registerEmail", true)
 addEventHandler("registerEmail", getRootElement(),register_email)
 
 function login_email(accountName, password)
-	local result = mysql_query(handler, "SELECT * FROM emailaccounts WHERE username='" .. mysql_escape_string(handler, accountName) .."' AND password='" .. mysql_escape_string(handler, password) .. "'")
+	local result = mysql_query(handler, "SELECT * FROM emailaccounts WHERE username='" .. mysql_escape_string(handler, accountName) .."' AND password=MD5('" .. mysql_escape_string(handler, password) .. "')")
 	if (mysql_num_rows(result)==0) then
 		triggerClientEvent("loginError", source) -- Error Message
 	else
