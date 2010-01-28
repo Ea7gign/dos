@@ -32,7 +32,7 @@ function leader_check (accountName, password)
 	mysql_free_result(query)
 		
 	if not (tonumber(leader)==1) then -- If the player is not the leader
-		triggerClientEvent("notLeader",getRootElement())
+		triggerClientEvent("notLeader",source)
 	else
 		register_email(accountName, password)
 	end
@@ -45,15 +45,15 @@ function register_email(accountName, password)
 	if (mysql_num_rows(result)>0) then
 		triggerClientEvent("name_in_use", source) -- Error Message
 	else
-		triggerClientEvent("closeEmailLogin",getRootElement())
+		triggerClientEvent("closeEmailLogin",source)
 		local dbid = getElementData(source, "dbid")
 		local query = mysql_query(handler, "INSERT INTO emailaccounts SET username='" .. mysql_escape_string(handler, accountName) .. "', password=MD5('" .. mysql_escape_string(handler, password) .. "'), creator='"..dbid.."'") -- Create the account.
 		local query = mysql_query(handler, "INSERT INTO emails SET date= NOW(), sender='Customer Services', receiver='" .. mysql_escape_string(handler, accountName) .. "', subject='Welcome', inbox='1',outbox='0', message='Welcome,\
 \
 Your email account has been registered.\
 \
-Username: " ..accountName.."\
-Password: " ..password.."\
+Username: " ..mysql_escape_string(handler, accountName).."\
+Password: " ..mysql_escape_string(handler, password).."\
 \
 Thank you for registering.'")
 		
@@ -69,7 +69,7 @@ function login_email(accountName, password)
 	if (mysql_num_rows(result)==0) then
 		triggerClientEvent("loginError", source) -- Error Message
 	else
-		triggerClientEvent("closeEmailLogin",getRootElement())
+		triggerClientEvent("closeEmailLogin",source)
 		get_inbox(accountName)
 		get_outbox(accountName)
 	end
@@ -97,7 +97,7 @@ function get_inbox(accountName)
 			}
 		end
 		mysql_free_result(result)
-		triggerClientEvent("showInbox",getRootElement(),inbox_table, accountName)
+		triggerClientEvent("showInbox",source,inbox_table, accountName)
 	end
 end
 addEvent("s_getInbox",true)
@@ -123,7 +123,7 @@ function get_outbox(accountName)
 			}
 		end
 		mysql_free_result(result)
-		triggerClientEvent("showOutbox",getRootElement(),outbox_table, accountName)
+		triggerClientEvent("showOutbox",source,outbox_table, accountName)
 	end
 end
 addEvent("s_getOutbox",true)
@@ -136,7 +136,7 @@ function send_message(accountName,to,subject,message)
 	else
 		local query = mysql_query(handler, "INSERT INTO emails SET date= NOW(), sender='".. mysql_escape_string(handler, accountName) .."', receiver='" .. mysql_escape_string(handler, to) .. "', subject='" .. mysql_escape_string(handler,subject) .. "', message='" .. mysql_escape_string(handler, message) .. "', inbox='1', outbox='1'")
 		get_outbox(accountName)
-		triggerClientEvent("c_sendMessage",getRootElement())
+		triggerClientEvent("c_sendMessage",source)
 	end
 end
 addEvent("sendMessage",true)

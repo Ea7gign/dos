@@ -418,7 +418,7 @@ function close_email_window()
 	end
 end
 addEvent("closeEmailLogin",true)
-addEventHandler("closeEmailLogin", getRootElement(),close_email_window)
+addEventHandler("closeEmailLogin", getLocalPlayer(),close_email_window)
 
 function show_inbox(inbox_table, accountName)
 	if not (wEmail) then
@@ -560,7 +560,7 @@ function show_inbox(inbox_table, accountName)
 	if not (check_mail_button) then
 		check_mail_button = guiCreateButton(0.3,0.9,0.2,0.08,"Check Mail",true,inbox_tab)
 		addEventHandler("onClientGUIClick",check_mail_button, function()
-			triggerServerEvent("s_getInbox",getRootElement(),accountName)
+			triggerServerEvent("s_getInbox",getLocalPlayer(),accountName)
 		end,false)	
 		
 		--[[DELETE FUNCTION (INBOX)
@@ -574,7 +574,7 @@ function show_inbox(inbox_table, accountName)
 	end
 end
 addEvent("showInbox",true)
-addEventHandler("showInbox",getRootElement(),show_inbox)
+addEventHandler("showInbox",getLocalPlayer(),show_inbox)
 
 function show_outbox(outbox_table,accountName)
 	------------
@@ -658,17 +658,17 @@ function show_outbox(outbox_table,accountName)
 	end
 end
 addEvent("showOutbox",true)
-addEventHandler("showOutbox",getRootElement(),show_outbox)
+addEventHandler("showOutbox",getLocalPlayer(),show_outbox)
 
 
 function invalid_address()
 	guiSetText(new_message_to_input, "Address not found!")
 end
 addEvent("invalidAddress",true)
-addEventHandler("invalidAddress",getRootElement(),invalid_address)
+addEventHandler("invalidAddress",getLocalPlayer(),invalid_address)
 
 function c_send_message()
 	guiSetSelectedTab(email_tab_panel,outbox_tab)
 end
 addEvent("c_sendMessage",true)
-addEventHandler("c_sendMessage",getRootElement(),c_send_message)
+addEventHandler("c_sendMessage",getLocalPlayer(),c_send_message)
