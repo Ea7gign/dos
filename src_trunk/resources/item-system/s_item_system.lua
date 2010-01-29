@@ -768,7 +768,7 @@ function dropItem(itemID, x, y, z, ammo, keepammo)
 	if not ammo then
 		local itemSlot = itemID
 		local itemID, itemValue = unpack( getItems( source )[ itemSlot ] )
-		local insert = mysql_query(handler, "INSERT INTO worlditems SET itemid='" .. itemID .. "', itemvalue='" .. mysql_escape_string(handler, itemValue) .. "', creationdate = NOW(), x = " .. x .. ", y = " .. y .. ", z= " .. z .. ", dimension = " .. dimension .. ", interior = " .. interior .. ", rz = " .. rz2)
+		local insert = mysql_query(handler, "INSERT INTO worlditems SET itemid='" .. itemID .. "', itemvalue='" .. mysql_escape_string(handler, itemValue) .. "', creationdate = NOW(), x = " .. x .. ", y = " .. y .. ", z= " .. z .. ", dimension = " .. dimension .. ", interior = " .. interior .. ", rz = " .. rz2 .. ", creator=" .. getElementData(source, "dbid"))
 		if insert then
 			local id = mysql_insert_id(handler)
 			mysql_free_result(insert)
@@ -798,6 +798,7 @@ function dropItem(itemID, x, y, z, ammo, keepammo)
 			setElementData(obj, "id", id, false)
 			setElementData(obj, "itemID", itemID)
 			setElementData(obj, "itemValue", itemValue)
+			setElementData(obj, "creator", getElementData(source, "dbid"), false)
 			
 			takeItemFromSlot( source, itemSlot )
 			
@@ -945,7 +946,7 @@ function loadWorldItems(res)
 	end
 	
 	-- actually load items
-	local result = mysql_query(handler, "SELECT id, itemid, itemvalue, x, y, z, dimension, interior, rz FROM worlditems")
+	local result = mysql_query(handler, "SELECT id, itemid, itemvalue, x, y, z, dimension, interior, rz, creator FROM worlditems")
 	for result, row in mysql_rows(result) do
 		local id = tonumber(row[1])
 		local itemID = tonumber(row[2])
@@ -956,6 +957,7 @@ function loadWorldItems(res)
 		local dimension = tonumber(row[7])
 		local interior = tonumber(row[8])
 		local rz2 = tonumber(row[9])
+		local creator = tonumber(row[10])
 		
 		if itemID < 0 then -- weapon
 			itemID = -itemID
@@ -976,6 +978,7 @@ function loadWorldItems(res)
 			setElementData(obj, "id", id, false)
 			setElementData(obj, "itemID", -itemID)
 			setElementData(obj, "itemValue", itemValue)
+			setElementData(obj, "creator", creator, false)
 		else
 			local modelid = getItemModel(itemID)
 			
@@ -988,6 +991,7 @@ function loadWorldItems(res)
 			setElementData(obj, "id", id)
 			setElementData(obj, "itemID", itemID)
 			setElementData(obj, "itemValue", itemValue)
+			setElementData(obj, "creator", creator, false)
 		end
 	end
 	exports.irc:sendMessage("[SCRIPT] Loaded " .. tonumber(mysql_num_rows(result)) .. " world items.")
@@ -1103,7 +1107,7 @@ function getNearbyItems(thePlayer, commandName)
 				local distance = getDistanceBetweenPoints3D(posX, posY, posZ, x, y, z)
 				
 				if distance <= 10 and getElementDimension(theObject) == getElementDimension(thePlayer) and getElementInterior(theObject) == getElementInterior(thePlayer) then
-					outputChatBox("   Item with ID " .. dbid .. ": " .. ( getItemName( getElementData(theObject, "itemID") ) or "?" ) .. "(" .. getElementData(theObject, "itemID") .. ") with Value " .. tostring( getElementData(theObject, "itemValue") ), thePlayer, 255, 126, 0)
+					outputChatBox("   #" .. dbid .. " by " .. ( exports['vehicle-system']:getCharacterName( getElementData(theObject, "creator") ) or "?" ) .. ": " .. ( getItemName( getElementData(theObject, "itemID") ) or "?" ) .. "(" .. getElementData(theObject, "itemID") .. ") with Value " .. tostring( getElementData(theObject, "itemValue") ), thePlayer, 255, 126, 0)
 					count = count + 1
 				end
 			end
