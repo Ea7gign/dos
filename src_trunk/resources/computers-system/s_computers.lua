@@ -52,8 +52,12 @@ function register_email(accountName, password)
 \
 Your email account has been registered.\
 \
+Now you are online you are ableto receive email on the move.\
+\
 Username: " ..mysql_escape_string(handler, accountName).."\
 Password: " ..mysql_escape_string(handler, password).."\
+\
+Rest assured your private details are secure with us and our arbitarary third party advertisers.\
 \
 Thank you for registering.'")
 		
