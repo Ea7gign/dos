@@ -186,17 +186,24 @@
 
 	<!-- B -->
 	<script src="websites/bankofsa.lua" type="client"/>
-
+	<script src="websites/bibles.lua" type="client"/>
+	
 	<!-- E -->
 	<script src="websites/error.lua" type="client"/>
 	
 	<!-- F -->
 	<script src="websites/fields.lua" type="client"/>
 	
+	<!-- I -->
+	<script src="websites/izanagi.lua" type="client"/>
+	
 	<!-- L -->
 	<script src="websites/lossantos.lua" type="client"/>	
 	<script src="websites/lses.lua" type="client"/>
 	<script src="websites/lspd.lua" type="client"/>
+	
+	<!-- M -->
+	<script src="websites/midoruenterprises.lua" type="client"/>
 	
 	<!-- N -->
 	<script src="websites/natslife_s.lua" type="server"/>
