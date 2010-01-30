@@ -11,9 +11,12 @@
 	<!-- Images -->
 	<file src="websites/images/ad_space_box.png" />
 	<file src="websites/images/ad_space_h.png" />
+	<file src="websites/images/bank_ad1.png" />
+	<file src="websites/images/bank_ad2.png" />
 	<file src="websites/images/banshee.png" />
 	<file src="websites/images/bike.png" />
 	<file src="websites/images/bullet.png" />
+	<file src="websites/images/ccbosa-logo.png" />
 	<file src="websites/images/chase.png" />
 	<file src="websites/images/copyright.png" />
 	<file src="websites/images/city_hall.png" />
@@ -186,6 +189,7 @@
 
 	<!-- B -->
 	<script src="websites/bankofsa.lua" type="client"/>
+	<script src="websites/beststowing.lua" type="client"/>
 	<script src="websites/bibles.lua" type="client"/>
 	
 	<!-- E -->

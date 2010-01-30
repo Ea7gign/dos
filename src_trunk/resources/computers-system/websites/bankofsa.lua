@@ -7,15 +7,46 @@ function www_bankofsa_sa()
 	guiSetText(internet_address_label, "Credit & Commerce Bank of San Andreas - Waterwolf")
 	guiSetText(address_bar,"www.bankofsa.sa")	
 	
-	bg = guiCreateStaticImage(0,0,660,page_length,"websites/colours/10.png",false,internet_pane)
+	bg = guiCreateStaticImage(0,0,660,page_length,"websites/colours/14.png",false,internet_pane)
 	
-	local banner = guiCreateStaticImage(5,5,450,60,"websites/colours/7.png",false,bg)
-	local header = guiCreateLabel(10,5,460,40,"Bank of San Andreas",false,bg)
-	guiSetFont(header, "sa-header")
+	local body = guiCreateStaticImage(105,0,450,500,"websites/colours/1.png",false,bg)
+	local banner = guiCreateStaticImage(110,5,440,98,"websites/images/ccbosa-logo.png",false,bg)
 	
-	local mainStory = guiCreateLabel(100,65,450,165,"Website under construction.",false,bg)
-	guiSetFont(mainStory,"default-bold-small")
+	local link_1 = guiCreateLabel(123,107,33,14,"Offers",false,bg)
+	guiSetFont(link_1,"default-small")
+	guiLabelSetColor(link_1,0,51,153)	
 	
+	local link_2 = guiCreateLabel(191,107,80,14,"Current Accounts",false,bg)
+	guiSetFont(link_2,"default-small")
+	guiLabelSetColor(link_2,0,51,153)
+	
+	local link_3 = guiCreateLabel(314,107,32,14,"Loans",false,bg)
+	guiSetFont(link_3,"default-small")
+	guiLabelSetColor(link_3,0,51,153)
+	
+	local link_4 = guiCreateLabel(387,107,56,14,"Investment",false,bg)
+	guiSetFont(link_4,"default-small")
+	guiLabelSetColor(link_4,0,51,153)
+	
+	local link_5 = guiCreateLabel(479,107,60,14,"Credit Cards",false,bg)
+	guiSetFont(link_5,"default-small")
+	guiLabelSetColor(link_5,0,51,153)
+	
+	local left_column = guiCreateStaticImage(110,125,145,360,"websites/colours/116.png",false,bg)
+	local ad1 = guiCreateStaticImage(115,129,135,143,"websites/images/bank_ad1.png",false,bg)
+	local ad2 = guiCreateStaticImage(115,276,135,143,"websites/images/bank_ad2.png",false,bg)
+	
+	local right_column = guiCreateStaticImage(260,125,290,360,"websites/colours/116.png",false,bg)
+	local right_column_inner = guiCreateStaticImage(265,130,280,195,"websites/colours/1.png",false,bg)
+	
+	local title = guiCreateLabel(270,135,270,14,"Online Banking",false,bg)
+	guiSetFont(title,"default-bold-small")
+	guiLabelSetColor(title,0,51,153)
+	
+	local underline = guiCreateStaticImage(270,149,270,1,"websites/colours/116.png",false,bg)
+	local text = guiCreateLabel(270,155,270,14,"Service currently unavailable",false,bg)
+	guiLabelSetColor(text,0,51,153)
+	guiSetFont(text,"default-small")
 ----------------------------------------------------------------------
 	if(page_length>=397)then
 		guiScrollPaneSetScrollBars(internet_pane,false,true)

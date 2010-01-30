@@ -54,7 +54,7 @@ function www_izanagi_sa()
 	
 	guiLabelSetHorizontalAlign(request_info,"left",true)
 	guiLabelSetColor(request_info, 255,255,255)
-	local logo = guiCreateStaticImage(319,286,146,110, "websites/images/izanagi/izanagi-yellow.png", false, bg)
+	local logo = guiCreateStaticImage(319,286,146,110, "websites/images/izanagi/izanagi-red.png", false, bg)
 
 	addEventHandler("onClientGUIClick",logo,function()
 		local url = tostring("www.izanagi.sa")
