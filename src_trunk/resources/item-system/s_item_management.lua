@@ -422,7 +422,7 @@ function deleteAll( itemID, itemValue )
 	if itemID then
 		-- make sure it's erased from the db
 		if itemValue then
-			mysql_free_result( mysql_query( handler, "DELETE FROM items WHERE itemID = " .. itemID .. " AND itemValue = " .. mysql_escape_string( handler, tostring( itemValue ) ) ) )
+			mysql_free_result( mysql_query( handler, "DELETE FROM items WHERE itemID = " .. itemID .. " AND itemValue = '" .. mysql_escape_string( handler, tostring( itemValue ) ) .. "'" ) )
 			mysql_free_result( mysql_query( handler, "DELETE FROM worlditems WHERE itemid = " .. itemID .. " AND itemvalue = '" .. mysql_escape_string( handler, tostring( itemValue ) ) .. "'" ) )
 			
 			-- delete from all items
