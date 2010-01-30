@@ -94,7 +94,7 @@ function www_sanetwork_sa()
 	guiSetFont(top_story_date,"default-bold-small")
 	guiLabelSetColor(top_story_date,132,5,16)
 	-- Summary
-	local top_story_summary =  guiCreateLabel(10,306,440,64,"Shortly after three forty-five explosions were heard in the El Corona district of Los Santos after a light aircraft plummeted in Unity Station exploding in a chorus of flames.",false,bg)
+	local top_story_summary =  guiCreateLabel(10,306,440,64,"Shortly after three thirty in the afternoon explosions were heard in the El Corona district of Los Santos after a light aircraft plummeted into Unity Station, exploding in a chorus of flames.",false,bg)
 	guiLabelSetColor(top_story_summary,38,38,38)
 	guiLabelSetHorizontalAlign(top_story_summary,"left",true)
 	
@@ -334,13 +334,13 @@ function www_sanetwork_sa_fortunate_escape_in_mysterious_plane_crash()
 	guiLabelSetColor(author,38,38,38)
 	
 	-- Article
-	local article =  guiCreateLabel(10,318,440,410,"Shortly after three forty-five explosions were heard in the El Corona district of Los Santos after a light aircraft plummeted in Unity Station exploding in a chorus of flames.\
-	\
-	Police and fire services were quick to respond to the scene setting up a perimeter along the stations parking lot. At the scene police had not been able to recover a body and fortunately reported there being no victims in the crash. Police were also quick to dismiss speculation that this was in any way linked to a terrorist attack.\
-	\
-	The aircraft in question, a Dodo S34, is commonly used by recreational pilots in Los Santos air space. It is heralded by many in the aviation industry for its robustness and reliability questioning whether this was down to mechanical fault or human error. It is currently unclear who the pilot of the aircraft was, where it was headed or who the aircraft belong to.\
-	\
-	Police are appealing for witnesses to aid in their investigations.",false,bg)
+	local article =  guiCreateLabel(10,318,440,410,"Shortly after three thirty in the afternoon explosions were heard in the El Corona district of Los Santos after a light aircraft plummeted into Unity Station, exploding in a chorus of flames.\
+\
+Police and fire services were quick to respond to the scene and hastily set up a perimeter along the stations parking lot. Fortunately, no casualties were reported but investigators were unable to recover a body from the wreckage of the aircraft. Police were quick to dismiss speculation that this was in any way linked to terrorism.\
+\
+The aircraft in question, a Dodo S34, is commonly used by recreational pilots in Los Santos air space. It is heralded by many in the aviation industry for its robustness and reliability, bringing into question whether the crash was a mechanical fault or human error. It is currently unclear who the pilot of the aircraft was, where it was headed or who the aircraft belongs to.\
+\
+Police are appealing for witnesses to aid in their investigations.",false,bg)
 	guiLabelSetColor(article,38,38,38)
 	guiLabelSetHorizontalAlign(article,"left",true)
 
