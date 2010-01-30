@@ -23,8 +23,9 @@
 	<file src="websites/images/court-logo.png" />
 	<file src="websites/images/graffiti.png" />
 	<file src="websites/images/grove.png" />
-	<file src="izanagi-red" />
-	<file src="izanagi-black" />
+	<file src="websites/images/izanagi-black.png" />
+	<file src="websites/images/izanagi-green.png" />
+	<file src="websites/images/izanagi-red.png" />
 	<file src="websites/images/jester.png" />
 	<file src="websites/images/ls_harbour.png" />
 	<file src="websites/images/lses-logo.png" />
