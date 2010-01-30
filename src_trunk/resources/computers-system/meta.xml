@@ -218,6 +218,7 @@
 	<file src="websites/natslife.xml"/>
 	
 	<!-- S -->
+	<file src="websites/sadesigns.lua" />
 	<script src="websites/sanetwork.lua" type="client"/>
 	
 </meta>
