@@ -70,7 +70,7 @@ function www_midoruenterprises_sa()
 	end,false)
 	
 	
-	local designer_link = guiCreateStaticImage(519,286,146,110, "websites/images/izanagi/izanagi-green.png", false, bg)
+	local designer_link = guiCreateStaticImage(519,286,146,110, "websites/images/izanagi-green.png", false, bg)
 
 
 	addEventHandler("onClientGUIClick",designer_link,function()
@@ -166,7 +166,7 @@ function www_midoruenterprises_sa_contact()
 		get_page(url)
 	end,false)
 	
-	local designer_link = guiCreateStaticImage(519,286,146,110, "websites/images/izanagi/izanagi-green.png", false, bg)
+	local designer_link = guiCreateStaticImage(519,286,146,110, "websites/images/izanagi-green.png", false, bg)
 
 	addEventHandler("onClientGUIClick",designer_link,function()
 		local url = tostring("www.izanagi.sa")
@@ -199,7 +199,6 @@ function www_midoruenterprises_sa_contact()
 		guiSetSize(bg,660,397,false)
 		guiScrollPaneSetScrollBars(internet_pane, false, false)
 	end
-end
 
 
 function www_midoruenterprises_sa_props()
@@ -269,7 +268,7 @@ function www_midoruenterprises_sa_props()
 		get_page(url)
 	end,false)
 	
-	local designer_link = guiCreateStaticImage(519,286,146,110, "websites/images/izanagi/izanagi-green.png", false, bg)
+	local designer_link = guiCreateStaticImage(519,286,146,110, "websites/images/izanagi-green.png", false, bg)
 
 	addEventHandler("onClientGUIClick",designer_link,function()
 		local url = tostring("www.izanagi.sa")
@@ -381,7 +380,7 @@ function www_midoruenterprises_sa_employ()
 		get_page(url)
 	end,false)
 	
-	local designer_link = guiCreateStaticImage(519,286,146,110, "websites/images/izanagi/izanagi-green.png", false, bg)
+	local designer_link = guiCreateStaticImage(519,286,146,110, "websites/images/izanagi-green.png", false, bg)
 	
 addEventHandler("onClientGUIClick",designer_link,function()
 		local url = tostring("www.izanagi.sa")

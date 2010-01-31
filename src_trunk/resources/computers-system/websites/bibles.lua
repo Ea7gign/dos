@@ -75,7 +75,7 @@ function www_bibles_sa()
 		get_page(url)
 	end,false)
 	
-	local designer_link = guiCreateStaticImage(519,286,146,110, "websites/images/izanagi/izanagi-black.png", false, bg)
+	local designer_link = guiCreateStaticImage(519,286,146,110, "websites/images/izanagi-black.png", false, bg)
 
 	addEventHandler("onClientGUIClick",designer_link,function()
 		local url = tostring("www.izanagi.sa")
