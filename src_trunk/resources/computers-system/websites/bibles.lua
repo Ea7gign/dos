@@ -86,12 +86,11 @@ function www_bibles_sa()
 	----------------------------------------------- End of webpage -- Do not edit below this line. -----------------------------------------------
 	
 	if(page_length>=397)then
-		guiScrollPaneSetScrollBars(internet_pane,false,true)
-		guiScrollPaneSetVerticalScrollPosition(internet_pane,0)
+		guiScrollPaneSetScrollBars(bg,false,true)
 	else
-		guiSetSize(bg,660,397,false)
-		guiScrollPaneSetScrollBars(internet_pane, false, false)
-	end
+		guiSetSize(bg,460,397,false)
+		guiScrollPaneSetScrollBars(internet_pane, false, true)
+	end	
 end
 
 

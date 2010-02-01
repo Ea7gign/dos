@@ -90,12 +90,11 @@ function www_midoruenterprises_sa()
 	----------------------------------------------- End of webpage -- Do not edit below this line. -----------------------------------------------
 	
 	if(page_length>=397)then
-		guiScrollPaneSetScrollBars(internet_pane,false,true)
-		guiScrollPaneSetVerticalScrollPosition(internet_pane,0)
+		guiScrollPaneSetScrollBars(bg,false,true)
 	else
 		guiSetSize(bg,660,397,false)
 		guiScrollPaneSetScrollBars(internet_pane, false, false)
-	end
+	end	
 end
 
 
@@ -193,12 +192,12 @@ function www_midoruenterprises_sa_contact()
 	----------------------------------------------- End of webpage -- Do not edit below this line. -----------------------------------------------
 	
 	if(page_length>=397)then
-		guiScrollPaneSetScrollBars(internet_pane,false,true)
-		guiScrollPaneSetVerticalScrollPosition(internet_pane,0)
+		guiScrollPaneSetScrollBars(bg,false,true)
 	else
 		guiSetSize(bg,660,397,false)
 		guiScrollPaneSetScrollBars(internet_pane, false, false)
-	end
+	end	
+end
 
 
 function www_midoruenterprises_sa_props()
@@ -304,12 +303,11 @@ function www_midoruenterprises_sa_props()
 	----------------------------------------------- End of webpage -- Do not edit below this line. -----------------------------------------------
 	
 	if(page_length>=397)then
-		guiScrollPaneSetScrollBars(internet_pane,false,true)
-		guiScrollPaneSetVerticalScrollPosition(internet_pane,0)
+		guiScrollPaneSetScrollBars(bg,false,true)
 	else
 		guiSetSize(bg,660,397,false)
 		guiScrollPaneSetScrollBars(internet_pane, false, false)
-	end
+	end	
 end
 
 
@@ -405,10 +403,9 @@ addEventHandler("onClientGUIClick",designer_link,function()
 	----------------------------------------------- End of webpage -- Do not edit below this line. -----------------------------------------------
 	
 	if(page_length>=397)then
-		guiScrollPaneSetScrollBars(internet_pane,false,true)
-		guiScrollPaneSetVerticalScrollPosition(internet_pane,0)
+		guiScrollPaneSetScrollBars(bg,false,true)
 	else
 		guiSetSize(bg,660,397,false)
 		guiScrollPaneSetScrollBars(internet_pane, false, false)
-	end
+	end	
 end
