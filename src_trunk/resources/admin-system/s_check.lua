@@ -8,7 +8,7 @@ function doCheck(sourcePlayer, command, ...)
 			local username = getPlayerName(thePlayer)
 			
 			if (logged==0) then
-				outputChatBox("Player is not logged in.", thePlayer, 255, 0, 0)
+				outputChatBox("Player is not logged in.", sourcePlayer, 255, 0, 0)
 			else
 				if noob and isElement(noob) then
 					local ip = getPlayerIP(noob)
