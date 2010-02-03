@@ -227,7 +227,7 @@ function tellTransfers(source, dbid, event)
 	-- `w.time` - INTERVAL 1 hour as 'newtime'
 	-- hour correction
 	
-	local query = mysql_query(handler, "SELECT w.*, a.charactername, b.charactername,`w.time` - INTERVAL 1 hour as 'newtime' FROM wiretransfers w LEFT JOIN characters a ON a.id = `from` LEFT JOIN characters b ON b.id = `to` WHERE " .. where .. " ORDER BY id DESC LIMIT 40")
+	local query = mysql_query(handler, "SELECT w.*, a.charactername, b.charactername,w.`time` - INTERVAL 1 hour as 'newtime' FROM wiretransfers w LEFT JOIN characters a ON a.id = `from` LEFT JOIN characters b ON b.id = `to` WHERE " .. where .. " ORDER BY id DESC LIMIT 40")
 	if query then
 		for result, row in mysql_rows(query) do
 			local id = tonumber(row[1])
