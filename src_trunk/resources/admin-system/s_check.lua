@@ -5,7 +5,6 @@ function doCheck(sourcePlayer, command, ...)
 		else
 			local noob = exports.global:findPlayerByPartialNick(sourcePlayer, table.concat({...},"_"))
 			local logged = getElementData(noob, "loggedin")
-			local username = getPlayerName(thePlayer)
 			
 			if (logged==0) then
 				outputChatBox("Player is not logged in.", sourcePlayer, 255, 0, 0)
