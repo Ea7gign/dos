@@ -1,6 +1,6 @@
 function updateHudClock()
-	-- 			watch											cellphone
-	if (exports.global:hasItem(getLocalPlayer(), 17) or exports.global:hasItem(getLocalPlayer(), 2)) then
+	-- 			watch											cellphone                                      PDA
+	if exports.global:hasItem(getLocalPlayer(), 17) or exports.global:hasItem(getLocalPlayer(), 2) or exports.global:hasItem(getLocalPlayer(), 96) then
 		showPlayerHudComponent("clock", true)
 	else
 		showPlayerHudComponent("clock", false)
