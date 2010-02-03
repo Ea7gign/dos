@@ -171,14 +171,16 @@ end
 function get_page(new_page)
 	previous = now
 	now = tostring(guiGetText(address_bar))
-	destroyElement(bg)
-	bg = nil
+	if bg then
+		destroyElement(bg)
+		bg = nil
+	end
 	guiSetText(address_bar,new_page)
 	if new_page ~= "" then
 		if new_page:sub(-1) == "/" then
 			new_page = new_page:sub(0,-2)
 		end
-		local fn = new_page:gsub("%.", "_"):gsub("/","_"):gsub("[^a-zA-Z0-9_]", ""):lower()
+		local fn = new_page:gsub("%.", "_"):gsub("/","_"):gsub("-","_"):gsub("[^a-zA-Z0-9_]", ""):lower()
 		if string.find(new_page, "www%.") ~= 1 or not pcall(loadstring( "return " .. fn .. "()" ) ) then
 			error_404()
 		end
