@@ -6,7 +6,7 @@
 -- Website owner's Character's name: John Brenkly
 
 
-function www_preview_sa()
+function www_lses_gov()
 	---------------------
 	-- Page Properties --
 	---------------------
