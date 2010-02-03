@@ -769,7 +769,7 @@ function loginPlayer(username, password, operatingsystem)
 			setElementData(source, "adminlevel", tonumber(admin))
 			setElementData(source, "hiddenadmin", tonumber(hiddenadmin))
 			setElementData(source, "donator", tonumber(donator))
-			setElementData(source, "help", tonumber(help))
+			setElementData(source, "tooltips:help", tonumber(help))
 			
 			setElementData(source, "blur", blur)
 			if (blur==0) then
@@ -1488,9 +1488,9 @@ addCommandHandler("toggleblur", cmdToggleBlur)
 
 function serverToggleHelp(enabled)
 	if (enabled) then
-		setElementData(source, "help", 1)
+		setElementData(source, "tooltips:help", 1)
 	else
-		setElementData(source, "help", 0)
+		setElementData(source, "tooltips:help", 0)
 	end
 	mysql_free_result( mysql_query( handler, "UPDATE accounts SET help=" .. getElementData( source, "help" ).. " WHERE id = " .. getElementData( source, "gameaccountid" ) ) )
 end

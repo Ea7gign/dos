@@ -38,7 +38,7 @@ help={
 }
 
 function show_icon(number)
-	local help_enabled = getElementData(getLocalPlayer(),"help")
+	local help_enabled = getElementData(getLocalPlayer(),"tooltips:help")
 	if(help_enabled==1)then
 		if (help_icon) then
 			removeIcon()
