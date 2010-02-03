@@ -147,6 +147,7 @@ function openInternetWindow()
 	if not (wInternet) then
 		wInternet = guiCreateWindow(X, Y, Width, Height, "Internet", false,wComputer)
 		internet_close_button = guiCreateButton(670,22,22,22,"x",false,wInternet)
+		guiSetProperty(internet_close_button,"AlwaysOnTop","True")
 		addEventHandler("onClientGUIClick",internet_close_button,closeInternetWindow,false)
 		internet_address_label = guiCreateLabel(10,20,670,20,"",false,wInternet)
 		address_bar = guiCreateEdit(40,45,320,24,"",false,wInternet)
@@ -183,8 +184,14 @@ function get_page(new_page)
 			new_page = new_page:sub(0,-2)
 		end
 		local fn = new_page:gsub("%.", "_"):gsub("/","_"):gsub("-","_"):gsub("[^a-zA-Z0-9_]", ""):lower()
-		if string.find(new_page, "www%.") ~= 1 or not pcall(loadstring( "return " .. fn .. "()" ) ) then
+		if string.find(new_page, "www%.") ~= 1 then
+			new_page = "www." .. new_page
+		end
+		
+		local status, error = pcall(loadstring( "return " .. fn .. "()" ) )
+		if not status then
 			error_404()
+			outputDebugString( "Website: " .. fn .. " - " .. error, 2 )
 		end
 	end
 end
@@ -222,6 +229,7 @@ function openEmailWindow()
 		wEmail = guiCreateWindow(X,Y,Width,Height,"E-mail",false,wComputer)
 		-- Close button
 		email_close_button = guiCreateButton(272,23,22,22,"x",false,wEmail)
+		guiSetProperty(email_close_button,"AlwaysOnTop","True")
 		addEventHandler("onClientGUIClick",email_close_button,close_email_window,false)
 		
 		-- Error Label
@@ -511,6 +519,7 @@ function show_inbox(inbox_table, accountName)
 		
 		-- Close button
 		email_close_button = guiCreateButton(0.94,0.05,0.06,0.05,"x",true,wEmail)
+		guiSetProperty(email_close_button,"AlwaysOnTop","True")
 		addEventHandler("onClientGUIClick",email_close_button,close_email_window,false)
 	end
 	
