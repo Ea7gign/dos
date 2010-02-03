@@ -127,10 +127,6 @@ addEventHandler("depositMoneyBusiness", getRootElement(), depositMoneyBusiness)
 function transferMoneyToPersonal(business, name, amount, reason)
 	reason = mysql_escape_string(handler, reason)
 	local reciever = getPlayerFromName(string.gsub(name," ","_"))
-	if reciever == source then
-		outputChatBox("You can't wiretransfer money to yourself.", source, 255, 0, 0)
-		return
-	end
 	local dbid = nil
 	if not reciever then
 		local result = mysql_query(handler, "SELECT id FROM characters WHERE charactername='" .. mysql_escape_string(handler, string.gsub(name," ","_")) .. "' LIMIT 1")
@@ -156,6 +152,10 @@ function transferMoneyToPersonal(business, name, amount, reason)
 				mysql_free_result( mysql_query( handler, "INSERT INTO wiretransfers (`from`, `to`, `amount`, `reason`, `type`) VALUES (" .. ( -getElementData( theTeam, "id" ) ) .. ", " .. dbid .. ", " .. amount .. ", '" .. reason .. "', 3)" ) )
 			end
 		else
+			if reciever == source then
+				outputChatBox("You can't wiretransfer money to yourself.", source, 255, 0, 0)
+				return
+			end
 			if getElementData(source, "bankmoney") - amount >= 0 then
 				setElementData(source, "bankmoney", getElementData(source, "bankmoney") - amount)
 				mysql_free_result( mysql_query( handler, "INSERT INTO wiretransfers (`from`, `to`, `amount`, `reason`, `type`) VALUES (" .. getElementData(source, "dbid") .. ", " .. dbid .. ", " .. amount .. ", '" .. reason .. "', 2)" ) )
