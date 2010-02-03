@@ -4,39 +4,45 @@ function doCheck(sourcePlayer, command, ...)
 			outputChatBox("SYNTAX: /" .. command .. " [Partial Player Name / ID]", sourcePlayer, 255, 194, 14)
 		else
 			local noob = exports.global:findPlayerByPartialNick(sourcePlayer, table.concat({...},"_"))
+			local logged = getElementData(noob, "loggedin")
+			local username = getPlayerName(thePlayer)
 			
-			if noob and isElement(noob) then
-				local ip = getPlayerIP(noob)
-				local adminreports = tonumber(getElementData(noob, "adminreports"))
-				local donatorlevel = exports.global:getPlayerDonatorTitle(noob)
-				
-				-- get admin note
-				local note = ""
-				local warns = "?"
-				local result = mysql_query( handler, "SELECT adminnote, warns FROM accounts WHERE id = " .. tostring(getElementData(noob, "gameaccountid")) )
-				if result then
-					local text = mysql_result( result, 1, 1 )
-					if text ~= mysql_null() then
-						note = text
+			if (logged==0) then
+				outputChatBox("Player is not logged in.", thePlayer, 255, 0, 0)
+			else
+				if noob and isElement(noob) then
+					local ip = getPlayerIP(noob)
+					local adminreports = tonumber(getElementData(noob, "adminreports"))
+					local donatorlevel = exports.global:getPlayerDonatorTitle(noob)
+					
+					-- get admin note
+					local note = ""
+					local warns = "?"
+					local result = mysql_query( handler, "SELECT adminnote, warns FROM accounts WHERE id = " .. tostring(getElementData(noob, "gameaccountid")) )
+					if result then
+						local text = mysql_result( result, 1, 1 )
+						if text ~= mysql_null() then
+							note = text
+						end
+						
+						warns = tonumber( mysql_result( result, 1, 2 ) ) or "?"
+						mysql_free_result( result )
+					else
+						outputDebugString( "Check Error: " .. mysql_error( handler ) )
 					end
 					
-					warns = tonumber( mysql_result( result, 1, 2 ) ) or "?"
-					mysql_free_result( result )
-				else
-					outputDebugString( "Check Error: " .. mysql_error( handler ) )
+					-- get admin history count
+					local history = '?'
+					local result = mysql_query( handler, "SELECT COUNT(*) FROM adminhistory WHERE user = " .. tostring(getElementData(noob, "gameaccountid")) )
+					if result then
+						history = tonumber( mysql_result( result, 1, 1 ) ) or '?'
+						mysql_free_result( result )
+					else
+						outputDebugString( "Check2 Error: " .. mysql_error( handler ) )
+					end
+					
+					triggerClientEvent( sourcePlayer, "onCheck", noob, ip, adminreports, donatorlevel, note, history, warns)
 				end
-				
-				-- get admin history count
-				local history = '?'
-				local result = mysql_query( handler, "SELECT COUNT(*) FROM adminhistory WHERE user = " .. tostring(getElementData(noob, "gameaccountid")) )
-				if result then
-					history = tonumber( mysql_result( result, 1, 1 ) ) or '?'
-					mysql_free_result( result )
-				else
-					outputDebugString( "Check2 Error: " .. mysql_error( handler ) )
-				end
-				
-				triggerClientEvent( sourcePlayer, "onCheck", noob, ip, adminreports, donatorlevel, note, history, warns)
 			end
 		end
 	end
@@ -96,8 +102,13 @@ addCommandHandler( "history",
 				outputChatBox("SYNTAX: /" .. commandName .. " [player]", thePlayer, 255, 194, 14)
 			else
 				local targetPlayer = exports.global:findPlayerByPartialNick(thePlayer, table.concat({...},"_"))
+				local logged = getElementData(targetPlayer, "loggedin")
 				if targetPlayer then
-					triggerEvent("showAdminHistory", thePlayer, targetPlayer)
+					if (logged==0) then
+						outputChatBox("Player is not logged in.", thePlayer, 255, 0, 0)
+					else
+						triggerEvent("showAdminHistory", thePlayer, targetPlayer)
+					end
 				end
 			end
 		end
