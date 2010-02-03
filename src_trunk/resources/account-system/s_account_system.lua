@@ -206,6 +206,21 @@ function spawnCharacter(charname, version)
 		local gender = tonumber(data["gender"])
 		local cellphonesecret = tonumber(data["cellphonesecret"])
 		local photos = tonumber(data["photos"])
+		local maxvehicles = tonumber(data["maxvehicles"])
+		
+		local description = data["description"]
+		local age = tonumber(data["age"])
+		local weight = tonumber(data["weight"])
+		local height = tonumber(data["height"])
+		local skincolor = tonumber(data["skincolor"])
+		setElementData(source, "chardescription", description, false)
+		setElementData(source, "age", age, false)
+		setElementData(source, "weight", weight, false)
+		setElementData(source, "height", height, false)
+		setElementData(source, "race", skincolor, false)
+
+		-- description, age, weight, height, skincolor
+		
 		
 		-- LANGUAGES
 		local lang1 = tonumber(data["lang1"])
@@ -502,7 +517,8 @@ function spawnCharacter(charname, version)
 		setElementData(source, "dutyskin", dutyskin, false)
 		setElementData(source, "phoneoff", phoneoff, false)
 		setElementData(source, "blindfold", blindfold, false)
-		setElementData(source, "gender", gender)
+		setElementData(source, "gender", gender, false)
+		setElementData(source, "maxvehicles", maxvehicles, false)
 		
 		if (restrainedobj>0) then
 			setElementData(source, "restrainedObj", restrainedobj, false)

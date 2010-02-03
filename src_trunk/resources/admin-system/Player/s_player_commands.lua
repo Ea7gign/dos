@@ -48,13 +48,13 @@ function lookPlayer(thePlayer, commandName, targetPlayer)
 			if (logged==0) then
 				outputChatBox("Player is not logged in.", thePlayer, 255, 0, 0)
 			else
-				local query = mysql_query(handler, "SELECT description, age, weight, height, skincolor FROM characters WHERE id = " .. getElementData(targetPlayer, "dbid"))
-				local description = tostring(mysql_result(query, 1, 1))
-				local age = tostring(mysql_result(query, 1, 2))
-				local weight = tostring(mysql_result(query, 1, 3))
-				local height = tostring(mysql_result(query, 1, 4))
-				local race = tonumber(mysql_result(query, 1, 5))
-				mysql_free_result(query)
+				--local query = mysql_query(handler, "SELECT description, age, weight, height, skincolor FROM characters WHERE id = " .. getElementData(targetPlayer, "dbid"))
+				local description = getElementData(targetPlayer, "chardescription")
+				local age = getElementData(targetPlayer, "age")
+				local weight = getElementData(targetPlayer, "weight")
+				local height = getElementData(targetPlayer, "height")
+				local race = getElementData(targetPlayer, "race")
+				--mysql_free_result(query)
 				
 				if (race==0) then
 					race = "Black"
