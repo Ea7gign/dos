@@ -1492,7 +1492,7 @@ function serverToggleHelp(enabled)
 	else
 		setElementData(source, "tooltips:help", 0)
 	end
-	mysql_free_result( mysql_query( handler, "UPDATE accounts SET help=" .. getElementData( source, "help" ).. " WHERE id = " .. getElementData( source, "gameaccountid" ) ) )
+	mysql_free_result( mysql_query( handler, "UPDATE accounts SET help=" .. getElementData( source, "tooltips:help" ).. " WHERE id = " .. getElementData( source, "gameaccountid" ) ) )
 end
 addEvent("updateHelp", true)
 addEventHandler("updateHelp", getRootElement(), serverToggleHelp)
