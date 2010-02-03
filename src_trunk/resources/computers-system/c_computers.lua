@@ -117,11 +117,13 @@ function closeComputerWindow()
 	
 	end
 	-- Computer Desktop GUI.
-	destroyElement(internetButton)
-	destroyElement(emailButton)
-	destroyElement(shutdownButton)
-	destroyElement(desktopImage)
-	destroyElement(wComputer)
+	if wComputer then
+		destroyElement(internetButton)
+		destroyElement(emailButton)
+		destroyElement(shutdownButton)
+		destroyElement(desktopImage)
+		destroyElement(wComputer)
+	end
 	wComputer,desktopImage,internetButton, emailButton, shutdownButton = nil
 	
 	guiSetInputEnabled(false)
@@ -207,6 +209,7 @@ end
 -------------------------------------------------------------------------------- E-mail --------------------------------------------------------------------------------
 ------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
+local prepared_mail = nil
 function openEmailWindow()
 	-- Window variables
 	local Width = 300
@@ -376,6 +379,7 @@ function close_email_window()
 		email_close_button,	email_error_label, username_label, username_input, address_label, address_1, address_2,	address_f,	password_label,	password_input,	email_login_button,	email_register_button, wEmail = nil
 	
 	elseif (inbox_grid) then
+		prepared_mail = nil
 	
 		destroyElement(inbox_grid)
 		destroyElement(inbox_message_datetitle_label)
@@ -451,7 +455,7 @@ function show_inbox(inbox_table, accountName)
 		new_message_subject_input = guiCreateEdit(0.2,0.2,0.5,0.05,"",true,send_tab)
 		-- Message:
 		new_message_content_label = guiCreateLabel(0.1,0.3,0.3,0.05,"Message:",true,send_tab)
-		new_message_content = guiCreateMemo(0.1,0.4,0.8,0.45,"Hi...",true,send_tab)
+		new_message_content = guiCreateMemo(0.1,0.4,0.8,0.45,"",true,send_tab)
 		-- Send Button
 		send_button = guiCreateButton(0.4,0.9,0.2,0.08,"Send",true,send_tab)
 		addEventHandler("onClientGUIClick",send_button,function()
@@ -461,6 +465,20 @@ function show_inbox(inbox_table, accountName)
 			
 			triggerServerEvent("sendMessage",getLocalPlayer(),accountName,to,subject,message)
 		end,false)
+		
+		if prepared_mail then
+			guiSetSelectedTab(email_tab_panel, send_tab)
+			if prepared_mail[1] then
+				guiSetText(new_message_to_input, prepared_mail[1])
+			end
+			if prepared_mail[2] then
+				guiSetText(new_message_subject_input, prepared_mail[2])
+			end
+			if prepared_mail[3] then
+				guiSetText(new_message_content, prepared_mail[3])
+			end
+			prepared_mail = nil
+		end
 		
 		--[[
 		---------------------
@@ -674,6 +692,12 @@ function c_send_message()
 end
 addEvent("c_sendMessage",true)
 addEventHandler("c_sendMessage",getLocalPlayer(),c_send_message)
+
+function compose_mail( address, title, text )
+	prepared_mail = { address, title, text }
+	openEmailWindow()
+end
+----------------------------------------
 
 addEventHandler("onClientResourceStop", getResourceRootElement( ),
 	function()
