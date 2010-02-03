@@ -82,7 +82,9 @@ addEvent("loginEmail", true)
 addEventHandler("loginEmail", getRootElement(),login_email)
 
 function get_inbox(accountName)
-	local result = mysql_query(handler, "SELECT id, date, sender, subject, message FROM emails WHERE receiver='".. mysql_escape_string(handler, accountName) .."' AND inbox='1' ORDER BY date DESC")
+	-- `date` - INTERVAL 1 hour as 'newtime'
+	-- hour correction
+	local result = mysql_query(handler, "SELECT id, `date` - INTERVAL 1 hour as 'newdate', sender, subject, message FROM emails WHERE receiver='".. mysql_escape_string(handler, accountName) .."' AND inbox='1' ORDER BY date DESC")
 	if (result) then
 		inbox_table = { }
 		local key = 1
