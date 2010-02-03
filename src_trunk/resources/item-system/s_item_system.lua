@@ -387,7 +387,7 @@ function useItem(itemSlot, additional)
 		elseif (itemID==58) then
 			takeItemFromSlot(source, itemSlot)
 			exports.global:sendLocalMeAction(source, "drinks some good Ziebrand Beer.")
-			setElementHealth(source, math.min(100, getElementHealth(source)) + 10)
+			setElementHealth(source,getElementHealth(source)-5)
 		elseif (itemID==59) then -- MUDKIP
 			takeItemFromSlot(source, itemSlot)
 			exports.global:sendLocalMeAction(source, "eats a mudkip.")
@@ -408,11 +408,11 @@ function useItem(itemSlot, additional)
 		elseif (itemID==62) then
 			takeItemFromSlot(source, itemSlot)
 			exports.global:sendLocalMeAction(source, "drinks some pure Bastradov Vodka.")
-			setElementHealth(source, math.min(100, getElementHealth(source)) + 50)
+			setElementHealth(source,getElementHealth(source)-10)
 		elseif (itemID==63) then
 			takeItemFromSlot(source, itemSlot)
 			exports.global:sendLocalMeAction(source, "drinks some Scottish Whiskey.")
-			setElementHealth(source, math.min(5, getElementHealth(source)))
+			setElementHealth(source,getElementHealth(source)-10)
 		elseif (itemID==64) then -- PD Badge
 			if(getElementData(source,"PDbadge")==1)then
 				removeElementData(source,"PDbadge")
