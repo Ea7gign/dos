@@ -223,12 +223,17 @@ function tellTransfers(source, dbid, event)
 	else
 		where = where .. " AND type != 4 AND type != 5" -- skip stuff that's not paid from bank money
 	end
-	local query = mysql_query(handler, "SELECT w.*, a.charactername, b.charactername FROM wiretransfers w LEFT JOIN characters a ON a.id = `from` LEFT JOIN characters b ON b.id = `to` WHERE " .. where .. " ORDER BY id DESC LIMIT 40")
+	
+	-- `w.time` - INTERVAL 1 hour as 'newtime'
+	-- hour correction
+	
+	local query = mysql_query(handler, "SELECT w.*, a.charactername, b.charactername,`w.time` - INTERVAL 1 hour as 'newtime' FROM wiretransfers w LEFT JOIN characters a ON a.id = `from` LEFT JOIN characters b ON b.id = `to` WHERE " .. where .. " ORDER BY id DESC LIMIT 40")
 	if query then
 		for result, row in mysql_rows(query) do
 			local id = tonumber(row[1])
 			local amount = tonumber(row[4])
-			local time = row[6]
+			--local time = row[6]
+			local time = row[10]
 			local type = tonumber(row[7])
 			local reason = row[5]
 			if reason == mysql_null() then
