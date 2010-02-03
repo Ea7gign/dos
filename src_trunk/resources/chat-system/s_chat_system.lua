@@ -147,7 +147,7 @@ function localIC(source, message, language)
 	
 	-- Chat Commands tooltip
 	if(getResourceFromName("tooltips-system"))then
-		triggerClientEvent(source,"tooltip:showHelp", source,17)
+		triggerClientEvent(source,"tooltips:showHelp", source,17)
 	end
 	
 	for key, nearbyPlayer in ipairs(getElementsByType( "player" )) do
