@@ -672,3 +672,9 @@ function c_send_message()
 end
 addEvent("c_sendMessage",true)
 addEventHandler("c_sendMessage",getLocalPlayer(),c_send_message)
+
+addEventHandler("onClientResourceStop", getResourceRootElement( ),
+	function()
+		closeComputerWindow()
+	end
+)
