@@ -69,8 +69,8 @@ function destroyBlip()
 		outputChatBox("The unit no longer requires assistance. Resume normal patrol", value, 255, 194, 14)
 		triggerClientEvent(value, "destroyBackupBlip", getRootElement())
 	end
-	removeEventHandler("onPlayerQuit", thePlayer, destroyBlip)
-	removeEventHandler("savePlayer", thePlayer, destroyBlip)
+	removeEventHandler("onPlayerQuit", source, destroyBlip)
+	removeEventHandler("savePlayer", source, destroyBlip)
 	backupPlayer = nil
 	backupBlip = false
 end
