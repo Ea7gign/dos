@@ -298,6 +298,8 @@ function respawnCmdVehicle(thePlayer, commandName, id)
 					if isElementAttached(theVehicle) then
 						detachElements(theVehicle)
 					end
+					removeElementData(theVehicle, 'i:left')
+					removeElementData(theVehicle, 'i:right')
 					if (dbid<0) then -- TEMP vehicle
 						fixVehicle(theVehicle) -- Can't really respawn this, so just repair it
 						if armoredCars[ getElementModel( theVehicle ) ] then
@@ -406,6 +408,8 @@ function respawnAllVehicles(thePlayer, commandName, timeToRespawn)
 							setElementHealth(theVehicle, 300) -- lowest possible health
 						end
 						
+						removeElementData(theVehicle, 'i:left')
+						removeElementData(theVehicle, 'i:right')
 						if getElementData(theVehicle, "owner") == -2 and getElementData(theVehicle,"Impounded") == 0 then
 							if isElementAttached(theVehicle) then
 								detachElements(theVehicle)
@@ -492,6 +496,8 @@ function respawnAllCivVehicles(thePlayer, commandName)
 						if isElementAttached(theVehicle) then
 							detachElements(theVehicle)
 						end
+						removeElementData(theVehicle, 'i:left')
+						removeElementData(theVehicle, 'i:right')
 						respawnVehicle(theVehicle)
 						setVehicleLocked(theVehicle, false)
 						counter = counter + 1
