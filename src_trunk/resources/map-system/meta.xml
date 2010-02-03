@@ -38,4 +38,6 @@
 	<script src="lmc-interiors.lua" type="client"/>
 	
 	<script src="Yakuza Little Tokyo.lua" type="client"/>
+
+	<script src="South Side Crips.lua" type="client"/>
 </meta>
