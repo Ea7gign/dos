@@ -63,8 +63,8 @@ function destroyBlip()
 	for k,v in ipairs(getPlayersInTeam ( getTeamFromName("Best's Towing and Recovery") )) do
 		triggerClientEvent(v, "destroyBackupBlip", backupBlip)
 	end
-	removeEventHandler("onPlayerQuit", thePlayer, destroyBlip)
-	removeEventHandler("savePlayer", thePlayer, destroyBlip)
+	removeEventHandler("onPlayerQuit", source, destroyBlip)
+	removeEventHandler("savePlayer", source, destroyBlip)
 	backupPlayer = nil
 	backupBlip = false
 end
