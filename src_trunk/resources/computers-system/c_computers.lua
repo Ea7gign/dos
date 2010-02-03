@@ -17,6 +17,10 @@ local wComputer,desktopImage,internetButton, emailButton, shutdownButton = nil
 ------------------------------------------------------------------
 
 function createComputerGUI()
+	-- Computers Tooltip
+	if(getResourceFromName("tooltips-system"))then
+		triggerEvent("showHelp", getLocalPlayer(),13)
+	end
 	local Width = 700
 	local Height = 500
 	local screenwidth, screenheight = guiGetScreenSize()

@@ -1020,6 +1020,11 @@ function pickupItem(object, leftammo)
 	
 	if (getDistanceBetweenPoints3D(x, y, z, ox, oy, oz)<3) then	
 		
+		-- Inventory Tooltip
+		if (getResourceFromName("tooltips-system"))then
+			triggerClientEvent(source,"showHelp",source,14)
+		end
+		
 		-- Animation
 		exports.global:applyAnimation(source, "CARRY", "liftup", 600, false, true, true)
 		

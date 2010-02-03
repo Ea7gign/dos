@@ -10,6 +10,12 @@ setElementData( jessie, "name", "Jessie Smith" )
 setPedAnimation ( jessie, "INT_OFFICE", "OFF_Sit_Idle_Loop", -1, true, false, false )
 
 function showEmploymentWindow()
+	
+	-- Employment Tooltip
+	if(getResourceFromName("tooltips-system"))then
+		triggerEvent("showHelp",getLocalPlayer(),7)
+	end
+	
 	triggerServerEvent("onEmploymentServer", getLocalPlayer())
 	local width, height = 300, 400
 	local scrWidth, scrHeight = guiGetScreenSize()

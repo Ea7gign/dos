@@ -1147,6 +1147,11 @@ function payAllWages(timer)
 		local logged = getElementData(value, "loggedin")
 		local timeinserver = getElementData(value, "timeinserver")
 		
+		-- Pay Check tooltip
+		if(getResourceFromName("tooltips-system"))then
+			triggerClientEvent(value,"showHelp", getRootElement(),12)
+		end
+		
 		if (logged==1) and (timeinserver>=60) then
 			mysql_free_result( mysql_query( handler, "UPDATE characters SET jobcontract = jobcontract - 1 WHERE id = " .. getElementData( value, "dbid" ) .. " AND jobcontract > 0" ) )
 			if getElementData(value, "license.car") and getElementData(value, "license.car") < 0 then

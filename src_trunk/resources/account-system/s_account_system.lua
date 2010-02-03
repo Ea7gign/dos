@@ -577,7 +577,11 @@ function spawnCharacter(charname, version)
 		-- Achievement
 		if not (exports.global:doesPlayerHaveAchievement(source, 38)) then
 			exports.global:givePlayerAchievement(source, 38) -- Welcome to Los Santos
-			triggerClientEvent(source, "showCityGuide", source)
+			-- Welcome tooltip (auto opens the window)
+			if(getResourceFromName("tooltips-system"))then
+				local title = tostring("Welcome to the Valhalla Gaming MTA role play server")
+				triggerClientEvent(source,"welcomeHelp", source,1,title)
+			end
 		end
 		
 		-- Weapon stats
@@ -741,6 +745,7 @@ function loginPlayer(username, password, operatingsystem)
 			local muted = tonumber(data["muted"])
 			local globalooc = tonumber(data["globalooc"])
 			local blur = tonumber(data["blur"])
+			local help = tonumber(data["help"])
 			local adminreports = tonumber(data["adminreports"])
 			local pmblocked = tonumber(data["pmblocked"])
 			local warns = tonumber(data["warns"])
@@ -764,6 +769,7 @@ function loginPlayer(username, password, operatingsystem)
 			setElementData(source, "adminlevel", tonumber(admin))
 			setElementData(source, "hiddenadmin", tonumber(hiddenadmin))
 			setElementData(source, "donator", tonumber(donator))
+			setElementData(source, "help", tonumber(help))
 			
 			setElementData(source, "blur", blur)
 			if (blur==0) then
@@ -1479,6 +1485,17 @@ function cmdToggleBlur(thePlayer, commandName)
 	mysql_free_result( mysql_query( handler, "UPDATE accounts SET blur=" .. ( 1 - blur ) .. " WHERE id = " .. getElementData( thePlayer, "gameaccountid" ) ) )
 end
 addCommandHandler("toggleblur", cmdToggleBlur)
+
+function serverToggleHelp(enabled)
+	if (enabled) then
+		setElementData(source, "help", 1)
+	else
+		setElementData(source, "help", 0)
+	end
+	mysql_free_result( mysql_query( handler, "UPDATE accounts SET help=" .. getElementData( source, "help" ).. " WHERE id = " .. getElementData( source, "gameaccountid" ) ) )
+end
+addEvent("updateHelp", true)
+addEventHandler("updateHelp", getRootElement(), serverToggleHelp)
 
 function cguiSetNewPassword(oldPassword, newPassword)
 	

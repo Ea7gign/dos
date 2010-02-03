@@ -3634,7 +3634,7 @@ addEventHandler("returnAchievements", getRootElement(), displayAchievements)
 --/////////////////////////////////////////////////////////////////
 --DISPLAY ACCOUNT MANAGEMENT
 --////////////////////////////////////////////////////////////////
-lDonator, lAdmin, lMuted, chkBlur, lChangePassword, lCurrPassword, tCurrPassword, lNewPassword1, NewPassword1, lNewPassword2, tNewPassword2, bSavePass = nil
+lDonator, lAdmin, lMuted, chkBlur, chkHelp, lChangePassword, lCurrPassword, tCurrPassword, lNewPassword1, NewPassword1, lNewPassword2, tNewPassword2, bSavePass = nil
 function displayAccountManagement()
 	-- DONATOR
 	local donator = tonumber(getElementData(getLocalPlayer(), "donatorlevel"))
@@ -3690,6 +3690,19 @@ function displayAccountManagement()
 	end
 	addEventHandler("onClientGUIClick", chkBlur, clientToggleBlur, false)
 	
+	-- Tooltips
+	if(getResourceFromName("tooltips-system"))then
+		local help = getElementData(getLocalPlayer(), "help")
+		chkHelp = guiCreateCheckBox(0.2, 0.25, 0.5, 0.1, "Tooltips", false, true, tabAccount)
+		guiSetFont(chkHelp, "default-bold-small")
+		if (help==0) then
+			guiCheckBoxSetSelected(chkHelp, false)
+		else
+			guiCheckBoxSetSelected(chkHelp, true)
+		end
+		addEventHandler("onClientGUIClick", chkHelp, clientToggleHelp, false)
+	end
+	
 	-- CHANGE PASSWORD
 	lChangePassword = guiCreateLabel(0.375, 0.35, 0.5, 0.05, "Change Password", true, tabAccount)
 	guiSetFont(lChangePassword, "default-bold-small")
@@ -3720,6 +3733,16 @@ function clientToggleBlur()
 		triggerServerEvent("updateBlurLevel", getLocalPlayer(), true)
 	else
 		triggerServerEvent("updateBlurLevel", getLocalPlayer(), false)
+	end
+end
+
+function clientToggleHelp()
+	local help = guiCheckBoxGetSelected(chkHelp)
+	
+	if (help) then
+		triggerServerEvent("updateHelp", getLocalPlayer(), true)
+	else
+		triggerServerEvent("updateHelp", getLocalPlayer(), false)
 	end
 end
 

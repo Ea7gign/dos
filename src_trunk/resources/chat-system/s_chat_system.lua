@@ -145,6 +145,11 @@ function localIC(source, message, language)
 	local interior = getElementInterior(source)
 	local shownto = 1
 	
+	-- Chat Commands tooltip
+	if(getResourceFromName("tooltips-system"))then
+		triggerClientEvent(source,"showHelp", source,17)
+	end
+	
 	for key, nearbyPlayer in ipairs(getElementsByType( "player" )) do
 		local dist = getElementDistance( source, nearbyPlayer )
 		
