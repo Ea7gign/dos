@@ -21,11 +21,11 @@ end
 
 -- Gate code / Using local functions to avoid 
 local function useDoor(thePlayer, commandName, ...)
-	if (exports.global:hasItem(thePlayer, 64) or exports.global:hasItem(thePlayer, 82)) then
-		local x, y, z = getElementPosition(thePlayer)
-		local distance = getDistanceBetweenPoints3D(1581.0400390625, -1617.6396484375, 13.3828125, x, y, z)
+	local x, y, z = getElementPosition(thePlayer)
+	local distance = getDistanceBetweenPoints3D(1581.0400390625, -1617.6396484375, 13.3828125, x, y, z)
 		
-		if (distance<=10) and (open==false) then
+	if (distance<=10) and (open==false) then
+		if (exports.global:hasItem(thePlayer, 64) or exports.global:hasItem(thePlayer, 82)) then
 			outputChatBox("The " .. GateName .. " is now open!", thePlayer, 0, 255, 0)
 			moveObject(Gate[1], 1000, 1570.4779052734,-1617.7227783203,14.1, 0, 0, 0)
 			moveObject(Gate[2], 1000, 1588.2482910156,-1608.6553955078,14.1, 0, 0, 0)
