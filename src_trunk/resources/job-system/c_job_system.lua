@@ -13,7 +13,7 @@ function showEmploymentWindow()
 	
 	-- Employment Tooltip
 	if(getResourceFromName("tooltips-system"))then
-		triggerEvent("showHelp",getLocalPlayer(),7)
+		triggerEvent("tooltips:showHelp",getLocalPlayer(),7)
 	end
 	
 	triggerServerEvent("onEmploymentServer", getLocalPlayer())

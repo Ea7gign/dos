@@ -1022,7 +1022,7 @@ function pickupItem(object, leftammo)
 		
 		-- Inventory Tooltip
 		if (getResourceFromName("tooltips-system"))then
-			triggerClientEvent(source,"showHelp",source,14)
+			triggerClientEvent(source,"tooltips:showHelp",source,14)
 		end
 		
 		-- Animation

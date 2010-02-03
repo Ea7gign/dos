@@ -46,7 +46,7 @@ function showGeneralshopUI(shop_type, race, gender)
 	
 		-- Shop Tooltip
 		if(getResourceFromName("tooltips-system"))then
-			triggerEvent("showHelp",getLocalPlayer(),5)
+			triggerEvent("tooltips:showHelp",getLocalPlayer(),5)
 		end
 		
 		setElementData(getLocalPlayer(), "exclusiveGUI", true, false)

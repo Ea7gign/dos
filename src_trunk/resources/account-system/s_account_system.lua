@@ -580,7 +580,7 @@ function spawnCharacter(charname, version)
 			-- Welcome tooltip (auto opens the window)
 			if(getResourceFromName("tooltips-system"))then
 				local title = tostring("Welcome to the Valhalla Gaming MTA role play server")
-				triggerClientEvent(source,"welcomeHelp", source,1,title)
+				triggerClientEvent(source,"tooltips:welcomeHelp", source,1,title)
 			end
 		end
 		

@@ -71,8 +71,8 @@ function show_icon(number)
 		end
 	end
 end
-addEvent("showHelp",true)
-addEventHandler("showHelp",getLocalPlayer(),show_icon)
+addEvent("tooltips:showHelp",true)
+addEventHandler("tooltips:showHelp",getLocalPlayer(),show_icon)
 
 function fadeIcon(fadeOut)
 	local alpha = guiGetAlpha(help_icon)
@@ -130,8 +130,8 @@ function createHelpGUI(number, title)
 		end
 	end
 end
-addEvent("welcomeHelp",true)
-addEventHandler("welcomeHelp",getLocalPlayer(),createHelpGUI)
+addEvent("tooltips:welcomeHelp",true)
+addEventHandler("tooltips:welcomeHelp",getLocalPlayer(),createHelpGUI)
 
 function removeIcon()
 	destroyElement(icon_label_shadow)

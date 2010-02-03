@@ -1149,7 +1149,7 @@ function payAllWages(timer)
 		
 		-- Pay Check tooltip
 		if(getResourceFromName("tooltips-system"))then
-			triggerClientEvent(value,"showHelp", getRootElement(),12)
+			triggerClientEvent(value,"tooltips:showHelp", getRootElement(),12)
 		end
 		
 		if (logged==1) and (timeinserver>=60) then

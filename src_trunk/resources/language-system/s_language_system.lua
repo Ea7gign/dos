@@ -96,7 +96,7 @@ function applyLanguage(from, player, message, language)
 		-- Language tooltip
 		if (skill == 0) then
 			if(getResourceFromName("tooltips-system"))then
-				triggerClientEvent(player,"showHelp", player,8)
+				triggerClientEvent(player,"tooltips:showHelp", player,8)
 			end
 		end
 		
