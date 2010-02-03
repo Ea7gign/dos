@@ -32,12 +32,14 @@
 	<script src="LinoKazuma.lua" type="client"/><!-- Donator Helipad -->
 	<script src="Church2Int.lua" type="client"/>
 	<script src="Exile.lua" type="client"/>
+	<script src="The Silver Mint.lua" type="client"/>
 
 	<script src="lmc-resto.lua" type="client"/>
 	<script src="lmc-backroom.lua" type="client"/>
 	<script src="lmc-interiors.lua" type="client"/>
 	
 	<script src="Yakuza Little Tokyo.lua" type="client"/>
+	<script src="Yakuza Starlight Inc.lua" type="client"/>
 
 	<script src="South Side Crips.lua" type="client"/>
 </meta>
