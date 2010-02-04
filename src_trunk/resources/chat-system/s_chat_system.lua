@@ -1143,7 +1143,7 @@ function toggleAds(thePlayer, commandName)
 	local logged = getElementData(thePlayer, "loggedin")
 	
 	if(logged==1) and (exports.global:isPlayerGoldDonator(thePlayer))then
-		local adblocked = getElementData(value, "disableAds")
+		local adblocked = getElementData(thePlayer, "disableAds")
 		if (adblocked) then -- enable the ads again
 			setElementData(thePlayer, "disableAds", false, false)
 			outputChatBox("Ads are now enabled.", thePlayer, 0, 255, 0)
@@ -1155,6 +1155,7 @@ function toggleAds(thePlayer, commandName)
 		end
 	end
 end
+addCommandHandler("togad", toggleAds)
 addCommandHandler("togglead", toggleAds)
 
 -- /pay
