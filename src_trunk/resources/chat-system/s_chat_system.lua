@@ -1149,7 +1149,7 @@ function toggleAds(thePlayer, commandName)
 			outputChatBox("Ads are now enabled.", thePlayer, 0, 255, 0)
 			mysql_free_result( mysql_query( handler, "UPDATE accounts SET adblocked=0 WHERE id = " .. getElementData(thePlayer, "gameaccountid") ) )
 		else -- disable them D:
-			setElementData(thePlayer, "adsblocked", true, false)
+			setElementData(thePlayer, "disableAds", true, false)
 			outputChatBox("Ads are now disabled.", thePlayer, 255, 0, 0)
 			mysql_free_result( mysql_query( handler, "UPDATE accounts SET adblocked=1 WHERE id = " .. getElementData(thePlayer, "gameaccountid") ) )
 		end
