@@ -398,7 +398,7 @@ function acceptDeal_S( dealNumber )
 		end
 		doneDeals = doneDeals + 1
 		setElementData( getRootElement( ), "stevie.done", doneDeals, false )
-		exports.logs:logMessage("[STEVIE-CALL] " .. getElementData(thePlayer, "gameaccountusername") .. "/".. getPlayerName(thePlayer) .." accepted deal no " .. dealNumber .. " for ".. cost , 4)
+		exports.logs:logMessage("[STEVIE-CALL] " .. getElementData(source, "gameaccountusername") .. "/".. getPlayerName(source) .." accepted deal no " .. dealNumber .. " for ".. cost , 4)
 		outputChatBox("You have sent Stevie $".. cost .." for the deal.", source, 0, 255, 0)
 		
 		local x, y, z = locations[doneDeals][1], locations[doneDeals][2], locations[doneDeals][3]
