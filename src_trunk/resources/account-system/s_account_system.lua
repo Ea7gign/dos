@@ -748,6 +748,7 @@ function loginPlayer(username, password, operatingsystem)
 			local help = tonumber(data["help"])
 			local adminreports = tonumber(data["adminreports"])
 			local pmblocked = tonumber(data["pmblocked"])
+			local adblocked = tonumber(data["adblocked"])
 			local warns = tonumber(data["warns"])
 			local chatbubbles = tonumber(data["chatbubbles"])
 			local appstate = tonumber(data["appstate"])
@@ -809,7 +810,18 @@ function loginPlayer(username, password, operatingsystem)
 				setElementData(source, "globalooc", tonumber(globalooc), false)
 				setElementData(source, "muted", tonumber(muted))
 				setElementData(source, "adminreports", adminreports, false)
-				setElementData(source, "pmblocked", pmblocked, false)
+				
+				if donator > 0 then
+					setElementData(source, "pmblocked", pmblocked, false)
+					if (adblocked == 1) then
+						setElementData(source, "disableAds", true, false)
+					else
+						setElementData(source, "disableAds", false, false)
+					end
+				else -- if their donator package expired
+					setElementData(source, "pmblocked", 0, false)
+					setElementData(source, "disableAds", false, false)
+				end
 				setElementData(source, "warns", warns, false)
 				setElementData(source, "chatbubbles", chatbubbles, false)
 				

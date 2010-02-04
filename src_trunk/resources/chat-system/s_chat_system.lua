@@ -1137,6 +1137,25 @@ function togglePM(thePlayer, commandName)
 	end
 end
 addCommandHandler("togpm", togglePM)
+addCommandHandler("togglepm", togglePM)
+
+function toggleAds(thePlayer, commandName)
+	local logged = getElementData(thePlayer, "loggedin")
+	
+	if(logged==1) and (exports.global:isPlayerGoldDonator(thePlayer)))then
+		local adblocked = getElementData(value, "disableAds")
+		if (adblocked) then -- enable the ads again
+			setElementData(thePlayer, "disableAds", false, false)
+			outputChatBox("Ads are now enabled.", thePlayer, 0, 255, 0)
+			mysql_free_result( mysql_query( handler, "UPDATE accounts SET adblocked=0 WHERE id = " .. getElementData(thePlayer, "gameaccountid") ) )
+		else -- disable them D:
+			setElementData(thePlayer, "adsblocked", true, false)
+			outputChatBox("Ads are now disabled.", thePlayer, 255, 0, 0)
+			mysql_free_result( mysql_query( handler, "UPDATE accounts SET adblocked=1 WHERE id = " .. getElementData(thePlayer, "gameaccountid") ) )
+		end
+	end
+end
+addCommandHandler("togglead", toggleAds)
 
 -- /pay
 function payPlayer(thePlayer, commandName, targetPlayerNick, amount)
