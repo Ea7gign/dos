@@ -1391,7 +1391,7 @@ addCommandHandler("n", newsMessage, false, false)
 function togNews(thePlayer, commandName)
 	local logged = getElementData(thePlayer, "loggedin")
 	
-	if (logged==1) then
+	if (logged==1) and (exports.global:isPlayerGoldDonator(thePlayer)) then
 		local newsTog = getElementData(thePlayer, "tognews")
 		
 		if (newsTog~=1) then
@@ -1401,9 +1401,11 @@ function togNews(thePlayer, commandName)
 			outputChatBox("/news enabled.", thePlayer, 255, 194, 14)
 			setElementData(thePlayer, "tognews", 0, false)
 		end
+		mysql_free_result( mysql_query( handler, "UPDATE accounts SET newsblocked=" .. getElementData(thePlayer, "tognews") .. " WHERE id = " .. getElementData(thePlayer, "gameaccountid") ) )
 	end
 end
 addCommandHandler("tognews", togNews, false, false)
+addCommandHandler("togglenews", togNews, false, false)
 
 
 -- /startinterview

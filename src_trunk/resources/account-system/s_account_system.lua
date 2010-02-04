@@ -749,6 +749,7 @@ function loginPlayer(username, password, operatingsystem)
 			local adminreports = tonumber(data["adminreports"])
 			local pmblocked = tonumber(data["pmblocked"])
 			local adblocked = tonumber(data["adblocked"])
+			local newsblocked = tonumber(data["newsblocked"])
 			local warns = tonumber(data["warns"])
 			local chatbubbles = tonumber(data["chatbubbles"])
 			local appstate = tonumber(data["appstate"])
@@ -811,17 +812,21 @@ function loginPlayer(username, password, operatingsystem)
 				setElementData(source, "muted", tonumber(muted))
 				setElementData(source, "adminreports", adminreports, false)
 				
-				if donator > 0 then
+				if donator > 0 then -- check if they're a donator
 					setElementData(source, "pmblocked", pmblocked, false)
+					setElementData(source, "tognews", newsblocked, false)
 					if (adblocked == 1) then
 						setElementData(source, "disableAds", true, false)
 					else
 						setElementData(source, "disableAds", false, false)
 					end
-				else -- if their donator package expired
+				else -- no donator, set default things
 					setElementData(source, "pmblocked", 0, false)
 					setElementData(source, "disableAds", false, false)
+					setElementData(source, "tognews", 0, false)
 				end
+				
+				
 				setElementData(source, "warns", warns, false)
 				setElementData(source, "chatbubbles", chatbubbles, false)
 				
