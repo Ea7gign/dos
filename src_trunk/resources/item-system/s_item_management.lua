@@ -147,7 +147,9 @@ end
 -- loads all items for that element
 function loadItems( element, force )
 	if not isElement( element ) then
-		return false
+		return false, "No element"
+	elseif not getID( element ) then
+		return false, "Invalid Element ID"
 	elseif force or not saveditems[ element ] then
 		saveditems[ element ] = {}
 		notify( element )
@@ -173,7 +175,7 @@ function loadItems( element, force )
 			return true
 		else
 			outputDebugString( mysql_error( handler ) )
-			return false
+			return false, "MySQL-Error"
 		end
 	else
 		return true
@@ -211,172 +213,201 @@ end
 
 -- gives an item to an element
 function giveItem( element, itemID, itemValue, itemIndex )
-	loadItems( element )
-	
-	if not hasSpaceForItem( element, itemID ) then
-		return false, "Inventory is Full"
-	end
-	
-	if not itemIndex then
-		local result = mysql_query( handler, "INSERT INTO items (type, owner, itemID, itemValue) VALUES (" .. getType( element ) .. "," .. getID( element ) .. "," .. itemID .. ",'" .. mysql_escape_string(handler, itemValue) .. "')" )
-		if result then
-			itemIndex = mysql_insert_id( handler )
-			mysql_free_result( result )
-		else
-			outputDebugString( mysql_error( handler ) )
-			return false, "MySQL Error"
+	local success, error = loadItems( element )
+	if success then
+		if not hasSpaceForItem( element, itemID ) then
+			return false, "Inventory is Full"
 		end
+		
+		if not itemIndex then
+			local result = mysql_query( handler, "INSERT INTO items (type, owner, itemID, itemValue) VALUES (" .. getType( element ) .. "," .. getID( element ) .. "," .. itemID .. ",'" .. mysql_escape_string(handler, itemValue) .. "')" )
+			if result then
+				itemIndex = mysql_insert_id( handler )
+				mysql_free_result( result )
+			else
+				outputDebugString( mysql_error( handler ) )
+				return false, "MySQL Error"
+			end
+		end
+		
+		saveditems[element][ #saveditems[element] + 1 ] = { itemID, itemValue, itemIndex }
+		notify( element )
+		return true
+	else
+		return false, "loadItems error: " .. error
 	end
-	
-	saveditems[element][ #saveditems[element] + 1 ] = { itemID, itemValue, itemIndex }
-	notify( element )
-	return true
 end
 
 -- takes an item from the element
 function takeItem(element, itemID, itemValue)
-	loadItems( element )
-
-	local success, slot = hasItem(element, itemID, itemValue)
+	local success, error = loadItems( element )
 	if success then
-		takeItemFromSlot(element, slot)
-		return true
+		local success, slot = hasItem(element, itemID, itemValue)
+		if success then
+			takeItemFromSlot(element, slot)
+			return true
+		else
+			return false, "Element doesn't have this item"
+		end
 	else
-		return false
+		return false, "loadItems error: " .. error
 	end
 end
 
 -- permanently removes an item from an element
 function takeItemFromSlot(element, slot, nosqlupdate)
-	loadItems( element )
-
-	if saveditems[element][slot] then
-		local id = saveditems[element][slot][1]
-		local value = saveditems[element][slot][2]
-		local index = saveditems[element][slot][3]
-		
-		local success = true
-		if not nosqlupdate then
-			local result = mysql_query( handler, "DELETE FROM items WHERE `index` = " .. index .. " LIMIT 1" )
-			if result then
-				mysql_free_result( result )
-			else
-				success = false
-				outputDebugString( mysql_error( handler ) )
+	local success, error = loadItems( element )
+	if success then
+		if saveditems[element][slot] then
+			local id = saveditems[element][slot][1]
+			local value = saveditems[element][slot][2]
+			local index = saveditems[element][slot][3]
+			
+			local success = true
+			if not nosqlupdate then
+				local result = mysql_query( handler, "DELETE FROM items WHERE `index` = " .. index .. " LIMIT 1" )
+				if result then
+					mysql_free_result( result )
+				else
+					success = false
+					outputDebugString( mysql_error( handler ) )
+				end
 			end
+			
+			if success then
+				-- shift following items from id to id-1 items
+				table.remove( saveditems[element], slot )
+				notify( element )
+				return true
+			end
+			return false, "Slot does not exist."
 		end
-		
-		if success then
-			-- shift following items from id to id-1 items
-			table.remove( saveditems[element], slot )
-			notify( element )
-			return true
-		end
+	else
+		return false, "loadItems error: " .. error
 	end
-	return false
 end
 
 -- updates the item value
 function updateItemValue(element, slot, itemValue)
-	loadItems( element )
-	
-	if saveditems[element][slot] then
-		local itemValue = tonumber(itemValue) or tostring(itemValue)
-		if itemValue then
-			local itemIndex = saveditems[element][slot][3]
-			local result = mysql_query( handler, "UPDATE items SET `itemValue` = '" .. mysql_escape_string( handler, tostring( itemValue ) ) .. "' WHERE `index` = " .. itemIndex )
-			if result then
-				mysql_free_result( result )
-				
-				saveditems[element][slot][2] = itemValue
-				notify( element )
-				return true
+	local success, error = loadItems( element )
+	if success then
+		if saveditems[element][slot] then
+			local itemValue = tonumber(itemValue) or tostring(itemValue)
+			if itemValue then
+				local itemIndex = saveditems[element][slot][3]
+				local result = mysql_query( handler, "UPDATE items SET `itemValue` = '" .. mysql_escape_string( handler, tostring( itemValue ) ) .. "' WHERE `index` = " .. itemIndex )
+				if result then
+					mysql_free_result( result )
+					
+					saveditems[element][slot][2] = itemValue
+					notify( element )
+					return true
+				else
+					outputDebugString( mysql_error( handler ) )
+					return false, "MySQL-Query failed."
+				end
 			else
-				outputDebugString( mysql_error( handler ) )
-				return false, "MySQL-Query failed."
+				return false, "Invalid ItemValue"
 			end
 		else
-			return false, "Invalid ItemValue"
+			return false, "Slot does not exist."
 		end
 	else
-		return false, "Slot does not exist."
+		return false, "loadItems error: " .. error
 	end
 end
 
+
 -- moves an item from any element to another element
 function moveItem(from, to, slot)
-	loadItems( from )
-	loadItems( to )
-
-	if saveditems[from] and saveditems[from][slot] then
-		if hasSpaceForItem(to, saveditems[from][slot][1]) then
-			local itemIndex = saveditems[from][slot][3]
-			if itemIndex then
-				local itemID = saveditems[from][slot][1]
-				if itemID == 48 or itemID == 60 then
-					return false, "This Item cannot be moved"
-				else
-					local query = mysql_query( handler, "UPDATE items SET type = " .. getType(to) .. ", owner = " .. getID(to) .. " WHERE `index` = " .. itemIndex )
-					if query then
-						mysql_free_result( query )
-						
-						local itemValue = saveditems[from][slot][2]
-						
-						takeItemFromSlot(from, slot, true)
-						giveItem(to, itemID, itemValue, itemIndex)
-						
-						return true
+	local success, error = loadItems( from )
+	if success then
+		local success, error = loadItems( to )
+		if success then
+			if saveditems[from] and saveditems[from][slot] then
+				if hasSpaceForItem(to, saveditems[from][slot][1]) then
+					local itemIndex = saveditems[from][slot][3]
+					if itemIndex then
+						local itemID = saveditems[from][slot][1]
+						if itemID == 48 or itemID == 60 then
+							return false, "This Item cannot be moved"
+						else
+							local query = mysql_query( handler, "UPDATE items SET type = " .. getType(to) .. ", owner = " .. getID(to) .. " WHERE `index` = " .. itemIndex )
+							if query then
+								mysql_free_result( query )
+								
+								local itemValue = saveditems[from][slot][2]
+								
+								takeItemFromSlot(from, slot, true)
+								giveItem(to, itemID, itemValue, itemIndex)
+								
+								return true
+							else
+								outputDebugString( mysql_error( handler ) )
+								return false, "MySQL-Query failed."
+							end
+						end
 					else
-						outputDebugString( mysql_error( handler ) )
-						return false, "MySQL-Query failed."
+						return false, "Item does not exist."
 					end
+				else
+					return false, "Target does not have Space for Item."
 				end
 			else
-				return false, "Item does not exist."
+				return false, "Slot does not exist."
 			end
 		else
-			return false, "Target does not have Space for Item."
+			return false, "loadItems(to) error: " .. error
 		end
 	else
-		return false, "Slot does not exist."
+		return false, "loadItems(from) error: " .. error
 	end
 end
 
 -- checks if the element has that specific item
 function hasItem(element, itemID, itemValue)
-	loadItems( element )
-
-	for key, value in pairs(saveditems[element]) do
-		if value[1] == itemID and ( not itemValue or itemValue == value[2] ) then
-			return true, key, value[2], value[3]
+	local success, error = loadItems( element )
+	if success then
+		for key, value in pairs(saveditems[element]) do
+			if value[1] == itemID and ( not itemValue or itemValue == value[2] ) then
+				return true, key, value[2], value[3]
+			end
 		end
+		return false
+	else
+		return false, "loadItems error: " .. error
 	end
-	return false
 end
 
 -- checks if the element has space for adding a new item
 function hasSpaceForItem(element, itemID)
-	loadItems( element )
-	
-	local keycount = countItems( element, 3 ) + countItems( element, 4 ) + countItems( element, 5 ) + countItems( element, 73 )
-	if itemID == 3 or itemID == 4 or itemID == 5 or itemID == 73 then
-		return keycount < 2 * getInventorySlots(element)
+	local success, error = loadItems( element )
+	if success then
+		local keycount = countItems( element, 3 ) + countItems( element, 4 ) + countItems( element, 5 ) + countItems( element, 73 )
+		if itemID == 3 or itemID == 4 or itemID == 5 or itemID == 73 then
+			return keycount < 2 * getInventorySlots(element)
+		else
+			return #getItems(element) - keycount < getInventorySlots(element)
+		end
 	else
-		return #getItems(element) - keycount < getInventorySlots(element)
+		return false, "loadItems error: " .. error
 	end
 end
 
 -- count all instances of that object
 function countItems( element, itemID, itemValue )
-	loadItems( element )
-	
-	local count = 0
-	for key, value in pairs(saveditems[element]) do
-		if value[1] == itemID and ( not itemValue or itemValue == value[2] ) then
-			count = count + 1
+	local success, error = loadItems( element )
+	if success then
+		local count = 0
+		for key, value in pairs(saveditems[element]) do
+			if value[1] == itemID and ( not itemValue or itemValue == value[2] ) then
+				count = count + 1
+			end
 		end
+		return count
+	else
+		return 0, "loadItems error: " .. error
 	end
-	return count
 end
 
 -- returns a list of all items of that element
