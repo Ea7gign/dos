@@ -1142,7 +1142,7 @@ addCommandHandler("togglepm", togglePM)
 function toggleAds(thePlayer, commandName)
 	local logged = getElementData(thePlayer, "loggedin")
 	
-	if(logged==1) and (exports.global:isPlayerGoldDonator(thePlayer)))then
+	if(logged==1) and (exports.global:isPlayerGoldDonator(thePlayer))then
 		local adblocked = getElementData(value, "disableAds")
 		if (adblocked) then -- enable the ads again
 			setElementData(thePlayer, "disableAds", false, false)
