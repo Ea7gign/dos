@@ -138,22 +138,18 @@ local sites =
 					mail = "GrantThompson@lossantos.gov",
 					skin = 240
 				},
-				0.5,
+				1,
 				{
 					name = "Public Relations Officer\nDaniella Filippi",
 					mail = false,
 					skin = 150
 				},
 				{
-					name = "Treasurer\nHans Vanderburg",
-					mail = "H.Vanderburg@lossantos.gov",
-					skin = 217
-				},
-				{
 					name = "Head of Security\nEnzo DeLuca",
 					mail = "e.deluca@lossantos.gov",
 					skin = 240
-				}
+				},
+				0.5
 			}
 			
 			x = x + 10
