@@ -169,7 +169,7 @@ function openInternetWindow()
 		shadow_top = guiCreateStaticImage(2,84,676,1,"websites/colours/13.png",false,wInternet)
 		shadow_left = guiCreateStaticImage(2,85,1,397,"websites/colours/13.png",false,wInternet)
 		shadow_bottom = guiCreateStaticImage(4,482,676,1,"websites/colours/1.png",false,wInternet)
-		www_sanetwork_sa()
+		get_page("www.sanetwork.sa")
 	else
 		guiBringToFront(wInternet)
 	end
@@ -234,7 +234,7 @@ function openEmailWindow()
 		-- Close button
 		email_close_button = guiCreateButton(272,23,22,22,"x",false,wEmail)
 		guiSetProperty(email_close_button,"AlwaysOnTop","True")
-		addEventHandler("onClientGUIClick",email_close_button,close_email_window,false)
+		addEventHandler("onClientGUIClick",email_close_button,function() prepared_mail = nil close_email_window() end,false)
 		
 		-- Error Label
 		email_error_label = guiCreateLabel(13,25,250,16,"",false,wEmail)
