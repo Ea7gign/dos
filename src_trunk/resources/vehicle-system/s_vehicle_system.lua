@@ -1059,27 +1059,32 @@ function sellVehicle(thePlayer, commandName, targetPlayerName)
 					local theVehicle = getPedOccupiedVehicle(thePlayer)
 					if theVehicle then
 						local vehicleID = getElementData(theVehicle, "dbid")
-						-- getElementData(theVehicle, "owner") == getElementData(thePlayer, "dbid") or 
-						if exports.global:isPlayerLeadAdmin(thePlayer) then
+						if getElementData(theVehicle, "owner") == getElementData(thePlayer, "dbid") or exports.global:isPlayerLeadAdmin(thePlayer) then
 							if getElementData(targetPlayer, "dbid") ~= getElementData(theVehicle, "owner") then
 								if exports.global:hasSpaceForItem(targetPlayer, 3) then
-									local query = mysql_query(handler, "UPDATE vehicles SET owner = '" .. getElementData(targetPlayer, "dbid") .. "' WHERE id='" .. vehicleID .. "'")
-									if query then
-										mysql_free_result(query)
-										setElementData(theVehicle, "owner", getElementData(targetPlayer, "dbid"))
-										
-										exports.global:takeItem(thePlayer, 3, vehicleID)
-										exports.global:giveItem(targetPlayer, 3, vehicleID)
-										
-										exports.logs:logMessage("[SELL] car #" .. vehicleID .. " was sold from " .. getPlayerName(thePlayer):gsub("_", " ") .. " to " .. targetPlayerName, 9)
-										
-										outputChatBox("You've successfully sold your " .. getVehicleName(theVehicle) .. " to " .. targetPlayerName .. ".", thePlayer, 0, 255, 0)
-										outputChatBox((getPlayerName(thePlayer):gsub("_", " ")) .. " sold you a " .. getVehicleName(theVehicle) .. ".", targetPlayer, 0, 255, 0)
+									if exports.global:canPlayerBuyVehicle(targetPlayer) then
+										local query = mysql_query(handler, "UPDATE vehicles SET owner = '" .. getElementData(targetPlayer, "dbid") .. "' WHERE id='" .. vehicleID .. "'")
+										if query then
+											mysql_free_result(query)
+											setElementData(theVehicle, "owner", getElementData(targetPlayer, "dbid"))
+											
+											exports.global:takeItem(thePlayer, 3, vehicleID)
+											exports.global:giveItem(targetPlayer, 3, vehicleID)
+											
+											exports.logs:logMessage("[SELL] car #" .. vehicleID .. " was sold from " .. getPlayerName(thePlayer):gsub("_", " ") .. " to " .. targetPlayerName, 9)
+											
+											outputChatBox("You've successfully sold your " .. getVehicleName(theVehicle) .. " to " .. targetPlayerName .. ".", thePlayer, 0, 255, 0)
+											outputChatBox((getPlayerName(thePlayer):gsub("_", " ")) .. " sold you a " .. getVehicleName(theVehicle) .. ".", targetPlayer, 0, 255, 0)
+										else
+											outputChatBox("Error 09001 - Report on Forums.", thePlayer, 255, 0, 0)
+										end
 									else
-										outputChatBox("Error 09001 - Report on Forums.", thePlayer, 255, 0, 0)
+										outputChatBox(targetPlayerName .. " has already too much vehicles.", thePlayer, 255, 0, 0)
+										outputChatBox((getPlayerName(thePlayer):gsub("_", " ")) .. " tried to sell you a car, but you have too much cars already.", targetPlayer, 255, 0, 0)
 									end
 								else
 									outputChatBox(targetPlayerName .. " has no space for the vehicle keys.", thePlayer, 255, 0, 0)
+									outputChatBox((getPlayerName(thePlayer):gsub("_", " ")) .. " tried to sell you a car, but you haven't got space for a key.", targetPlayer, 255, 0, 0)
 								end
 							else
 								outputChatBox("You can't sell your own vehicle to yourself.", thePlayer, 255, 0, 0)
