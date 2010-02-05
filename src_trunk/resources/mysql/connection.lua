@@ -2,7 +2,7 @@
 example usage:
 
 mysql = exports.mysql
-local query = "SELECT * FROM `players` WHERE `username` = '" .. mysql:escape_string(username) .. "'"
+local query = "SELECT * FROM `characters` WHERE `charactername` = '.. mysql:escape_string(username) .. "'"
 local result = mysql:query(query)
 local row = mysql:fetch_assoc(result)
 local bankmoney = row["bankmoney"]
@@ -23,12 +23,9 @@ local resultPool = { }
 
 -- connectToDatabase - Internal function, to spawn a DB connection
 function connectToDatabase(res)
-	-- make sum love to the database
 	MySQLConnection = mysql_connect(hostname, username, password, database, port)
 	
 	if (not MySQLConnection) then
-		-- sql server doesnt want to make love
-
 		if (res == getThisResource()) then
 			cancelEvent(true, "Cannot connect to the database.")
 		end
@@ -74,11 +71,8 @@ function ping()
 	if (mysql_ping(MySQLConnection) == false) then
 		-- FUU, NO MOAR CONNECTION
 		destroyDatabaseConnection()
-		connectToDatabase(nil) -- need to pass an argument cus else it starts Q_Qing
-		
-		-- can has connection noa?
+		connectToDatabase(nil)
 		if (mysql_ping(MySQLConnection) == false) then
-			-- FUUUU
 			logSQLError()
 			return false
 		end

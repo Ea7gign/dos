@@ -67,7 +67,7 @@ function resourceStart()
 	setMapName("Valhalla Gaming: Los Santos")
 	
 	setRuleValue("Script Version", tostring(scriptVer))
-	setRuleValue("Author", "Daniels")
+	setRuleValue("Author", "VG Scripting Team")
 
 	for key, value in ipairs(exports.pool:getPoolElementsByType("player")) do
 		triggerEvent("playerJoinResourceStart", value)
@@ -101,7 +101,7 @@ addEventHandler("onPlayerJoin", getRootElement(), onJoin)
 addEvent("playerJoinResourceStart", false)
 addEventHandler("playerJoinResourceStart", getRootElement(), onJoin)
 
-
+--[[
 function registerPlayer(username, password)
 	local safeusername = mysql_escape_string(handler, username)
 	
@@ -147,9 +147,10 @@ function registerPlayer(username, password)
 		mysql_free_result(result)
 	end
 end
---addEvent("onPlayerRegister", false)
---addEvent("attemptRegister", true)
---addEventHandler("attemptRegister", getRootElement(), registerPlayer)
+addEvent("onPlayerRegister", false)
+addEvent("attemptRegister", true)
+addEventHandler("attemptRegister", getRootElement(), registerPlayer)
+]]
 
 addEvent("restoreJob", false)
 function spawnCharacter(charname, version)
@@ -219,9 +220,6 @@ function spawnCharacter(charname, version)
 		setElementData(source, "height", height, false)
 		setElementData(source, "race", skincolor, false)
 
-		-- description, age, weight, height, skincolor
-		
-		
 		-- LANGUAGES
 		local lang1 = tonumber(data["lang1"])
 		local lang1skill = tonumber(data["lang1skill"])
@@ -505,7 +503,6 @@ function spawnCharacter(charname, version)
 		setElementData(source, "calling", nil, false)
 		setElementData(source, "calltimer", nil, false)
 		setElementData(source, "phonestate", 0, false)
-		--setElementData(source, "radiochannel", radiochannel, false)
 		setElementData(source, "realinvehicle", 0, false)
 		setElementData(source, "duty", duty, false)
 		setElementData(source, "job", job)
@@ -623,16 +620,7 @@ function spawnCharacter(charname, version)
 		
 		triggerEvent("onCharacterLogin", source, charname, factionID)
 		mysql_free_result(result)
-		
-		-- 2 years achievement
-		--[[
-		local realtime = getRealTime()
-		
-		if (realtime.yearday == 296 and realtime.year+1900 == 2009) then -- october 24th 2009
-			setTimer(giveBirthdayAchievement, 5000, 1, source)
-		end
-		]]
-		
+				
 		if exports.global:isPlayerScripter(source) then
 			triggerClientEvent(source, "runcode:loadScripts", source)
 		end
@@ -647,15 +635,6 @@ addEventHandler("spawnCharacter", getRootElement(), spawnCharacter)
 
 function blindfoldFix(player)
 	fadeCamera(player, true, 2)
-end
-
-function giveBirthdayAchievement(player)
-	exports.global:givePlayerAchievement(player, 44) -- MTA BETA ONLY
-end
-
-function giveBetaAchievement(player)
-	-- MTA BETA ONLY
-	--exports.global:givePlayerAchievement(player, 36) -- MTA BETA ONLY
 end
 
 function timerUnjailPlayer(jailedPlayer)

@@ -35,12 +35,16 @@
 	
 	<script src="optomization_globals.lua" type="server"/>
 	
-	<script src="vehicle_globals.lua" type="server"/>
-	<script src="vehicle_globals.lua" type="client"/>
+	<script src="c_vehicle_globals.lua" type="server"/>
+	<script src="c_vehicle_globals.lua" type="client"/>
 	<export function="getVehicleVelocity" type="server"/>
 	<export function="getVehicleVelocity" type="client"/>
 	<export function="relateVelocity" type="server"/>
 	<export function="relateVelocity" type="client"/>
+	
+	<script src="s_vehicle_globals.lua type="server"/>
+	<export function="getVehiclesOwnedByCharacter" type="server"/>
+	<export function="canPlayerBuyVehicle" type="server"/>
 	
 	<script src="money_globals.lua" type="server"/>
 	<script src="c_money_globals.lua" type="client"/>
