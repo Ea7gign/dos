@@ -68,11 +68,11 @@ function mechanicWindow(vehicle)
 				end
 				
 				-- Upgrades
-				if not noUpgrades[getVehicleType(vehicle)] and #getVehicleCompatibleUpgrades(vehicle) > 0 then
+				--[[if not noUpgrades[getVehicleType(vehicle)] and #getVehicleCompatibleUpgrades(vehicle) > 0 then
 					bMechanicFive = guiCreateButton( 0.05, y, 0.9, 0.1, "Add Upgrade", true, wMechanic )
 					addEventHandler( "onClientGUIClick", bMechanicFive, upgradeWindow, false)
 					y = y + 0.1
-				end
+				end]]
 				
 				-- Paintjob
 				if vehicleWithPaintjob[getElementModel(vehicle)] then
