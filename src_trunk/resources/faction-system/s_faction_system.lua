@@ -974,6 +974,7 @@ function payWage(player, pay, faction, tax)
 	local governmentIncome = 0
 	local bankmoney = getElementData(player, "bankmoney")
 	local interestrate = 0.004
+	local noWage = pay == 0
 	
 	-- DONATOR PERKS
 	local donator = getElementData(player, "donatorlevel")
@@ -1009,7 +1010,7 @@ function payWage(player, pay, faction, tax)
 	-- business money
 	local profit = getElementData(player, "businessprofit")
 	setElementData(player, "businessprofit", 0, false)
-	bankmoney = bankmoney + pay + interest + profit + donatormoney
+	bankmoney = bankmoney + math.max( 0, pay ) + interest + profit + donatormoney
 
 	
 	-- rentable houses
@@ -1096,7 +1097,7 @@ function payWage(player, pay, faction, tax)
 	local grossincome = pay+profit+interest+donatormoney-rent-vtax-ptax
 		
 	-- let the client tell them the (bad) news
-	triggerClientEvent(player, "cPayDay", player, faction, pay, profit, interest, donatormoney, tax, incomeTax, vtax, ptax, rent, grossincome)
+	triggerClientEvent(player, "cPayDay", player, faction, noWage and -1 or pay, profit, interest, donatormoney, tax, incomeTax, vtax, ptax, rent, grossincome)
 	
 	-- Insert in Transactions
 	

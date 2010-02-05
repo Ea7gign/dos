@@ -678,11 +678,11 @@ function cPayDay(faction, pay, profit, interest, donatormoney, tax, incomeTax, v
 		
 	-- state earnings/money from faction
 	if not (faction) then
-		if (pay > 0) then
+		if (pay + tax > 0) then
 			outputChatBox("    State Benefits: #00FF00" .. pay+tax .. "$", 255, 194, 14, true)
 		end		
 	else
-		if (pay > 0) then
+		if (pay + tax > 0) then
 			outputChatBox("    Wage Paid: #00FF00" .. pay+tax .. "$", 255, 194, 14, true)		
 		end
 	end
@@ -733,7 +733,7 @@ function cPayDay(faction, pay, profit, interest, donatormoney, tax, incomeTax, v
 	end
 	
 	
-	if (pay == 0) then
+	if (pay + tax == 0) then
 		if not (faction) then
 			outputChatBox("    The government could not afford to pay you your state benefits.", 255, 0, 0)
 		else
