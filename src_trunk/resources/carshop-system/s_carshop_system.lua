@@ -60,7 +60,7 @@ function buyCar(id, cost, col1, col2, x, y, z, rz, px, py, pz, prz, shopID)
 			outputChatBox("Press 'K' to unlock this vehicle.", source, 255, 194, 14)
 			makeCar(source, id, cost, col1, col2, x, y, z, rz, px, py, pz, prz)
 		else
-			outputChatBox("You tried to buy a car, but you have too much vehicles already.", targetPlayer, 255, 0, 0)
+			outputChatBox("You tried to buy a car, but you have too many vehicles already.", source, 255, 0, 0)
 		end
 	end
 end
