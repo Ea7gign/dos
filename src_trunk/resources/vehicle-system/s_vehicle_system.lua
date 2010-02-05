@@ -150,6 +150,10 @@ function createPermVehicle(thePlayer, commandName, ...)
 						outputChatBox("This player cannot afford this vehicle.", thePlayer, 255, 0, 0)
 						return
 					end
+					if not exports.global:canPlayerBuyVehicle(source) then
+						outputChatBox("This player has too many cars.", thePlayer, 255, 0, 0)
+						return
+					end
 				end
 				
 				local letter1 = string.char(math.random(65,90))
