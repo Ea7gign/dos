@@ -46,18 +46,22 @@ addEventHandler("onPickupHit", getResourceRootElement(), pickupUse)
 
 function buyCar(id, cost, col1, col2, x, y, z, rz, px, py, pz, prz, shopID)
 	if exports.global:hasMoney(source, cost) then
-		outputChatBox("You bought a " .. getVehicleNameFromModel(id) .. " for " .. cost .. "$. Enjoy!", source, 255, 194, 14)
-		
-		if shopID == 1 then
-			outputChatBox("You can set this vehicles spawn position by parking it and typing /park", source, 255, 194, 14)
-			outputChatBox("Vehicles parked near the dealership or bus spawn point will be deleted without notice.", source, 255, 0, 0)
-		elseif shopID == 2 then
-			outputChatBox("You can set this boats spawn position by parking it and typing /park", source, 255, 194, 14)
-			outputChatBox("Boats parked near the marina will be deleted without notice.", source, 255, 0, 0)
+		if exports.global:canPlayerBuyVehicle(source) then
+			outputChatBox("You bought a " .. getVehicleNameFromModel(id) .. " for " .. cost .. "$. Enjoy!", source, 255, 194, 14)
+			
+			if shopID == 1 then
+				outputChatBox("You can set this vehicles spawn position by parking it and typing /park", source, 255, 194, 14)
+				outputChatBox("Vehicles parked near the dealership or bus spawn point will be deleted without notice.", source, 255, 0, 0)
+			elseif shopID == 2 then
+				outputChatBox("You can set this boats spawn position by parking it and typing /park", source, 255, 194, 14)
+				outputChatBox("Boats parked near the marina will be deleted without notice.", source, 255, 0, 0)
+			end
+			outputChatBox("If you do not use /park within an hour, your car will be DELETED.", source, 255, 0, 0)
+			outputChatBox("Press 'K' to unlock this vehicle.", source, 255, 194, 14)
+			makeCar(source, id, cost, col1, col2, x, y, z, rz, px, py, pz, prz)
+		else
+			outputChatBox("You tried to buy a car, but you have too much vehicles already.", targetPlayer, 255, 0, 0)
 		end
-		outputChatBox("If you do not use /park within an hour, your car will be DELETED.", source, 255, 0, 0)
-		outputChatBox("Press 'K' to unlock this vehicle.", source, 255, 194, 14)
-		makeCar(source, id, cost, col1, col2, x, y, z, rz, px, py, pz, prz)
 	end
 end
 addEvent("buyCar", true)
@@ -65,6 +69,10 @@ addEventHandler("buyCar", getRootElement(), buyCar)
 
 function makeCar(thePlayer, id, cost, col1, col2, x, y, z, rz, px, py, pz, prz)
 	if not exports.global:takeMoney(thePlayer, cost) then
+		return
+	end
+	
+	if not exports.global:canPlayerBuyVehicle(source) then
 		return
 	end
 	
