@@ -32,6 +32,9 @@ setElementData(carshopPickup, "shopid", 1, false)
 boatshopPickup = createPickup(715.35546875, -1705.5791015625, 2.4296875, 3, 1239)
 setElementData(boatshopPickup, "shopid", 2, false)
 
+cheapcarshopPickup = createPickup( 2131.8115234375, -1151.3212890625, 24.060283660889, 3, 1239)
+setElementData(cheapcarshopPickup, "shopid", 3, false)
+
 function pickupUse(thePlayer)
 	if getElementData(source, "shopid") then
 		if getElementData(thePlayer, "license.car") == 1 then
