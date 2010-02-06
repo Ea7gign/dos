@@ -25,7 +25,6 @@
 	<file src="websites/images/graffiti.png" />
 	<file src="websites/images/grove.png" />
 	<file src="websites/images/izanagi-black.png" />
-	<file src="websites/images/izanagi-green.png" />
 	<file src="websites/images/izanagi-red.png" />
 	<file src="websites/images/jester.png" />
 	<file src="websites/images/ls_harbour.png" />
@@ -209,9 +208,6 @@
 	<script src="websites/lossantos.lua" type="client"/>	
 	<script src="websites/lses.lua" type="client"/>
 	<script src="websites/lspd.lua" type="client"/>
-	
-	<!-- M -->
-	<script src="websites/midoruenterprises.lua" type="client"/>
 	
 	<!-- N -->
 	<script src="websites/natslife_s.lua" type="server"/>
