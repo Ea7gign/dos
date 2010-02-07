@@ -44,6 +44,7 @@ function showStats(thePlayer, commandName, targetPlayerName)
 			numcars = numcars + 1
 		end
 	end
+	numcars = numcars .. "/" .. getElementData(thePlayer, "maxvehicles")
 	
 	-- Properties
 	local properties = ""
