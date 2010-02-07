@@ -730,7 +730,6 @@ function useItem(button)
 					end, 15000, 1
 				)
 			elseif (itemID==96) then
-				exports['computers-system']:createComputerGUI()
 				hideInventory()
 			end
 

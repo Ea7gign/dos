@@ -257,7 +257,7 @@ end
 ------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 -------------------------------------------------------------------------------- E-mail --------------------------------------------------------------------------------
 ------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-
+local activeMail, activeMailOut = nil, nil
 local prepared_mail = nil
 function openEmailWindow()
 	-- Window variables
@@ -574,21 +574,26 @@ function show_inbox(inbox_table, accountName)
 		destroyElement(inbox_grid)
 		inbox_grid = nil
 	end	
+	activeMail = 1
 	-- Create the grid list of received messages
 	inbox_grid = guiCreateGridList (0.01,0.02,0.98,0.36,true,inbox_tab)
 	inbox_grid_date = guiGridListAddColumn(inbox_grid,"Date",0.16)
 	inbox_grid_sender = guiGridListAddColumn(inbox_grid,"From",0.3)
 	inbox_grid_subject = guiGridListAddColumn(inbox_grid,"Subject",0.5)
 	guiGridListSetSortingEnabled(inbox_grid,false)
-	for key, value in pairs(inbox_table) do
-		i_message_date = inbox_table[key][2]
-		i_message_sender = inbox_table[key][3]
-		i_message_subject = inbox_table[key][4]
-		inbox_row = guiGridListAddRow(inbox_grid)
-		guiGridListSetItemText(inbox_grid, inbox_row, inbox_grid_date, i_message_date, false, false) -- Date Sent
-		guiGridListSetItemText(inbox_grid, inbox_row, inbox_grid_sender, i_message_sender, false, false) -- Sender
-		guiGridListSetItemText(inbox_grid, inbox_row, inbox_grid_subject, i_message_subject, false, false) -- Subject	
+	if inbox_table[1][1] ~= "" or inbox_table[1][2] ~= "" then
+		for key, value in pairs(inbox_table) do
+			i_message_date = inbox_table[key][2]
+			i_message_sender = inbox_table[key][3]
+			i_message_subject = inbox_table[key][4]
+			inbox_row = guiGridListAddRow(inbox_grid)
+			guiGridListSetItemText(inbox_grid, inbox_row, inbox_grid_date, i_message_date, false, false) -- Date Sent
+			guiGridListSetItemText(inbox_grid, inbox_row, inbox_grid_sender, i_message_sender, false, false) -- Sender
+			guiGridListSetItemText(inbox_grid, inbox_row, inbox_grid_subject, i_message_subject, false, false) -- Subject	
+		end
+		guiGridListSetSelectedItem(inbox_grid,0,1)
 	end
+	
 	if not(inbox_message_datetitle_label) then
 		-- Static labels showing date and sender
 		inbox_message_datetitle_label = guiCreateLabel(0.02,0.4,0.96,0.1,"Date received:",true,inbox_tab)
@@ -615,33 +620,51 @@ function show_inbox(inbox_table, accountName)
 		guiSetText(inbox_message_subject_label,tostring(inbox_table[1][4]))
 		guiSetText(inbox_message_label,tostring(inbox_table[1][5]))
 	end
-	addEventHandler("onClientGUIDoubleClick",inbox_grid,function(button, state)
+	addEventHandler("onClientGUIClick",inbox_grid,function(button, state)
 		if(button == "left") then
-			
-			local row = nil
 			local row = tonumber(guiGridListGetSelectedItem(inbox_grid)+1)
-			
-			guiSetText(inbox_message_date_label,tostring(inbox_table[row][2]))
-			guiSetText(inbox_message_from_label,tostring(inbox_table[row][3]))
-			guiSetText(inbox_message_subject_label,tostring(inbox_table[row][4]))
-			guiSetText(inbox_message_label,tostring(inbox_table[row][5]))
+			activeMail = row
+			if row > 0 then
+				guiSetText(inbox_message_date_label,tostring(inbox_table[row][2]))
+				guiSetText(inbox_message_from_label,tostring(inbox_table[row][3]))
+				guiSetText(inbox_message_subject_label,tostring(inbox_table[row][4]))
+				guiSetText(inbox_message_label,tostring(inbox_table[row][5]))
+			end
 		end
 	end,false)
 	
 	if not (check_mail_button) then
-		check_mail_button = guiCreateButton(0.3,0.9,0.2,0.08,"Check Mail",true,inbox_tab)
+		check_mail_button = guiCreateButton(0.2,0.9,0.2,0.08,"Check Mail",true,inbox_tab)
 		addEventHandler("onClientGUIClick",check_mail_button, function()
 			triggerServerEvent("s_getInbox",getLocalPlayer(),accountName)
-		end,false)	
+		end,false)
 		
-		--[[DELETE FUNCTION (INBOX)
-		inbox_delete_mail_button = guiCreateButton(0.5,0.9,0.2,0.08,"Delete",true,inbox_tab)
+		--DELETE FUNCTION (INBOX)
+		inbox_delete_mail_button = guiCreateButton(0.4,0.9,0.2,0.08,"Delete",true,inbox_tab)
 		addEventHandler("onClientGUIClick",inbox_delete_mail_button,function()
-			local del_row = nil
-			del_row = tonumber(guiGridListGetSelectedItem(inbox_grid)+1)
-			local id = inbox_table[del_row][1]
-			triggerServerEvent("deleteInboxMessage",getLocalPlayer(),id,accountName)
-		end,false)]]
+			local msg = inbox_table[activeMail]
+			if msg and msg[2] ~= "" then
+				triggerServerEvent("deleteInboxMessage",getLocalPlayer(),msg[1],accountName)
+			end
+		end,false)
+		
+		--REPLY BUTTON
+		inbox_reply_button = guiCreateButton(0.6,0.9,0.2,0.08,"Reply",true,inbox_tab)
+		addEventHandler("onClientGUIClick",inbox_reply_button,function()
+			local msg = inbox_table[activeMail]
+			if msg and msg[2] ~= "" then	
+				guiSetText(new_message_to_input, msg[3])
+				
+				if msg[4]:find( "Re: " ) ~= 1 then
+					guiSetText(new_message_subject_input, "Re: " .. msg[4]:sub( 4 ))
+				else
+					guiSetText(new_message_subject_input, msg[4])
+				end
+				guiSetText(new_message_content, "")
+				guiSetSelectedTab(email_tab_panel, send_tab)
+			end
+		end,false)
+		
 	end
 end
 addEvent("showInbox",true)
@@ -656,7 +679,7 @@ function show_outbox(outbox_table,accountName)
 		destroyElement(outbox_grid)
 		outbox_grid = nil
 	end
-
+	activeMailOut = 1
 	-- Create the grid list of received messages
 	outbox_grid = guiCreateGridList (0.01,0.02,0.98,0.36,true,outbox_tab)
 	outbox_grid_date = guiGridListAddColumn(outbox_grid,"Date",0.16)
@@ -664,18 +687,19 @@ function show_outbox(outbox_table,accountName)
 	outbox_grid_subject = guiGridListAddColumn(outbox_grid,"Subject",0.5)
 	guiGridListSetSortingEnabled(outbox_grid,false)
 	
-	for key, value in pairs(outbox_table) do
-
-		local o_message_date = outbox_table[key][2]
-		local o_message_sender = outbox_table[key][3]
-		local o_message_subject = outbox_table[key][4]
-		
-		local outbox_row = guiGridListAddRow(outbox_grid)
-		guiGridListSetItemText(outbox_grid, outbox_row, outbox_grid_date, o_message_date, false, false) -- Date Sent
-		guiGridListSetItemText(outbox_grid, outbox_row, outbox_grid_sender, o_message_sender, false, false) -- Sender
-		guiGridListSetItemText(outbox_grid, outbox_row, outbox_grid_subject, o_message_subject, false, false) -- Subject	
+	if outbox_table[1][1] ~= "" or outbox_table[1][2] ~= "" then
+		for key, value in pairs(outbox_table) do
+			local o_message_date = outbox_table[key][2]
+			local o_message_sender = outbox_table[key][3]
+			local o_message_subject = outbox_table[key][4]
+			
+			local outbox_row = guiGridListAddRow(outbox_grid)
+			guiGridListSetItemText(outbox_grid, outbox_row, outbox_grid_date, o_message_date, false, false) -- Date Sent
+			guiGridListSetItemText(outbox_grid, outbox_row, outbox_grid_sender, o_message_sender, false, false) -- Sender
+			guiGridListSetItemText(outbox_grid, outbox_row, outbox_grid_subject, o_message_subject, false, false) -- Subject	
+		end
+		guiGridListSetSelectedItem(outbox_grid,0,1)
 	end
-	
 	if not(outbox_message_datetitle_label) then
 		-- Static labels showing date and sender
 		outbox_message_datetitle_label = guiCreateLabel(0.02,0.4,0.96,0.1,"Date received:",true,outbox_tab)
@@ -703,29 +727,30 @@ function show_outbox(outbox_table,accountName)
 		guiSetText(outbox_message_label,tostring(outbox_table[1][5]))
 	end
 	
-	addEventHandler("onClientGUIDoubleClick",outbox_grid,function(button, state)
+	addEventHandler("onClientGUIClick",outbox_grid,function(button, state)
 		if(button == "left") then
 		
-			local row = nil
 			local row = tonumber(guiGridListGetSelectedItem(outbox_grid)+1)
-			
-			guiSetText(outbox_message_date_label,tostring(outbox_table[row][2]))
-			guiSetText(outbox_message_from_label,tostring(outbox_table[row][3]))
-			guiSetText(outbox_message_subject_label,tostring(outbox_table[row][4]))
-			guiSetText(outbox_message_label,tostring(outbox_table[row][5]))
+			activeMailOut = row
+			if row > 0 then
+				guiSetText(outbox_message_date_label,tostring(outbox_table[row][2]))
+				guiSetText(outbox_message_from_label,tostring(outbox_table[row][3]))
+				guiSetText(outbox_message_subject_label,tostring(outbox_table[row][4]))
+				guiSetText(outbox_message_label,tostring(outbox_table[row][5]))
+			end
 		end
 	end,false)
 	
 	if not (outbox_delete_mail_button) then
 		
-		--[[ DELETE FUNCTION (OUTBOX)
+		-- DELETE FUNCTION (OUTBOX)
 		outbox_delete_mail_button = guiCreateButton(0.4,0.9,0.2,0.08,"Delete",true,outbox_tab)
 		addEventHandler("onClientGUIClick",outbox_delete_mail_button,function()
-			local o_del_row = nil
-			o_del_row = tonumber(guiGridListGetSelectedItem(outbox_grid)+1)
-			local id = outbox_table[o_del_row][1]
-			triggerServerEvent("deleteOutboxMessage",getLocalPlayer(),id, accountName)
-		end,false)]]
+			local msg = outbox_table[activeMailOut]
+			if msg and msg[2] ~= "" then
+				triggerServerEvent("deleteOutboxMessage",getLocalPlayer(),msg[1], accountName)
+			end
+		end,false)
 	end
 end
 addEvent("showOutbox",true)
