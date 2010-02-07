@@ -126,7 +126,6 @@ function makeCar(thePlayer, id, cost, col1, col2, x, y, z, rz, px, py, pz, prz)
 		setElementData(veh, "faction", -1)
 		setElementData(veh, "owner", dbid, false)
 		setElementData(veh, "job", 0, false)
-		triggerEvent("onVehicleSpawn", veh, false)
 		
 		if getVehicleType(veh) == "Boat" then
 			exports.global:givePlayerAchievement(thePlayer, 27)

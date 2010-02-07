@@ -31,9 +31,6 @@ lightlessVehicle = { [592]=true, [577]=true, [511]=true, [548]=true, [512]=true,
 locklessVehicle = { [581]=true, [509]=true, [481]=true, [462]=true, [521]=true, [463]=true, [510]=true, [522]=true, [461]=true, [448]=true, [468]=true, [586]=true }
 armoredCars = { [427]=true, [528]=true, [432]=true, [601]=true, [428]=true, [597]=true } -- Enforcer, FBI Truck, Rhino, SWAT Tank, Securicar, SFPD Car
 
--- Events
-addEvent("onVehicleSpawn", false)
-
 -- cached owner name queries
 local charCache = {} -- messes with name changes
 
@@ -215,15 +212,12 @@ function createPermVehicle(thePlayer, commandName, ...)
 						
 						setElementData(veh, "dimension", dimension, false)
 						setElementData(veh, "interior", interior, false)
-						setElementData(veh, "currdimension", dimension, false)
-						setElementData(veh, "currinterior", dimension, false)
 						setElementData(veh, "handbrake", 0, false)
 						
 						setElementDimension(veh, dimension)
 						setElementInterior(veh, interior)
 						
 						outputChatBox(getVehicleName(veh) .. " spawned with ID #" .. insertid .. ".", thePlayer, 255, 194, 14)
-						triggerEvent("onVehicleSpawn", veh)
 						
 						local owner = ""
 						if factionVehicle == -1 then
@@ -319,8 +313,6 @@ function createCivilianPermVehicle(thePlayer, commandName, ...)
 				
 				setElementData(veh, "dimension", dimension, false)
 				setElementData(veh, "interior", interior, false)
-				setElementData(veh, "currdimension", dimension, false)
-				setElementData(veh, "currinterior", interior, false)
 				setElementData(veh, "job", job, job ~= 0)
 				
 				-- Set the vehicle armored if it is armored
@@ -345,7 +337,6 @@ function createCivilianPermVehicle(thePlayer, commandName, ...)
 					setElementData(veh, "job", job, job ~= 0)
 					setElementData(veh, "handbrake", 0, false)
 					outputChatBox(getVehicleName(veh) .. " (Civilian) spawned with ID #" .. insertid .. ".", thePlayer, 255, 194, 14)
-					triggerEvent("onVehicleSpawn", veh)
 					
 					exports.logs:logMessage("[MAKECIVVEH] " .. getPlayerName( thePlayer ) .. " created car #" .. insertid .. " (" .. getVehicleNameFromModel( id ) .. ")", 9)
 					
@@ -364,249 +355,135 @@ function loadAllVehicles(res)
 		setElementData(value, "realinvehicle", 0, false)
 	end
 	
-	local result = mysql_query(handler, "SELECT currx, curry, currz, currrx, currry, currrz, x, y, z, rotx, roty, rotz, id, model, upgrade0, upgrade1, upgrade2, upgrade3, upgrade4, upgrade5, upgrade6, upgrade7, upgrade8, upgrade9, upgrade10, upgrade11, upgrade12, upgrade13, upgrade14, upgrade15, upgrade16, Impounded, handbrake FROM vehicles")
-	local resultext = mysql_query(handler, "SELECT fuel, engine, locked, lights, sirens, paintjob, wheel1, wheel2, wheel3, wheel4, panel0, panel1, panel2, panel3, panel4, panel5, panel6, door1, door2, door3, door4, door5, door6, hp, color1, color2, plate, faction, owner, job, dimension, interior, currdimension, currinterior FROM vehicles")
-	
-	local counter = 0
-	local rowc = 1
-	
-	if (result) then
-		for result, row in mysql_rows(result) do
-			local x = tonumber(row[1])
-			local y = tonumber(row[2])
-			local z = tonumber(row[3])
-			
-			local rx = tonumber(row[4])
-			local ry = tonumber(row[5])
-			local rz = tonumber(row[6])
-			
-
-			local respawnx = tonumber(row[7])
-			local respawny = tonumber(row[8])
-			local respawnz = tonumber(row[9])
-			
-			local respawnrx = tonumber(row[10])
-			local respawnry = tonumber(row[11])
-			local respawnrz = tonumber(row[12])
-			
-			local id = tonumber(row[13])
-			local vehid = tonumber(row[14])
-			
-			local upgrade0 = row[15]
-			local upgrade1 = row[16]
-			local upgrade2 = row[17]
-			local upgrade3 = row[18]
-			local upgrade4 = row[19]
-			local upgrade5 = row[20]
-			local upgrade6 = row[21]
-			local upgrade7 = row[22]
-			local upgrade8 = row[23]
-			local upgrade9 = row[24]
-			local upgrade10 = row[25]
-			local upgrade11 = row[26]
-			local upgrade12 = row[27]
-			local upgrade13 = row[28]
-			local upgrade14 = row[29]
-			local upgrade15 = row[30]
-			local upgrade16 = row[31]
-			local Impounded = row[32]
-			local handbrake = row[33]
-			
-			local fuel = tonumber(mysql_result(resultext, rowc, 1))
-			local engine = tonumber(mysql_result(resultext, rowc, 2))
-			local locked = tonumber(mysql_result(resultext, rowc, 3))
-			local lights = tonumber(mysql_result(resultext, rowc, 4))
-			local sirens = tonumber(mysql_result(resultext, rowc, 5))
-			local paintjob = tonumber(mysql_result(resultext, rowc, 6))
-			
-			local wheel1 = mysql_result(resultext, rowc, 7)
-			local wheel2 = mysql_result(resultext, rowc, 8)
-			local wheel3 = mysql_result(resultext, rowc, 9)
-			local wheel4 = mysql_result(resultext, rowc, 10)
-			
-			local panel0 = mysql_result(resultext, rowc, 11)
-			local panel1 = mysql_result(resultext, rowc, 12)
-			local panel2 = mysql_result(resultext, rowc, 13)
-			local panel3 = mysql_result(resultext, rowc, 14)
-			local panel4 = mysql_result(resultext, rowc, 15)
-			local panel5 = mysql_result(resultext, rowc, 16)
-			local panel6 = mysql_result(resultext, rowc, 17)
-			
-			local door1 = mysql_result(resultext, rowc, 18)
-			local door2 = mysql_result(resultext, rowc, 19)
-			local door3 = mysql_result(resultext, rowc, 20)
-			local door4 = mysql_result(resultext, rowc, 21)
-			local door5 = mysql_result(resultext, rowc, 22)
-			local door6 = mysql_result(resultext, rowc, 23)
-			
-			local hp = tonumber(mysql_result(resultext, rowc, 24))
-			
-			local col1 = mysql_result(resultext, rowc, 25)
-			local col2 = mysql_result(resultext, rowc, 26)
-			
-			local plate = mysql_result(resultext, rowc, 27)
-			
-			local faction = tonumber(mysql_result(resultext, rowc, 28))
-			local owner = tonumber(mysql_result(resultext, rowc, 29))
-			
-			local dimension = tonumber(mysql_result(resultext, rowc, 31))
-			local interior = tonumber(mysql_result(resultext, rowc, 32))
-			local currdimension = tonumber(mysql_result(resultext, rowc, 33))
-			local currinterior = tonumber(mysql_result(resultext, rowc, 34))
-			
-			if faction~=-1 or owner == -2 then
-				locked = 0
+	local null = mysql_null()
+	local result = mysql_unbuffered_query(handler, "SELECT * FROM vehicles ORDER BY id ASC;")
+	if result then
+		while true do
+			local row = mysql_fetch_assoc( result )
+			if not row then
+				break
 			end
 			
-			local job = tonumber(mysql_result(resultext, rowc, 30))
+			for k, v in pairs( row ) do
+				if v == null then
+					row[k] = nil
+				else
+					row[k] = tonumber(v) or v
+				end
+			end
 			
+			
+			--
 			-- Spawn the vehicle
-			local veh = createVehicle(vehid, x, y, z, rx, ry, rz, plate)
-			exports.pool:allocateElement(veh)
-			
-			-- Set the vehicle armored if it is armored
-			if (armoredCars[tonumber(vehid)]) then
-				setVehicleDamageProof(veh, true)
-			end
-			
-			-- Set the lights to undamaged, currently we cannot load light states as the MTA function is bugged
-			setVehicleLightState(veh, 0, 0)
-			setVehicleLightState(veh, 1, 0)
-			setVehicleLightState(veh, 2, 0)
-			setVehicleLightState(veh, 3, 0)
-			
-			-- Add the vehicle upgrades
-			addVehicleUpgrade(veh, upgrade0)
-			addVehicleUpgrade(veh, upgrade1)
-			addVehicleUpgrade(veh, upgrade2)
-			addVehicleUpgrade(veh, upgrade3)
-			addVehicleUpgrade(veh, upgrade4)
-			addVehicleUpgrade(veh, upgrade5)
-			addVehicleUpgrade(veh, upgrade6)
-			addVehicleUpgrade(veh, upgrade7)
-			addVehicleUpgrade(veh, upgrade8)
-			addVehicleUpgrade(veh, upgrade9)
-			addVehicleUpgrade(veh, upgrade10)
-			addVehicleUpgrade(veh, upgrade11)
-			addVehicleUpgrade(veh, upgrade12)
-			addVehicleUpgrade(veh, upgrade13)
-			addVehicleUpgrade(veh, upgrade14)
-			addVehicleUpgrade(veh, upgrade15)
-			addVehicleUpgrade(veh, upgrade16)
-			
-			-- Paint job
-			setVehiclePaintjob(veh, paintjob)
-			
-			-- Vehicle wheel states
-			setVehicleWheelStates(veh, wheel1, wheel2, wheel3, wheel4)
-			
-			-- Vehicle panel states
-			setVehiclePanelState(veh, 0, panel0)
-			setVehiclePanelState(veh, 1, panel1)
-			setVehiclePanelState(veh, 2, panel2)
-			setVehiclePanelState(veh, 3, panel3)
-			setVehiclePanelState(veh, 4, panel4)
-			setVehiclePanelState(veh, 5, panel5)
-			setVehiclePanelState(veh, 6, panel6)
-			
-			-- Door states
-			setVehicleDoorState(veh, 0, door1)
-			setVehicleDoorState(veh, 1, door2)
-			setVehicleDoorState(veh, 2, door3)
-			setVehicleDoorState(veh, 3, door4)
-			setVehicleDoorState(veh, 4, door5)
-			setVehicleDoorState(veh, 5, door6)
-			
-			-- Car HP
-			setElementHealth(veh, hp)
-			
-			-- Lock the vehicle if locked
-			setVehicleLocked(veh, locked == 1)
-			
-			-- Set the siren status
-			setVehicleSirensOn(veh, sirens == 1)
-			
-			if (job>0) then
-				toggleVehicleRespawn(veh, true)
-				setVehicleRespawnDelay(veh, 60000)
-				setVehicleIdleRespawnDelay(veh, 180000)
-			end
-			
-			-- Set the vehicles color
-			setVehicleColor(veh, col1, col2, col1, col2)
-			
-			-- Fix rz
-			rz = -rz
-			--respawnrz = -respawnrz
-			respawnry = 0
-			
-			-- Where the vehicle will respawn on explode/idle
-			setVehicleRespawnPosition(veh, respawnx, respawny, respawnz, respawnrx, respawnry, respawnrz)
-			setElementData(veh, "respawnposition", {respawnx, respawny, respawnz, respawnrx, respawnry, respawnrz}, false)
-			
-			-- Vehicles element data
-			setElementData(veh, "dbid", id)
-			setElementData(veh, "fuel", fuel)
-			setElementData(veh, "engine", engine, false)
-			setElementData(veh, "oldx", x, false)
-			setElementData(veh, "oldy", y, false)
-			setElementData(veh, "oldz", z, false)
-			setElementData(veh, "faction", faction)
-			setElementData(veh, "owner", owner, false)
-			setElementData(veh, "job", tonumber(job), tonumber(job) ~= 0)
+			local veh = createVehicle(row.model, row.currx, row.curry, row.currz, row.currrx, row.currry, row.currrz, row.plate)
+			if veh then
+				setElementData(veh, "dbid", row.id)
+				exports.pool:allocateElement(veh)
 
-			-- Impounded
-			setElementData(veh, "Impounded", tonumber(Impounded))
-			if tonumber(Impounded) > 0 then
-				setVehicleDamageProof(veh, true)
+				-- color
+				setVehicleColor(veh, row.color1, row.color2, row.color1, row.color2)
+				
+				-- Set the vehicle armored if it is armored
+				if (armoredCars[row.model]) then
+					setVehicleDamageProof(veh, true)
+				end
+				
+				-- add the vehicle upgrades
+				for i = 0, 16 do
+					local upgrade = row['upgrade' .. i]
+					if upgrade and upgrade > 0 then
+						addVehicleUpgrade(veh, upgrade)
+					end
+				end
+				
+				-- paintjob
+				setVehiclePaintjob(veh, row.paintjob)
+				
+				-- wheel states
+				setVehicleWheelStates(veh, row.wheel1, row.wheel2, row.wheel3, row.wheel4)
+				
+				-- panel states (windshield broken etc)
+				for i = 0, 6 do
+					setVehiclePanelState(veh, i, row['panel' .. i])
+				end
+				
+				-- door states
+				for i = 0, 5 do
+					setVehicleDoorState(veh, i, row['door' .. (i+1)])
+				end
+				
+				-- lock the vehicle if it's locked
+				setVehicleLocked(veh, row.owner ~= -2 and row.locked == 1)
+				
+				-- set the sirens on if it has some
+				setVehicleSirensOn(veh, row.sirens == 1)
+				
+				-- job
+				if row.job > 0 then
+					toggleVehicleRespawn(veh, true)
+					setVehicleRespawnDelay(veh, 60000)
+					setVehicleIdleRespawnDelay(veh, 180000)
+					setElementData(veh, "job", row.job)
+				else
+					setElementData(veh, "job", 0, false)
+				end
+				
+				setVehicleRespawnPosition(veh, row.x, row.y, row.z, row.rotx, row.roty, row.rotz)
+				setElementData(veh, "respawnposition", {row.x, row.y, row.z, row.rotx, row.roty, row.rotz}, false)
+				
+				-- element data
+				setElementData(veh, "fuel", row.fuel, false)
+				setElementData(veh, "oldx", row.currx, false)
+				setElementData(veh, "oldy", row.curry, false)
+				setElementData(veh, "oldz", row.currz, false)
+				setElementData(veh, "faction", row.faction)
+				setElementData(veh, "owner", row.owner)
+				
+				-- impound shizzle
+				setElementData(veh, "Impounded", tonumber(row.Impounded))
+				if tonumber(row.Impounded) > 0 then
+					setVehicleDamageProof(veh, true)
+				end
+				
+				-- interior/dimension
+				setElementDimension(veh, row.currdimension)
+				setElementInterior(veh, row.currinterior)
+				
+				setElementData(veh, "dimension", row.dimension, false)
+				setElementData(veh, "interior", row.interior, false)
+				
+				-- lights
+				setVehicleOverrideLights(veh, row.lights == 0 and 1 or row.lights )
+				
+				-- engine
+				if row.hp <= 350 then
+					setElementHealth(veh, 300)
+					setVehicleDamageProof(veh, true)
+					setVehicleEngineState(veh, false)
+					setElementData(veh, "engine", 0, false)
+					setElementData(veh, "enginebroke", 1, false)
+				else
+					setElementHealth(veh, row.hp)
+					setVehicleEngineState(veh, row.engine == 1)
+					setElementData(veh, "engine", row.engine, false)
+					setElementData(veh, "enginebroke", 0, false)
+				end
+				setVehicleFuelTankExplodable(veh, false)
+				
+				-- handbrake
+				if row.handbrake > 0 then
+					setVehicleFrozen(veh, true)
+				end
+				
+				--
+				exports['vehicle-interiors']:add( veh )
 			end
-
-			-- Interiors
-			setElementDimension(veh, currdimension)
-			setElementInterior(veh, currinterior)
-			
-			setElementData(veh, "dimension", dimension, false)
-			setElementData(veh, "interior", interior, false)
-			setElementData(veh, "currdimension", dimension, false)
-			setElementData(veh, "currinterior", interior, false)
-			
-			-- Set the lights
-			if (lights==0 or lights==1) then
-				setVehicleOverrideLights(veh, 1)
-			else
-				setVehicleOverrideLights(veh, 2)
-			end
-			
-			-- Set the engine
-			setVehicleEngineState(veh, engine == 1)
-			
-			-- Set the fuel tank non explodable
-			setVehicleFuelTankExplodable(veh, false)
-			
-			triggerEvent("onVehicleSpawn", veh)
-			counter = counter + 1
-			rowc = rowc + 1
-			
-			-- Handbrake
-			setElementData(veh, "handbrake", tonumber(handbrake), false)
-			if tonumber(handbrake) > 0 then
-				setVehicleFrozen(veh, true)
-			end
-			
-			-- broken engine
-			if (hp<=350) then
-				setElementHealth(veh, 300)
-				setVehicleDamageProof(veh, true)
-				setVehicleEngineState(veh, false)
-				setElementData(veh, "enginebroke", 1, false)
-			end
-			
-			exports['vehicle-interiors']:add( veh )
 		end
+		mysql_free_result( result )
+	else
+		outputDebugString( "loadAllVehicles failed:" .. mysql_error( handler ) )
 	end
-	mysql_free_result(result)
-	mysql_free_result(resultext)
-	exports.irc:sendMessage("[SCRIPT] Loaded " .. counter .. " vehicles.")
+	exports.irc:sendMessage("[SCRIPT] Loaded " .. #getElementsByType( "vehicle", getResourceRootElement( ) ) .. " vehicles.")
 end
 addEventHandler("onResourceStart", getResourceRootElement(), loadAllVehicles)
 
@@ -1144,7 +1021,6 @@ addEventHandler("lockUnlockInsideVehicle", getRootElement(), lockUnlockInside)
 local storeTimers = { }
 
 function lockUnlockOutside(vehicle)
-	local locked = getElementData(vehicle, "locked")
 	local dbid = getElementData(vehicle, "dbid")
 	
 	exports.global:applyAnimation(source, "GHANDS", "gsign3LH", 2000, false, false, false)
