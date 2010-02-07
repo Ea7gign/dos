@@ -36,7 +36,7 @@ function createComputerGUI()
 		shutdownButton = guiCreateStaticImage(10,380,56,66,"shutdown_icon.png",false,desktopImage)
 		addEventHandler("onClientGUIClick",shutdownButton,closeComputerWindow,false)
 		chatButton = guiCreateButton ( 0.03 , 0.96 , 0.14 , 0.03 , "Toggle Input" , true , desktopImage )
-		addEventHandler("onClientGUIClick", guiToggleButton ,  toggleChatboxComputer)
+		addEventHandler("onClientGUIClick", chatButton ,  toggleChatboxComputer)
 		showCursor(true)
 		guiSetInputEnabled(true)		
 	end
