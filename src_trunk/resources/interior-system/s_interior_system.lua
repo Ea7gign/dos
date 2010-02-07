@@ -1104,6 +1104,11 @@ function setInteriorID( thePlayer, commandName, interiorID )
 					setElementPosition( exit, ix, iy, iz )
 					setElementInterior( exit, interiorw )
 					
+					local safe = safeTable[ dbid ]
+					if safe then
+						setElementInterior( safe, interiorw )
+					end
+					
 					for key, value in pairs( getElementsByType( "player" ) ) do
 						if isElement( value ) and getElementDimension( value ) == dbid then
 							setElementPosition( value, ix, iy, iz )
