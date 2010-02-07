@@ -1,6 +1,6 @@
 function setPlayerFreecamEnabled(player)
 	if not isPlayerFreecamEnabled(player) then
-		startX, startY, startZ = getElementPosition(localPlayer)
+		startX, startY, startZ = getElementPosition(player)
 		setElementData(player, "tv:dim", getElementDimension(player), false)
 		setElementData(player, "tv:int", getElementInterior(player), false)
 		setElementData(player, "tv:x", startX, false)
