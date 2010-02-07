@@ -3692,7 +3692,7 @@ function displayAccountManagement()
 	
 	-- Tooltips
 	if(getResourceFromName("tooltips-system"))then
-		local help = getElementData(getLocalPlayer(), "help")
+		local help = getElementData(getLocalPlayer(), "tooltips:help")
 		chkHelp = guiCreateCheckBox(0.2, 0.25, 0.5, 0.1, "Tooltips", false, true, tabAccount)
 		guiSetFont(chkHelp, "default-bold-small")
 		if (help==0) then
