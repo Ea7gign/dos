@@ -1,4 +1,7 @@
 function setPlayerFreecamEnabled(player, x, y, z, dontChangeFixedMode)
+	removePedFromVehicle(player)
+	setElementData(player, "realinvehicle", 0, false)
+
 	return triggerClientEvent(player,"doSetFreecamEnabled", getRootElement(), x, y, z, dontChangeFixedMode)
 end
 

@@ -1,5 +1,7 @@
 function setPlayerFreecamEnabled(player)
 	if not isPlayerFreecamEnabled(player) then
+		removePedFromVehicle(player)
+		setElementData(player, "realinvehicle", 0, false)
 		startX, startY, startZ = getElementPosition(player)
 		setElementData(player, "tv:dim", getElementDimension(player), false)
 		setElementData(player, "tv:int", getElementInterior(player), false)
