@@ -573,6 +573,7 @@ function addUpgrade(thePlayer, commandName, target, upgradeID)
 					local success = addVehicleUpgrade(theVehicle, upgradeID)
 					
 					if (success) then
+						exports.logs:logMessage("[/ADDUPGRADE] " .. getElementData(thePlayer, "gameaccountusername") .. "/".. getPlayerName(thePlayer) .." added upgrade ".. upgradeID .. "(" .. getVehicleUpgradeSlotName(upgradeID) .. ") to car " .. getElementData(theVehicle, "dbid"), 4)
 						outputChatBox(getVehicleUpgradeSlotName(upgradeID) .. " upgrade added to " .. targetPlayerName .. "'s vehicle.", thePlayer)
 						outputChatBox("Admin " .. username .. " added upgrade " .. getVehicleUpgradeSlotName(upgradeID) .. " to your vehicle.", targetPlayer)
 						exports['savevehicle-system']:saveVehicle(theVehicle)
@@ -606,6 +607,7 @@ function addPaintjob(thePlayer, commandName, target, paintjobID)
 						local success = setVehiclePaintjob(theVehicle, paintjobID)
 						
 						if (success) then
+							exports.logs:logMessage("[/PAINTJOB] " .. getElementData(thePlayer, "gameaccountusername") .. "/".. getPlayerName(thePlayer) .." added paintjob ".. paintjobID .. " to car " .. getElementData(theVehicle, "dbid"), 4)
 							outputChatBox("Paintjob #" .. paintjobID .. " added to " .. targetPlayerName .. "'s vehicle.", thePlayer)
 							outputChatBox("Admin " .. username .. " added Paintjob #" .. paintjobID .. " to your vehicle.", targetPlayer)
 							exports['savevehicle-system']:saveVehicle(theVehicle)
@@ -634,6 +636,7 @@ function resetUpgrades(thePlayer, commandName, target)
 					outputChatBox("That player is not in a vehicle.", thePlayer, 255, 0, 0)
 				else
 					local theVehicle = getPedOccupiedVehicle(targetPlayer)
+					exports.logs:logMessage("[/RESETUPGRADES] " .. getElementData(thePlayer, "gameaccountusername") .. "/".. getPlayerName(thePlayer) .." reset car " .. getElementData(theVehicle, "dbid") .. "'s upgrades", 4)
 					for key, value in ipairs(getVehicleUpgrades(theVehicle)) do
 						removeVehicleUpgrade(theVehicle, value)
 					end
