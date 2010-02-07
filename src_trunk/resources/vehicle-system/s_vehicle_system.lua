@@ -150,7 +150,7 @@ function createPermVehicle(thePlayer, commandName, ...)
 						outputChatBox("This player cannot afford this vehicle.", thePlayer, 255, 0, 0)
 						return
 					end
-					if not exports.global:canPlayerBuyVehicle(source) then
+					if not exports.global:canPlayerBuyVehicle(targetPlayer) then
 						outputChatBox("This player has too many cars.", thePlayer, 255, 0, 0)
 						return
 					end
