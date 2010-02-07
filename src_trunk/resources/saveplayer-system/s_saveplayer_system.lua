@@ -133,7 +133,7 @@ function savePlayer(reason, player)
 			y = getElementData(source, "tv:y")
 			z = = getElementData(source, "tv:z")
 			interior = getElementData(source, "tv:int")
-			dimension = getElementData(source, "tv:dim")
+			dimension = getElementData(source, "tv:dim") 
 		end
 		
 		local  timeinserver = getElementData(source, "timeinserver")
