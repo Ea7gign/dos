@@ -1,13 +1,15 @@
 function setPlayerFreecamEnabled(player)
 	if not isPlayerFreecamEnabled(player) then
+		startX, startY, startZ = getElementPosition(localPlayer)
 		setElementData(player, "tv:dim", getElementDimension(player), false)
 		setElementData(player, "tv:int", getElementInterior(player), false)
-		
+		setElementData(player, "tv:x", startX, false)
+		setElementData(player, "tv:y", startY, false)
+		setElementData(player, "tv:z", startZ, false)
 		setElementDimension(player, 127)
 		setElementInterior(player, 3)
 		setElementAlpha(player, 0)
 		setElementData(player, "reconx", true)
-		setElementData(player, "freecamTV:oldPos", { getElementDimension( player ), getElementInterior( player ), getElementPosition( player ) }, false )
 		return triggerClientEvent(player,"doSetFreecamEnabledTV", getRootElement(), 1309.3671875, -1393.1240234375, 1022.1019897461, false)
 	else
 		return false

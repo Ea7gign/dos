@@ -128,8 +128,12 @@ function savePlayer(reason, player)
 		end
 		
 		-- Fix for freecam-tv
-		if getElementData(source,"freecamTV:state") then 
-			dimension, interior, x, y, z = unpack( getElementData(source, "freecamTV:oldPos") )
+		if exports['freecam-tv']:isPlayerFreecamEnabled(source) then 
+			x = getElementData(source, "tv:x")
+			y = getElementData(source, "tv:y")
+			z = = getElementData(source, "tv:z")
+			interior = getElementData(source, "tv:int")
+			dimension = getElementData(source, "tv:dim")
 		end
 		
 		local  timeinserver = getElementData(source, "timeinserver")
