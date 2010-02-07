@@ -149,9 +149,14 @@ function createPermVehicle(thePlayer, commandName, ...)
 					if not exports.global:takeMoney(targetPlayer, cost) then
 						outputChatBox("This player cannot afford this vehicle.", thePlayer, 255, 0, 0)
 						return
-					end
-					if not exports.global:canPlayerBuyVehicle(targetPlayer) then
+					elseif not exports.global:canPlayerBuyVehicle(targetPlayer) then
 						outputChatBox("This player has too many cars.", thePlayer, 255, 0, 0)
+						return
+					elseif ( getVehicleType(id) == "Helicopter" or getVehicleType(id) == "Plane" ) and not exports.global:hasItem(targetPlayer, 78) then
+						outputChatBox("The player has no Pilot Certificate.", thePlayer, 255, 0, 0)
+						return
+					elseif getVehicleType(id) == "BMX" then
+						outputChatBox("Invalid Vehicle ID.", thePlayer, 255, 0, 0)
 						return
 					end
 				end
