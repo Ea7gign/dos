@@ -373,6 +373,10 @@ function reloadInterior(thePlayer, commandName, interiorID)
 				
 				reloadOneInterior(dbid, false)
 				outputChatBox("Reloaded Interior #" .. dbid, thePlayer, 0, 255, 0)
+			else
+				if reloadOneInterior(tonumber(interiorID), false) then
+					outputChatBox("Loaded Interior #" .. tonumber(interiorID), thePlayer, 0, 255, 0)
+				end
 			end
 		end
 	end
@@ -387,146 +391,60 @@ function reloadOneInterior(id, hasCoroutine, displayircmessage)
 	if displayircmessage == nil then
 		displayircmessage = false
 	end
-	local result = mysql_query(handler, "SELECT id, x, y, z , interiorx, interiory, interiorz, type, owner, locked, cost, name, interior, dimensionwithin, interiorwithin, angle, angleexit, max_items, rentable, tennant, rent, money, safepositionX, safepositionY, safepositionZ, safepositionRZ, fee, disabled FROM interiors WHERE id='" .. id .. "'")
 	
-	if (hasCoroutine) then
-		coroutine.yield()
-	end
-	
-	if (result) then
-		for result, row in mysql_rows(result) do
-			local id = tonumber(row[1])
-			local x = tonumber(row[2])
-			local y = tonumber(row[3])
-			local z = tonumber(row[4])
-				
-			local ix = tonumber(row[5])
-			local iy = tonumber(row[6])
-			local iz = tonumber(row[7])
-				
-			local inttype = tonumber(row[8])
-			local owner = tonumber(row[9])
-			local locked = tonumber(row[10])
-			local cost = tonumber(row[11])
-			local name = row[12]
-			
-			if (hasCoroutine) then
-				coroutine.yield()
-			end
-			
-			local interior = tonumber(row[13])
-			local dimension = tonumber(row[14])
-			local interiorwithin = tonumber(row[15])
-			local optAngle = tonumber(row[16])
-			local exitAngle = tonumber(row[17])
-			
-			local max_items = tonumber(row[18])
-			
-			local rentable = tonumber(row[19])
-			local tennant = row[20]
-			local rent = tonumber(row[21])
-			
-			local money = tonumber(row[22])
-			
-			if (hasCoroutine) then
-				coroutine.yield()
-			end
-			
-			local safeX, safeY, safeZ, safeRZ = row[23], row[24], row[25], row[26]
-			local fee = 0
-			local disabled = tonumber(row[28])
-			
-			local intpickup, pickup
-			-- If the is a house
-			if (inttype==0) then -- House
-				if (owner<1) then
-					pickup = createPickup(x, y, z, 3, 1273)
-					exports.pool:allocateElement(pickup)
+	local result = mysql_unbuffered_query(handler, "SELECT * FROM interiors WHERE id = " .. id )
+	if result then
+		local row = mysql_fetch_assoc( result )
+		mysql_free_result( result )
+		
+		if (hasCoroutine) then
+			coroutine.yield()
+		end
+		
+		if row then
+			for k, v in pairs( row ) do
+				if v == null then
+					row[k] = nil
 				else
-					pickup = createPickup(x, y, z, 3, 1318)
-					exports.pool:allocateElement(pickup)
+					row[k] = tonumber(v) or v
 				end
-				
-				intpickup = createPickup(ix, iy, iz, 3, 1318)
-				exports.pool:allocateElement(intpickup)
-				if (hasCoroutine) then
-					coroutine.yield()
-				end
-			-- if it is a business
-			elseif (inttype==1) then -- Business
-				if (owner<1) then
-					pickup = createPickup(x, y, z, 3, 1272)
-					exports.pool:allocateElement(pickup)
-				else
-					pickup = createPickup(x, y, z, 3, 1318)
-					exports.pool:allocateElement(pickup)
-				end
-				
-				intpickup = createPickup(ix, iy, iz, 3, 1318)
-				exports.pool:allocateElement(intpickup)
-				
-				fee = tonumber(row[27])
-				
-				if (hasCoroutine) then
-					coroutine.yield()
-				end
-			-- if it is a gov building
-			elseif (inttype==2) then -- Interior Owned
-				pickup = createPickup(x, y, z, 3, 1318)
-				intpickup = createPickup(ix, iy, iz, 3, 1318)
-				exports.pool:allocateElement(pickup)
-				exports.pool:allocateElement(intpickup)
-				if (hasCoroutine) then
-					coroutine.yield()
-				end
-			-- If the is rentable
-			elseif (inttype==3) then -- Rentable
-				if (owner<1) then
-					pickup = createPickup(x, y, z, 3, 1273)
-					exports.pool:allocateElement(pickup)
-				else
-					pickup = createPickup(x, y, z, 3, 1318)
-					exports.pool:allocateElement(pickup)
-				end
-					
-				intpickup = createPickup(ix, iy, iz, 3, 1318)
-				exports.pool:allocateElement(intpickup)
-				if (hasCoroutine) then
-					coroutine.yield()
-				end
-			else
-				outputDebugString("Invalid Interior: " .. tostring( id ))
-				return -- dun dun dunno!
 			end
 			
-			if disabled == 1 then
-				setPickupType( pickup, 3, 1314 )
-			end
-			
+			local pickup = createPickup( row.x, row.y, row.z, 3, row.disabled == 1 and 1314 or ( row.type == 2 and 1318 or ( row.owner < 1 and ( row.type == 1 and 1272 or 1273 ) or 1318 ) ) )
+			local intpickup = createPickup( row.interiorx, row.interiory, row.interiorz, 3, 1318 )
+			exports.pool:allocateElement(pickup)
+			exports.pool:allocateElement(intpickup)
 			setElementData( pickup, "other", intpickup, false )
 			setElementData( intpickup, "other", pickup, false )
 			
-			setPickupElementData(pickup, id, optAngle, locked, owner, inttype, cost, name, max_items, tennant, rent, interiorwithin, dimension, money, fee)
-			setIntPickupElementData(intpickup, id, rot, locked, owner, inttype, interior)
-			
-			if safeTable[id] then
-				destroyElement( safeTable[id] )
-				safeTable[id] = nil
+			if (hasCoroutine) then
+				coroutine.yield()
 			end
 			
-			if safeX ~= mysql_null() and safeY ~= mysql_null() and safeZ ~= mysql_null() and safeRZ ~= mysql_null() then
-				local tempobject = createObject(2332, tonumber(safeX), tonumber(safeY), tonumber(safeZ), 0, 0, tonumber(safeRZ))
-				setElementInterior(tempobject, interior)
-				setElementDimension(tempobject, id)
-				safeTable[id] = tempobject
+			setPickupElementData(pickup, row.id, row.angle, row.locked, row.owner, row.type, row.cost, row.name, row.max_items, row.tennant, row.rent, row.interiorwithin, row.dimensionwithin, row.money, row.type == 1 and row.fee or 0)
+			setIntPickupElementData(intpickup, row.id, row.angleexit, row.locked, row.owner, row.type, row.interior)
+			
+			if safeTable[row.id] then
+				destroyElement( safeTable[row.id] )
+				safeTable[row.id] = nil
 			end
 			
-			intTable[id] = { pickup, intpickup }
+			if row.safepositionX and row.safepositionY and row.safepositionZ ~= mysql_null() and row.safepositionRZ then
+				local tempobject = createObject(2332, row.safepositionX, row.safepositionY, row.safepositionZ, 0, 0, row.safepositionRZ)
+				setElementInterior(tempobject, row.interior)
+				setElementDimension(tempobject, row.id)
+				safeTable[row.id] = tempobject
+			end
+			
+			intTable[row.id] = { pickup, intpickup }
+			
+			return true
+		else
+			outputDebugString( "Invalid Int" .. id )
+			return false
 		end
-		if displayircmessage then
-			exports.irc:sendMessage("[SCRIPT] Loaded 1 interior (ID: " .. id .. ")")
-		end
-		mysql_free_result(result)
+	else
+		outputDebugString( "Loading Interiors Error: " .. mysql_error( handler ) )
 	end
 end
 
@@ -538,23 +456,26 @@ function resume()
 end
 
 function loadAllInteriors()
-	local result = mysql_query(handler, "SELECT id FROM interiors")
-	local counter = 0
-		
 	local players = exports.pool:getPoolElementsByType("player")
 	for k, thePlayer in ipairs(players) do
 		removeElementData(thePlayer, "interiormarker")
 	end
 		
+	local result = mysql_unbuffered_query(handler, "SELECT id FROM interiors")
+	local counter = 0
 	if (result) then
+		local ids = {}
 		for result, row in mysql_rows(result) do
-			local id = tonumber(row[1])
-			local co = coroutine.create(reloadOneInterior)
-			coroutine.resume(co, id, true)
-			table.insert(threads, co)
+			ids[ tonumber(row[1]) ] = true
 			counter = counter + 1
 		end
 		mysql_free_result(result)
+		
+		for id in pairs( ids ) do
+			local co = coroutine.create(reloadOneInterior)
+			coroutine.resume(co, id, true)
+			table.insert(threads, co)
+		end
 		exports.irc:sendMessage("[SCRIPT] Loaded " .. counter .. " interiors.")
 		setTimer(resume, 1000, 4)
 	end
