@@ -131,7 +131,7 @@ function savePlayer(reason, player)
 		if exports['freecam-tv']:isPlayerFreecamEnabled(source) then 
 			x = getElementData(source, "tv:x")
 			y = getElementData(source, "tv:y")
-			z = = getElementData(source, "tv:z")
+			z =  getElementData(source, "tv:z")
 			interior = getElementData(source, "tv:int")
 			dimension = getElementData(source, "tv:dim") 
 		end
