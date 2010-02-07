@@ -358,12 +358,7 @@ function loadAllVehicles(res)
 	local null = mysql_null()
 	local result = mysql_unbuffered_query(handler, "SELECT * FROM vehicles ORDER BY id ASC;")
 	if result then
-		while true do
-			local row = mysql_fetch_assoc( result )
-			if not row then
-				break
-			end
-			
+		for res, row in mysql_rows_assoc( result ) do
 			for k, v in pairs( row ) do
 				if v == null then
 					row[k] = nil
