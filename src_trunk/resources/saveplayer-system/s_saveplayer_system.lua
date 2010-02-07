@@ -127,6 +127,13 @@ function savePlayer(reason, player)
 			businessprofit = ''
 		end
 		
+		-- Fix for freecam-tv
+		if exports['freecam-tv']:isPlayerFreecamEnabled(source) then 
+			x = getElementData(source, "freecamTV:startX")
+			y = getElementData(source, "freecamTV:startY")
+			z = getElementData(source, "freecamTV:startZ")
+		end
+		
 		local  timeinserver = getElementData(source, "timeinserver")
 		
 		-- LAST AREA
