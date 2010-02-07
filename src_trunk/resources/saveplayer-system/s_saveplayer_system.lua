@@ -128,14 +128,11 @@ function savePlayer(reason, player)
 		end
 		
 		-- Fix for freecam-tv
-		if exports['freecam-tv']:isPlayerFreecamEnabled(source) then 
-			x = getElementData(source, "freecamTV:startX")
-			y = getElementData(source, "freecamTV:startY")
-			z = getElementData(source, "freecamTV:startZ")
+		if getElementData(source,"freecamTV:state") then 
+			dimension, interior, x, y, z = unpack( getElementData(source, "freecamTV:oldPos") )
 		end
 		
 		local  timeinserver = getElementData(source, "timeinserver")
-		
 		-- LAST AREA
 		local zone = exports.global:getElementZoneName(source)
 		if not zone or #zone == 0 then

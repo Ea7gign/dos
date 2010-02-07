@@ -7,6 +7,7 @@ function setPlayerFreecamEnabled(player)
 		setElementInterior(player, 3)
 		setElementAlpha(player, 0)
 		setElementData(player, "reconx", true)
+		setElementData(player, "freecamTV:oldPos", { getElementDimension( player ), getElementInterior( player ), getElementPosition( player ) }, false )
 		return triggerClientEvent(player,"doSetFreecamEnabledTV", getRootElement(), 1309.3671875, -1393.1240234375, 1022.1019897461, false)
 	else
 		return false

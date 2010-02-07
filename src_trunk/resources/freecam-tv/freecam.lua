@@ -143,9 +143,6 @@ function setFreecamEnabled (x, y, z)
 	addEventHandler("onClientRender", rootElement, freecamFrame)
 	addEventHandler("onClientCursorMove",rootElement, freecamMouse)
 	setElementData(localPlayer, "freecamTV:state", true)
-	setElementData(localPlayer, "freecamTV:startX", startX, true)
-	setElementData(localPlayer, "freecamTV:startY", startY, true)
-	setElementData(localPlayer, "freecamTV:startZ", startZ, true)
 	setPedWeaponSlot(localPlayer, 0)
 	setElementPosition(localPlayer, x, y, z)
 	setCameraMatrix(x, y, z, x - 100, y - 30, z - 30)
@@ -165,7 +162,7 @@ function setFreecamDisabled()
     setCameraTarget(localPlayer, localPlayer)
 	toggleAllControls(true)
     setElementPosition(localPlayer, startX, startY, startZ)
-    
+
 	return true
 end
 
