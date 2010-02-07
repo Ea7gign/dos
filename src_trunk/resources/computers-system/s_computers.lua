@@ -110,7 +110,7 @@ addEvent("s_getInbox",true)
 addEventHandler("s_getInbox",getRootElement(),get_inbox)
 
 function get_outbox(accountName)
-	local result = mysql_query(handler, "SELECT id, date, receiver, subject, message FROM emails WHERE sender='".. mysql_escape_string(handler, accountName) .."' AND outbox='1' ORDER BY date DESC")
+	local result = mysql_query(handler, "SELECT id, `date` - INTERVAL 1 hour as 'newdate', receiver, subject, message FROM emails WHERE sender='".. mysql_escape_string(handler, accountName) .."' AND outbox='1' ORDER BY date DESC")
 	if (result) then
 		outbox_table = { }
 		local key = 1
