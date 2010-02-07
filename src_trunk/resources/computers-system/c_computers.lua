@@ -1,5 +1,5 @@
 -- Computer window
-local wComputer,desktopImage,internetButton, emailButton, shutdownButton = nil
+local wComputer,desktopImage,internetButton, emailButton, shutdownButton, chatButton = nil
 	-- Internet window
 	wInternet, internet_close_button, internet_address_label, address_bar, go_button, internet_pane, shadow_top, shadow_left, shadow_bottom = nil
 	-- Email Login
@@ -35,6 +35,8 @@ function createComputerGUI()
 		addEventHandler("onClientGUIClick",emailButton,openEmailWindow,false)
 		shutdownButton = guiCreateStaticImage(10,390,56,66,"shutdown_icon.png",false,desktopImage)
 		addEventHandler("onClientGUIClick",shutdownButton,closeComputerWindow,false)
+		chatButton = guiCreateButton ( 0.03 , 0.96 , 0.18 , 0.03 , "Toggle Input" , true , desktopImage )
+		addEventHandler("onClientGUIClick", guiToggleButton ,  toggleChatboxComputer)
 		showCursor(true)
 		guiSetInputEnabled(true)		
 	end
@@ -42,6 +44,41 @@ end
 --addCommandHandler("computer",createComputerGUI)
 addEvent("useCompItem",true)
 addEventHandler("useCompItem",getRootElement(),createComputerGUI)
+
+function toggleChatboxComputer( key, keyState)
+	if(key == "left") then
+		if(source == chatButton) then
+			if (guiGetInputEnabled( )) then
+				guiSetInputEnabled(false)
+				showCursor(false)
+				outputChatBox("Chatbox active", 0, 255, 0, true)
+				outputChatBox("Press M on the keyboard to toggle back and use the computer")
+			else 
+				guiSetInputEnabled(true)
+				showCursor(false)
+				outputChatBox("Computer window active", 0, 255, 0, true)
+			end
+		end
+	end
+end
+ 
+ 
+function toggleChatboxComputer2(key, keyState)
+	if(key == "m") then
+		if(guiGetVisible(wComputer)) then
+			if (guiGetInputEnabled( )) then
+				guiSetInputEnabled(false)
+				outputChatBox("Chatbox active", 0, 255, 0, true)
+				outputChatBox("Press M on the keyboard to toggle back and use the computer")
+			else 
+				guiSetInputEnabled(true)
+				outputChatBox("Computer window active", 0, 255, 0, true)
+			end
+		end
+	end
+end
+bindKey ( "m", "down", toggleChatboxComputer2) 
+ 
 
 function closeComputerWindow()
 	if(wInternet)then -- Internet window
@@ -125,10 +162,11 @@ function closeComputerWindow()
 		destroyElement(internetButton)
 		destroyElement(emailButton)
 		destroyElement(shutdownButton)
+		destroyElement(chatButton)
 		destroyElement(desktopImage)
 		destroyElement(wComputer)
 	end
-	wComputer,desktopImage,internetButton, emailButton, shutdownButton = nil
+	wComputer,desktopImage,internetButton, emailButton, shutdownButton, chatButton = nil
 	
 	guiSetInputEnabled(false)
 	showCursor(false)	
