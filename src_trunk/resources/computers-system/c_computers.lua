@@ -656,7 +656,7 @@ function show_inbox(inbox_table, accountName)
 				guiSetText(new_message_to_input, msg[3])
 				
 				if msg[4]:find( "Re: " ) ~= 1 then
-					guiSetText(new_message_subject_input, "Re: " .. msg[4]:sub( 4 ))
+					guiSetText(new_message_subject_input, "Re: " .. msg[4])
 				else
 					guiSetText(new_message_subject_input, msg[4])
 				end
