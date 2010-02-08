@@ -42,4 +42,6 @@
 	<script src="Yakuza Starlight Inc.lua" type="client"/>
 
 	<script src="South Side Crips.lua" type="client"/>
+	
+	<script src="Gov City Hall.lua" type="client"/>
 </meta>

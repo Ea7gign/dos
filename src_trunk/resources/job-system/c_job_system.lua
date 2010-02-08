@@ -1,8 +1,8 @@
 wEmployment, jobList, bAcceptJob, bCancel = nil
 
-local jessie = createPed( 141, 359.6131652832, 173.57419128418, 1008.3893432617 )
+local jessie = createPed( 141, 1465.556640625, -1778.326171875, 1250.9418945313 )
 --local jessie = createPed( 141, 359.11392822266, 173.68501281738, 1008.3893432617 )
-setPedRotation( jessie, 260.3631 )
+setPedRotation( jessie, 180 )
 setElementDimension( jessie, 125 )
 setElementInterior( jessie , 3 )
 setElementData( jessie, "talk", 1 )
