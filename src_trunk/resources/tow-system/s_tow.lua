@@ -27,32 +27,9 @@ addEventHandler("onResourceStop", getResourceRootElement(getThisResource()), clo
 -- ////////////////////////////////////
 
 -- towing impound lot
-local towSphere = createColPolygon(2874.138671875, -2027.3203125, 2874.138671875, -2027.3203125, 2874.7802734375, -1932.6650390625, 3014.611328125, -1932.435546875, 3014.564453125, -2032.248046875)
+local towSphere = createColPolygon(2789.131835, -1468.5177, 2789.131835, -1468.5177, 2789.133544, -1425.358398, 2820.9104, -1425.353027, 2820.912597, -1467.778808)
 -- pd impound lot
 local towSphere2 = createColPolygon(1540.209594, -1602.937377, 1540.209594, -1602.937377, 1590.368408, -1602.958251, 1583.952514, -1617.322265625, 1540.34082, -1617.087524)
-
-local unimpoundSpot = 0
-
-function findUnimpoundSpot()
-	unimpoundSpot = unimpoundSpot + 1
-	if unimpoundSpot > 6 then
-		unimpoundSpot = 1
-	end
-	if unimpoundSpot == 1 then
-		return 2852.6171875, -1906.3427734375, 10.804823875427
-	elseif unimpoundSpot == 2 then
-		return 2852.6875, -1916.978515625, 10.815172195435
-	elseif unimpoundSpot == 3 then
-		return 2852.7001953125, -1926.904296875, 10.816542625427
-	elseif unimpoundSpot == 4 then
-		return 2852.7109375, -1937.5283203125, 10.816487312317
-	elseif unimpoundSpot == 5 then
-		return 2852.8310546875, -1949.072265625, 10.817353248596
-	else
-		return 2852.9697265625, -1964.05859375, 10.818488121033
-	end
-
-end
 
 function cannotVehpos(thePlayer)
 	return isElementWithinColShape(thePlayer, towSphere) and getElementData(thePlayer,"faction") ~= 30
@@ -124,15 +101,14 @@ addEventHandler("onColShapeHit", towSphere2, UnlockVehicle)
 function payRelease(vehID)
 	if exports.global:takeMoney(source, 95) then
 		exports.global:giveMoney(getTeamFromName("Best's Towing and Recovery"), 95)
-		setElementPosition(vehID, findUnimpoundSpot())
-		setVehicleRotation(vehID, 0,0,183.66284179688)
+		setVehicleFrozen(vehID, false)
+		setElementData(vehID, "handbrake", 0, false)
+		setElementData(vehID, "Impounded", 0)
+		setElementPosition(vehID, 2743.0905761719, -1462.744750, 32.453125)
 		setVehicleLocked(vehID, true)
 		setElementData(vehID, "enginebroke", 0, false)
 		setVehicleDamageProof(vehID, false)
 		setVehicleEngineState(vehID, false)
-		setVehicleFrozen(vehID, false)
-		setElementData(vehID, "handbrake", 0, false)
-		setElementData(vehID, "Impounded", 0)
 		updateVehPos(vehID)
 		
 		outputChatBox("Your vehicle has been released. (( Please remember to /park your vehicle so it does not respawn in our carpark. ))", source, 255, 194, 14)
