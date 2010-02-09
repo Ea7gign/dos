@@ -31,6 +31,29 @@ local towSphere = createColPolygon(2874.138671875, -2027.3203125, 2874.138671875
 -- pd impound lot
 local towSphere2 = createColPolygon(1540.209594, -1602.937377, 1540.209594, -1602.937377, 1590.368408, -1602.958251, 1583.952514, -1617.322265625, 1540.34082, -1617.087524)
 
+local unimpoundSpot = 0
+
+function findUnimpoundSpot()
+	unimpoundSlot = unimpoundSlot + 1
+	if unimpoundSlot > 6 then
+		unimpoundSlot = 1
+	end
+	if unimpoundSpot == 1 then
+		return 2852.6171875, -1906.3427734375, 10.804823875427
+	elseif unimpoundSpot == 2 then
+		return 2852.6875, -1916.978515625, 10.815172195435
+	elseif unimpoundSpot == 3 then
+		return 2852.7001953125, -1926.904296875, 10.816542625427
+	elseif unimpoundSpot == 4 then
+		return 2852.7109375, -1937.5283203125, 10.816487312317
+	elseif unimpoundSpot == 5 then
+		return 2852.8310546875, -1949.072265625, 10.817353248596
+	else
+		return 2852.9697265625, -1964.05859375, 10.818488121033
+	end
+
+end
+
 function cannotVehpos(thePlayer)
 	return isElementWithinColShape(thePlayer, towSphere) and getElementData(thePlayer,"faction") ~= 30
 end
@@ -104,7 +127,8 @@ function payRelease(vehID)
 		setVehicleFrozen(vehID, false)
 		setElementData(vehID, "handbrake", 0, false)
 		setElementData(vehID, "Impounded", 0)
-		setElementPosition(vehID, 2743.0905761719, -1462.744750, 32.453125)
+		setElementPosition(vehID, findUnimpoundSpot())
+		setVehicleRotation(vehID, 0,0,140.66284179688)
 		setVehicleLocked(vehID, true)
 		setElementData(vehID, "enginebroke", 0, false)
 		setVehicleDamageProof(vehID, false)
