@@ -934,7 +934,7 @@ end
 addEvent("dropItem", true)
 addEventHandler("dropItem", getRootElement(), dropItem)
 
-function moveItem(item, x, y, z)
+local function moveItem(item, x, y, z)
 	local result = mysql_query( handler, "UPDATE worlditems SET x = " .. x .. ", y = " .. y .. ", z = " .. z .. " WHERE id = " .. getElementData( item, "id" ) )
 	if result then
 		mysql_free_result( result )
