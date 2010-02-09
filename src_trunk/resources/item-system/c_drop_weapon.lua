@@ -1,5 +1,5 @@
 local wDropWeapon, sDropWeapon, eDropWeapon, bDropWeapon, bCancelDropWeapon = nil
-local _ammo, _weapon, _row, dieinafire = nil
+local _ammo, _weapon, _x, _y, _z, dieinafire = nil
 
 local function hideDropWeaponGUI()
 	if wDropWeapon then
@@ -11,41 +11,29 @@ local function hideDropWeaponGUI()
 	end
 	_weapon = nil
 	_ammo = nil
+	_x = nil
+	_y = nil
+	_z = nil
 	dieinafire = false
 end
 
 local function dropWeaponFromGUI(ammo)
+	waitingForItemDrop = true
 	local ammo = math.min( _ammo, ammo )
-	
-	local keepammo = _ammo - ammo
-	if keepammo == 0 then
-		guiGridListRemoveRow(gWeapons, _row)
-	else
-		guiGridListSetItemText(gWeapons, _row, colValue, tostring(keepammo), false, false)
-	end
-
-	local x, y, z = getElementPosition(getLocalPlayer())
-	local rot = getPedRotation(getLocalPlayer())
-	x = x + math.sin( math.rad( rot ) ) * 1
-	y = y + math.cos( math.rad( rot ) ) * 1
-	
-	local z = getGroundPosition( x, y, z + 2 )
-	
-	triggerServerEvent("dropItem", getLocalPlayer(), _weapon, x, y, z, ammo, keepammo)
-
+	triggerServerEvent("dropItem", getLocalPlayer(), _weapon, _x, _y, _z, ammo, _ammo - ammo)
 	hideDropWeaponGUI()
-	guiSetEnabled( wItems, false )
-	guiSetVisible( wWait, true )
 end
 
-function openWeaponDropGUI(weapon, ammo, row)
+function openWeaponDropGUI(weapon, ammo, x, y, z)
 	if wDropWeapon then
 		hideDropWeaponGUI()
 	end
 	
 	_ammo = ammo
 	_weapon = weapon
-	_row = row
+	_x = x
+	_y = y
+	_z = z
 	if ammo == 1 then
 		dropWeaponFromGUI(ammo)
 	else

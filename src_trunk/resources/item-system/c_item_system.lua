@@ -25,7 +25,7 @@ guiSetEnabled( wWait, false )
 guiSetVisible( wWait, false )
 guiSetProperty( wWait, "AlwaysOnTop", "True" )
 
-function clickItem(button, state, absX, absY, x, y, z, element)
+--[[function clickItem(button, state, absX, absY, x, y, z, element)
 	if (button == "right") and (state=="down") then
 		if getElementData(getLocalPlayer(), "exclusiveGUI") then
 			return
@@ -83,7 +83,7 @@ function clickItem(button, state, absX, absY, x, y, z, element)
 		end
 	end
 end
-addEventHandler("onClientClick", getRootElement(), clickItem, true)
+addEventHandler("onClientClick", getRootElement(), clickItem, true)]]
 
 function showItemMenu()
 	local itemID = getElementData(item, "itemID")
@@ -189,7 +189,7 @@ function toggleGhettoblaster(button, state, absX, absY, step)
 	hideItemMenu()
 end
 
-function pickupItem(button, state)
+function pickupItem(button, state, item)
 	if (button=="left") then
 		local restrain = getElementData(getLocalPlayer(), "restrain")
 		
@@ -198,12 +198,14 @@ function pickupItem(button, state)
 		elseif getElementData(item, "itemID") > 0 and not hasSpaceForItem(getLocalPlayer(), getElementData(item, "itemID")) then
 			outputChatBox("Your Inventory is full.", 255, 0, 0)
 		elseif isElement(item) then
-			showCursor(false)
-			triggerEvent("cursorHide", getLocalPlayer())
+			if wRightClick then
+				showCursor(false)
+				triggerEvent("cursorHide", getLocalPlayer())
+			end
 			
 			local itemID = tonumber(getElementData(item, "itemID")) or 0
 			local itemValue = tonumber(getElementData(item, "itemValue")) or 0
-			if itemID < 0 then
+			if itemID < 0 and itemID ~= -100 then
 				local free, totalfree = exports.weaponcap:getFreeAmmo( -itemID )
 				local cap = exports.weaponcap:getAmmoCap( -itemID )
 				if totalfree == 0 then
@@ -224,7 +226,9 @@ function pickupItem(button, state)
 			else
 				triggerServerEvent("pickupItem", getLocalPlayer(), item)
 			end
-			hideItemMenu()
+			if wRightClick then
+				hideItemMenu()
+			end
 		end
 	end
 end
@@ -320,9 +324,9 @@ function toggleInventory()
 			hideInventory()
 		end
 	elseif not getElementData(getLocalPlayer(), "adminjailed") and not getElementData(getLocalPlayer(), "pd.jailstation") then
-		showInventory(getLocalPlayer())
+		--showInventory(getLocalPlayer())
 	else
-		outputChatBox("You can't access your inventory in jail", 255, 0, 0)
+		--outputChatBox("You can't access your inventory in jail", 255, 0, 0)
 	end
 end
 bindKey("i", "down", toggleInventory)
@@ -414,8 +418,8 @@ function showInventory(player, syncw, synca)
 		
 		source = nil
 		toggleCategory()
-		addEventHandler("onClientGUIDoubleClick", gItems, useItem, false)
-		addEventHandler("onClientGUIDoubleClick", gKeys, useItem, false)
+		-- addEventHandler("onClientGUIDoubleClick", gItems, useItem, false)
+		-- addEventHandler("onClientGUIDoubleClick", gKeys, useItem, false)
 
 		-- WEAPONS
 		gWeapons = guiCreateGridList(0.025, 0.05, 0.95, 0.9, true, tabWeapons)
@@ -458,7 +462,7 @@ function showInventory(player, syncw, synca)
 		end
 		guiSetVisible(colWSlot, false)
 		
-		addEventHandler("onClientGUIDoubleClick", gWeapons, useItem, false)
+		-- addEventHandler("onClientGUIDoubleClick", gWeapons, useItem, false)
 		
 		-- ARMOR
 		if getPedArmor(player) > 0 then
@@ -474,7 +478,7 @@ function showInventory(player, syncw, synca)
 		guiSetFont(lDescription, "default-bold-small")
 		
 		-- buttons
-		if player == getLocalPlayer() then
+		--[[if player == getLocalPlayer() then
 			bUseItem = guiCreateButton(0.05, 0.91, 0.2, 0.15, "Use Item", true, wItems)
             addEventHandler("onClientGUIClick", bUseItem, useItem, false)
 			guiSetEnabled(bUseItem, false)
@@ -490,10 +494,10 @@ function showInventory(player, syncw, synca)
 			bDestroyItem = guiCreateButton(0.8, 0.91, 0.2, 0.15, "Destroy Item", true, wItems)
 			addEventHandler("onClientGUIClick", bDestroyItem, destroyItem, false)
 			guiSetEnabled(bDestroyItem, false)
-		else
+		else]]
 			bClose = guiCreateButton(0.375, 0.91, 0.2, 0.15, "Close Inventory", true, wItems)
 			addEventHandler("onClientGUIClick", bClose, hideInventory, false)
-		end
+		--end
 		showCursor(true)
 	end
 end
@@ -583,327 +587,162 @@ function showDescription(button, state)
 	end
 end
 
-function useItem(button)
+function useItem(itemSlot)
+--function useItem(button)
+	showinvPlayer = getLocalPlayer()
 	if getElementHealth(getLocalPlayer()) == 0 then return end
-	if (button=="left") then
-		local x, y, z = getElementPosition(getLocalPlayer())
-		local groundz = getGroundPosition(x, y, z)
-		if (guiGetSelectedTab(tabPanel)==tabItems or guiGetSelectedTab(tabPanel)==tabKeys) then -- ITEMS
-			local row, col = guiGridListGetSelectedItem(guiGetSelectedTab(tabPanel) == tabKeys and gKeys or gItems)
-			local itemSlot = tonumber(guiGridListGetItemData(guiGetSelectedTab(tabPanel) == tabKeys and gKeys or gItems, row, 1))
-			local itemID = getItems( showinvPlayer )[itemSlot][1]
-			local itemName = getItemName( itemID )
-			local itemValue = getItems( showinvPlayer )[itemSlot][2]
-			local additional = nil
-			
-			if (itemID==2) then -- cellphone
-				hideInventory()
-				triggerEvent("showPhoneGUI", getLocalPlayer(), itemValue)
-				outputChatBox("Use /call to use this item.", 255, 194, 14)
-				return
-			elseif (itemID==6) then -- radio
-				outputChatBox("Press Y to use this item. You can also use /tuneradio to tune your radio.", 255, 194, 14)
-				return
-			elseif (itemID==7) then -- phonebook
-				outputChatBox("Use /phonebook to use this item.", 255, 194, 14)
-				return
-			elseif (itemID==18) then -- City Guide
-				triggerEvent( "showCityGuide", getLocalPlayer( ) )
-				return
-			elseif (itemID==19) then -- MP3 PLayer
-				outputChatBox("Use the - and = keys to use the MP3 Player.", 255, 194, 14)
-				return
-			elseif (itemID==27) then -- Flashbang
-				local x, y, z = getElementPosition(getLocalPlayer( ))
-				local rot = getPedRotation(getLocalPlayer( ))
-				x = x + math.sin(math.rad(-rot)) * 10
-				y = y + math.cos(math.rad(-rot)) * 10
-				z = getGroundPosition(x, y, z + 2)
-				additional = { x, y, z }
-			elseif (itemID==28 or itemID==54) then -- Glowstick or Ghettoblaster
-				local x, y, z = getElementPosition(getLocalPlayer( ))
-				local rot = getPedRotation(getLocalPlayer( ))
-				x = x + math.sin(math.rad(-rot)) * 2
-				y = y + math.cos(math.rad(-rot)) * 2
-				z = getGroundPosition(x, y, z)
-				additional = { x, y, z - 0.5 }
-			elseif (itemID==30) or (itemID==31) or (itemID==32) or (itemID==33) then
-				outputChatBox("Use the chemistry set purchasable from 24/7 to use this item.", 255, 0, 0)
-				return
-			elseif (itemID==34) then -- COCAINE
-				doDrug1Effect()
-			elseif (itemID==35) then
+	local x, y, z = getElementPosition(getLocalPlayer())
+	local groundz = getGroundPosition(x, y, z)
+	if itemSlot > 0 then -- ITEMS
+		local itemID = getItems( showinvPlayer )[itemSlot][1]
+		local itemName = getItemName( itemID )
+		local itemValue = getItems( showinvPlayer )[itemSlot][2]
+		local additional = nil
+		
+		if (itemID==2) then -- cellphone
+			hideInventory()
+			triggerEvent("showPhoneGUI", getLocalPlayer(), itemValue)
+			outputChatBox("Use /call to use this item.", 255, 194, 14)
+			return
+		elseif (itemID==6) then -- radio
+			outputChatBox("Press Y to use this item. You can also use /tuneradio to tune your radio.", 255, 194, 14)
+			return
+		elseif (itemID==7) then -- phonebook
+			outputChatBox("Use /phonebook to use this item.", 255, 194, 14)
+			return
+		elseif (itemID==18) then -- City Guide
+			triggerEvent( "showCityGuide", getLocalPlayer( ) )
+			return
+		elseif (itemID==19) then -- MP3 PLayer
+			outputChatBox("Use the - and = keys to use the MP3 Player.", 255, 194, 14)
+			return
+		elseif (itemID==27) then -- Flashbang
+			local x, y, z = getElementPosition(getLocalPlayer( ))
+			local rot = getPedRotation(getLocalPlayer( ))
+			x = x + math.sin(math.rad(-rot)) * 10
+			y = y + math.cos(math.rad(-rot)) * 10
+			z = getGroundPosition(x, y, z + 2)
+			additional = { x, y, z }
+		elseif (itemID==28 or itemID==54) then -- Glowstick or Ghettoblaster
+			local x, y, z = getElementPosition(getLocalPlayer( ))
+			local rot = getPedRotation(getLocalPlayer( ))
+			x = x + math.sin(math.rad(-rot)) * 2
+			y = y + math.cos(math.rad(-rot)) * 2
+			z = getGroundPosition(x, y, z)
+			additional = { x, y, z - 0.5 }
+		elseif (itemID==30) or (itemID==31) or (itemID==32) or (itemID==33) then
+			outputChatBox("Use the chemistry set purchasable from 24/7 to use this item.", 255, 0, 0)
+			return
+		elseif (itemID==34) then -- COCAINE
+			doDrug1Effect()
+		elseif (itemID==35) then
+			doDrug2Effect()
+		elseif (itemID==36) then
+			doDrug3Effect()
+		elseif (itemID==37) then
+			doDrug4Effect()
+		elseif (itemID==38) then
+			if not getPedOccupiedVehicle(getLocalPlayer()) then
+				doDrug5Effect()
+			end
+		elseif (itemID==39) then
+			doDrug6Effect()
+		elseif (itemID==40) then
+			doDrug3Effect()
+			doDrug1Effect()
+		elseif (itemID==41) then
+			doDrug4Effect()
+			doDrug6Effect()
+		elseif (itemID==42) then
+			if not getPedOccupiedVehicle(getLocalPlayer()) then
+				doDrug5Effect()
 				doDrug2Effect()
-			elseif (itemID==36) then
-				doDrug3Effect()
-			elseif (itemID==37) then
-				doDrug4Effect()
-			elseif (itemID==38) then
-				if not getPedOccupiedVehicle(getLocalPlayer()) then
-					doDrug5Effect()
-				end
-			elseif (itemID==39) then
-				doDrug6Effect()
-			elseif (itemID==40) then
-				doDrug3Effect()
-				doDrug1Effect()
-			elseif (itemID==41) then
-				doDrug4Effect()
-				doDrug6Effect()
-			elseif (itemID==42) then
-				if not getPedOccupiedVehicle(getLocalPlayer()) then
-					doDrug5Effect()
-					doDrug2Effect()
-				end
-			elseif (itemID==43) then
-				doDrug4Effect()
-				doDrug1Effect()
-				doDrug6Effect()
-			elseif (itemID==44) then
-				hideInventory()
-				showChemistrySet()
-				return
-			elseif (itemID==45) or (itemID==46) or (itemID==47) or (itemID==66) then
-				outputChatBox("Right click a player to use this item.", source, 255, 0, 0)
-				return
-			elseif (itemID==48) then
-				outputChatBox("Your inventory is extended.", 0, 255, 0)
-				return
-			elseif (itemID==50) or (itemID==51) or (itemID==52) then
-				hideInventory()
-			elseif (itemID==53) then -- Breathalizer
-				outputChatBox("Use /breathtest to use this item.", 255, 194, 15)
-				return
-			elseif (itemID==57) then -- FUEL CAN
-				hideInventory()
-			elseif (itemID==58) then
-				setTimer(
-					function()
-						setElementData(getLocalPlayer(), "alcohollevel", ( getElementData(getLocalPlayer(), "alcohollevel") or 0 ) + 0.1, false)
-					end, 15000, 1
-				)
-			elseif (itemID==61) then -- Emergency Light Becon
-				outputChatBox("Put it in your car inventory and press 'P' to toggle it.", 255, 194, 14)
-				return
-			elseif (itemID==62) then
-				setTimer(
-					function()
-						setElementData(getLocalPlayer(), "alcohollevel", ( getElementData(getLocalPlayer(), "alcohollevel") or 0 ) + 0.3, false)
-					end, 5000, 1
-				)
-			elseif (itemID==63) then
-				setTimer(
-					function()
-						setElementData(getLocalPlayer(), "alcohollevel", ( getElementData(getLocalPlayer(), "alcohollevel") or 0 ) + 0.2, false)
-					end, 10000, 1
-				)
-			elseif (itemID==67) then -- GPS
-				outputChatBox("Put it in your car inventory and Press 'F5'.", 255, 194, 14)
-				return
-			elseif (itemID==70) then -- First Aid Kit
-				outputChatBox("Right click on a player who's knocked out to stabilize him.", 255, 194, 14)
-				return
-			elseif (itemID==71) then -- Notebook
-				outputChatBox("Use /writenote [text] to write a note. There are " .. itemValue .. " pages left.", 255, 194, 14)
-				return
-			elseif (itemID==72) then -- Note
-				outputChatBox("The Note reads: " .. itemValue, 255, 194, 14)
-			elseif (itemID==78) then
-				outputChatBox("This San Andreas Pilot License was issued for " .. itemValue .. ".", 255, 194, 14)
-				return
-			elseif (itemID==81) then
-				outputChatBox("Drop this Fridge in an Interior.", 255, 194, 14)
-				return
-			elseif (itemID==82) then
-				outputChatBox("A BT&R identification, issued to " .. itemValue .. ".", 255, 194, 14)
-				return
-			elseif (itemID==84) then
-				outputChatBox("Put it in a car or carry it to know when police is around.", 255, 194, 14)
-				return
-			elseif (itemID==85) then -- Emergency Light Becon
-				outputChatBox("Put it in your car inventory and press 'N' to toggle it.", 255, 194, 14)
-				return
-			elseif (itemID==91) then
-				setTimer(
-					function()
-						setElementData(getLocalPlayer(), "alcohollevel", ( getElementData(getLocalPlayer(), "alcohollevel") or 0 ) + 0.35, false)
-					end, 15000, 1
-				)
-			elseif (itemID==96) then
-				hideInventory()
 			end
-
-			
-			triggerServerEvent("useItem", getLocalPlayer(), itemSlot, additional)
-		elseif (guiGetSelectedTab(tabPanel)==tabWeapons) then -- WEAPONS
-			local row, col = guiGridListGetSelectedItem(gWeapons)
-			local itemSlot = tonumber(guiGridListGetItemText(gWeapons, row, 1))
-			if itemSlot == 13 then
-				outputChatBox("You wear Body Armor.", 0, 255, 0)
-			else
-				setPedWeaponSlot( getLocalPlayer(), itemSlot )
-			end
+		elseif (itemID==43) then
+			doDrug4Effect()
+			doDrug1Effect()
+			doDrug6Effect()
+		elseif (itemID==44) then
+			hideInventory()
+			showChemistrySet()
+			return
+		elseif (itemID==45) or (itemID==46) or (itemID==47) or (itemID==66) then
+			outputChatBox("Right click a player to use this item.", source, 255, 0, 0)
+			return
+		elseif (itemID==48) then
+			outputChatBox("Your inventory is extended.", 0, 255, 0)
+			return
+		elseif (itemID==50) or (itemID==51) or (itemID==52) then
+			hideInventory()
+		elseif (itemID==53) then -- Breathalizer
+			outputChatBox("Use /breathtest to use this item.", 255, 194, 15)
+			return
+		elseif (itemID==57) then -- FUEL CAN
+			hideInventory()
+		elseif (itemID==58) then
+			setTimer(
+				function()
+					setElementData(getLocalPlayer(), "alcohollevel", ( getElementData(getLocalPlayer(), "alcohollevel") or 0 ) + 0.1, false)
+				end, 15000, 1
+			)
+		elseif (itemID==61) then -- Emergency Light Becon
+			outputChatBox("Put it in your car inventory and press 'P' to toggle it.", 255, 194, 14)
+			return
+		elseif (itemID==62) then
+			setTimer(
+				function()
+					setElementData(getLocalPlayer(), "alcohollevel", ( getElementData(getLocalPlayer(), "alcohollevel") or 0 ) + 0.3, false)
+				end, 5000, 1
+			)
+		elseif (itemID==63) then
+			setTimer(
+				function()
+					setElementData(getLocalPlayer(), "alcohollevel", ( getElementData(getLocalPlayer(), "alcohollevel") or 0 ) + 0.2, false)
+				end, 10000, 1
+			)
+		elseif (itemID==67) then -- GPS
+			outputChatBox("Put it in your car inventory and Press 'F5'.", 255, 194, 14)
+			return
+		elseif (itemID==70) then -- First Aid Kit
+			outputChatBox("Right click on a player who's knocked out to stabilize him.", 255, 194, 14)
+			return
+		elseif (itemID==71) then -- Notebook
+			outputChatBox("Use /writenote [text] to write a note. There are " .. itemValue .. " pages left.", 255, 194, 14)
+			return
+		elseif (itemID==72) then -- Note
+			outputChatBox("The Note reads: " .. itemValue, 255, 194, 14)
+		elseif (itemID==78) then
+			outputChatBox("This San Andreas Pilot License was issued for " .. itemValue .. ".", 255, 194, 14)
+			return
+		elseif (itemID==81) then
+			outputChatBox("Drop this Fridge in an Interior.", 255, 194, 14)
+			return
+		elseif (itemID==82) then
+			outputChatBox("A BT&R identification, issued to " .. itemValue .. ".", 255, 194, 14)
+			return
+		elseif (itemID==84) then
+			outputChatBox("Put it in a car or carry it to know when police is around.", 255, 194, 14)
+			return
+		elseif (itemID==85) then -- Emergency Light Becon
+			outputChatBox("Put it in your car inventory and press 'N' to toggle it.", 255, 194, 14)
+			return
+		elseif (itemID==91) then
+			setTimer(
+				function()
+					setElementData(getLocalPlayer(), "alcohollevel", ( getElementData(getLocalPlayer(), "alcohollevel") or 0 ) + 0.35, false)
+				end, 15000, 1
+			)
+		elseif (itemID==96) then
+			hideInventory()
 		end
-	end
-end
 
-function destroyItem(button)
-	if getElementHealth(getLocalPlayer()) == 0 then return end
-	if (button=="left") then
-		if (guiGetSelectedTab(tabPanel)==tabItems or guiGetSelectedTab(tabPanel)==tabKeys) then -- ITEMS
-			local row, col = guiGridListGetSelectedItem(guiGetSelectedTab(tabPanel) == tabKeys and gKeys or gItems)
-			local itemSlot = tonumber(guiGridListGetItemData(guiGetSelectedTab(tabPanel) == tabKeys and gKeys or gItems, row, 1))
-			if itemSlot and getItems(getLocalPlayer())[itemSlot] then
-				local itemID = getItems(getLocalPlayer())[itemSlot][1]
-				if itemID == 48 and countItems( getLocalPlayer(), 48 ) == 1 then -- backpack
-					local keycount = countItems( getLocalPlayer(), 3 ) + countItems( getLocalPlayer(), 4 ) + countItems( getLocalPlayer(), 5 )
-					if keycount > getInventorySlots(getLocalPlayer()) or #getItems( getLocalPlayer() ) - keycount - 1 > getInventorySlots(getLocalPlayer()) / 2 then
-						outputChatBox("You have too much stuff in your inventory.", getLocalPlayer())
-						return
-					end
-				end
-				
-				guiGridListRemoveRow(guiGetSelectedTab(tabPanel) == tabKeys and gKeys or gItems, row)
-				
-				if guiGetSelectedTab(tabPanel) == tabItems then
-					local row = guiGridListAddRow(gItems)
-					guiGridListSetItemText(gItems, row, colName, "Empty", false, false)
-					guiGridListSetItemText(gItems, row, colValue, "None", false, false)
-					
-					for i = 0, getInventorySlots( getLocalPlayer() ) - 1 do
-						guiGridListSetItemText(gItems, i, colSlot, tostring(i + 1), false, true)
-					end
-				end
-				
-				guiGridListSetSelectedItem(guiGetSelectedTab(tabPanel) == tabKeys and gKeys or gItems, 0, 0)
-				
-				triggerServerEvent("destroyItem", getLocalPlayer(), itemSlot)
-			end
-		elseif (guiGetSelectedTab(tabPanel)==tabWeapons) then -- WEAPONS
-			local row, col = guiGridListGetSelectedItem(gWeapons)
-			local itemSlot = tonumber(guiGridListGetItemText(gWeapons, row, 1))
-			local itemID = tonumber(getPedWeapon(getLocalPlayer(), itemSlot))
 			
-			guiGridListSetSelectedItem(gWeapons, 0, 0)
-			guiGridListRemoveRow(gWeapons, row)
-			
-			triggerServerEvent("destroyItem", getLocalPlayer(), itemID, true)
-		end
-		
-		guiSetEnabled(bUseItem, false)
-		guiSetEnabled(bDropItem, false)
-		guiSetEnabled(bShowItem, false)
-		guiSetEnabled(bDestroyItem, false)
-	end
-end
-
-function dropItem(button)
-	if getElementHealth(getLocalPlayer()) == 0 then return end
-	if (button=="left") then
-		guiSetEnabled(bUseItem, false)
-		guiSetEnabled(bDropItem, false)
-		guiSetEnabled(bShowItem, false)
-		guiSetEnabled(bDestroyItem, false)
-		
-		if (guiGetSelectedTab(tabPanel)==tabItems or guiGetSelectedTab(tabPanel)==tabKeys) then -- ITEMS
-			local row, col = guiGridListGetSelectedItem(guiGetSelectedTab(tabPanel) == tabKeys and gKeys or gItems)
-			local itemSlot = tonumber(guiGridListGetItemData(guiGetSelectedTab(tabPanel) == tabKeys and gKeys or gItems, row, 1))
-			local item = getItems(getLocalPlayer())[itemSlot]
-			if item then
-				local itemID = item[1]
-				if itemID == 60 then
-					outputChatBox("This item cannot be dropped.", 255, 0, 0)
-					return
-				elseif itemID == 81 and getElementDimension(getLocalPlayer()) == 0 then
-					outputChatBox("You need to drop this in an interior.", 255, 0, 0)
-					return
-				end
-				
-				guiGridListRemoveRow(guiGetSelectedTab(tabPanel) == tabKeys and gKeys or gItems, row)
-				if guiGetSelectedTab(tabPanel) == tabItems then
-					local row = guiGridListAddRow(gItems)
-					guiGridListSetItemText(gItems, row, colName, "Empty", false, false)
-					guiGridListSetItemText(gItems, row, colValue, "None", false, false)
-					
-					for i = 0, getInventorySlots( getLocalPlayer() ) - 1 do
-						guiGridListSetItemText(gItems, i, colSlot, tostring(i + 1), false, true)
-					end
-				end
-
-				guiGridListSetSelectedItem(guiGetSelectedTab(tabPanel) == tabKeys and gKeys or gItems, 0, 0)
-				
-				-- DIRECTLY INFRONT OF PLAYER
-				local matrix = getElementMatrix(getLocalPlayer())
-				local oldX = 0
-				local oldY = 1
-				local oldZ = 0
-				local x = oldX * matrix[1][1] + oldY * matrix [2][1] + oldZ * matrix [3][1] + matrix [4][1]
-				local y = oldX * matrix[1][2] + oldY * matrix [2][2] + oldZ * matrix [3][2] + matrix [4][2]
-				local z = oldX * matrix[1][3] + oldY * matrix [2][3] + oldZ * matrix [3][3] + matrix [4][3]
-				
-				local z = getGroundPosition( x, y, z + 2 )
-				guiSetEnabled( wItems, false )
-				guiSetVisible( wWait, true )
-				triggerServerEvent("dropItem", getLocalPlayer(), itemSlot, x, y, z)
-			end
-		elseif (guiGetSelectedTab(tabPanel)==tabWeapons) then -- WEAPONS
-			local row, col = guiGridListGetSelectedItem(gWeapons)
-			local itemSlot = tonumber(guiGridListGetItemText(gWeapons, row, 1))
-			local itemValue = tonumber(guiGridListGetItemText(gWeapons, row, 3))
-			local itemID = 0
-			if itemSlot == 13 then
-				itemID = 100
-				itemValue = getPedArmor(getLocalPlayer())
-			else
-				itemID = tonumber(getPedWeapon(getLocalPlayer(), itemSlot))
-				itemValue = math.min( getPedTotalAmmo(getLocalPlayer(), itemSlot), getElementData(getLocalPlayer(), "ACweapon" .. itemID) or 0 )
-			end
-			
-			if itemValue > 0 then
-				guiGridListSetSelectedItem(gWeapons, 0, 0)
-				if itemSlot >= 2 and itemSlot <= 9 then
-					openWeaponDropGUI(itemID, itemValue, row)
-				else
-					guiGridListRemoveRow(gWeapons, row)
-				
-					-- DIRECTLY INFRONT OF PLAYER
-					local matrix = getElementMatrix(getLocalPlayer())
-					local oldX = 0
-					local oldY = 1
-					local oldZ = 0
-					local x = oldX * matrix[1][1] + oldY * matrix [2][1] + oldZ * matrix [3][1] + matrix [4][1]
-					local y = oldX * matrix[1][2] + oldY * matrix [2][2] + oldZ * matrix [3][2] + matrix [4][2]
-					local z = oldX * matrix[1][3] + oldY * matrix [2][3] + oldZ * matrix [3][3] + matrix [4][3]
-					
-					local z = getGroundPosition( x, y, z + 2 )
-					
-					guiSetEnabled( wItems, false )
-					guiSetVisible( wWait, true )
-					triggerServerEvent("dropItem", getLocalPlayer(), itemID, x, y, z, itemValue)
-				end
-			end
-		end
-	end
-end
-
-function showItem(button)
-	if getElementHealth(getLocalPlayer()) == 0 then return end
-	if (button=="left") then
-		if (guiGetSelectedTab(tabPanel)==tabItems or guiGetSelectedTab(tabPanel)==tabKeys) then -- ITEMS
-			local row, col = guiGridListGetSelectedItem(guiGetSelectedTab(tabPanel) == tabKeys and gKeys or gItems)
-			local itemName = guiGridListGetItemText(guiGetSelectedTab(tabPanel) == tabKeys and gKeys or gItems, row, 2)
-			if itemName == "Porn Tape" then
-				itemName = itemName .. ", " .. guiGridListGetItemText(guiGetSelectedTab(tabPanel) == tabKeys and gKeys or gItems, row, 3)
-			elseif itemName == "BT&R Identification" then
-				itemName = itemName .. ", issued to " .. guiGridListGetItemText(guiGetSelectedTab(tabPanel) == tabKeys and gKeys or gItems, row, 3)
-			elseif itemName == "SAN Identifcation" then
-				itemName = itemName .. ", issued to " .. guiGridListGetItemText(guiGetSelectedTab(tabPanel) == tabKeys and gKeys or gItems, row, 3)
-			end
-			triggerServerEvent("showItem", getLocalPlayer(), itemName)
-		elseif (guiGetSelectedTab(tabPanel)==tabWeapons) then -- WEAPONS
-			local row, col = guiGridListGetSelectedItem(gWeapons)
-			local itemName = guiGridListGetItemText(gWeapons, row, 2)
-			triggerServerEvent("showItem", getLocalPlayer(), itemName)
+		triggerServerEvent("useItem", getLocalPlayer(), itemSlot, additional)
+	else
+		if itemSlot == -100 then
+			outputChatBox("You wear Body Armor.", 0, 255, 0)
+		else
+			setPedWeaponSlot( getLocalPlayer(), -itemSlot )
 		end
 	end
 end

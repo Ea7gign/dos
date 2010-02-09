@@ -673,11 +673,10 @@ function destroyGlowStick(marker)
 	destroyElement(marker)
 end
 
-function destroyItem(itemID, isWeapon)
+function destroyItem(itemID)
 	if isPedDead(source) or getElementData(source, "injuriedanimation") then return end
 	local itemName = ""
-	
-	if not isWeapon then
+	if itemID and itemID > 0 then
 		local itemSlot = itemID
 		local item = getItems( source )[itemSlot]
 		if item then
@@ -742,12 +741,12 @@ function destroyItem(itemID, isWeapon)
 			end
 		end
 	else
-		if not itemID then
+		if itemID == -100 then
 			setPedArmor(source, 0)
 			itemName = "Body Armor"
 		else
-			exports.global:takeWeapon(source, tonumber(itemID))
-			itemName = getWeaponNameFromID( itemID )
+			exports.global:takeWeapon(source, tonumber(-itemID))
+			itemName = getWeaponNameFromID( -itemID )
 		end
 	end
 	outputChatBox("You destroyed a " .. itemName .. ".", source, 255, 194, 14)
@@ -935,6 +934,24 @@ end
 addEvent("dropItem", true)
 addEventHandler("dropItem", getRootElement(), dropItem)
 
+function moveItem(item, x, y, z)
+	local result = mysql_query( handler, "UPDATE worlditems SET x = " .. x .. ", y = " .. y .. ", z = " .. z .. " WHERE id = " .. getElementData( item, "id" ) )
+	if result then
+		mysql_free_result( result )
+		
+		local itemID = getElementData(item, "itemID")
+		if itemID > 0 then
+			local rx, ry, rz, zoffset = getItemRotInfo(itemID)
+			z = z + zoffset
+		elseif itemID == 100 then
+			z = z + 0.1
+		end
+		setElementPosition(item, x, y, z)
+	end
+end
+addEvent("moveItem", true)
+addEventHandler("moveItem", getRootElement(), moveItem)
+
 function loadWorldItems(res)
 	
 	-- delete items too old
@@ -1018,7 +1035,7 @@ function pickupItem(object, leftammo)
 	local x, y, z = getElementPosition(source)
 	local ox, oy, oz = getElementPosition(object)
 	
-	if (getDistanceBetweenPoints3D(x, y, z, ox, oy, oz)<3) then	
+	if (getDistanceBetweenPoints3D(x, y, z, ox, oy, oz)<10) then	
 		
 		-- Inventory Tooltip
 		if (getResourceFromName("tooltips-system"))then

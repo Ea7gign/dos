@@ -164,10 +164,15 @@ function getItemValue(id, value)
 end
 
 function getItemDescription(id, value)
-	if id == 96 and value ~= 1 then
-		return g_items[id][2]:gsub("PDA","Laptop")
+	local i = g_items[id]
+	if i then
+		local desc = i[2]
+		if id == 96 and value ~= 1 then
+			return desc:gsub("PDA","Laptop")
+		else
+			return desc:gsub("#v",value)
+		end
 	end
-	return ( g_items[id] or { nil, "?" } )[2]
 end
 
 function getItemType(id)
