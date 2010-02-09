@@ -34,9 +34,9 @@ local towSphere2 = createColPolygon(1540.209594, -1602.937377, 1540.209594, -160
 local unimpoundSpot = 0
 
 function findUnimpoundSpot()
-	unimpoundSlot = unimpoundSlot + 1
-	if unimpoundSlot > 6 then
-		unimpoundSlot = 1
+	unimpoundSpot = unimpoundSpot + 1
+	if unimpoundSpot > 6 then
+		unimpoundSpot = 1
 	end
 	if unimpoundSpot == 1 then
 		return 2852.6171875, -1906.3427734375, 10.804823875427
@@ -124,15 +124,15 @@ addEventHandler("onColShapeHit", towSphere2, UnlockVehicle)
 function payRelease(vehID)
 	if exports.global:takeMoney(source, 95) then
 		exports.global:giveMoney(getTeamFromName("Best's Towing and Recovery"), 95)
-		setVehicleFrozen(vehID, false)
-		setElementData(vehID, "handbrake", 0, false)
-		setElementData(vehID, "Impounded", 0)
 		setElementPosition(vehID, findUnimpoundSpot())
 		setVehicleRotation(vehID, 0,0,140.66284179688)
 		setVehicleLocked(vehID, true)
 		setElementData(vehID, "enginebroke", 0, false)
 		setVehicleDamageProof(vehID, false)
 		setVehicleEngineState(vehID, false)
+		setVehicleFrozen(vehID, false)
+		setElementData(vehID, "handbrake", 0, false)
+		setElementData(vehID, "Impounded", 0)
 		updateVehPos(vehID)
 		
 		outputChatBox("Your vehicle has been released. (( Please remember to /park your vehicle so it does not respawn in our carpark. ))", source, 255, 194, 14)
