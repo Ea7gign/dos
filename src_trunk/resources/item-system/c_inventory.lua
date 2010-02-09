@@ -129,6 +129,14 @@ local function getWeapons( )
 	return weapons
 end
 
+local function getImage( itemID, itemValue )
+	if itemID ~= 16 then
+		return "images/" .. itemID .. ".png"
+	else
+		return ":account-system/img/" .. ("%03d"):format(itemValue) .. ".png"
+	end
+end
+
 addEventHandler( "onClientRender", getRootElement( ),
 	function( )
 		hoverItemSlot = false
@@ -176,7 +184,7 @@ addEventHandler( "onClientRender", getRootElement( ),
 					local boxx = x2 + spacer
 					local boxy = y2 + spacer + sbox * ( i - irows )
 					dxDrawRectangle( boxx, boxy, box, box, i == activeTab and active_tab_color or icon[2] )
-					dxDrawImage( boxx, boxy, box, box, "images/" .. icon[1] .. ".png" )
+					dxDrawImage( boxx, boxy, box, box, getImage( icon[1] ) )
 					
 					if not clickWorldItem and isInBox( cursorX, cursorY, boxx, boxx + box, boxy, boxy + box ) then
 						if i <= 3 then
@@ -206,7 +214,7 @@ addEventHandler( "onClientRender", getRootElement( ),
 					if item then
 						if not isMove or item[4] ~= clickItemSlot.id then
 							dxDrawRectangle( boxx, boxy, box, box, full_color )
-							dxDrawImage( boxx, boxy, box, box, "images/" .. item[1] .. ".png" )
+							dxDrawImage( boxx, boxy, box, box, getImage( item[1], item[2] ) )
 							
 							-- ammo count for weapons
 							if activeTab == 3 then
@@ -265,7 +273,7 @@ addEventHandler( "onClientRender", getRootElement( ),
 				
 				dxDrawRectangle( boxx - spacer, boxy - spacer, box + 2 * spacer, box + 2 * spacer, color )
 				dxDrawRectangle( boxx, boxy, box, box, full_color )
-				dxDrawImage( boxx, boxy, box, box, "images/" .. item[1] .. ".png" )
+				dxDrawImage( boxx, boxy, box, box, getImage( item[1], item[2] ) )
 			end
 				
 			if show then
