@@ -374,9 +374,13 @@ addEventHandler( "onClientClick", getRootElement( ),
 					end
 				elseif hoverWorldItem or clickWorldItem then
 					if state == "down" then
-						clickDown = getTickCount( )
-						clickWorldItem = hoverWorldItem
-						setElementAlpha( clickWorldItem, 127 )
+						if getElementData( hoverWorldItem, "itemID" ) == 81 then
+							triggerServerEvent( "openFreakinInventory", getLocalPlayer(), hoverWorldItem, cursorX, cursorY )
+						else
+							clickDown = getTickCount( )
+							clickWorldItem = hoverWorldItem
+							setElementAlpha( clickWorldItem, 127 )
+						end
 					elseif state == "up" and clickWorldItem then
 						setElementAlpha( clickWorldItem, 255 )
 
@@ -419,6 +423,15 @@ addEventHandler( "onClientClick", getRootElement( ),
 					setElementAlpha( clickWorldItem, 255 )
 					clickWorldItem = false
 					clickDown = false
+				end
+				if state == "up" and hoverWorldItem then
+					if getElementData( hoverWorldItem, "itemID" ) == 81 then -- Fridge
+						triggerServerEvent( "openFreakinInventory", getLocalPlayer(), hoverWorldItem, cursorX, cursorY )
+					elseif getElementData( hoverWorldItem, "itemID" ) == 54 then -- Ghettoblaster
+						item = hoverWorldItem
+						ax, ay = cursorX, cursorY
+						showItemMenu( )
+					end
 				end
 			end
 		end
