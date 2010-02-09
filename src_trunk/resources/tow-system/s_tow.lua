@@ -125,7 +125,7 @@ function payRelease(vehID)
 	if exports.global:takeMoney(source, 95) then
 		exports.global:giveMoney(getTeamFromName("Best's Towing and Recovery"), 95)
 		setElementPosition(vehID, findUnimpoundSpot())
-		setVehicleRotation(vehID, 0,0,140.66284179688)
+		setVehicleRotation(vehID, 0,0,183.66284179688)
 		setVehicleLocked(vehID, true)
 		setElementData(vehID, "enginebroke", 0, false)
 		setVehicleDamageProof(vehID, false)
