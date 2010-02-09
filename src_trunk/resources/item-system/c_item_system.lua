@@ -614,8 +614,11 @@ function useItem(itemSlot)
 			triggerEvent( "showCityGuide", getLocalPlayer( ) )
 			return
 		elseif (itemID==19) then -- MP3 PLayer
-			outputChatBox("Use the - and = keys to use the MP3 Player.", 255, 194, 14)
-			return
+			if isPedInVehicle(getLocalPlayer()) or getElementData(getLocalPlayer(), "fishing") or getElementData(getLocalPlayer(), "jammed") then
+				outputChatBox("Use the - and = keys to use the MP3 Player.", 255, 194, 14)
+			else
+				exports['realism-system']:toggleMP3("=", "down")
+			end			return
 		elseif (itemID==27) then -- Flashbang
 			local x, y, z = getElementPosition(getLocalPlayer( ))
 			local rot = getPedRotation(getLocalPlayer( ))
