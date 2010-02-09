@@ -45,4 +45,7 @@
 	<script src="South Side Crips.lua" type="client"/>
 	
 	<script src="Gov City Hall.lua" type="client"/>
+
+	<script src="BTR\interior.lua" type="client"/>
+	<script src="BTR\exterior.lua" type="client"/>
 </meta>
