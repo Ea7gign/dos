@@ -400,6 +400,7 @@ addEventHandler( "onClientClick", getRootElement( ),
 					if show then
 						if activeTab == hoverAction then
 							show = false
+							showCursor( false )
 						else
 							activeTab = hoverAction
 						end
