@@ -41,8 +41,9 @@ local actionIcons =
 	{ 48, tocolor( 255, 255, 127, 63 ), "Items" },
 	{ 4, tocolor( 255, 255, 127, 63 ), "Keys" },
 	{ -28, tocolor( 255, 255, 127, 63 ), "Weapons" },
+	{ -202, tocolor( 127, 255, 127, 63 ), "Drop Item", "Press CTRL while selecting an item to automatically drop it." },
 	{ -201, tocolor( 127, 127, 255, 63 ), "Show Item" },
-	{ -200, tocolor( 255, 127, 127, 63 ), "Destroy Item" }
+	{ -200, tocolor( 255, 127, 127, 63 ), "Destroy Item", "Press DELETE while selecting an item to automatically delete it." }
 }
 
 local savedArmor = false
@@ -169,8 +170,8 @@ addEventHandler( "onClientRender", getRootElement( ),
 				-- inventory buttons
 				local x2 = x - sbox
 				local irows = isMove and 4 or 1
-				local jrows = isMove and 5 or 3
-				local y2 = y + sbox * ( isMove and 1.5 or 1 )
+				local jrows = isMove and 6 or 3
+				local y2 = y + sbox
 				dxDrawRectangle( x2, y2, sbox, ( jrows - irows + 1 ) * sbox + spacer, background_color )
 				for i = irows, jrows do
 					local icon = actionIcons[ i ]
@@ -182,11 +183,11 @@ addEventHandler( "onClientRender", getRootElement( ),
 					if not clickWorldItem and isInBox( cursorX, cursorY, boxx, boxx + box, boxy, boxy + box ) then
 						if i <= 3 then
 							if not isMove then -- tabs
-								tooltip( cursorX, cursorY, icon[3] )
+								tooltip( cursorX, cursorY, icon[3], icon[4] )
 								hoverAction = i
 							end
 						elseif isMove then
-							tooltip( cursorX, cursorY, icon[3] )
+							tooltip( cursorX, cursorY, icon[3], icon[4] )
 							hoverAction = i
 						end
 					end
@@ -310,7 +311,19 @@ addEventHandler( "onClientClick", getRootElement( ),
 						clickItemSlot = hoverItemSlot
 						clickItemSlot.rx = clickItemSlot.x - cursorX
 						clickItemSlot.ry = clickItemSlot.y - cursorY
-					elseif state == "up" and clickItemSlot then
+					end
+					
+					if state == "down" and getKeyState( "delete" ) then -- quick delete
+						state = "up"
+						clickDown = 0
+						hoverAction = 6
+					elseif state == "down" and ( getKeyState( "lctrl" ) or getKeyState( "rctrl" ) ) then -- quick drop
+						state = "up"
+						clickDown = 0
+						hoverAction = 4
+					end
+					
+					if state == "up" and clickItemSlot then
 						if getTickCount( ) - clickDown < 200 then
 							if isCursorOverInventory then
 								useItem( inventory[ clickItemSlot.invslot ][ 1 ] < 0 and inventory[ clickItemSlot.invslot ][ 3 ] or clickItemSlot.id )
@@ -340,6 +353,37 @@ addEventHandler( "onClientClick", getRootElement( ),
 									end
 								end
 							elseif hoverAction == 4 then
+								local item = inventory[ clickItemSlot.invslot ]
+								local itemID = item[ 1 ]
+								local itemValue = item[2]
+								
+								local matrix = getElementMatrix(getLocalPlayer())
+								local oldX = 0
+								local oldY = 1
+								local oldZ = 0
+								local x = oldX * matrix[1][1] + oldY * matrix [2][1] + oldZ * matrix [3][1] + matrix [4][1]
+								local y = oldX * matrix[1][2] + oldY * matrix [2][2] + oldZ * matrix [3][2] + matrix [4][2]
+								local z = oldX * matrix[1][3] + oldY * matrix [2][3] + oldZ * matrix [3][3] + matrix [4][3]
+								
+								local z = getGroundPosition( x, y, z + 2 )
+								
+								if itemID > 0 then
+									waitingForItemDrop = true
+									triggerServerEvent( "dropItem", localPlayer, clickItemSlot.id, x, y, z )
+								elseif itemID == -100 then
+									waitingForItemDrop = true
+									triggerServerEvent( "dropItem", localPlayer, 100, x, y, z, savedArmor )
+								else
+									-- weapon
+									local slot = -item[3]
+									if slot >= 2 and slot <= 9 then
+										openWeaponDropGUI(-itemID, itemValue, x, y, z)
+									else
+										waitingForItemDrop = true
+										triggerServerEvent( "dropItem", localPlayer, -itemID, x, y, z, itemValue )
+									end
+								end
+							elseif hoverAction == 5 then
 								-- Show Item
 								local item = inventory[ clickItemSlot.invslot ]
 								local itemName, itemValue = getItemName( item[1], item[2] ), getItemValue( item[1], item[2] )
@@ -353,7 +397,7 @@ addEventHandler( "onClientClick", getRootElement( ),
 									itemName = itemName .. ", issued to " .. itemValue
 								end
 								triggerServerEvent( "showItem", localPlayer, itemName )
-							elseif hoverAction == 5 then
+							elseif hoverAction == 6 then
 								local item = inventory[ clickItemSlot.invslot ]
 								local itemID = item[ 1 ]
 								local itemSlot = itemID < 0 and itemID or clickItemSlot.id
