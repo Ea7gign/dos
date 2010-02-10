@@ -91,7 +91,7 @@ local function tooltip( x, y, text, text2 )
 		text = text .. "\n" .. text2
 	end
 	local height = 10 * ( text2 and 5 or 3 )
-	x = math.max( 10, math.min( x, sx - width - 30 ) )
+	x = math.max( 10, math.min( x, sx - width - 10 ) )
 	y = math.max( 10, math.min( y, sy - height - 10 ) )
 	
 	dxDrawRectangle( x, y, width, height, tooltip_background_color, true )
