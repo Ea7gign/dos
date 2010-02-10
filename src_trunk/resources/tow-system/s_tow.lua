@@ -31,6 +31,33 @@ local towSphere = createColPolygon(2789.131835, -1468.5177, 2789.131835, -1468.5
 -- pd impound lot
 local towSphere2 = createColPolygon(1540.209594, -1602.937377, 1540.209594, -1602.937377, 1590.368408, -1602.958251, 1583.952514, -1617.322265625, 1540.34082, -1617.087524)
 
+local currentReleasePos = 0
+
+function getReleasePosition()
+	currentReleasePos = currentReleasePos + 1
+	if currentReleasePos > 5 then
+		currentReleasePos = 1
+	end
+	
+	local x = 2742.7216796875
+	local y = -1474.1484375
+	local z = 32
+	
+	if (currentReleasePos == 1) then
+		y = -1474.1484375
+	elseif (currentReleasePos == 2) then
+		y = -1463.5712890625
+	elseif (currentReleasePos == 3) then
+		y = -1454.5625
+	elseif (currentReleasePos == 4)
+		y = -1444.880859375
+	else
+		y = -1433.2705078125
+	end
+	
+	return x, y, z
+end
+
 function cannotVehpos(thePlayer)
 	return isElementWithinColShape(thePlayer, towSphere) and getElementData(thePlayer,"faction") ~= 30
 end
@@ -47,6 +74,7 @@ function CanTowTruckDriverVehPos(thePlayer, commandName)
 	end
 	return ret
 end
+
 --Auto Pay for PD
 function CanTowTruckDriverGetPaid(thePlayer, commandName)
 	if (isElementWithinColShape(thePlayer,towSphere2)) then
@@ -102,16 +130,17 @@ function payRelease(vehID)
 	if exports.global:takeMoney(source, 95) then
 		exports.global:giveMoney(getTeamFromName("Best's Towing and Recovery"), 95)
 		setVehicleFrozen(vehID, false)
-		setElementData(vehID, "handbrake", 0, false)
-		setElementData(vehID, "Impounded", 0)
-		setElementPosition(vehID, 2743.0905761719, -1462.744750, 32.453125)
+		setElementPosition(vehID, getReleasePosition())
+		setVehicleRotation(vehID, 0, 0, 0) -- facing north
 		setVehicleLocked(vehID, true)
 		setElementData(vehID, "enginebroke", 0, false)
 		setVehicleDamageProof(vehID, false)
 		setVehicleEngineState(vehID, false)
+		setElementData(vehID, "handbrake", 0, false)
+		setElementData(vehID, "Impounded", 0)
 		updateVehPos(vehID)
-		
-		outputChatBox("Your vehicle has been released. (( Please remember to /park your vehicle so it does not respawn in our carpark. ))", source, 255, 194, 14)
+		triggerEvent("parkVehicle", source, vehID)
+		outputChatBox("Your vehicle has been released. (( Please remember to /park your vehicle so it does not respawn in front of our carpark. ))", source, 255, 194, 14)
 	else
 		outputChatBox("Insufficient Funds.", source, 255, 0, 0)
 	end
