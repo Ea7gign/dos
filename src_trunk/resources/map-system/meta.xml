@@ -43,6 +43,7 @@
 	
 	<!-- 26: Los Malvados -->
 	<script src="seville.lua" type="client"/>
+	<script src="Los Malvados Blob Records.lua" type="client"/>
 	
 	<!-- 30: Best's Towing and Recovery -->
 	<script src="BTR\interior.lua" type="client"/>
