@@ -765,116 +765,117 @@ function dropItem(itemID, x, y, z, ammo, keepammo)
 	
 	local rz2 = getPedRotation(source)
 	if not ammo then
+		local itemSlot = itemID
+		local itemID, itemValue = unpack( getItems( source )[ itemSlot ] )
+		
 		if itemID == 60 then
 			outputChatBox( "This Item can't be dropped." )
 		elseif itemID == 81 and dimension == 0 then
 			outputChatBox( "You need to drop this item in an interior." )
-		end
-		
-		local itemSlot = itemID
-		local itemID, itemValue = unpack( getItems( source )[ itemSlot ] )
-		local insert = mysql_query(handler, "INSERT INTO worlditems SET itemid='" .. itemID .. "', itemvalue='" .. mysql_escape_string(handler, itemValue) .. "', creationdate = NOW(), x = " .. x .. ", y = " .. y .. ", z= " .. z .. ", dimension = " .. dimension .. ", interior = " .. interior .. ", rz = " .. rz2 .. ", creator=" .. getElementData(source, "dbid"))
-		if insert then
-			local id = mysql_insert_id(handler)
-			mysql_free_result(insert)
-			
-			outputChatBox("You dropped a " .. getItemName( itemID, itemValue ) .. ".", source, 255, 194, 14)
-			
-			-- Animation
-			exports.global:applyAnimation(source, "CARRY", "putdwn", 500, false, false, true)
-			toggleAllControls( source, true, true, true )
-			
-			-- Create Object
-			local modelid = getItemModel(tonumber(itemID))
-			
-			local rx, ry, rz, zoffset = getItemRotInfo(itemID)
-			local obj = createObject(modelid, x, y, z + zoffset - 0.05, rx, ry, rz+rz2)
-			exports.pool:allocateElement(obj)
-			
-			setElementInterior(obj, interior)
-			setElementDimension(obj, dimension)
-			
-			if (itemID==76) then
-				moveObject(obj, 200, x, y, z + zoffset, 90, 0, 0)
-			else
-				moveObject(obj, 200, x, y, z + zoffset)
-			end
-			
-			setElementData(obj, "id", id, false)
-			setElementData(obj, "itemID", itemID)
-			setElementData(obj, "itemValue", itemValue)
-			setElementData(obj, "creator", getElementData(source, "dbid"), false)
-			
-			takeItemFromSlot( source, itemSlot )
-			
-			-- Dropped his backpack
-			if itemID == 48 and countItems( source, 48 ) == 0 then
-				local keycount = countItems( source, 3 ) + countItems( source, 4 ) + countItems( source, 5 )
-				for i = #getItems( source ), 1, -1 do
-					if keycount <= 2 * getInventorySlots(source) then
-						break
-					elseif getItems( source )[ i ] == 3 or getItems( source )[ i ] == 4 or getItems( source )[ i ] == 5 then
-						moveItem( source, obj, i )
-						keycount = keycount - 1
-					end
-				end
-				
-				for i = #getItems( source ), 1, -1 do
-					if #getItems( source ) - keycount <= getInventorySlots(source) then
-						break
-					elseif getItems( source )[ i ] ~= 3 and getItems( source )[ i ] ~= 4 and getItems( source )[ i ] ~= 5 then
-						moveItem( source, obj, i )
-					end
-				end
-			end
-			
-			if itemID == 2 or itemID == 17 then
-				triggerClientEvent(source, "updateHudClock", source)
-			-- Check if he drops his current clothes
-			elseif itemID == 16 and itemValue == getPedSkin(source) and not hasItem(source, 16, itemValue) then
-				local result = mysql_query(handler, "SELECT skincolor, gender FROM characters WHERE id='" .. getElementData(source, "dbid") .. "' LIMIT 1")
-				local skincolor = tonumber(mysql_result(result, 1, 1))
-				local gender = tonumber(mysql_result(result, 1, 2))
-				
-				if (gender==0) then -- MALE
-					if (skincolor==0) then -- BLACK
-						setElementModel(source, 80)
-					elseif (skincolor==1 or skincolor==2) then -- WHITE
-						setElementModel(source, 252)
-					end
-				elseif (gender==1) then -- FEMALE
-					if (skincolor==0) then -- BLACK
-						setElementModel(source, 139)
-					elseif (skincolor==1) then -- WHITE
-						setElementModel(source, 138)
-					elseif (skincolor==2) then -- ASIAN
-						setElementModel(source, 140)
-					end
-				end
-				mysql_free_result(result)
-			elseif tonumber(itemID) == 64 and not hasItem(source, 64) then
-				removeElementData(source,"PDbadge")
-				exports.global:sendLocalMeAction(source, "removes a Police Badge.")
-				exports.global:updateNametagColor(source)
-			elseif  tonumber(itemID) == 65 and not hasItem(source, 65)then
-				removeElementData(source,"ESbadge")
-				exports.global:sendLocalMeAction(source, "removes an Emergency Services ID.")
-				exports.global:updateNametagColor(source)
-			elseif  tonumber(itemID) == 86 and not hasItem(source, 86)then
-				removeElementData(source,"SANbadge")
-				exports.global:sendLocalMeAction(source, "removes a SAN ID.")
-				exports.global:updateNametagColor(source)
-			elseif tonumber(itemID) == 87 and not hasItem(source, 87) then
-				removeElementData(source,"GOVbadge")
-				exports.global:sendLocalMeAction(source, "removes a Government Badge.")
-				exports.global:updateNametagColor(source)
-			elseif tonumber(itemID)== 76 and not exports.global:hasItem(source, 76) then
-				destroyElement(shields[source])
-				shields[source] = nil
-			end
-			exports.global:sendLocalMeAction(source, "dropped a " .. getItemName( itemID, itemValue ) .. ".")
 		else
-			outputDebugString( mysql_error( handler ) )
+			local insert = mysql_query(handler, "INSERT INTO worlditems SET itemid='" .. itemID .. "', itemvalue='" .. mysql_escape_string(handler, itemValue) .. "', creationdate = NOW(), x = " .. x .. ", y = " .. y .. ", z= " .. z .. ", dimension = " .. dimension .. ", interior = " .. interior .. ", rz = " .. rz2 .. ", creator=" .. getElementData(source, "dbid"))
+			if insert then
+				local id = mysql_insert_id(handler)
+				mysql_free_result(insert)
+				
+				outputChatBox("You dropped a " .. getItemName( itemID, itemValue ) .. ".", source, 255, 194, 14)
+				
+				-- Animation
+				exports.global:applyAnimation(source, "CARRY", "putdwn", 500, false, false, true)
+				toggleAllControls( source, true, true, true )
+				
+				-- Create Object
+				local modelid = getItemModel(tonumber(itemID))
+				
+				local rx, ry, rz, zoffset = getItemRotInfo(itemID)
+				local obj = createObject(modelid, x, y, z + zoffset - 0.05, rx, ry, rz+rz2)
+				exports.pool:allocateElement(obj)
+				
+				setElementInterior(obj, interior)
+				setElementDimension(obj, dimension)
+				
+				if (itemID==76) then
+					moveObject(obj, 200, x, y, z + zoffset, 90, 0, 0)
+				else
+					moveObject(obj, 200, x, y, z + zoffset)
+				end
+				
+				setElementData(obj, "id", id, false)
+				setElementData(obj, "itemID", itemID)
+				setElementData(obj, "itemValue", itemValue)
+				setElementData(obj, "creator", getElementData(source, "dbid"), false)
+				
+				takeItemFromSlot( source, itemSlot )
+				
+				-- Dropped his backpack
+				if itemID == 48 and countItems( source, 48 ) == 0 then
+					local keycount = countItems( source, 3 ) + countItems( source, 4 ) + countItems( source, 5 )
+					for i = #getItems( source ), 1, -1 do
+						if keycount <= 2 * getInventorySlots(source) then
+							break
+						elseif getItems( source )[ i ] == 3 or getItems( source )[ i ] == 4 or getItems( source )[ i ] == 5 then
+							moveItem( source, obj, i )
+							keycount = keycount - 1
+						end
+					end
+					
+					for i = #getItems( source ), 1, -1 do
+						if #getItems( source ) - keycount <= getInventorySlots(source) then
+							break
+						elseif getItems( source )[ i ] ~= 3 and getItems( source )[ i ] ~= 4 and getItems( source )[ i ] ~= 5 then
+							moveItem( source, obj, i )
+						end
+					end
+				end
+				
+				if itemID == 2 or itemID == 17 then
+					triggerClientEvent(source, "updateHudClock", source)
+				-- Check if he drops his current clothes
+				elseif itemID == 16 and itemValue == getPedSkin(source) and not hasItem(source, 16, itemValue) then
+					local result = mysql_query(handler, "SELECT skincolor, gender FROM characters WHERE id='" .. getElementData(source, "dbid") .. "' LIMIT 1")
+					local skincolor = tonumber(mysql_result(result, 1, 1))
+					local gender = tonumber(mysql_result(result, 1, 2))
+					
+					if (gender==0) then -- MALE
+						if (skincolor==0) then -- BLACK
+							setElementModel(source, 80)
+						elseif (skincolor==1 or skincolor==2) then -- WHITE
+							setElementModel(source, 252)
+						end
+					elseif (gender==1) then -- FEMALE
+						if (skincolor==0) then -- BLACK
+							setElementModel(source, 139)
+						elseif (skincolor==1) then -- WHITE
+							setElementModel(source, 138)
+						elseif (skincolor==2) then -- ASIAN
+							setElementModel(source, 140)
+						end
+					end
+					mysql_free_result(result)
+				elseif tonumber(itemID) == 64 and not hasItem(source, 64) then
+					removeElementData(source,"PDbadge")
+					exports.global:sendLocalMeAction(source, "removes a Police Badge.")
+					exports.global:updateNametagColor(source)
+				elseif  tonumber(itemID) == 65 and not hasItem(source, 65)then
+					removeElementData(source,"ESbadge")
+					exports.global:sendLocalMeAction(source, "removes an Emergency Services ID.")
+					exports.global:updateNametagColor(source)
+				elseif  tonumber(itemID) == 86 and not hasItem(source, 86)then
+					removeElementData(source,"SANbadge")
+					exports.global:sendLocalMeAction(source, "removes a SAN ID.")
+					exports.global:updateNametagColor(source)
+				elseif tonumber(itemID) == 87 and not hasItem(source, 87) then
+					removeElementData(source,"GOVbadge")
+					exports.global:sendLocalMeAction(source, "removes a Government Badge.")
+					exports.global:updateNametagColor(source)
+				elseif tonumber(itemID)== 76 and not exports.global:hasItem(source, 76) then
+					destroyElement(shields[source])
+					shields[source] = nil
+				end
+				exports.global:sendLocalMeAction(source, "dropped a " .. getItemName( itemID, itemValue ) .. ".")
+			else
+				outputDebugString( mysql_error( handler ) )
+			end
 		end
 	else
 		if tonumber(getElementData(source, "duty")) > 0 then
