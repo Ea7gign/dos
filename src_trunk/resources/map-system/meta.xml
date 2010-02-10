@@ -1,8 +1,9 @@
 <meta>
 	<script src="createObject.lua" type="client"/>
+	
 	<script src="Bank Int.lua" type="client"/>
 	<script src="Church Int.lua" type="client"/>
-	<script src="Hospital Int.lua" type="client"/>
+	<script src="Church2Int.lua" type="client"/>
 	<script src="LS Harbor.lua" type="client"/>
 	<script src="Main Street.lua" type="client"/>
 	<script src="Recording Studio.lua" type="client"/>
@@ -10,41 +11,58 @@
 	<script src="Fixes.lua" type="client"/>
 	<script src="Strip Club Back Room.lua" type="client"/>
 	<script src="Idlewood Gas.lua" type="client"/>
-	<script src="seville.lua" type="client"/>
 	<script src="Busstops_LS_LineAB.lua" type="client"/>
 	<script src="Pershing_Square.lua" type="client"/>
-	<script src="PD Impound.lua" type="client"/>
 	<script src="swimming_pool.lua" type="client"/>
 	<script src="ein-barn.lua" type="client"/>
+	<script src="LinoKazuma.lua" type="client"/><!-- Donator Helipad -->
+	<script src="Exile.lua" type="client"/>
+	<script src="daniels_mansion.lua" type="client"/>
+	<script src="MountMansion.lua" type="client"/>
+	<script src="The Silver Mint.lua" type="client"/>
+	
+	<!-- Los Santos Police Department -->
+	<script src="PD Impound.lua" type="client"/>
+	<script src="PD Interior.lua" type="client"/>
+	<script src="PD Interior2.lua" type="client"/>
+	
+	<!-- 2: Los Santos Emergency Services -->
+	<script src="ES.lua" type="client"/>
+	<script src="ES Academy.lua" type="client"/>
+	<script src="FD Interior.lua" type="client"/>
+	<script src="Hospital Int.lua" type="client"/>
+	
+	<!-- 3: Government of Los Santos -->
+	<script src="Gov City Hall.lua" type="client"/>
+	
+	<!-- 20: San Andreas Network -->
 	<script src="SAN Roof.lua" type="client"/>
 	<script src="SAN Interior.lua" type="client"/>
 	<script src="SAN Printworks.lua" type="client"/>
-	<script src="PD Interior.lua" type="client"/>
-	<script src="PD Interior2.lua" type="client"/>
-	<script src="daniels_mansion.lua" type="client"/>
-	<script src="MountMansion.lua" type="client"/>
-	<script src="FD Interior.lua" type="client"/>
-	<script src="CityHall.lua" type="client"/>
-	<script src="ES.lua" type="client"/>
-	<script src="ES Academy.lua" type="client"/>
-	<script src="court.lua" type="client"/>
 	<script src="san_tv.lua" type="client"/>
-	<script src="LinoKazuma.lua" type="client"/><!-- Donator Helipad -->
-	<script src="Church2Int.lua" type="client"/>
-	<script src="Exile.lua" type="client"/>
-	<script src="The Silver Mint.lua" type="client"/>
-
+	
+	<!-- 26: Los Malvados -->
+	<script src="seville.lua" type="client"/>
+	
+	<!-- 30: Best's Towing and Recovery -->
+	<script src="BTR\interior.lua" type="client"/>
+	
+	<!-- 36: First Court of San Andreas -->
+	<script src="court.lua" type="client"/>
+	
+	<!-- 46: Little Moscow Crew -->
 	<script src="lmc-resto.lua" type="client"/>
 	<script src="lmc-backroom.lua" type="client"/>
 	<script src="lmc-interiors.lua" type="client"/>
 	<script src="LMC Vadmis Meatshop.lua" type="client"/>
 	
+	<!-- 56: Yakuza: Yamaguchi-Gumi -->
 	<script src="Yakuza Little Tokyo.lua" type="client"/>
 	<script src="Yakuza Starlight Inc.lua" type="client"/>
-
+	
+	<!-- 58: Southside Crips -->
 	<script src="South Side Crips.lua" type="client"/>
 	
-	<script src="Gov City Hall.lua" type="client"/>
-
-	<script src="BTR\interior.lua" type="client"/>
+	<!-- 64: Los Santos International Flight School -->
+	<script src="Flight School.lua" type="client"/>
 </meta>
