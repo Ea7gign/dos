@@ -84,6 +84,11 @@ local function getHoverElement( )
 end
 
 local function tooltip( x, y, text, text2 )
+	text = tostring( text )
+	if text2 then
+		text2 = tostring( text2 )
+	end
+	
 	if text == text2 then
 		text2 = nil
 	end
