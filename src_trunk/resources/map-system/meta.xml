@@ -66,4 +66,9 @@
 	
 	<!-- 64: Los Santos International Flight School -->
 	<script src="Flight School.lua" type="client"/>
+	
+	<!-- ??: Prison -->
+	<script src="Prison Ext.lua" type="client"/>
+	<script src="Prison Int Rec.lua" type="client"/>
+	<script src="Prison Int Cells.lua" type="client"/>
 </meta>
