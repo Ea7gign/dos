@@ -49,7 +49,7 @@ function getReleasePosition()
 		y = -1463.5712890625
 	elseif (currentReleasePos == 3) then
 		y = -1454.5625
-	elseif (currentReleasePos == 4)
+	elseif (currentReleasePos == 4) then
 		y = -1444.880859375
 	else
 		y = -1433.2705078125
