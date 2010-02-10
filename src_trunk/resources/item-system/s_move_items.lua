@@ -44,12 +44,12 @@ addEventHandler( "closeFreakinInventory", getRootElement(), closeInventory )
 
 --
 
-local function moveToElement( element, slot, ammo )
+local function moveToElement( element, slot, ammo, event )
 	if not canAccessElement( source, element ) then
 		return
 	end
 	
-	local name = getElementModel( element ) == 2147 and "Fridge" or ( getElementType( element ) == "vehicle" and "Vehicle" or "Safe" )
+	local name = getElementModel( element ) == 2147 and "Fridge" or ( getElementType( element ) == "vehicle" and "Vehicle" or ( getElementType( element ) == "player" and "Player" or "Safe" ) )
 			
 	if not ammo then
 		local item = getItems( source )[ slot ]
@@ -100,11 +100,37 @@ local function moveToElement( element, slot, ammo )
 			end
 		end
 	end
-	triggerClientEvent( source, "finishItemMove", source )
+	triggerClientEvent( source, event or "finishItemMove", source )
 end
 
 addEvent( "moveToElement", true )
 addEventHandler( "moveToElement", getRootElement(), moveToElement )
+
+local function moveWorldItemToElement( item, element )
+	if not isElement( item ) or not isElement( element ) or not canAccessElement( source, element ) then
+		return
+	end
+	
+	local id = getElementData( item, "id" )
+	local itemID = getElementData( item, "itemID" )
+	local itemValue = getElementData( item, "itemValue" )
+	local name = getElementModel( element ) == 2147 and "Fridge" or ( getElementType( element ) == "vehicle" and "Vehicle" or ( getElementType( element ) == "player" and "Player" or "Safe" ) )
+	
+	if giveItem( element, itemID, itemValue ) then
+		exports.logs:logMessage( getPlayerName( source ) .. " put item #" .. id .. " (" .. itemID .. ":" .. getItemName( itemID ) .. ") - " .. itemValue .. " in " .. name .. " #" .. getElementID(element), 17)
+		mysql_free_result( mysql_query(handler, "DELETE FROM worlditems WHERE id='" .. id .. "'") )
+		
+		while #getItems( item ) > 0 do
+			moveItem( item, element, 1 )
+		end
+		destroyElement( item )
+	else
+		outputChatBox( "The Inventory is full.", source, 255, 0, 0 )
+	end
+end
+
+addEvent( "moveWorldItemToElement", true )
+addEventHandler( "moveWorldItemToElement", getRootElement(), moveWorldItemToElement )
 
 local function moveFromElement( element, slot, ammo, index )
 	if not canAccessElement( source, element ) then

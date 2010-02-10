@@ -1,6 +1,7 @@
 -- Configuration
 local background_color = tocolor( 0, 0, 0, 127 )
 local background_error_color = tocolor( 255, 0, 0, 127 )
+local background_movetoelement_color = tocolor( 127, 127, 255, 63 )
 local empty_color = tocolor( 127, 127, 127, 10 )
 local full_color = tocolor( 255, 255, 255, 10 )
 local tooltip_text_color = tocolor( 255, 255, 255, 255 )
@@ -21,11 +22,13 @@ local localPlayer = getLocalPlayer( )
 
 local inventory = false -- elements to display
 local show = false -- defines wherever to show the inventory or not
+local useHQimages = nil
 
 --
 
 local clickDown = false
 waitingForItemDrop = false
+local hoverElement = false
 
 local hoverItemSlot = false
 local clickItemSlot = false
@@ -125,7 +128,16 @@ end
 
 local function getImage( itemID, itemValue )
 	if itemID ~= 16 then
-		return "images/" .. itemID .. ".png"
+		if useHQimages == nil then
+			if dxDrawImage( 0, 0, 1, 1, "hqimages/" .. itemID .. ".png" ) then
+				useHQimages = true
+			else
+				useHQimages = false
+			end
+		end
+		
+
+		return ( useHQimages and "hq" or "" ) .. "images/" .. itemID .. ".png"
 	else
 		return ":account-system/img/" .. ("%03d"):format(itemValue) .. ".png"
 	end
@@ -137,13 +149,14 @@ addEventHandler( "onClientRender", getRootElement( ),
 		hoverWorldItem = false
 		hoverAction = false
 		isCursorOverInventory = false
+		hoverElement = false
 		
 		if not guiGetInputEnabled( ) and not isMTAWindowActive( ) and isCursorShowing( ) then
 			local cursorX, cursorY, cwX, cwY, cwZ = getCursorPosition( )
 			local cursorX, cursorY = cursorX * sx, cursorY * sy
 			
 			-- background
-			if not inventory or ( activeTab == 3 and savedArmor ~= math.floor( getPedArmor( localPlayer ) ) ) then
+			if activeTab == 3 or not inventory or ( activeTab == 3 and savedArmor ~= math.floor( getPedArmor( localPlayer ) ) ) then
 				if activeTab == 3 then
 					inventory = getWeapons( )
 				else
@@ -233,7 +246,8 @@ addEventHandler( "onClientRender", getRootElement( ),
 			
 			if isMove or clickWorldItem then
 				local boxx, boxy, item
-				local color = background_color
+				local color = full_color
+				local col, x, y, z
 				if clickWorldItem then
 					item = { getElementData( clickWorldItem, "itemID" ), getElementData( clickWorldItem, "itemValue" ), false, false }
 					boxx = cursorX - spacer - box / 2
@@ -245,9 +259,21 @@ addEventHandler( "onClientRender", getRootElement( ),
 					else
 						-- check if we can drop there
 						local cameraX, cameraY, cameraZ = getWorldFromScreenPosition( cursorX, cursorY, 0.1 )
-						local col, x, y, z, _ = processLineOfSight( cameraX, cameraY, cameraZ, cwX, cwY, cwZ )
+						col, x, y, z, hoverElement = processLineOfSight( cameraX, cameraY, cameraZ, cwX, cwY, cwZ )
 						if not col or getDistanceBetweenPoints3D( x, y, z, getElementPosition( localPlayer ) ) >= 10 then
 							color = background_error_color
+						elseif hoverElement then
+							if getElementType( hoverElement ) == "vehicle" then
+								color = isVehicleLocked( hoverElement ) and background_error_color or background_movetoelement_color
+							elseif getElementType( hoverElement ) == "player" then
+								color = item[1] < 0 and background_error_color or background_movetoelement_color
+							elseif getElementModel( hoverElement ) == 2332 then -- safe
+								color = ( hasItem( localPlayer, 4, getElementDimension( localPlayer ) ) or hasItem( localPlayer, 5, getElementDimension( localPlayer ) ) ) and background_movetoelement_color or background_error_color
+							elseif getElementModel( hoverElement ) == 2147 then -- fridge
+								color = background_movetoelement_color
+							else
+								color = background_error_color
+							end
 						end
 					end
 				else
@@ -258,18 +284,50 @@ addEventHandler( "onClientRender", getRootElement( ),
 					if not isCursorOverInventory then
 						-- check if we can drop there
 						local cameraX, cameraY, cameraZ = getWorldFromScreenPosition( cursorX, cursorY, 0.1 )
-						local col, x, y, z, _ = processLineOfSight( cameraX, cameraY, cameraZ, cwX, cwY, cwZ )
+						col, x, y, z, hoverElement = processLineOfSight( cameraX, cameraY, cameraZ, cwX, cwY, cwZ )
 						if not col or getDistanceBetweenPoints3D( x, y, z, getElementPosition( localPlayer ) ) >= 10 then
 							color = background_error_color
+						elseif hoverElement then
+							if getElementType( hoverElement ) == "vehicle" then
+								color = isVehicleLocked( hoverElement ) and background_error_color or background_movetoelement_color
+							elseif getElementType( hoverElement ) == "player" then
+								color = item[1] < 0 and background_error_color or background_movetoelement_color
+							elseif getElementModel( hoverElement ) == 2332 then -- safe
+								color = ( hasItem( localPlayer, 4, getElementDimension( localPlayer ) ) or hasItem( localPlayer, 5, getElementDimension( localPlayer ) ) ) and background_movetoelement_color or background_error_color
+							elseif getElementModel( hoverElement ) == 2147 then -- fridge
+								color = background_movetoelement_color
+							else
+								color = background_error_color
+							end
 						end
+
 					end
 				end
 				
-				dxDrawRectangle( boxx - spacer, boxy - spacer, box + 2 * spacer, box + 2 * spacer, color )
-				dxDrawRectangle( boxx, boxy, box, box, full_color )
+				dxDrawRectangle( boxx - spacer, boxy - spacer, box + 2 * spacer, box + 2 * spacer, background_color )
+				dxDrawRectangle( boxx, boxy, box, box, color )
 				dxDrawImage( boxx, boxy, box, box, getImage( item[1], item[2] ) )
+				if hoverElement then
+					if color == background_movetoelement_color then
+						local name = ""
+						if getElementType( hoverElement ) == "player" then
+							name = getPlayerName( hoverElement ):gsub( "_", " " )
+						elseif getElementType( hoverElement ) == "vehicle" then
+							name = getVehicleName( hoverElement ) .. " (#" .. getElementData( hoverElement, "dbid" ) .. ")"
+						elseif getElementModel( hoverElement ) == 2147 then
+							name = "Fridge"
+						elseif getElementModel( hoverElement ) == 2332 then
+							name = "Safe"
+						end
+						tooltip( boxx + sbox, boxy + ( box - 50 ) / 2, getItemName( item[1], item[2] ), "Move to " .. name .. "." )
+					else
+						hoverElement = false
+					end
+				else
+					hoverElement = nil
+				end
 			end
-				
+			
 			if show then
 				-- hide any tooltips while over the inventory
 				if isCursorOverInventory or clickWorldItem then
@@ -335,20 +393,31 @@ addEventHandler( "onClientClick", getRootElement( ),
 									local item = inventory[ clickItemSlot.invslot ]
 									local itemID = item[1]
 									local itemValue = item[2]
-									if itemID > 0 then
-										waitingForItemDrop = true
-										triggerServerEvent( "dropItem", localPlayer, clickItemSlot.id, worldX, worldY, worldZ )
-									elseif itemID == -100 then
-										waitingForItemDrop = true
-										triggerServerEvent( "dropItem", localPlayer, 100, worldX, worldY, worldZ, savedArmor )
-									else
-										-- weapon
-										local slot = -item[3]
-										if slot >= 2 and slot <= 9 then
-											openWeaponDropGUI(-itemID, itemValue, worldX, worldY, worldZ)
-										else
+									if hoverElement == nil then
+										if itemID > 0 then
 											waitingForItemDrop = true
-											triggerServerEvent( "dropItem", localPlayer, -itemID, worldX, worldY, worldZ, itemValue )
+											triggerServerEvent( "dropItem", localPlayer, clickItemSlot.id, worldX, worldY, worldZ )
+										elseif itemID == -100 then
+											waitingForItemDrop = true
+											triggerServerEvent( "dropItem", localPlayer, 100, worldX, worldY, worldZ, savedArmor )
+										else
+											-- weapon
+											local slot = -item[3]
+											if slot >= 2 and slot <= 9 then
+												openWeaponDropGUI(-itemID, itemValue, worldX, worldY, worldZ)
+											else
+												waitingForItemDrop = true
+												triggerServerEvent( "dropItem", localPlayer, -itemID, worldX, worldY, worldZ, itemValue )
+											end
+										end
+									elseif hoverElement then
+										if itemID > 0 then
+											waitingForItemDrop = true
+											triggerServerEvent( "moveToElement", localPlayer, hoverElement, clickItemSlot.id, nil, "finishItemDrop" )
+										elseif itemID == -100 then
+											triggerServerEvent( "moveToElement", localPlayer, hoverElement, clickItemSlot.id, true, "finishItemDrop" )
+										else
+											triggerServerEvent( "moveToElement", localPlayer, hoverElement, -itemID, itemValue, "finishItemDrop" )
 										end
 									end
 								end
@@ -437,7 +506,11 @@ addEventHandler( "onClientClick", getRootElement( ),
 							else
 								-- Drag&Drop, bitches
 								if getDistanceBetweenPoints3D( worldX, worldY, worldZ, getElementPosition( localPlayer ) ) < 10 then
-									triggerServerEvent( "moveItem", localPlayer, clickWorldItem, worldX, worldY, worldZ )
+									if hoverElement == nil then
+										triggerServerEvent( "moveItem", localPlayer, clickWorldItem, worldX, worldY, worldZ )
+									elseif hoverElement then
+										triggerServerEvent( "moveWorldItemToElement", localPlayer, clickWorldItem, hoverElement )
+									end
 								end
 							end
 						end
