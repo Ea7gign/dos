@@ -6,13 +6,6 @@ local full_color = tocolor( 255, 255, 255, 10 )
 local tooltip_text_color = tocolor( 255, 255, 255, 255 )
 local tooltip_background_color = tocolor( 0, 0, 0, 190 )
 local active_tab_color = tocolor( 127, 255, 127, 127 )
---
---[[
-Keys: Inventory
-	click = use
-	click'n'drag = move/drop, right = cancel
-	right click = menu show|destroy|bind item to key|cancel
-]]
 
 --
 
