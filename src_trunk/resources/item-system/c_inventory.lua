@@ -247,7 +247,7 @@ addEventHandler( "onClientRender", getRootElement( ),
 				end
 			end
 			
-			if isMove or clickWorldItem then
+			if clickDown and ( getTickCount( ) - clickDown >= 200 ) and ( clickItemSlot or clickWorldItem ) then
 				local boxx, boxy, item
 				local color = full_color
 				local col, x, y, z
