@@ -57,10 +57,8 @@ local function getHoverElement( )
 	local cursorX, cursorY, absX, absY, absZ = getCursorPosition( )
 	local cameraX, cameraY, cameraZ = getWorldFromScreenPosition( cursorX, cursorY, 0.1 )
 	local a, b, c, d, element = processLineOfSight( cameraX, cameraY, cameraZ, absX, absY, absZ )
-	if element then
-		if getElementParent(getElementParent(element)) == getResourceRootElement() then
-			return element
-		end
+	if element and getElementParent(getElementParent(element)) == getResourceRootElement() then
+		return element
 	elseif b and c and d then
 		element = nil
 		local x, y, z = nil
@@ -301,7 +299,7 @@ addEventHandler( "onClientRender", getRootElement( ),
 								color = ( hasItem( localPlayer, 4, getElementDimension( localPlayer ) ) or hasItem( localPlayer, 5, getElementDimension( localPlayer ) ) ) and background_movetoelement_color or background_error_color
 							elseif getElementModel( hoverElement ) == 2147 then -- fridge
 								color = background_movetoelement_color
-							elseif hoverElement == getHoverElement() then
+							elseif getElementParent(getElementParent(hoverElement)) ~= getResourceRootElement() or hoverElement == getHoverElement() then
 								color = full_color
 							else
 								color = background_error_color
