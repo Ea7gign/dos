@@ -44,6 +44,14 @@ addEventHandler( "closeFreakinInventory", getRootElement(), closeInventory )
 
 --
 
+local function output(from, to, itemID)
+	if from ~= to and getElementType(from) == "player" and getElementType(to) == "player" then
+		outputChatBox( getPlayerName( from ):gsub("_", " ") .. " gave you a " .. getItemName( itemID ) .. ".", to, 255, 194, 14 )
+	end
+end
+
+--
+
 local function moveToElement( element, slot, ammo, event )
 	if not canAccessElement( source, element ) then
 		return
@@ -71,6 +79,7 @@ local function moveToElement( element, slot, ammo, event )
 					outputChatBox( "Moving failed: " .. tostring( reason ), source, 255, 0, 0 )
 				else
 					exports.logs:logMessage( getPlayerName( source ) .. "->" .. name .. " #" .. getElementID(element) .. " - " .. getItemName( item[1] ) .. " - " .. item[2], 17)
+					output(source, element, item[1])
 				end
 			end
 		end
@@ -89,12 +98,14 @@ local function moveToElement( element, slot, ammo, event )
 						setPedArmor( source, 0 )
 						giveItem( element, slot, ammo )
 						exports.logs:logMessage( getPlayerName( source ) .. "->" .. name .. " #" .. getElementID(element) .. " - " .. getItemName( slot ) .. " - " .. ammo, 17)
+						output(source, element, -100)
 					end
 				else
 					exports.global:takeWeapon( source, slot )
 					if ammo > 0 then
 						giveItem( element, -slot, ammo )
 						exports.logs:logMessage( getPlayerName( source ) .. "->" .. name .. " #" .. getElementID(element) .. " - " .. getItemName( -slot ) .. " - " .. ammo, 17)
+						output(source, element, -slot)
 					end
 				end
 			end
@@ -105,6 +116,8 @@ end
 
 addEvent( "moveToElement", true )
 addEventHandler( "moveToElement", getRootElement(), moveToElement )
+
+--
 
 local function moveWorldItemToElement( item, element )
 	if not isElement( item ) or not isElement( element ) or not canAccessElement( source, element ) then
@@ -117,6 +130,7 @@ local function moveWorldItemToElement( item, element )
 	local name = getElementModel( element ) == 2147 and "Fridge" or ( getElementType( element ) == "vehicle" and "Vehicle" or ( getElementType( element ) == "player" and "Player" or "Safe" ) )
 	
 	if giveItem( element, itemID, itemValue ) then
+		output(source, element, itemID)
 		exports.logs:logMessage( getPlayerName( source ) .. " put item #" .. id .. " (" .. itemID .. ":" .. getItemName( itemID ) .. ") - " .. itemValue .. " in " .. name .. " #" .. getElementID(element), 17)
 		mysql_free_result( mysql_query(handler, "DELETE FROM worlditems WHERE id='" .. id .. "'") )
 		
@@ -131,6 +145,8 @@ end
 
 addEvent( "moveWorldItemToElement", true )
 addEventHandler( "moveWorldItemToElement", getRootElement(), moveWorldItemToElement )
+
+--
 
 local function moveFromElement( element, slot, ammo, index )
 	if not canAccessElement( source, element ) then
