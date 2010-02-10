@@ -272,7 +272,7 @@ addEventHandler( "onClientRender", getRootElement( ),
 							elseif getElementModel( hoverElement ) == 2147 then -- fridge
 								color = background_movetoelement_color
 							else
-								color = background_error_color
+								color = full_color
 							end
 						end
 					end
@@ -296,6 +296,8 @@ addEventHandler( "onClientRender", getRootElement( ),
 								color = ( hasItem( localPlayer, 4, getElementDimension( localPlayer ) ) or hasItem( localPlayer, 5, getElementDimension( localPlayer ) ) ) and background_movetoelement_color or background_error_color
 							elseif getElementModel( hoverElement ) == 2147 then -- fridge
 								color = background_movetoelement_color
+							elseif hoverElement == getHoverElement() then
+								color = full_color
 							else
 								color = background_error_color
 							end
@@ -320,6 +322,8 @@ addEventHandler( "onClientRender", getRootElement( ),
 							name = "Safe"
 						end
 						tooltip( boxx + sbox, boxy + ( box - 50 ) / 2, getItemName( item[1], item[2] ), "Move to " .. name .. "." )
+					elseif color == full_color then
+						hoverElement = nil
 					else
 						hoverElement = false
 					end
