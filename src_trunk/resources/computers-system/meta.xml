@@ -206,7 +206,10 @@
 	
 	<!-- L -->
 	<script src="websites/lossantos.lua" type="client"/>	
-	<script src="websites/lses.lua" type="client"/>
+	<script src="websites/lses/lses.gov.lua" type="client"/>
+	<script src="websites/lses/lses.gov_about.lua" type="client"/>
+	<script src="websites/lses/lses.gov_join.lua" type="client"/>
+	<script src="websites/lses/lses.gov_members.lua" type="client"/>
 	<script src="websites/lspd.lua" type="client"/>
 	
 	<!-- N -->
