@@ -273,7 +273,7 @@ addEventHandler( "onClientRender", getRootElement( ),
 							elseif getElementModel( hoverElement ) == 2332 then -- safe
 								color = ( hasItem( localPlayer, 4, getElementDimension( localPlayer ) ) or hasItem( localPlayer, 5, getElementDimension( localPlayer ) ) ) and background_movetoelement_color or background_error_color
 							elseif getElementModel( hoverElement ) == 2147 then -- fridge
-								color = background_movetoelement_color
+								color = getItemType( item[ 1 ] ) == 1 and background_movetoelement_color or background_error_color
 							else
 								color = full_color
 							end
@@ -298,7 +298,7 @@ addEventHandler( "onClientRender", getRootElement( ),
 							elseif getElementModel( hoverElement ) == 2332 then -- safe
 								color = ( hasItem( localPlayer, 4, getElementDimension( localPlayer ) ) or hasItem( localPlayer, 5, getElementDimension( localPlayer ) ) ) and background_movetoelement_color or background_error_color
 							elseif getElementModel( hoverElement ) == 2147 then -- fridge
-								color = background_movetoelement_color
+								color = getItemType( item[ 1 ] ) == 1 and background_movetoelement_color or background_error_color
 							elseif getElementParent(getElementParent(hoverElement)) ~= getResourceRootElement() or hoverElement == getHoverElement() then
 								color = full_color
 							else
