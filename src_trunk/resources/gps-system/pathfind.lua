@@ -2,7 +2,7 @@ local root = getRootElement()
 local floor = math.floor
 
 local function getAreaID(x, y)
-	return floor((y + 3000)/750)*8 + floor((x + 3000)/750)
+	return floor((math.max(-3000,math.min(y,3000)) + 3000)/750)*8 + floor((math.max(-3000,math.min(x,3000)) + 3000)/750)
 end
 
 local function getNodeByID(db, nodeID)
