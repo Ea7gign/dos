@@ -56,6 +56,7 @@
 	<script src="lmc-backroom.lua" type="client"/>
 	<script src="lmc-interiors.lua" type="client"/>
 	<script src="LMC Vadmis Meatshop.lua" type="client"/>
+	<script src="LMC Spasibar.lua" type="client"/>
 	
 	<!-- 56: Yakuza: Yamaguchi-Gumi -->
 	<script src="Yakuza Little Tokyo.lua" type="client"/>
