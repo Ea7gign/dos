@@ -1,4 +1,4 @@
-setTimer(
+--[[setTimer(
 	function()
 		for key, value in ipairs( getElementsByType( "player" ) ) do
 			if getElementDimension( value ) < 65000 then
@@ -16,4 +16,4 @@ setTimer(
 	end,
 	1000,
 	0
-)
+)]]--
