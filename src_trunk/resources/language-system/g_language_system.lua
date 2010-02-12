@@ -27,6 +27,8 @@ languages = {
 	"Korean",
 	"Vietnamese",
 	"Romanian",
+	"Albanian",
+	"Lithuanian",
 }
 	
 flags = {
@@ -58,6 +60,8 @@ flags = {
 	"kr",
 	"vn",
 	"ro",
+	"al",
+	"lt"
 }
 
 
