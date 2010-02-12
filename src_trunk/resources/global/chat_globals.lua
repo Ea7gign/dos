@@ -1,4 +1,4 @@
-oocState = 1
+oocState = getElementData(getRootElement(),"globalooc:state") or 0
 
 function getOOCState()
 	return oocState
@@ -6,6 +6,7 @@ end
 
 function setOOCState(state)
 	oocState = state
+	setElementData(getRootElement(),"globalooc:state", state, false)
 end
 
 function sendMessageToAdmins(message)
