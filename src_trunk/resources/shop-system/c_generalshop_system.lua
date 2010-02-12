@@ -359,35 +359,15 @@ function getItemsForSale(shop_type, race, gender)
 		item = {
 			{"City Guide", "A small city guide booklet.", "15", 18, 1,1,false,7},
 			{"Los Santos Highway Code", "A paperback book.", "10", 50, 1, 1, false, 5},
-			{"Chemistry 101", "A hardback academic book.", "20", 51, 1, 1, false, 10},
-			{"English Dictionary","A Dictionary, useful for learning lingo.", "25", 69, 1, 1, false, 2},		
-			{"Russian Dictionary","A Dictionary, useful for learning lingo.", "25", 69, 2, 1, false, 2},		
-			{"German Dictionary","A Dictionary, useful for learning lingo.", "25", 69, 3, 1, false, 2},	
-			{"French Dictionary","A Dictionary, useful for learning lingo.", "25", 69, 4, 1, false, 2},	
-			{"Dutch Dictionary","A Dictionary, useful for learning lingo.", "25", 69, 5, 1, false, 2},	
-			{"Italian Dictionary","A Dictionary, useful for learning lingo.", "25", 69, 6, 1, false, 2},
-			{"Spanish Dictionary","A Dictionary, useful for learning lingo.", "25", 69, 7, 1, false, 2},
-			{"Gaelic Dictionary","A Dictionary, useful for learning lingo.", "25", 69, 8, 1, false, 2},		
-			{"Japanese Dictionary","A Dictionary, useful for learning lingo.", "25", 69, 9, 1, false, 2},		
-			{"Chinese Dictionary","A Dictionary, useful for learning lingo.", "25", 69, 10, 1, false, 2},
-			{"Arabic Dictionary","A Dictionary, useful for learning lingo.", "25", 69, 11, 1, false, 2},	
-			{"Norwegian Dictionary","A Dictionary, useful for learning lingo.", "25", 69, 12, 1, false, 2},		
-			{"Swedish Dictionary","A Dictionary, useful for learning lingo.", "25", 69, 13, 1, false, 2},	
-			{"Danish Dictionary","A Dictionary, useful for learning lingo.", "25", 69, 14, 1, false, 2},		
-			{"Welsh Dictionary","A Dictionary, useful for learning lingo.", "25", 69, 15, 1, false, 2},	
-			{"Hungarian Dictionary","A Dictionary, useful for learning lingo.", "25", 69, 16, 1, false, 2},			
-			{"Bosnian Dictionary","A Dictionary, useful for learning lingo.", "25", 69, 17, 1, false, 2},	
-			{"Somalian Dictionary","A Dictionary, useful for learning lingo.", "25", 69, 18, 1, false, 2},	
-			{"Finnish Dictionary","A Dictionary, useful for learning lingo.", "25", 69, 19, 1, false, 2},	
-			{"Georgian Dictionary","A Dictionary, useful for learning lingo.", "25", 69, 20, 1, false, 2},
-			{"Greek Dictionary","A Dictionary, useful for learning lingo.", "25", 69, 21, 1, false, 2},	
-			{"Polish Dictionary","A Dictionary, useful for learning lingo.", "25", 69, 22, 1, false, 2},			
-			{"Portugeese Dictionary","A Dictionary, useful for learning lingo.", "25", 69, 23, 1, false, 2},			
-			{"Turkish Dictionary","A Dictionary, useful for learning lingo.", "25", 69, 24, 1, false, 2},
-			{"Estonian Dictionary","A Dictionary, useful for learning lingo.", "25", 69, 25, 1, false, 2},		
-			{"Korean Dictionary","A Dictionary, useful for learning lingo.", "25", 69, 26, 1, false, 2},
-			{"Vietnamese Dictionary","A Dictionary, useful for learning lingo.", "25", 69, 27, 1, false, 2}			
+			{"Chemistry 101", "A hardback academic book.", "20", 51, 1, 1, false, 10}
 		}
+		
+		for i = 1, exports['language-system']:getLanguageCount() do
+			local ln = exports['language-system']:getLanguageName(i)
+			if ln then
+				item[#item+1] = {ln .. " Dictionary","A Dictionary, useful for learning lingo.", "25", 69, 1, 1, false, 2},
+			end
+		end
 	-- coffee shop
 	elseif(shop_type == 11) then
 		item = {
