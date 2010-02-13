@@ -271,6 +271,7 @@ function respawnCmdVehicle(thePlayer, commandName, id)
 				end
 				removeElementData(theVehicle, 'i:left')
 				removeElementData(theVehicle, 'i:right')
+				local dbid = getElementData(theVehicle,"dbid")
 				if (dbid<0) then -- TEMP vehicle
 					fixVehicle(theVehicle) -- Can't really respawn this, so just repair it
 					if armoredCars[ getElementModel( theVehicle ) ] then
