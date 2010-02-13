@@ -865,10 +865,11 @@ addCommandHandler("setcolor", setPlayerVehicleColor, false, false)
 
 function deleteVehicle(thePlayer, commandName, id)
 	if (exports.global:isPlayerAdmin(thePlayer)) then
-		if not (id) then
+		local dbid = tonumber(id)
+		if not (dbid) then
 			outputChatBox("SYNTAX: /" .. commandName .. " [id]", thePlayer, 255, 194, 14)
 		else
-			local theVehicle = exports.pool:getElement("vehicle", tonumber(id))
+			local theVehicle = exports.pool:getElement("vehicle", dbid)
 			if theVehicle then
 				triggerEvent("onVehicleDelete", theVehicle)
 				if (dbid<0) then -- TEMP vehicle
