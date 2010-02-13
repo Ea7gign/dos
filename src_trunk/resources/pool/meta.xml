@@ -5,5 +5,4 @@
 	<export function="allocateElement" type="server"/>
 	<export function="getPoolElementsByType" type="server"/>
 	<export function="getElement" type="server"/>
-	<export function="setElementID" type="server"/>
 </meta>

@@ -65,8 +65,9 @@ function deallocateElement(element)
 	local elementType = getElementType(element)
 	if (isValidType(elementType)) then
 		local elementPool = poolTable[elementType]
-		for k, v in ipairs(elementPool) do
-			if v == element then
+		local i = 0
+		for k = #elementPool, 1, -1 do
+			if elementPool[k] == element then
 				table.remove(elementPool, k)
 			end
 		end
@@ -89,6 +90,7 @@ end
 function allocateElement(element, id)
 	local elementType = getElementType(element)
 	if (isValidType(elementType)) then
+		deallocateElement(element)
 		table.insert (poolTable[elementType], element)
 		if indexedPools[elementType] then
 			if not id then
@@ -98,6 +100,11 @@ function allocateElement(element, id)
 				indexedPools[elementType][tonumber(id)] = element
 			end
 		end
+	end
+	
+	-- add all children
+	for k, e in ipairs(getElementChildren(element)) do
+		allocateElement(e)
 	end
 end
 
@@ -112,18 +119,12 @@ function getPoolElementsByType(elementType)
 	return false
 end
 
-function updatePoolOnResourceStart(resource)
-	if resource == getThisResource() then
-		for k, element in ipairs(getElementChildren(getRootElement())) do
-			allocateElement(element)
-		end
-	else
-		for k, element in ipairs( getElementChildren(source)) do
-			allocateElement(element)
-		end
+
+addEventHandler("onResourceStart", getRootElement(), 
+	function( resource )
+		allocateElement(resource == getThisResource() and getRootElement() or source)
 	end
-end
-addEventHandler("onResourceStart", getRootElement(), updatePoolOnResourceStart)
+)
 
 addEventHandler("onPlayerJoin", getRootElement(),
 	function ()
@@ -145,11 +146,4 @@ addEventHandler("onElementDestroy", getRootElement(),
 
 function getElement(elementType, id)
 	return indexedPools[elementType] and indexedPools[elementType][tonumber(id)]
-end
-
-function setElementID(element, id)
-	if indexedPools[getElementType(element)] then
-		deallocateElement(element)
-		allocateElement(element, id)
-	end
 end

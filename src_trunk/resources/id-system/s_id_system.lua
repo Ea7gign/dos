@@ -12,7 +12,7 @@ function playerJoin()
 	
 	ids[slot] = source
 	setElementData(source, "playerid", slot)
-	exports.pool:setElementID(source, slot)
+	exports.pool:allocateElement(source, slot)
 end
 addEventHandler("onPlayerJoin", getRootElement(), playerJoin)
 
@@ -31,7 +31,7 @@ function resourceStart()
 	for key, value in ipairs(players) do
 		ids[key] = value
 		setElementData(value, "playerid", key)
-		exports.pool:setElementID(value, key)
+		exports.pool:allocateElement(value, key)
 	end
 end
 addEventHandler("onResourceStart", getResourceRootElement(getThisResource()), resourceStart)
