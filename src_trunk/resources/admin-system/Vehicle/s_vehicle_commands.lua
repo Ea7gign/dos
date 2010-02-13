@@ -164,29 +164,20 @@ function gotoCar(thePlayer, commandName, id)
 		if not (id) then
 			outputChatBox("SYNTAX: /" .. commandName .. " [id]", thePlayer, 255, 194, 14)
 		else
-			local vehicles = exports.pool:getPoolElementsByType("vehicle")
-			local counter = 0
-			
-			for k, theVehicle in ipairs(vehicles) do
-				local dbid = getElementData(theVehicle, "dbid")
-
-				if (dbid==tonumber(id)) then
-					local rx, ry, rz = getVehicleRotation(theVehicle)
-					local x, y, z = getElementPosition(theVehicle)
-					x = x + ( ( math.cos ( math.rad ( rz ) ) ) * 5 )
-					y = y + ( ( math.sin ( math.rad ( rz ) ) ) * 5 )
-					
-					setElementPosition(thePlayer, x, y, z)
-					setPedRotation(thePlayer, rz)
-					setElementInterior(thePlayer, getElementInterior(theVehicle))
-					setElementDimension(thePlayer, getElementDimension(theVehicle))
-					
-					counter = counter + 1
-					outputChatBox("Teleported to vehicles location.", thePlayer, 255, 194, 14)
-				end
-			end
-			
-			if (counter==0) then
+			local theVehicle = exports.pool:getElement("vehicle", tonumber(id))
+			if theVehicle then
+				local rx, ry, rz = getVehicleRotation(theVehicle)
+				local x, y, z = getElementPosition(theVehicle)
+				x = x + ( ( math.cos ( math.rad ( rz ) ) ) * 5 )
+				y = y + ( ( math.sin ( math.rad ( rz ) ) ) * 5 )
+				
+				setElementPosition(thePlayer, x, y, z)
+				setPedRotation(thePlayer, rz)
+				setElementInterior(thePlayer, getElementInterior(theVehicle))
+				setElementDimension(thePlayer, getElementDimension(theVehicle))
+				
+				outputChatBox("Teleported to vehicles location.", thePlayer, 255, 194, 14)
+			else
 				outputChatBox("Invalid Vehicle ID.", thePlayer, 255, 0, 0)
 			end
 		end
@@ -200,34 +191,25 @@ function getCar(thePlayer, commandName, id)
 		if not (id) then
 			outputChatBox("SYNTAX: /" .. commandName .. " [id]", thePlayer, 255, 194, 14)
 		else
-			local vehicles = exports.pool:getPoolElementsByType("vehicle")
-			local counter = 0
-			
-			for k, theVehicle in ipairs(vehicles) do
-				local dbid = getElementData(theVehicle, "dbid")
-
-				if (dbid==tonumber(id)) then
-					local r = getPedRotation(thePlayer)
-					local x, y, z = getElementPosition(thePlayer)
-					x = x + ( ( math.cos ( math.rad ( r ) ) ) * 5 )
-					y = y + ( ( math.sin ( math.rad ( r ) ) ) * 5 )
-					
-					if	(getElementHealth(theVehicle)==0) then
-						spawnVehicle(theVehicle, x, y, z, 0, 0, r)
-					else
-						setElementPosition(theVehicle, x, y, z)
-						setVehicleRotation(theVehicle, 0, 0, r)
-					end
-					
-					setElementInterior(theVehicle, getElementInterior(thePlayer))
-					setElementDimension(theVehicle, getElementDimension(thePlayer))
-
-					counter = counter + 1
-					outputChatBox("Vehicle teleported to your location.", thePlayer, 255, 194, 14)
+			local theVehicle = exports.pool:getElement("vehicle", tonumber(id))
+			if theVehicle then
+				local r = getPedRotation(thePlayer)
+				local x, y, z = getElementPosition(thePlayer)
+				x = x + ( ( math.cos ( math.rad ( r ) ) ) * 5 )
+				y = y + ( ( math.sin ( math.rad ( r ) ) ) * 5 )
+				
+				if	(getElementHealth(theVehicle)==0) then
+					spawnVehicle(theVehicle, x, y, z, 0, 0, r)
+				else
+					setElementPosition(theVehicle, x, y, z)
+					setVehicleRotation(theVehicle, 0, 0, r)
 				end
-			end
-			
-			if (counter==0) then
+				
+				setElementInterior(theVehicle, getElementInterior(thePlayer))
+				setElementDimension(theVehicle, getElementDimension(thePlayer))
+
+				outputChatBox("Vehicle teleported to your location.", thePlayer, 255, 194, 14)
+			else
 				outputChatBox("Invalid Vehicle ID.", thePlayer, 255, 0, 0)
 			end
 		end
@@ -251,12 +233,9 @@ function getNearbyVehicles(thePlayer, commandName)
 			local ownerName = ""
 			
 			if (faction>0) then
-				for key, value in ipairs(exports.pool:getPoolElementsByType("team")) do
-					local dbid = tonumber(getElementData(value, "id"))
-					if (dbid==tonumber(faction)) then
-						ownerName = getTeamName(value)
-						break
-					end
+				local theTeam = exports.pool:getElement("team", faction)
+				if theTeam then
+					ownerName = getTeamName(value)
 				end
 			elseif (owner==-1) then
 				ownerName = "Admin"
@@ -285,41 +264,30 @@ function respawnCmdVehicle(thePlayer, commandName, id)
 		if not (id) then
 			outputChatBox("SYNTAX: /respawnveh [id]", thePlayer, 255, 194, 14)
 		else
-			local id = tonumber(id)
-			local vehicles = exports.pool:getPoolElementsByType("vehicle")
-			local counter = 0
-			
-			for k, theVehicle in ipairs(vehicles) do
-				local dbid = getElementData(theVehicle, "dbid")
-
-				if (dbid==tonumber(id)) then
-					if isElementAttached(theVehicle) then
-						detachElements(theVehicle)
-					end
-					removeElementData(theVehicle, 'i:left')
-					removeElementData(theVehicle, 'i:right')
-					if (dbid<0) then -- TEMP vehicle
-						fixVehicle(theVehicle) -- Can't really respawn this, so just repair it
-						if armoredCars[ getElementModel( theVehicle ) ] then
-							setVehicleDamageProof(theVehicle, true)
-						else
-							setVehicleDamageProof(theVehicle, false)
-						end
-						setVehicleWheelStates(theVehicle, 0, 0, 0, 0)
-						setElementData(theVehicle, "enginebroke", 0, false)
-					else
-						respawnVehicle(theVehicle)
-						if getElementData(theVehicle, "owner") == -2 and getElementData(theVehicle,"Impounded") == 0  then
-							setVehicleLocked(theVehicle, false)
-						end
-					end
-					counter = counter + 1
-					
-					outputChatBox("Vehicle respawned.", thePlayer, 255, 194, 14)
+			local theVehicle = exports.pool:getElement("vehicle", tonumber(id))
+			if theVehicle then
+				if isElementAttached(theVehicle) then
+					detachElements(theVehicle)
 				end
-			end
-			
-			if (counter==0) then
+				removeElementData(theVehicle, 'i:left')
+				removeElementData(theVehicle, 'i:right')
+				if (dbid<0) then -- TEMP vehicle
+					fixVehicle(theVehicle) -- Can't really respawn this, so just repair it
+					if armoredCars[ getElementModel( theVehicle ) ] then
+						setVehicleDamageProof(theVehicle, true)
+					else
+						setVehicleDamageProof(theVehicle, false)
+					end
+					setVehicleWheelStates(theVehicle, 0, 0, 0, 0)
+					setElementData(theVehicle, "enginebroke", 0, false)
+				else
+					respawnVehicle(theVehicle)
+					if getElementData(theVehicle, "owner") == -2 and getElementData(theVehicle,"Impounded") == 0  then
+						setVehicleLocked(theVehicle, false)
+					end
+				end
+				outputChatBox("Vehicle respawned.", thePlayer, 255, 194, 14)
+			else
 				outputChatBox("Invalid Vehicle ID.", thePlayer, 255, 0, 0)
 			end
 		end
@@ -899,38 +867,28 @@ function deleteVehicle(thePlayer, commandName, id)
 		if not (id) then
 			outputChatBox("SYNTAX: /" .. commandName .. " [id]", thePlayer, 255, 194, 14)
 		else
-			local vehicles = exports.pool:getPoolElementsByType("vehicle")
-			local counter = 0
-			
-			for k, theVehicle in ipairs(vehicles) do
-				local dbid = tonumber(getElementData(theVehicle, "dbid"))
-
-				if (dbid==tonumber(id)) then
-					triggerEvent("onVehicleDelete", theVehicle)
-					if (dbid<0) then -- TEMP vehicle
+			local theVehicle = exports.pool:getElement("vehicle", tonumber(id))
+			if theVehicle then
+				triggerEvent("onVehicleDelete", theVehicle)
+				if (dbid<0) then -- TEMP vehicle
+					destroyElement(theVehicle)
+				else
+					if (exports.global:isPlayerLeadAdmin(thePlayer)) then
+						local query = mysql_query(handler, "DELETE FROM vehicles WHERE id='" .. dbid .. "'")
+						call( getResourceFromName( "item-system" ), "deleteAll", 3, dbid )
+						call( getResourceFromName( "item-system" ), "clearItems", theVehicle )
+						mysql_free_result(query)
 						destroyElement(theVehicle)
+						exports.irc:sendMessage("[ADMIN] " .. getPlayerName(thePlayer) .. " deleted vehicle #" .. dbid .. ".")
+						exports.logs:logMessage("[DELVEH] " .. getPlayerName( thePlayer ) .. " deleted vehicle #" .. dbid, 9)
 					else
-						if (exports.global:isPlayerLeadAdmin(thePlayer)) then
-							local query = mysql_query(handler, "DELETE FROM vehicles WHERE id='" .. dbid .. "'")
-							call( getResourceFromName( "item-system" ), "deleteAll", 3, dbid )
-							call( getResourceFromName( "item-system" ), "clearItems", theVehicle )
-							mysql_free_result(query)
-							destroyElement(theVehicle)
-							exports.irc:sendMessage("[ADMIN] " .. getPlayerName(thePlayer) .. " deleted vehicle #" .. dbid .. ".")
-							exports.logs:logMessage("[DELVEH] " .. getPlayerName( thePlayer ) .. " deleted vehicle #" .. dbid, 9)
-						else
-							outputChatBox("You do not have permission to delete permanent vehicles.", thePlayer, 255, 0, 0)
-							return
-						end
+						outputChatBox("You do not have permission to delete permanent vehicles.", thePlayer, 255, 0, 0)
+						return
 					end
-					counter = counter + 1
 				end
-			end
-			
-			if (counter==0) then
-				outputChatBox("No vehicles with that ID found.", thePlayer, 255, 0, 0)
-			else
 				outputChatBox("Vehicle deleted.", thePlayer)
+			else
+				outputChatBox("No vehicles with that ID found.", thePlayer, 255, 0, 0)
 			end
 		end
 	end

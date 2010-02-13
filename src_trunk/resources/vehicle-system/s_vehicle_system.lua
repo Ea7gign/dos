@@ -1119,7 +1119,8 @@ addEventHandler("removeNOS", getRootElement(), removeNOS)
 local destroyTimers = { }
 function createShopVehicle(dbid, ...)
 	local veh = createVehicle(unpack({...}))
-
+	exports.pool:allocateElement(veh, dbid)
+	
 	setElementData(veh, "dbid", dbid)
 	setElementData(veh, "requires.vehpos", 1, false)
 	local timer = setTimer(checkVehpos, 3600000, 1, veh, dbid)
@@ -1225,14 +1226,7 @@ function setVehiclePosition2(thePlayer, commandName, vehicleID)
 		if not vehicleID or vehicleID < 0 then
 			outputChatBox( "SYNTAX: /" .. commandName .. " [vehicle id]", thePlayer, 255, 194, 14 )
 		else
-			local veh = nil
-			for k, v in ipairs( getElementsByType( "vehicle" ) ) do
-				if getElementData( v, "dbid" ) == vehicleID then
-					veh = v
-					break
-				end
-			end
-			
+			local veh = exports.pool:getElement("vehicle", vehicleID)
 			if veh then
 				removeElementData(veh, "requires.vehpos")
 				local x, y, z = getElementPosition(veh)

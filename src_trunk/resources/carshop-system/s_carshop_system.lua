@@ -99,7 +99,6 @@ function makeCar(thePlayer, id, cost, col1, col2, x, y, z, rz, px, py, pz, prz)
 		mysql_free_result(query)
 		
 		local veh = call( getResourceFromName( "vehicle-system" ), "createShopVehicle", insertid, id, x, y, z, 0, 0, rz, plate )
-		exports.pool:allocateElement(veh)
 		
 		setElementData(veh, "fuel", 100, false)
 		setElementData(veh, "Impounded", 0)

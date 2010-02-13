@@ -1661,14 +1661,7 @@ function bigEarsFaction(thePlayer, commandName, factionID)
 			removeElementData(thePlayer, "bigearsfaction")
 			outputChatBox("Big Ears turned off.", thePlayer, 255, 0, 0)
 		else
-			local team = nil
-			for k, v in pairs( getElementsByType( "team" ) ) do
-				if getElementData( v, "id" ) == factionID then
-					team = v
-					break
-				end
-			end
-			
+			local team = exports.pool:getElement("team", factionID)
 			if not team then
 				outputChatBox("No faction with that ID found.", thePlayer, 255, 0, 0)
 			else

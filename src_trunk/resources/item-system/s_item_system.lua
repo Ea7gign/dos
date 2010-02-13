@@ -35,22 +35,18 @@ function useItem(itemSlot, additional)
 				triggerEvent("lockUnlockInsideVehicle", source, veh)
 			else
 				-- unlock nearby cars
-				local found = nil
-				for key, value in ipairs(exports.pool:getPoolElementsByType("vehicle")) do
-					local dbid = getElementData(value, "dbid")
+				local value = exports.pool:getElement( "vehicle", itemValue )
+				if value then
 					local vx, vy, vz = getElementPosition(value)
 					local x, y, z = getElementPosition(source)
-					
-					if (dbid==itemValue) and (getDistanceBetweenPoints3D(x, y, z, vx, vy, vz)<=30) then -- car found
-						found = value
-						break
+						
+					if getDistanceBetweenPoints3D(x, y, z, vx, vy, vz) <= 30 then -- car found
+						triggerEvent("lockUnlockOutsideVehicle", source, value)
+					else
+						outputChatBox("You are too far from the vehicle.", source, 255, 194, 14)
 					end
-				end
-				
-				if not (found) then
-					outputChatBox("You are too far from the vehicle.", source, 255, 194, 14)
 				else
-					triggerEvent("lockUnlockOutsideVehicle", source, found)
+					outputChatBox("Invalid Vehicle.", source, 255, 194, 14)
 				end
 			end
 		elseif (itemID==4) or (itemID==5) then -- house key or business key

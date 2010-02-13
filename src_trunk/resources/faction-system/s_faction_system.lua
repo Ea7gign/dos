@@ -70,7 +70,7 @@ function loadAllFactions(res)
 			local factionType = tonumber(row[4])
 			
 			local theTeam = createTeam(tostring(name))
-			exports.pool:allocateElement(theTeam)
+			exports.pool:allocateElement(theTeam, id)
 			setElementData(theTeam, "type", factionType)
 			setElementData(theTeam, "money", money)
 			setElementData(theTeam, "id", id)
@@ -98,7 +98,7 @@ function loadAllFactions(res)
 		mysql_free_result(result)
 		
 		local citteam = createTeam("Citizen", 255, 255, 255)
-		exports.pool:allocateElement(citteam)
+		exports.pool:allocateElement(citteam, -1)
 		
 		-- set all players into their appropriate faction
 		local players = exports.pool:getPoolElementsByType("player")
@@ -553,13 +553,13 @@ function createFaction(thePlayer, commandName, factionType, ...)
 			factionType = tonumber(factionType)
 			
 			local theTeam = createTeam(tostring(factionName))
-			exports.pool:allocateElement(theTeam)
-			if	(theTeam) then
+			if theTeam then
 				local query = mysql_query(handler, "INSERT INTO factions SET name='" .. mysql_escape_string(handler, factionName) .. "', bankbalance='0', type='" .. mysql_escape_string(handler, factionType) .. "'")
 				
 				if (query) then
 					local id = mysql_insert_id(handler)
 					mysql_free_result(query)
+					exports.pool:allocateElement(theTeam, id)
 					
 					query = mysql_query(handler, "UPDATE factions SET rank_1='Dynamic Rank #1', rank_2='Dynamic Rank #2', rank_3='Dynamic Rank #3', rank_4='Dynamic Rank #4', rank_5='Dynamic Rank #5', rank_6='Dynamic Rank #6', rank_7='Dynamic Rank #7', rank_8='Dynamic Rank #8', rank_9='Dynamic Rank #9', rank_10='Dynamic Rank #10', rank_11='Dynamic Rank #11', rank_12='Dynamic Rank #12', rank_13='Dynamic Rank #13', rank_14='Dynamic Rank #14', rank_15='Dynamic Rank #15', motd='Welcome to the faction.' WHERE id='" .. id .. "'")
 					mysql_free_result(query)
@@ -568,6 +568,7 @@ function createFaction(thePlayer, commandName, factionType, ...)
 					setElementData(theTeam, "id", tonumber(id))
 					setElementData(theTeam, "money", 0)
 				else
+					destroyElement(theTeam)
 					outputChatBox("Error creating faction.", thePlayer, 255, 0, 0)
 				end
 			else
@@ -584,16 +585,8 @@ function adminRenameFaction(thePlayer, commandName, factionID, ...)
 			outputChatBox("SYNTAX: /" .. commandName .. " [Faction ID] [Faction Name]", thePlayer, 255, 194, 14)
 		else
 			factionID = tonumber(factionID)
-			if factionID then
-				theTeam = nil
-				for key, value in ipairs(exports.pool:getPoolElementsByType("team")) do
-					local id = getElementData(value, "id")
-					
-					if id== tonumber(factionID) then
-						theTeam = value
-					end
-				end
-				
+			if factionID and factionID > 0 then
+				local theTeam = exports.pool:getElement("team", factionID)
 				if (theTeam) then
 					local factionName = table.concat({...}, " ")
 					local updated = mysql_query(handler, "UPDATE factions SET name='" .. mysql_escape_string(handler, factionName) .. "' WHERE id='" .. factionID .. "'")
@@ -622,20 +615,10 @@ function adminSetPlayerFaction(thePlayer, commandName, partialNick, factionID)
 			local targetPlayer, targetPlayerNick = exports.global:findPlayerByPartialNick(thePlayer, partialNick)
 			
 			if targetPlayer then
-				local theTeam = nil
-				if factionID ~= -1 then
-					for key, value in ipairs(exports.pool:getPoolElementsByType("team")) do
-						local id = getElementData(value, "id")
-						
-						if id == factionID then
-							theTeam = value
-						end
-					end
-				
-					if not theTeam then
-						outputChatBox("Invalid Faction ID.", thePlayer, 255, 0, 0)
-						return
-					end
+				local theTeam = exports.pool:getElement("team", factionID)
+				if not theTeam then
+					outputChatBox("Invalid Faction ID.", thePlayer, 255, 0, 0)
+					return
 				end
 
 				local query = mysql_query(handler, "UPDATE characters SET faction_leader = 0, faction_id = " .. factionID .. ", faction_rank = 1, duty = 0, dutyskin = -1 WHERE id=" .. getElementData(targetPlayer, "dbid"))
@@ -643,8 +626,8 @@ function adminSetPlayerFaction(thePlayer, commandName, partialNick, factionID)
 				if (query) then
 					mysql_free_result(query)
 				
+					setPlayerTeam(targetPlayer, theTeam)
 					if factionID > 0 then
-						setPlayerTeam(targetPlayer, theTeam)
 						setElementData(targetPlayer, "faction", factionID)
 						setElementData(targetPlayer, "factionrank", 1)
 						setElementData(targetPlayer, "dutyskin", -1, false)
@@ -660,8 +643,6 @@ function adminSetPlayerFaction(thePlayer, commandName, partialNick, factionID)
 						
 						exports.logs:logMessage("[FACTION] " .. getPlayerName( thePlayer ) .. " set " .. getPlayerName( targetPlayer ) .. " to faction " .. getTeamName(theTeam) .. " (#" .. factionID .. ")", 15)
 					else
-						local theTeam = getTeamFromName("Citizen")
-						setPlayerTeam(targetPlayer, theTeam)
 						setElementData(targetPlayer, "faction", -1)
 						setElementData(targetPlayer, "factionrank", 1)
 						setElementData(targetPlayer, "dutyskin", -1, false)
@@ -687,24 +668,14 @@ function adminSetFactionLeader(thePlayer, commandName, partialNick, factionID)
 		factionID = tonumber(factionID)
 		if not (partialNick) or not (factionID)  then
 			outputChatBox("SYNTAX: /" .. commandName .. " [Player Partial Name] [Faction ID]", thePlayer, 255, 194, 14)
-		else
+		elseif factionID > 0 then
 			local targetPlayer, targetPlayerNick = exports.global:findPlayerByPartialNick(thePlayer, partialNick)
 			
 			if targetPlayer then
-				local theTeam = nil
-				if factionID ~= -1 then
-					for key, value in ipairs(exports.pool:getPoolElementsByType("team")) do
-						local id = getElementData(value, "id")
-						
-						if id == factionID then
-							theTeam = value
-						end
-					end
-				
-					if not theTeam then
-						outputChatBox("Invalid Faction ID.", thePlayer, 255, 0, 0)
-						return
-					end
+				local theTeam = exports.pool:getElement("team", factionID)
+				if not theTeam then
+					outputChatBox("Invalid Faction ID.", thePlayer, 255, 0, 0)
+					return
 				end
 				
 				local query = mysql_query(handler, "UPDATE characters SET faction_leader = 1, faction_id = " .. tonumber(factionID) .. ", faction_rank = 1, dutyskin = -1, duty = 0 WHERE id = " .. getElementData(targetPlayer, "dbid"))
@@ -741,15 +712,8 @@ function adminDeleteFaction(thePlayer, commandName, factionID)
 			outputChatBox("SYNTAX: /" .. commandName .. " [Faction ID]", thePlayer, 255, 194, 14)
 		else
 			factionID = tonumber(factionID)
-			if factionID then
-				theTeam = nil
-				for key, value in ipairs(exports.pool:getPoolElementsByType("team")) do
-					local id = getElementData(value, "id")
-					
-					if id == factionID then
-						theTeam = value
-					end
-				end
+			if factionID and factionID > 0 then
+				local theTeam = exports.pool:getElement("team", factionID)
 				
 				if (theTeam) then
 					local deleted = mysql_query(handler, "DELETE FROM factions WHERE id='" .. factionID .. "'")
@@ -814,16 +778,9 @@ function setFactionMoney(thePlayer, commandName, factionID, amount)
 			outputChatBox("SYNTAX: /" .. commandName .. " [Faction ID] [Money]", thePlayer, 255, 194, 14)
 		else
 			factionID = tonumber(factionID)
-			if factionID then
-				theTeam = nil
+			if factionID and factionID > 0 then
+				local theTeam = exports.pool:getElement("team", factionID)
 				amount = tonumber(amount)
-				for key, value in ipairs(exports.pool:getPoolElementsByType("team")) do
-					local id = getElementData(value, "id")
-					
-					if id == factionID then
-						theTeam = value
-					end
-				end
 				
 				if (theTeam) then
 					exports.global:setMoney(theTeam, amount)
@@ -846,16 +803,9 @@ function setFactionBudget(thePlayer, commandName, factionID, amount)
 			outputChatBox("SYNTAX: /" .. commandName .. " [Faction ID] [Money]", thePlayer, 255, 194, 14)
 		else
 			factionID = tonumber(factionID)
-			if factionID then
-				theTeam = nil
+			if factionID and factionID > 0 then
+				local theTeam = exports.pool:getElement("team", factionID)
 				amount = tonumber(amount)
-				for key, value in ipairs(exports.pool:getPoolElementsByType("team")) do
-					local id = getElementData(value, "id")
-					
-					if id == factionID then
-						theTeam = value
-					end
-				end
 				
 				if (theTeam) then
 					if getElementData(theTeam, "type") >= 2 and getElementData(theTeam, "type") <= 6 then

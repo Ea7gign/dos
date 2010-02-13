@@ -29,7 +29,7 @@ function getElementZoneName( element, citiesonly )
 	if getElementDimension( element ) >= 19000 then
 		local vehicle = exports.pool:getElement( "vehicle", getElementDimension( element ) - 20000 )
 		if vehicle then
-			return getElementZoneName( vehicle, citiesonly ) .. " [" .. getVehicleName( vehicle ) .. "]"
+			return ( getElementZoneName( vehicle, citiesonly ) or "?" ) .. " [" .. getVehicleName( vehicle ) .. "]"
 		end
 	elseif not cache[citiesonly][ getElementDimension( element ) ] then
 		name = ''

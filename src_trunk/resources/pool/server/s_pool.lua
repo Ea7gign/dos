@@ -13,13 +13,15 @@ poolTable = {
 local indexedPools =
 {
 	player = {},
-	vehicle = {}
+	vehicle = {},
+	team = {}
 }
 
 local idelementdata =
 {
 	player = "playerid",
-	vehicle = "dbid"
+	vehicle = "dbid",
+	team = "id"
 }
 
 function isValidType(elementType)

@@ -196,14 +196,6 @@ addEventHandler("transferMoneyToPersonal", getRootElement(), transferMoneyToPers
 	8: faction budget
 ]]
 
-function findTeamByID(id)	
-	for key, value in ipairs(exports.pool:getPoolElementsByType("team")) do
-		if tonumber(getElementData(value, "id")) == id then
-			return value
-		end
-	end
-end
-
 function tellTransfersPersonal()
 	local dbid = getElementData(source, "dbid")
 	tellTransfers(source, dbid, "recievePersonalTransfer")
@@ -246,7 +238,7 @@ function tellTransfers(source, dbid, event)
 			elseif tonumber(row[2]) then
 				num = tonumber(row[2]) 
 				if num < 0 then
-					from = getTeamName(findTeamByID(-num))
+					from = getTeamName(exports.pool:getElement("team", -num))
 				elseif num == 0 and ( type == 6 or type == 7 ) then
 					from = "Government"
 				end
@@ -254,7 +246,7 @@ function tellTransfers(source, dbid, event)
 			if row[9] ~= mysql_null() then
 				to = row[9]:gsub("_", " ")
 			elseif tonumber(row[3]) and tonumber(row[3]) < 0 then
-				to = getTeamName(findTeamByID(-tonumber(row[3])))
+				to = getTeamName(exports.pool:getElement("team", -tonumber(row[3])))
 			end
 			
 			if type >= 2 and type <= 5 and tonumber(row[2]) == dbid then

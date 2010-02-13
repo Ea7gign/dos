@@ -31,26 +31,16 @@ function findPlayerByPartialNick(thePlayer, partialNick)
 	local matchNickAccuracy = -1
 	local partialNick = string.lower(partialNick)
 
-	local players = exports.pool:getPoolElementsByType("player")
-	
 	if thePlayer and partialNick == "*" then
 		return thePlayer, getPlayerName(thePlayer):gsub("_", " ")
 	elseif getPlayerFromName(partialNick) then
 		return getPlayerFromName(partialNick), getPlayerName( getPlayerFromName(partialNick) ):gsub("_", " ")
 	-- IDS
 	elseif tonumber(partialNick) then
-		for key, value in ipairs(players) do
-			if isElement(value) then
-				local id = getElementData(value, "playerid")
-				
-				if id and id == tonumber(partialNick) then
-					matchPlayer = value
-					candidates = { matchPlayer }
-					break
-				end
-			end
-		end
+		matchPlayer = exports.pool:getElement("player", tonumber(partialNick))
+		candidates = { matchPlayer }
 	else -- Look for player nicks
+		local players = exports.pool:getPoolElementsByType("player")
 		for playerKey, arrayPlayer in ipairs(players) do
 			if isElement(arrayPlayer) then
 				local playerName = string.lower(getPlayerName(arrayPlayer))

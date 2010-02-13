@@ -2403,11 +2403,9 @@ local function showAlts(thePlayer, id)
 			
 			local faction = tonumber( row[3] ) or 0
 			if faction > 0 then
-				for key, value in pairs( getElementsByType( "team" ) ) do
-					if getElementData( value, "id" ) == faction then
-						text = text .. " - " .. getTeamName( value )
-						break
-					end
+				local theTeam = exports.pool:getElement("team", faction)
+				if theTeam then
+					text = text .. " - " .. getTeamName( theTeam )
 				end
 			end
 			
