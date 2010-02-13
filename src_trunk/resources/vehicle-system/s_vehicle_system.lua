@@ -166,7 +166,6 @@ function createPermVehicle(thePlayer, commandName, ...)
 				if not (veh) then
 					outputChatBox("Invalid Vehicle ID.", thePlayer, 255, 0, 0)
 				else
-					exports.pool:allocateElement(veh)
 					setElementData(veh, "fuel", 100)
 					setElementData(veh, "Impounded", 0)
 					setElementData(veh, "handbrake", 0, false)
@@ -196,6 +195,8 @@ function createPermVehicle(thePlayer, commandName, ...)
 						local insertid = mysql_insert_id( handler )
 						mysql_free_result(query)
 							
+						exports.pool:allocateElement(veh, insertid)
+						
 						if (factionVehicle==-1) then
 							exports.global:giveItem(targetPlayer, 3, tonumber(insertid))
 						end
@@ -229,6 +230,8 @@ function createPermVehicle(thePlayer, commandName, ...)
 						exports.logs:logMessage("[MAKEVEH] " .. getPlayerName( thePlayer ) .. " created car #" .. insertid .. " (" .. getVehicleNameFromModel( id ) .. ") - " .. owner, 9)
 						
 						exports['vehicle-interiors']:add( veh )
+					else
+						destroyElement( veh )
 					end
 				end
 			end
@@ -286,7 +289,6 @@ function createCivilianPermVehicle(thePlayer, commandName, ...)
 			if not (veh) then
 				outputChatBox("Invalid Vehicle ID.", thePlayer, 255, 0, 0)
 			else
-				exports.pool:allocateElement(veh)
 				setElementData(veh, "fuel", 100)
 				setElementData(veh, "handbrake", 0, false)
 					
@@ -326,6 +328,8 @@ function createCivilianPermVehicle(thePlayer, commandName, ...)
 					mysql_free_result(query)
 					local insertid = mysql_insert_id(handler)
 					
+					exports.pool:allocateElement(veh, insertid)
+					
 					setElementData(veh, "dbid", insertid)
 					setElementData(veh, "fuel", 100)
 					setElementData(veh, "engine", 0, false)
@@ -341,6 +345,8 @@ function createCivilianPermVehicle(thePlayer, commandName, ...)
 					exports.logs:logMessage("[MAKECIVVEH] " .. getPlayerName( thePlayer ) .. " created car #" .. insertid .. " (" .. getVehicleNameFromModel( id ) .. ")", 9)
 					
 					exports['vehicle-interiors']:add( veh )
+				else
+					destroyElement( veh )
 				end
 			end
 		end
@@ -373,8 +379,8 @@ function loadAllVehicles(res)
 			local veh = createVehicle(row.model, row.currx, row.curry, row.currz, row.currrx, row.currry, row.currrz, row.plate)
 			if veh then
 				setElementData(veh, "dbid", row.id)
-				exports.pool:allocateElement(veh)
-
+				exports.pool:allocateElement(veh, row.id)
+				
 				-- color
 				setVehicleColor(veh, row.color1, row.color2, row.color1, row.color2)
 				

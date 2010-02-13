@@ -96,8 +96,9 @@ function createTempVehicle(thePlayer, commandName, ...)
 						setVehicleDamageProof(veh, true)
 					end
 
-					exports.pool:allocateElement(veh)
-					setElementData(veh, "fuel", 100, false)
+					totalTempVehicles = totalTempVehicles + 1
+					local dbid = (-totalTempVehicles)
+					exports.pool:allocateElement(veh, dbid)
 					
 					setVehicleColor(veh, col1, col2, col1, col2)
 					
@@ -107,9 +108,6 @@ function createTempVehicle(thePlayer, commandName, ...)
 					setVehicleOverrideLights(veh, 1)
 					setVehicleEngineState(veh, false)
 					setVehicleFuelTankExplodable(veh, false)
-					
-					totalTempVehicles = totalTempVehicles + 1
-					local dbid = (-totalTempVehicles)
 					
 					setElementData(veh, "dbid", dbid)
 					setElementData(veh, "fuel", 100, false)
