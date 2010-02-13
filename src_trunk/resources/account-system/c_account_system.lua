@@ -3916,7 +3916,7 @@ function checkForRadarMap()
 		guiSetAlpha(bChangeChar, visible and 0.75 or 0)
 		visible = false
 	end
-	if bChangeAccount and isElement(bChangeAccount) and ( guiGetAlpha(bChangeChar) > 0 ) ~= visible then
+	if bChangeAccount and isElement(bChangeAccount) and ( guiGetAlpha(bChangeAccount) > 0 ) ~= visible then
 		guiSetAlpha(bChangeAccount, visible and 0.75 or 0)
 	end
 end
