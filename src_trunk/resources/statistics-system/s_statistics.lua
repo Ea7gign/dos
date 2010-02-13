@@ -45,11 +45,7 @@ function getAdminStats(thePlayer, commandName)
 		end
 				
 		-- VEHICLES
-		local counter = 0
-		for key, value in ipairs(exports.pool:getPoolElementsByType("vehicle")) do
-			counter = counter + 1
-		end
-		outputChatBox("     Vehicles: " .. counter .. ".", thePlayer, 255, 194, 14)
+		outputChatBox("     Vehicles: " .. #exports.pool:getPoolElementsByType("vehicle") .. ".", thePlayer, 255, 194, 14)
 	end
 end
 addCommandHandler("astats", getAdminStats)
