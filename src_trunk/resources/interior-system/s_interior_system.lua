@@ -128,25 +128,6 @@ addCommandHandler("setinteriorexit", updateInteriorExit, false, false)
 function findProperty(thePlayer, dimension)
 	local dbid = dimension or getElementDimension( thePlayer )
 	if dbid > 0 then
-		-- find the entrance and exit
---[[		local entrance, exit = nil, nil
-		for key, value in pairs(getElementsByType( "pickup", getResourceRootElement() )) do
-			if getElementData(value, "name") then
-				if getElementData(value, "dbid") == dbid then
-					entrance = value
-					exit = getElementData( value, "other" )
-					break
-				end
-			elseif getElementData(value, "dbid") == dbid then
-				exit = value
-				entrance = getElementData( value, "other" )
-				break
-			end
-		end
-		
-		if entrance then
-			return dbid, entrance, exit, getElementData(entrance,"inttype")
-		end]]
 		if intTable[dbid] then
 			local entrance, exit = unpack( intTable[dbid] )
 			return dbid, entrance, exit, getElementData(entrance,"inttype")

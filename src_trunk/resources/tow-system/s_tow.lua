@@ -250,16 +250,3 @@ function updateCivilianVehicles(theTruck)
 	end
 end
 addEventHandler("onTrailerDetach", getRootElement(), updateCivilianVehicles)
-
-local factionCache = { }
-function getFactionByID( id )
-	if not factionCache[ id ] then
-		for _, team in pairs( getElementsByType( "team" ) ) do
-			if getElementData( team, "id" ) == id then
-				factionCache[ id ] = getTeamName( team )
-				break
-			end
-		end
-	end
-	return factionCache[ id ] or "Unknown Faction"
-end
