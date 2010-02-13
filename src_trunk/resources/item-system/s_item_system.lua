@@ -653,6 +653,23 @@ function useItem(itemSlot, additional)
 end
 addEvent("useItem", true)
 addEventHandler("useItem", getRootElement(), useItem)
+addCommandHandler("useitem",
+	function(thePlayer, commandName, itemID, ...)
+		if tonumber( itemID ) then
+			local args = {...}
+			local itemValue
+			if #args > 0 then
+				itemValue = table.concat(args, " ")
+				itemValue = tonumber(itemValue) or itemValue
+			end
+			
+			local has, slot = hasItem(thePlayer, tonumber( itemID ), itemValue)
+			if has then
+				triggerEvent("useItem", thePlayer, slot)
+			end
+		end
+	end
+)
 
 function explodeFlash(obj, x, y, z)
 	local players = exports.global:getNearbyElements(obj, "player")
