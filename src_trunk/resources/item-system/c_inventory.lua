@@ -167,7 +167,7 @@ addEventHandler( "onClientRender", getRootElement( ),
 					if items then
 						inventory = {}
 						for k, v in ipairs( items ) do
-							if ( activeTab == 2 ) ~= ( v[1] ~= 3 and v[1] ~= 4 and v[1] ~= 5 and v[1] ~= 73 ) then
+							if ( activeTab == 2 ) ~= ( getItemType( v[1] ) ~= 2 ) then
 								inventory[ #inventory + 1 ] = { v[1], v[2], v[3], k }
 							end
 						end
