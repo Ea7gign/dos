@@ -3909,16 +3909,15 @@ function updateEditedCharacter()
 	end
 end
 
-local oldvisible
+local oldvisible, changeAcc, changeChar
 function checkForRadarMap()
-	local visible = not isPlayerMapVisible()
-	if visible ~= oldvisible then
-		if bChangeChar and isElement(bChangeChar) then
-			guiSetVisible(bChangeChar, visible)
-		end
-		if bChangeAccount and isElement(bChangeAccount) then
-			guiSetVisible(bChangeAccount, visible)
-		end
+	local visible = not isPlayerMapVisible() and isCursorShowing()
+	if bChangeChar and isElement(bChangeChar) and ( guiGetAlpha(bChangeChar) > 0 ) ~= visible then
+		guiSetAlpha(bChangeChar, visible and 0.75 or 0)
+		visible = false
+	end
+	if bChangeAccount and isElement(bChangeAccount) and ( guiGetAlpha(bChangeChar) > 0 ) ~= visible then
+		guiSetAlpha(bChangeAccount, visible and 0.75 or 0)
 	end
 end
 addEventHandler( "onClientRender", getRootElement(), checkForRadarMap )
