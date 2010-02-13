@@ -12,12 +12,5 @@ function resourceStart(res)
 	for key, value in ipairs(exports.pool:getPoolElementsByType("player")) do
 		toggleControl(value, "fire", true)
 	end
-	
-	-- garage fix
-	for i = 0, 49 do
-		if i ~= 13 then
-			setGarageOpen(i, true)
-		end
-	end
 end
 addEventHandler("onResourceStart", getResourceRootElement(), resourceStart)

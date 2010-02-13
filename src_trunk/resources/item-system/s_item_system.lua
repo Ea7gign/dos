@@ -635,6 +635,17 @@ function useItem(itemSlot, additional)
 			local bookName = "LSESProcedureManual"
 			exports.global:sendLocalMeAction(source, "reads ".. bookTitle ..".")
 			triggerClientEvent( source, "showBook", source, bookName, bookTitle )
+		elseif (itemID==98) then -- Garage Remote
+			local id = tonumber( itemValue )
+			if id and id >= 0 and id <= 49 then
+				setGarageOpen(itemValue, not isGarageOpen(itemValue))
+				
+				local garages = {}
+				for i = 0, 49 do
+					garages[i] = isGarageOpen(i)
+				end
+				mysql_free_result( mysql_query(handler, "UPDATE settings SET value = '" .. mysql_escape_string( handler, toJSON( garages ) ) .. "' WHERE name = 'garagestates'" ) )
+			end
 		else
 			outputChatBox("Error 800001 - Report on http://bugs.valhallagaming.net", source, 255, 0, 0)
 		end

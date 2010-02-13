@@ -106,6 +106,7 @@ g_items = {
 	{ "Drink", "", 1, 1484, -15, 30, 0, 0.2 },
 	{ "PDA", "A top of the range PDA to view e-mails and browse the internet.", 6, 2886, 270, 0, 0, 0.1 },
 	{ "LSES Procedures Manual", "The Los Santos Emergency Service procedures handbook.", 5, 2824, 0, 0, 0, -0.01 },
+	{ "Garage Remote", "A small remote to open or close a Garage.", 2, 364, 0, 0, 0, 0.05 },
 	--Chairs = { 1663, 1671, 1720, 1721, 1810, 1811, 2079, 2120, 2121, 2125, 2777, 2788, 1369 }
 }
 

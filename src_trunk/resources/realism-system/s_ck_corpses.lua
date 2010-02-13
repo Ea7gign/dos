@@ -62,6 +62,22 @@ function loadAllCorpses(res)
 		end
 		mysql_free_result(result)
 	end
+	
+	-- Garage Stuff
+	local result = mysql_query( handler, "SELECT value FROM settings WHERE name = 'garagestates'" )
+	if result then
+		local res = mysql_result( result, 1, 1 )
+		local garages = fromJSON( res )
+		mysql_free_result( result )
+		
+		if garages then
+			for i = 0, 49 do
+				setGarageOpen( i, garages[tostring(i)] )
+			end
+		else
+			outputDebugString( "Failed to load Garage States" )
+		end
+	end
 end
 addEventHandler("onResourceStart", getResourceRootElement(), loadAllCorpses)
 
