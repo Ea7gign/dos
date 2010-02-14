@@ -1,10 +1,5 @@
 tick = getTickCount()
 
-function statsStarted()
-	exports.irc:sendMessage("[STATISTICS] Statistics Engine Started.")
-end
-addEventHandler("onResourceStart", getResourceRootElement(), statsStarted)
-
 -- /UPTIME
 function getUptime(thePlayer, commandName)
 	if (exports.global:isPlayerAdmin(thePlayer)) then
