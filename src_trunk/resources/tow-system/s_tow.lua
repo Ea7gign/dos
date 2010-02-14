@@ -1,30 +1,4 @@
--- ////////////////////////////////////
--- //			MYSQL				 //
--- ////////////////////////////////////		
-sqlUsername = exports.mysql:getMySQLUsername()
-sqlPassword = exports.mysql:getMySQLPassword()
-sqlDB = exports.mysql:getMySQLDBName()
-sqlHost = exports.mysql:getMySQLHost()
-sqlPort = exports.mysql:getMySQLPort()
-
-handler = mysql_connect(sqlHost, sqlUsername, sqlPassword, sqlDB, sqlPort)
-
-function checkMySQL()
-	if not (mysql_ping(handler)) then
-		handler = mysql_connect(sqlHost, sqlUsername, sqlPassword, sqlDB, sqlPort)
-	end
-end
-setTimer(checkMySQL, 300000, 0)
-
-function closeMySQL()
-	if (handler) then
-		mysql_close(handler)
-	end
-end
-addEventHandler("onResourceStop", getResourceRootElement(getThisResource()), closeMySQL)
--- ////////////////////////////////////
--- //			MYSQL END			 //
--- ////////////////////////////////////
+local mysql = exports.mysql
 
 -- towing impound lot
 local towSphere = createColPolygon(2789.131835, -1468.5177, 2789.131835, -1468.5177, 2789.133544, -1425.358398, 2820.9104, -1425.353027, 2820.912597, -1467.778808)
@@ -183,8 +157,7 @@ function updateVehPos(veh)
 	local interior = getElementInterior(veh)
 	local dimension = getElementDimension(veh)
 	local dbid = getElementData(veh, "dbid")	
-	local query = mysql_query(handler, "UPDATE vehicles SET x='" .. x .. "', y='" .. y .."', z='" .. z .. "', rotx='" .. rx .. "', roty='" .. ry .. "', rotz='" .. rz .. "', currx='" .. x .. "', curry='" .. y .. "', currz='" .. z .. "', currrx='" .. rx .. "', currry='" .. ry .. "', currrz='" .. rz .. "', interior='" .. interior .. "', currinterior='" .. interior .. "', dimension='" .. dimension .. "', currdimension='" .. dimension .. "' WHERE id='" .. dbid .. "'")
-	mysql_free_result(query)	
+	mysql:query_free("UPDATE vehicles SET x='" .. x .. "', y='" .. y .."', z='" .. z .. "', rotx='" .. rx .. "', roty='" .. ry .. "', rotz='" .. rz .. "', currx='" .. x .. "', curry='" .. y .. "', currz='" .. z .. "', currrx='" .. rx .. "', currry='" .. ry .. "', currrz='" .. rz .. "', interior='" .. interior .. "', currinterior='" .. interior .. "', dimension='" .. dimension .. "', currdimension='" .. dimension .. "' WHERE id='" .. dbid .. "'")
 	setVehicleRespawnPosition(veh, x, y, z, rx, ry, rz)
 	setElementData(veh, "respawnposition", {x, y, z, rx, ry, rz}, false)
 end
@@ -197,24 +170,23 @@ function updateTowingVehicle(theTruck)
 			local faction = getElementData(source, "faction")
 			local carName = getVehicleName(source)
 			
-			if (owner<0) then
+			if owner < 0 and faction == -1 then
 				outputChatBox("(( This " .. carName .. " is a civilian vehicle. ))", thePlayer, 255, 195, 14)
 			elseif (faction==-1) and (owner>0) then
-				local query = mysql_query(handler, "SELECT charactername FROM characters WHERE id='" .. owner .. "' LIMIT 1")
-			
-				if (mysql_num_rows(query)>0) then
-					local ownerName = mysql_result(query, 1, 1)
-					outputChatBox("(( This " .. carName .. " belongs to " .. ownerName .. ". ))", thePlayer, 255, 195, 14)
-				end
-				mysql_free_result(query)
+				local ownerName = exports["vehicle-system"]:getCharacterName(owner)
+				outputChatBox("(( This " .. carName .. " belongs to " .. ownerName .. ". ))", thePlayer, 255, 195, 14)
 			else
-				local query = mysql_query(handler, "SELECT name FROM factions WHERE id='" .. faction .. "' LIMIT 1")
+				local row = mysql:query_fetch_assoc("SELECT name FROM factions WHERE id='" .. faction .. "' LIMIT 1")
 			
-				if (mysql_num_rows(query)>0) then
-					local ownerName = mysql_result(query, 1, 1)
+				if not (row == false) then
+					local ownerName = row.name
 					outputChatBox("(( This " .. carName .. " belongs to the " .. ownerName .. " faction. ))", thePlayer, 255, 195, 14)
 				end
-				mysql_free_result(query)
+			end
+			
+			if (getElementData(source, "Impounded") > 0) then
+				local output = getRealTime().yearday-getElementData(source, "Impounded")
+				outputChatBox("(( This " .. carName .. " has been Impounded for: " .. output .. (output == 1 and " Day." or " Days.") .. " ))", thePlayer, 255, 195, 14)
 			end
 			
 			-- fix for handbraked vehicles
