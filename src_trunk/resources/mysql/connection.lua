@@ -162,3 +162,13 @@ function query_fetch_assoc(str)
 	end
 	return false
 end
+
+function query_rows_assoc(str)
+	local queryresult = query(str)
+	if  not (queryresult == false) then
+		local result = rows_assoc(queryresult)
+		free_result(queryresult)
+		return result
+	end
+	return false
+end
