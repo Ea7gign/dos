@@ -12,8 +12,8 @@ mysql:freeResult(result)
 
 -- connection settings
 local hostname = "localhost"
-local username = "root"
-local password = "rewt"
+local username = "mta"
+local password = ""
 local database = "mta"
 local port = 3306
 
@@ -49,7 +49,7 @@ addEventHandler("onResourceStop", getResourceRootElement(getThisResource()), des
 -- do something usefull here
 function logSQLError(str)
 	local message = str or 'N/A'
-	outputDebugString("MYSQL ERROR "..mysql_errno(MySQLConnection) .. ": " .. mysql_errorMySQLConnection)")
+	outputDebugString("MYSQL ERROR "..mysql_errno(MySQLConnection) .. ": " .. mysql_errorMySQLConnection)
 end
 
 function getFreeResultPoolID()
@@ -151,4 +151,14 @@ function num_rows(resultid)
 	end
 	return mysql_num_rows(resultPool[resultid])
 	
+end
+
+function query_fetch_assoc(str)
+	local queryresult = query(str)
+	if  not (queryresult == false) then
+		local result = fetch_assoc(queryresult)
+		free_result(queryresult)
+		return result
+	end
+	return false
 end
