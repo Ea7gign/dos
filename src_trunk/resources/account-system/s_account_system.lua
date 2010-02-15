@@ -299,7 +299,7 @@ function spawnCharacter(charname, version)
 		-- Server message
 		exports.irc:sendMessage("[SERVER] Character " .. charname .. " logged in.")
 		clearChatBox(source)
-		outputChatBox("You are now playing as " .. charname .. ".", source, 0, 255, 0)
+		outputChatBox("You are now playing as " .. charname:gsub("_", " ") .. ".", source, 0, 255, 0)
 		outputChatBox("Looking for animations? /animlist", source, 255, 194, 14)
 		outputChatBox("Need Help? /helpme", source, 255, 194, 14)
 		
