@@ -23,4 +23,7 @@
 		<export function="num_rows" 		type="server" http="false" />
 		<export function="query_fetch_assoc"type="server" http="false" />
 		<export function="query_rows_assoc" type="server" http="false" />
+		<export function="insert_id" 		type="server" http="false" />
+		<export function="query_rows_assoc" type="server" http="false" />
+		<export function="query_insert_free"type="server" http="false" />
 </meta>

@@ -153,6 +153,13 @@ function num_rows(resultid)
 	
 end
 
+function insert_id(resultid)
+	if (not resultPool[resultid]) then
+		return false
+	end
+	return mysql_insert_id(resultPool[resultid])
+end
+
 function query_fetch_assoc(str)
 	local queryresult = query(str)
 	if  not (queryresult == false) then
@@ -167,6 +174,16 @@ function query_rows_assoc(str)
 	local queryresult = query(str)
 	if  not (queryresult == false) then
 		local result = rows_assoc(queryresult)
+		free_result(queryresult)
+		return result
+	end
+	return false
+end
+
+function query_insert_free(str)
+	local queryresult = query(str)
+	if  not (queryresult == false) then
+		local result = insert_id(queryresult)
 		free_result(queryresult)
 		return result
 	end
