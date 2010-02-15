@@ -463,14 +463,15 @@ function askAcceptFriend()
 	guiLabelSetHorizontalAlign (lQuestion,"center",true)
 	bButtonYes = guiCreateButton(0.1,0.65,0.37,0.23,"Yes",true,wConfirmFriendRequest)
 	bButtonNo = guiCreateButton(0.53,0.65,0.37,0.23,"No",true,wConfirmFriendRequest)
-	addEventHandler("onClientGUIClick", getRootElement(), askAcceptFriendClick)
+	addEventHandler("onClientGUIClick", bButtonYes, askAcceptFriendClick, false)
+	addEventHandler("onClientGUIClick", bButtonNo, askAcceptFriendClick, false)
 	bButtonPlayer = source
 end
 addEvent("askAcceptFriend", true)
 addEventHandler("askAcceptFriend", getRootElement(), askAcceptFriend)
 
-function askAcceptFriendClick(button)
-	if ( source == bButtonYes or source == bButtonNo ) then
+function askAcceptFriendClick(button, state)
+	if button == "left" and state == "up" then
 		if source == bButtonYes then
 			-- clicked yes
 			triggerServerEvent("acceptFriendSystemRequest", getLocalPlayer(), bButtonPlayer)
