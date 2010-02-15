@@ -22,11 +22,6 @@ exports.pool:allocateElement(fdColShape)
 setElementDimension(fdColShape, 10631)
 setElementInterior(fdColShape, 3)
 
-govColShape = createColSphere(347.1923828125, 161.8642578125, 1014.1875, 8)
-exports.pool:allocateElement(govColShape)
-setElementDimension(govColShape, 125)
-setElementInterior(govColShape, 3)
-
 angColShape = createColSphere(347.693359375, 162.5078125, 1014.1875, 7)
 exports.pool:allocateElement(angColShape)
 setElementDimension(angColShape, 79)
@@ -221,7 +216,7 @@ function govduty(thePlayer, commandName)
 	local logged = getElementData(thePlayer, "loggedin")
 
 	if (logged==1) then
-		if (isElementWithinColShape(thePlayer, govColShape)) then
+		if getElementDimension(thePlayer) == 125 then
 		
 			local duty = tonumber(getElementData(thePlayer, "duty"))
 			local faction = getElementData(thePlayer, "faction")
