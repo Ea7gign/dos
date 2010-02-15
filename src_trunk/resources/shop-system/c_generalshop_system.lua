@@ -365,7 +365,7 @@ function getItemsForSale(shop_type, race, gender)
 		for i = 1, exports['language-system']:getLanguageCount() do
 			local ln = exports['language-system']:getLanguageName(i)
 			if ln then
-				item[#item+1] = {ln .. " Dictionary","A Dictionary, useful for learning lingo.", "25", 69, 1, 1, false, 2}
+				item[#item+1] = {ln .. " Dictionary","A Dictionary, useful for learning lingo.", "25", 69, i, 1, false, 2}
 			end
 		end
 	-- coffee shop
