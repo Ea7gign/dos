@@ -8,7 +8,7 @@ local function openFile( )
 	local time = getRealTime( )
 	yearday = time.yearday
 	hour = time.hour
-	local fileName = ( "logs/%04d-%02d-%02d/%02.html" ):format( time.year + 1900, time.month + 1, time.monthday, time.hour )
+	local fileName = ( "logs/%04d-%02d-%02d/%02d.html" ):format( time.year + 1900, time.month + 1, time.monthday, time.hour )
 	
 	xmlFile = xmlLoadFile( fileName )
 	if not xmlFile then
