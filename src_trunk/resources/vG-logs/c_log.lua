@@ -1,13 +1,14 @@
 local xmlFile = nil
 local xmlNode = nil
-local yearday
+local yearday, hour
 
 --
 
 local function openFile( )
 	local time = getRealTime( )
 	yearday = time.yearday
-	local fileName = ( "logs/%04d-%02d-%02d.html" ):format( time.year + 1900, time.month + 1, time.monthday )
+	hour = time.hour
+	local fileName = ( "logs/%04d-%02d-%02d\%02.html" ):format( time.year + 1900, time.month + 1, time.monthday, time.hour )
 	
 	xmlFile = xmlLoadFile( fileName )
 	if not xmlFile then
@@ -51,7 +52,7 @@ addEventHandler( "onClientChatMessage", getRootElement( ),
 		local time = getRealTime( )
 		if not xmlFile or not xmlNode then
 			openFile( )
-		elseif time.yearday ~= yearday then
+		elseif time.yearday ~= yearday or time.hour ~= hour then
 			closeFile( )
 			openFile( )
 		end
