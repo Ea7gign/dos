@@ -62,9 +62,8 @@ function saveDeliveryProgress(vehicle, earned)
 		outputChatBox("#FF9933You can now either return to the #CC0000warehouse #FF9933and obtain your wage", source, 0, 0, 0, true)
 		outputChatBox("#FF9933or continue onto the next #FFFF00drop off point#FF9933 and increase your wage.", source, 0, 0, 0, true)
 		triggerClientEvent( source, "loadNewCheckpointTruckJob",  source)
+		triggerEvent("updateGlobalSupplies", source, math.random(1,10))
 	end
-	
-	triggerEvent("updateGlobalSupplies", source, 3)
 end
 addEvent("saveDeliveryProgress", true)
 addEventHandler("saveDeliveryProgress", getRootElement(), saveDeliveryProgress)
