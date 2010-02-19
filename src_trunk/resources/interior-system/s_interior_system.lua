@@ -746,6 +746,12 @@ function setPlayerInsideInterior(thePickup, thePlayer)
 					setPedRotation(thePlayer, rot)
 				end
 				
+				if (x >= 654 and x <= 971 and y >= -3541 and y <= -3205) then
+					triggerClientEvent(thePlayer, "usedElevator", thePlayer)
+					setPedFrozen(thePlayer, true)
+					setPedGravity(thePlayer, 0)
+				end
+				
 				triggerEvent("onPlayerInteriorChange", thePlayer, thePickup, other)
 				
 				-- fade camera in

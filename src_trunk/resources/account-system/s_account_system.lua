@@ -166,9 +166,9 @@ function spawnCharacter(charname, version)
 		local data = mysql_fetch_assoc(result)
 		
 		local id = tonumber(data["id"])
-		local x = data["x"]
-		local y = data["y"]
-		local z = data["z"]
+		local x = tonumber(data["x"])
+		local y = tonumber(data["y"])
+		local z = tonumber(data["z"])
 		
 		local rot = tonumber(data["rotation"])
 		local interior = tonumber(data["interior_id"])
@@ -304,8 +304,8 @@ function spawnCharacter(charname, version)
 		outputChatBox("Need Help? /helpme", source, 255, 194, 14)
 		
 	
-		-- If in bank, freeze them
-		if (interior==3) then
+		-- If in bank/prison, freeze them
+		if (interior==3) or (x >= 654 and x <= 971 and y >= -3541 and y <= -3205) then
 			triggerClientEvent(source, "usedElevator", source)
 			setPedFrozen(source, true)
 			setPedGravity(source, 0)

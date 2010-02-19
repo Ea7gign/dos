@@ -1,7 +1,8 @@
 elevatortimer = nil
+local count = 0
 function usedElevator(x, y, z)
 	if (isTimer(elevatorTimer)) then killTimer(elevatortimer) end
-	
+	count = 0
 	elevatortimer = setTimer(doGroundCheck, 100, 0)
 end
 addEvent( "usedElevator", true )
@@ -13,7 +14,8 @@ function doGroundCheck()
 	
 	local clear = isLineOfSightClear(x, y, z, x, y, z-10, true, true, true, true, false, false, false, false, getLocalPlayer())
 
-	if (not clear) then
+	count = count + 1
+	if count >= 20 or not clear then
 		triggerServerEvent("resetGravity", getLocalPlayer())
 		killTimer(elevatortimer)
 		elevatortimer = nil
