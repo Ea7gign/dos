@@ -46,7 +46,7 @@ addEventHandler( "closeFreakinInventory", getRootElement(), closeInventory )
 
 local function output(from, to, itemID)
 	if from ~= to and getElementType(from) == "player" and getElementType(to) == "player" then
-		outputChatBox( getPlayerName( from ):gsub("_", " ") .. " gave you a " .. getItemName( itemID ) .. ".", to, 255, 194, 14 )
+		exports.global:sendLocalMeAction( from, "gives " .. getPlayerName( to ):gsub("_", " ") .. " a " .. getItemName( itemID ) .. "." )
 	end
 end
 
