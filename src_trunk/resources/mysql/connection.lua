@@ -153,11 +153,8 @@ function num_rows(resultid)
 	
 end
 
-function insert_id(resultid)
-	if (not resultPool[resultid]) then
-		return false
-	end
-	return mysql_insert_id(resultPool[resultid])
+function insert_id()
+	return mysql_insert_id(MySQLConnection) or false
 end
 
 function query_fetch_assoc(str)
@@ -183,7 +180,7 @@ end
 function query_insert_free(str)
 	local queryresult = query(str)
 	if  not (queryresult == false) then
-		local result = insert_id(queryresult)
+		local result = insert_id()
 		free_result(queryresult)
 		return result
 	end
