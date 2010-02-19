@@ -22,11 +22,10 @@ exports.pool:allocateElement(fdColShape)
 setElementDimension(fdColShape, 10631)
 setElementInterior(fdColShape, 3)
 
-angColShape = createColSphere(347.693359375, 162.5078125, 1014.1875, 7)
-exports.pool:allocateElement(angColShape)
-setElementDimension(angColShape, 79)
-setElementInterior(angColShape, 3)
-
+sacfColShape = createColSphere(1036.546875, 1222.09375, 1485.005859375, 5)
+exports.pool:allocateElement(sacfColShape)
+setElementDimension(sacfColShape, 777)
+setElementInterior(sacfColShape, 3)
 
 local authSwat = nil
 
@@ -737,3 +736,53 @@ function duty(thePlayer)
 	end
 end
 addCommandHandler("duty", duty)
+
+
+-- SACF
+function sacfduty(thePlayer, commandName)	
+	local logged = getElementData(thePlayer, "loggedin")
+	
+	if (logged==1) then
+		if (isElementWithinColShape(thePlayer, sacfColShape)) then
+		
+			local duty = tonumber(getElementData(thePlayer, "duty"))
+			local theTeam = getPlayerTeam(thePlayer)
+			
+			if getTeamName( theTeam ) == "San Andreas Correctional Facility" then
+				if (duty==0) then
+					outputChatBox("You are now on Duty.", thePlayer)
+					exports.global:sendLocalMeAction(thePlayer, "takes their gear from their locker.")
+					
+					if setElementData(thePlayer, "casualskin", getPedSkin(thePlayer), false) then
+						mysql_free_result( mysql_query( handler, "UPDATE characters SET casualskin = " .. getPedSkin(thePlayer) .. " WHERE id = " .. getElementData(thePlayer, "dbid") ) )
+					end
+					
+					saveWeaponsOnDuty(thePlayer)
+					
+					setPedArmor(thePlayer, 100)
+					setElementHealth(thePlayer, 100)
+					
+					exports.global:giveWeapon(thePlayer, 3, 1) -- Nightstick
+					exports.global:giveWeapon(thePlayer, 41, 1500) -- Pepperspray
+					
+					setElementModel(thePlayer, 71)
+					
+					setElementData(thePlayer, "duty", 9, false)
+					
+					saveSkin(thePlayer)
+				elseif (duty==9) then
+					restoreWeapons(thePlayer)
+					outputChatBox("You are now off duty.", thePlayer)
+					exports.global:sendLocalMeAction(thePlayer, "puts their gear into their locker.")
+					setPedArmor(thePlayer, 0)
+					setElementData(thePlayer, "duty", 0, false)
+					
+					local casualskin = getElementData(thePlayer, "casualskin")
+					setElementModel(thePlayer, casualskin)
+					saveSkin(thePlayer)
+				end
+			end
+		end
+	end
+end
+addCommandHandler("duty", sacfduty, false, false)
