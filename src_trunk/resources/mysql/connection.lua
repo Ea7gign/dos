@@ -11,11 +11,11 @@ mysql:freeResult(result)
 ]]
 
 -- connection settings
-local hostname = "localhost"
-local username = "mta"
-local password = ""
-local database = "mta"
-local port = 3306
+local hostname = get( "hostname" ) or "localhost"
+local username = get( "username" ) or "mta"
+local password = get( "password" ) or ""
+local database = get( "mta" ) or "mta"
+local port = tonumber( get( "port" ) ) or 3306
 
 -- global things.
 local MySQLConnection = nil
@@ -49,7 +49,7 @@ addEventHandler("onResourceStop", getResourceRootElement(getThisResource()), des
 -- do something usefull here
 function logSQLError(str)
 	local message = str or 'N/A'
-	outputDebugString("MYSQL ERROR "..mysql_errno(MySQLConnection) .. ": " .. mysql_errorMySQLConnection)
+	outputDebugString("MYSQL ERROR "..mysql_errno(MySQLConnection) .. ": " .. mysql_error(MySQLConnection))
 end
 
 function getFreeResultPoolID()

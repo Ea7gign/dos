@@ -46,6 +46,8 @@ function runString (commandstring, outputTo, source)
 		vehicle = getPedOccupiedVehicle(source) or getPedContactElement(source)
 		car = vehicle
 	end
+	settingsSet = set
+	settingsGet = get
 	p = getPlayerFromName
 	c = getPedOccupiedVehicle
 	set = setElementData
