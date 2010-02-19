@@ -222,54 +222,37 @@ function govduty(thePlayer, commandName)
 			local factionrank = getElementData(thePlayer,"factionrank") 
 			
 			if (faction==3) then
-				if (factionrank == 4 or factionrank == 5 or factionrank > 10) then -- 4, 5, 11, 12, 13, 14, 15
-					if (duty==0) then
-						local dutyskin = 164					
-						outputChatBox("You are now on duty.", thePlayer)
-						exports.global:sendLocalMeAction(thePlayer, "takes their uniform from their locker.")
-							
-						
-						if setElementData(thePlayer, "casualskin", getPedSkin(thePlayer), false) then
-							mysql_free_result( mysql_query( handler, "UPDATE characters SET casualskin = " .. getPedSkin(thePlayer) .. " WHERE id = " .. getElementData(thePlayer, "dbid") ) )
-						end
-						
-						saveWeaponsOnDuty(thePlayer)
-						setElementHealth(thePlayer, 100) -- restore health
+				if (duty==0) then
+					outputChatBox("You are now on duty.", thePlayer)
+					exports.global:sendLocalMeAction(thePlayer, "takes their uniform from their locker.")
 						
 					
-						-- remember me to kill nathe when he changes this AGAIN
-						if (factionrank == 4 or factionrank == 5) then
-							setElementModel(thePlayer, dutyskin) -- setskin
-							setPedArmor(thePlayer, 100) -- armor
-							exports.global:giveWeapon(thePlayer, 22, 25) -- Colt
-							exports.global:giveItem(thePlayer, 45, 1) -- handcuffs
-							if (factionrank == 5) then
-								exports.global:giveWeapon(thePlayer, 29, 100) -- MP5
-							end
-						elseif (factionrank > 10) then
-							exports.global:giveWeapon(thePlayer, 22, 25) -- Colt
-							-- 100% armor only for rank 13, rest 50%
-							if (factionrank == 13) then
-								setPedArmor(thePlayer, 100) -- armor
-								exports.global:giveWeapon(thePlayer, 29, 100) -- MP5
-								exports.global:giveItem(thePlayer, 45, 1) -- handcuffs
-							else
-								setPedArmor(thePlayer, 50) -- armor
-							end
-						end
-						setElementData(thePlayer, "duty", 7, false)
-							
-						saveSkin(thePlayer)
-					elseif (duty==7) then -- gov
-						restoreWeapons(thePlayer)
-						outputChatBox("You are now off duty.", thePlayer)
-						exports.global:sendLocalMeAction(thePlayer, "puts their uniform into their locker.")
-						setElementData(thePlayer, "duty", 0, false)
-						
-						local casualskin = getElementData(thePlayer, "casualskin")
-						setElementModel(thePlayer, casualskin)
-						saveSkin(thePlayer)
+					if setElementData(thePlayer, "casualskin", getPedSkin(thePlayer), false) then
+						mysql_free_result( mysql_query( handler, "UPDATE characters SET casualskin = " .. getPedSkin(thePlayer) .. " WHERE id = " .. getElementData(thePlayer, "dbid") ) )
 					end
+					
+					saveWeaponsOnDuty(thePlayer)
+					setElementHealth(thePlayer, 100) -- restore health
+					
+					exports.global:giveItem(thePlayer, 46, 1) -- Rope
+					setPedArmor(thePlayer, 50) -- 50% armor
+					exports.global:giveWeapon(thePlayer, 22, 30) -- colt 45
+					exports.global:giveWeapon(thePlayer, 41, 1000) -- pepper spray
+					
+					setElementData(thePlayer, "duty", 7, false)
+						
+					saveSkin(thePlayer)
+				elseif (duty==7) then -- gov
+					restoreWeapons(thePlayer)
+					outputChatBox("You are now off duty.", thePlayer)
+					exports.global:sendLocalMeAction(thePlayer, "puts their uniform into their locker.")
+					exports.global:takeItem(thePlayer, 46)
+					setPedArmor(thePlayer, 0)
+					setElementData(thePlayer, "duty", 0, false)
+					
+					local casualskin = getElementData(thePlayer, "casualskin")
+					setElementModel(thePlayer, casualskin)
+					saveSkin(thePlayer)
 				end
 			end
 		end
