@@ -567,6 +567,16 @@ function createFaction(thePlayer, commandName, factionType, ...)
 					setElementData(theTeam, "type", tonumber(factionType))
 					setElementData(theTeam, "id", tonumber(id))
 					setElementData(theTeam, "money", 0)
+					
+					local factionRanks = {}
+					local factionWages = {}
+					for i = 1, 15 do
+						factionRanks[i] = "Dynamic Rank #" .. i
+						factionWages[i] = 100
+					end
+					setElementData(theTeam, "ranks", factionRanks, false)
+					setElementData(theTeam, "wages", factionWages, false)
+					setElementData(theTeam, "motd", "Welcome to the faction.", false)
 				else
 					destroyElement(theTeam)
 					outputChatBox("Error creating faction.", thePlayer, 255, 0, 0)
