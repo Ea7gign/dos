@@ -139,6 +139,7 @@ addEventHandler( "apps:showsingle", localPlayer,
 				function( button, state )
 					if button == "left" and state == "up" then
 						guiSetVisible( wApp, false )
+						guiSetInputEnabled( false )
 						triggerServerEvent( "apps:update", localPlayer, account, 3, guiGetText( texts.appreason ) or "" )
 					end
 				end, false
@@ -149,6 +150,7 @@ addEventHandler( "apps:showsingle", localPlayer,
 				function( button, state )
 					if button == "left" and state == "up" then
 						guiSetVisible( wApp, false )
+						guiSetInputEnabled( false )
 						triggerServerEvent( "apps:update", localPlayer, account, 2, guiGetText( texts.appreason ) or "" )
 					end
 				end, false
@@ -159,6 +161,7 @@ addEventHandler( "apps:showsingle", localPlayer,
 				function( button, state )
 					if button == "left" and state == "up" then
 						guiSetVisible( wApp, false )
+						guiSetInputEnabled( false )
 					end
 				end, false
 			)
@@ -167,6 +170,7 @@ addEventHandler( "apps:showsingle", localPlayer,
 				function( button, state )
 					if button == "left" and state == "up" then
 						guiSetVisible( wApp, false )
+						guiSetInputEnabled( false )
 						triggerServerEvent( "apps:show", localPlayer )
 					end
 				end, false
@@ -174,6 +178,7 @@ addEventHandler( "apps:showsingle", localPlayer,
 		else
 			guiSetVisible( wApp, true )
 		end
+		guiSetInputEnabled( true )
 		
 		for key, value in pairs( texts ) do
 			guiSetText( value[1], ( value[2] or "" ) .. ( info[key] or "" ) )
