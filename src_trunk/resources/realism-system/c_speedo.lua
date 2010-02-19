@@ -107,7 +107,7 @@ function onVehicleExit(thePlayer, seat)
 		end
 	end
 end
-addEventHandler("onClientVehicleStartExit", getRootElement(), onVehicleExit)
+addEventHandler("onClientVehicleExit", getRootElement(), onVehicleExit)
 
 function hideSpeedo()
 	removeEventHandler("onClientRender", getRootElement(), drawSpeedo)
