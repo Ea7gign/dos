@@ -530,6 +530,7 @@ addEventHandler( "onClientClick", getRootElement( ),
 						if activeTab == hoverAction then
 							show = false
 							showCursor( false )
+							exports["realism-system"]:showSpeedo()
 						else
 							activeTab = hoverAction
 						end
@@ -568,9 +569,11 @@ bindKey( "i", "down",
 		if show then
 			show = false
 			showCursor( false )
+			exports["realism-system"]:showSpeedo()
 		elseif not getElementData(localPlayer, "adminjailed") and not getElementData(localPlayer, "pd.jailstation") then
 			show = true
 			showCursor( true )
+			exports["realism-system"]:hideSpeedo()
 		else
 			outputChatBox("You can't access your inventory in jail", 255, 0, 0)
 		end
