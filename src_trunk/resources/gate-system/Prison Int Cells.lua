@@ -51,7 +51,7 @@ local function closeDoor( shortestID )
 end
 
 local function openDoor(thePlayer, commandName, pass)
-	if getElementDimension(thePlayer) == 778 then
+	if getTeamName(getPlayerTeam(thePlayer)) == "San Andreas Correctional Facility" and getElementDimension(thePlayer) == 778 then
 		local shortest, shortestID, dist = nil, nil, 10
 		local px, py, pz = getElementPosition(thePlayer)
 		
