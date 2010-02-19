@@ -196,7 +196,7 @@ function stabilizePlayer(player)
 	local found, slot, itemValue = exports.global:hasItem(source, 70)
 	if found then
 		if itemValue > 1 then
-			exports.global:updateItemValue(source, slot, itemValue - 1)
+			exports['item-system']:updateItemValue(source, slot, itemValue - 1)
 		else
 			exports.global:takeItem(source, 70, itemValue)
 		end

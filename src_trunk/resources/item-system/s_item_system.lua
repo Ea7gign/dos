@@ -1330,9 +1330,9 @@ function writeNote(thePlayer, commandName, ...)
 			exports.global:sendLocalMeAction(thePlayer, "writes a note on a piece of paper.")
 			
 			if itemValue > 1 then
-				updateItemValue( thePlayer, 71, itemValue - 1 )
+				updateItemValue( thePlayer, slot, itemValue - 1 )
 			else
-				takeItem( thePlayer, 71, itemValue )
+				takeItemFromSlot( thePlayer, slot )
 			end
 		else
 			outputChatBox("You don't have any empty paper.", thePlayer, 255, 0, 0)
