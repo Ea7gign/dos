@@ -1,5 +1,7 @@
 -- reverse carshop
 
+local mysql = exports.mysql
+
 local cOutsideCol = createColPolygon(
 	-1880, -1659, -- dummy
 	-1940, -1786,
@@ -108,7 +110,7 @@ local function crushCar(thePlayer, matching)
 				if price and price > 0 then
 					local dbid = getElementData(theVehicle, "dbid")
 					
-					local result = mysql_query( handler, "DELETE FROM vehicles WHERE id = " .. dbid )
+					local result = mysql:query_free( handler, "DELETE FROM vehicles WHERE id = " .. dbid )
 					if result then
 						exports.global:giveMoney(thePlayer, price)
 						call( getResourceFromName( "item-system" ), "deleteAll", 3, dbid )
@@ -118,7 +120,6 @@ local function crushCar(thePlayer, matching)
 						-- just make sure admins/irc are informed (just in case, so he can't reclaim the vehicle)
 						exports.global:sendMessageToAdmins("Removing vehicle #" .. dbid .. " (Crushed by " .. getPlayerName(thePlayer) .. ").")
 						exports.irc:sendAdminMessage("AdmInfo: Removing vehicle #" .. dbid .. " (Crushed by " .. getPlayerName(thePlayer) .. ").")
-						mysql_free_result(result)
 						
 						exports.logs:logMessage("[CRUSHER DELETE] Car #" .. dbid .. " was deleted by " .. getPlayerName(thePlayer), 9)
 						
