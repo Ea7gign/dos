@@ -26,8 +26,5 @@
 	<script src="Prison Int Cells.lua"/>
 	
 	<script src="MountMansion.lua" type="server"/>
-	<script src="BeachHouse.lua" type="server"/>
-	<script src="BeachHouse_c.lua" type="client"/>
 	<script src="c_doors.lua" type="client"/>
-	<script src="tigerclub.lua" type="server"/>
 </meta>
