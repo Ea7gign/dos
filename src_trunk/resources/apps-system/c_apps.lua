@@ -140,7 +140,7 @@ addEventHandler( "apps:showsingle", localPlayer,
 					if button == "left" and state == "up" then
 						guiSetVisible( wApp, false )
 						guiSetInputEnabled( false )
-						triggerServerEvent( "apps:update", localPlayer, account, 3, guiGetText( texts.appreason ) or "" )
+						triggerServerEvent( "apps:update", localPlayer, account, 3, guiGetText( texts.appreason[1] ) or "" )
 					end
 				end, false
 			)
@@ -151,7 +151,7 @@ addEventHandler( "apps:showsingle", localPlayer,
 					if button == "left" and state == "up" then
 						guiSetVisible( wApp, false )
 						guiSetInputEnabled( false )
-						triggerServerEvent( "apps:update", localPlayer, account, 2, guiGetText( texts.appreason ) or "" )
+						triggerServerEvent( "apps:update", localPlayer, account, 2, guiGetText( texts.appreason[1] ) or "" )
 					end
 				end, false
 			)
