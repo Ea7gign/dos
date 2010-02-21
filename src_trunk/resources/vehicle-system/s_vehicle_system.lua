@@ -1,30 +1,4 @@
--- ////////////////////////////////////
--- //			MYSQL				 //
--- ////////////////////////////////////		
-sqlUsername = exports.mysql:getMySQLUsername()
-sqlPassword = exports.mysql:getMySQLPassword()
-sqlDB = exports.mysql:getMySQLDBName()
-sqlHost = exports.mysql:getMySQLHost()
-sqlPort = exports.mysql:getMySQLPort()
-
-handler = mysql_connect(sqlHost, sqlUsername, sqlPassword, sqlDB, sqlPort)
-
-function checkMySQL()
-	if not (mysql_ping(handler)) then
-		handler = mysql_connect(sqlHost, sqlUsername, sqlPassword, sqlDB, sqlPort)
-	end
-end
-setTimer(checkMySQL, 300000, 0)
-
-function closeMySQL()
-	if (handler) then
-		mysql_close(handler)
-	end
-end
-addEventHandler("onResourceStop", getResourceRootElement(getThisResource()), closeMySQL)
--- ////////////////////////////////////
--- //			MYSQL END			 //
--- ////////////////////////////////////
+mysql = exports.mysql
 
 enginelessVehicle = { [510]=true, [509]=true, [481]=true }
 lightlessVehicle = { [592]=true, [577]=true, [511]=true, [548]=true, [512]=true, [593]=true, [425]=true, [520]=true, [417]=true, [487]=true, [553]=true, [488]=true, [497]=true, [563]=true, [476]=true, [447]=true, [519]=true, [460]=true, [469]=true, [513]=true, [472]=true, [473]=true, [493]=true, [595]=true, [484]=true, [430]=true, [453]=true, [452]=true, [446]=true, [454]=true }
@@ -52,18 +26,17 @@ end
 
 function getCharacterName( id )
 	if not charCache[ id ] then
-		local query = mysql_query(handler, "SELECT charactername, gender, marriedto FROM characters WHERE id = " .. id .. " LIMIT 1")
+		local query = mysql:query_fetch_assoc("SELECT charactername, gender, marriedto FROM characters WHERE id = " .. id .. " LIMIT 1")
 		if query then
-			local name = mysql_result(query, 1, 1)
-			local gender = tonumber(mysql_result(query, 1, 2))
-			local marriedto = tonumber(mysql_result(query, 1, 3))
-			mysql_free_result(query)
+			local name = query["charactername"]
+			local gender = tonumber(query["gender"])
+			local marriedto = tonumber(query["marriedto"])
 			
 			if name then
 				if marriedto > 0 then
-					local query = mysql_query(handler, "SELECT charactername FROM characters WHERE id = " .. marriedto .. " LIMIT 1")
+					local query = mysql:query_fetch_assoc("SELECT charactername FROM characters WHERE id = " .. marriedto .. " LIMIT 1")
 					if query then
-						local name2 = mysql_result(query, 1, 1)
+						local name2 = query["charactername"]
 						if name2 ~= mysql_null( ) then
 							if gender == 1 then
 								name = makeName( name, name2 )
@@ -71,7 +44,6 @@ function getCharacterName( id )
 								name = makeName( name2, name )
 							end
 						end
-						mysql_free_result(query)
 					end
 				end
 				charCache[ id ] = name:gsub("_", " ")
@@ -189,12 +161,9 @@ function createPermVehicle(thePlayer, commandName, ...)
 						
 					local dimension = getElementDimension(thePlayer)
 					local interior = getElementInterior(thePlayer)
-					local query = mysql_query(handler, "INSERT INTO vehicles SET model='" .. id .. "', x='" .. x .. "', y='" .. y .. "', z='" .. z .. "', rotx='" .. rx .. "', roty='" .. ry .. "', rotz='" .. rz .. "', color1='" .. col1 .. "', color2='" .. col2 .. "', faction='" .. factionVehicle .. "', owner='" .. ( factionVehicle == -1 and dbid or -1 ) .. "', plate='" .. plate .. "', currx='" .. x .. "', curry='" .. y .. "', currz='" .. z .. "', currrx='0', currry='0', currrz='" .. r .. "', locked=1, interior='" .. interior .. "', currinterior='" .. interior .. "', dimension='" .. dimension .. "', currdimension='" .. dimension .. "'")
+					local insertid = mysql:query_insert_free("INSERT INTO vehicles SET model='" .. id .. "', x='" .. x .. "', y='" .. y .. "', z='" .. z .. "', rotx='" .. rx .. "', roty='" .. ry .. "', rotz='" .. rz .. "', color1='" .. col1 .. "', color2='" .. col2 .. "', faction='" .. factionVehicle .. "', owner='" .. ( factionVehicle == -1 and dbid or -1 ) .. "', plate='" .. plate .. "', currx='" .. x .. "', curry='" .. y .. "', currz='" .. z .. "', currrx='0', currry='0', currrz='" .. r .. "', locked=1, interior='" .. interior .. "', currinterior='" .. interior .. "', dimension='" .. dimension .. "', currdimension='" .. dimension .. "'")
 
-					if (query) then
-						local insertid = mysql_insert_id( handler )
-						mysql_free_result(query)
-							
+					if (insertid) then
 						exports.pool:allocateElement(veh, insertid)
 						
 						if (factionVehicle==-1) then
@@ -322,12 +291,9 @@ function createCivilianPermVehicle(thePlayer, commandName, ...)
 					setVehicleDamageProof(veh, true)
 				end
 					
-				local query = mysql_query(handler, "INSERT INTO vehicles SET job='" .. job .. "', model='" .. id .. "', x='" .. x .. "', y='" .. y .. "', z='" .. z .. "', rotx='" .. rx .. "', roty='" .. ry .. "', rotz='" .. rz .. "', color1='" .. col1 .. "', color2='" .. col2 .. "', faction='-1', owner='-2', plate='" .. plate .. "', currx='" .. x .. "', curry='" .. y .. "', currz='" .. z .. "', currrx='0', currry='0', currrz='" .. r .. "', interior='" .. interior .. "', currinterior='" .. interior .. "', dimension='" .. dimension .. "', currdimension='" .. dimension .. "'")
+				local insertid = mysql:query_insert_free("INSERT INTO vehicles SET job='" .. job .. "', model='" .. id .. "', x='" .. x .. "', y='" .. y .. "', z='" .. z .. "', rotx='" .. rx .. "', roty='" .. ry .. "', rotz='" .. rz .. "', color1='" .. col1 .. "', color2='" .. col2 .. "', faction='-1', owner='-2', plate='" .. plate .. "', currx='" .. x .. "', curry='" .. y .. "', currz='" .. z .. "', currrx='0', currry='0', currrz='" .. r .. "', interior='" .. interior .. "', currinterior='" .. interior .. "', dimension='" .. dimension .. "', currdimension='" .. dimension .. "'")
 				
-				if (query) then
-					mysql_free_result(query)
-					local insertid = mysql_insert_id(handler)
-					
+				if (insertid) then
 					exports.pool:allocateElement(veh, insertid)
 					
 					setElementData(veh, "dbid", insertid)
@@ -362,24 +328,20 @@ function loadAllVehicles(res)
 	end
 	
 	local null = mysql_null()
-	local result = mysql_unbuffered_query(handler, "SELECT * FROM vehicles ORDER BY id ASC;")
+	local result = mysql:query("SELECT * FROM `vehicles` ORDER BY `id` ASC")
 	if result then
-		for res, row in mysql_rows_assoc( result ) do
-			for k, v in pairs( row ) do
-				if v == null then
-					row[k] = nil
-				else
-					row[k] = tonumber(v) or v
-				end
+		local run = true
+		while run do
+			local row = exports.mysql:fetch_assoc(result)
+			if not (row) then
+				break
 			end
 			
-			
-			--
 			-- Spawn the vehicle
 			local veh = createVehicle(row.model, row.currx, row.curry, row.currz, row.currrx, row.currry, row.currrz, row.plate)
 			if veh then
-				setElementData(veh, "dbid", row.id)
-				exports.pool:allocateElement(veh, row.id)
+				setElementData(veh, "dbid", tonumber(row.id))
+				exports.pool:allocateElement(veh, tonumber(row.id))
 				
 				-- color
 				setVehicleColor(veh, row.color1, row.color2, row.color1, row.color2)
@@ -391,7 +353,7 @@ function loadAllVehicles(res)
 				
 				-- add the vehicle upgrades
 				for i = 0, 16 do
-					local upgrade = row['upgrade' .. i]
+					local upgrade = tonumber(row['upgrade' .. i])
 					if upgrade and upgrade > 0 then
 						addVehicleUpgrade(veh, upgrade)
 					end
@@ -420,11 +382,11 @@ function loadAllVehicles(res)
 				setVehicleSirensOn(veh, row.sirens == 1)
 				
 				-- job
-				if row.job > 0 then
+				if tonumber(row.job) > 0 then
 					toggleVehicleRespawn(veh, true)
 					setVehicleRespawnDelay(veh, 60000)
 					setVehicleIdleRespawnDelay(veh, 180000)
-					setElementData(veh, "job", row.job)
+					setElementData(veh, "job", tonumber(row.job))
 				else
 					setElementData(veh, "job", 0, false)
 				end
@@ -433,12 +395,12 @@ function loadAllVehicles(res)
 				setElementData(veh, "respawnposition", {row.x, row.y, row.z, row.rotx, row.roty, row.rotz}, false)
 				
 				-- element data
-				setElementData(veh, "fuel", row.fuel, false)
+				setElementData(veh, "fuel", tonumber(row.fuel), false)
 				setElementData(veh, "oldx", row.currx, false)
 				setElementData(veh, "oldy", row.curry, false)
 				setElementData(veh, "oldz", row.currz, false)
-				setElementData(veh, "faction", row.faction)
-				setElementData(veh, "owner", row.owner)
+				setElementData(veh, "faction", tonumber(row.faction))
+				setElementData(veh, "owner", tonumber(row.owner))
 				
 				-- impound shizzle
 				setElementData(veh, "Impounded", tonumber(row.Impounded))
@@ -450,29 +412,29 @@ function loadAllVehicles(res)
 				setElementDimension(veh, row.currdimension)
 				setElementInterior(veh, row.currinterior)
 				
-				setElementData(veh, "dimension", row.dimension, false)
-				setElementData(veh, "interior", row.interior, false)
+				setElementData(veh, "dimension", tonumber(row.dimension), false)
+				setElementData(veh, "interior", tonumber(row.interior), false)
 				
 				-- lights
 				setVehicleOverrideLights(veh, row.lights == 0 and 1 or row.lights )
 				
 				-- engine
-				if row.hp <= 350 then
+				if tonumber(row.hp) <= 350 then
 					setElementHealth(veh, 300)
 					setVehicleDamageProof(veh, true)
 					setVehicleEngineState(veh, false)
 					setElementData(veh, "engine", 0, false)
 					setElementData(veh, "enginebroke", 1, false)
 				else
-					setElementHealth(veh, row.hp)
+					setElementHealth(veh, tonumber(row.hp))
 					setVehicleEngineState(veh, row.engine == 1)
-					setElementData(veh, "engine", row.engine, false)
+					setElementData(veh, "engine", tonumber(row.engine), false)
 					setElementData(veh, "enginebroke", 0, false)
 				end
 				setVehicleFuelTankExplodable(veh, false)
 				
 				-- handbrake
-				if row.handbrake > 0 then
+				if tonumber(row.handbrake) > 0 then
 					setVehicleFrozen(veh, true)
 				end
 				
@@ -480,9 +442,9 @@ function loadAllVehicles(res)
 				exports['vehicle-interiors']:add( veh )
 			end
 		end
-		mysql_free_result( result )
+		mysql:free_result(result)
 	else
-		outputDebugString( "loadAllVehicles failed:" .. mysql_error( handler ) )
+		outputDebugString( "loadAllVehicles failed" )
 	end
 	exports.irc:sendMessage("[SCRIPT] Loaded " .. #getElementsByType( "vehicle", getResourceRootElement( ) ) .. " vehicles.")
 end
@@ -950,9 +912,8 @@ function sellVehicle(thePlayer, commandName, targetPlayerName)
 							if getElementData(targetPlayer, "dbid") ~= getElementData(theVehicle, "owner") then
 								if exports.global:hasSpaceForItem(targetPlayer, 3) then
 									if exports.global:canPlayerBuyVehicle(targetPlayer) then
-										local query = mysql_query(handler, "UPDATE vehicles SET owner = '" .. getElementData(targetPlayer, "dbid") .. "' WHERE id='" .. vehicleID .. "'")
+										local query = mysql:query_free("UPDATE vehicles SET owner = '" .. getElementData(targetPlayer, "dbid") .. "' WHERE id='" .. vehicleID .. "'")
 										if query then
-											mysql_free_result(query)
 											setElementData(theVehicle, "owner", getElementData(targetPlayer, "dbid"))
 											
 											exports.global:takeItem(thePlayer, 3, vehicleID)
@@ -1057,8 +1018,7 @@ function storeVehicleLockState(vehicle, dbid)
 		if (locked) then state = 1
 		elseif (not locked) then state = 0 end
 		
-		local query = mysql_query(handler, "UPDATE vehicles SET locked='" .. state .. "' WHERE id='" .. dbid .. "' LIMIT 1")
-		mysql_free_result(query)
+		local query = mysql:query_free("UPDATE vehicles SET locked='" .. state .. "' WHERE id='" .. dbid .. "' LIMIT 1")
 		
 		storeTimers[vehicle] = nil
 	end
@@ -1142,8 +1102,7 @@ function checkVehpos(veh, dbid)
 				exports.logs:logMessage("[VEHPOS DELETE] car #" .. id .. " was deleted", 9)
 				exports.irc:sendAdminMessage("Removing vehicle #" .. id .. " (Did not get Vehpossed).")
 				destroyElement(veh)
-				local query = mysql_query(handler, "DELETE FROM vehicles WHERE id='" .. id .. "' LIMIT 1")
-				mysql_free_result(query)
+				local query = mysql:query_free("DELETE FROM vehicles WHERE id='" .. id .. "' LIMIT 1")
 				
 				call( getResourceFromName( "item-system" ), "clearItems", veh )
 				call( getResourceFromName( "item-system" ), "deleteAll", 3, id )
@@ -1187,8 +1146,7 @@ function setVehiclePosition(thePlayer, commandName)
 					local interior = getElementInterior(thePlayer)
 					local dimension = getElementDimension(thePlayer)
 					
-					local query = mysql_query(handler, "UPDATE vehicles SET x='" .. x .. "', y='" .. y .."', z='" .. z .. "', rotx='" .. rx .. "', roty='" .. ry .. "', rotz='" .. rz .. "', currx='" .. x .. "', curry='" .. y .. "', currz='" .. z .. "', currrx='" .. rx .. "', currry='" .. ry .. "', currrz='" .. rz .. "', interior='" .. interior .. "', currinterior='" .. interior .. "', dimension='" .. dimension .. "', currdimension='" .. dimension .. "' WHERE id='" .. dbid .. "'")
-					mysql_free_result(query)
+					local query = mysql:query_free("UPDATE vehicles SET x='" .. x .. "', y='" .. y .."', z='" .. z .. "', rotx='" .. rx .. "', roty='" .. ry .. "', rotz='" .. rz .. "', currx='" .. x .. "', curry='" .. y .. "', currz='" .. z .. "', currrx='" .. rx .. "', currry='" .. ry .. "', currrz='" .. rz .. "', interior='" .. interior .. "', currinterior='" .. interior .. "', dimension='" .. dimension .. "', currdimension='" .. dimension .. "' WHERE id='" .. dbid .. "'")
 					setVehicleRespawnPosition(veh, x, y, z, rx, ry, rz)
 					setElementData(veh, "respawnposition", {x, y, z, rx, ry, rz}, false)
 					setElementData(veh, "interior", interior)
@@ -1235,8 +1193,7 @@ function setVehiclePosition2(thePlayer, commandName, vehicleID)
 				local interior = getElementInterior(thePlayer)
 				local dimension = getElementDimension(thePlayer)
 				
-				local query = mysql_query(handler, "UPDATE vehicles SET x='" .. x .. "', y='" .. y .."', z='" .. z .. "', rotx='" .. rx .. "', roty='" .. ry .. "', rotz='" .. rz .. "', currx='" .. x .. "', curry='" .. y .. "', currz='" .. z .. "', currrx='" .. rx .. "', currry='" .. ry .. "', currrz='" .. rz .. "', interior='" .. interior .. "', currinterior='" .. interior .. "', dimension='" .. dimension .. "', currdimension='" .. dimension .. "' WHERE id='" .. vehicleID .. "'")
-				mysql_free_result(query)
+				local query = mysql:query_free("UPDATE vehicles SET x='" .. x .. "', y='" .. y .."', z='" .. z .. "', rotx='" .. rx .. "', roty='" .. ry .. "', rotz='" .. rz .. "', currx='" .. x .. "', curry='" .. y .. "', currz='" .. z .. "', currrx='" .. rx .. "', currry='" .. ry .. "', currrz='" .. rz .. "', interior='" .. interior .. "', currinterior='" .. interior .. "', dimension='" .. dimension .. "', currdimension='" .. dimension .. "' WHERE id='" .. vehicleID .. "'")
 				setVehicleRespawnPosition(veh, x, y, z, rx, ry, rz)
 				setElementData(veh, "respawnposition", {x, y, z, rx, ry, rz}, false)
 				setElementData(veh, "interior", interior)
@@ -1298,8 +1255,7 @@ function setVehiclePosition3(veh)
 				local interior = getElementInterior(source)
 				local dimension = getElementDimension(source)
 				
-				local query = mysql_query(handler, "UPDATE vehicles SET x='" .. x .. "', y='" .. y .."', z='" .. z .. "', rotx='" .. rx .. "', roty='" .. ry .. "', rotz='" .. rz .. "', currx='" .. x .. "', curry='" .. y .. "', currz='" .. z .. "', currrx='" .. rx .. "', currry='" .. ry .. "', currrz='" .. rz .. "', interior='" .. interior .. "', currinterior='" .. interior .. "', dimension='" .. dimension .. "', currdimension='" .. dimension .. "' WHERE id='" .. dbid .. "'")
-				mysql_free_result(query)
+				local query = mysql:query_free("UPDATE vehicles SET x='" .. x .. "', y='" .. y .."', z='" .. z .. "', rotx='" .. rx .. "', roty='" .. ry .. "', rotz='" .. rz .. "', currx='" .. x .. "', curry='" .. y .. "', currz='" .. z .. "', currrx='" .. rx .. "', currry='" .. ry .. "', currrz='" .. rz .. "', interior='" .. interior .. "', currinterior='" .. interior .. "', dimension='" .. dimension .. "', currdimension='" .. dimension .. "' WHERE id='" .. dbid .. "'")
 				setVehicleRespawnPosition(veh, x, y, z, rx, ry, rz)
 				setElementData(veh, "respawnposition", {x, y, z, rx, ry, rz}, false)
 				setElementData(veh, "interior", interior)
