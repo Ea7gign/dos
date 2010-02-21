@@ -171,7 +171,12 @@ end
 
 function rotateCar()
 	local rx, ry, rz = getElementRotation(car)
-	setElementRotation(car, 0, 0, rz+1)
+	setElementRotation(car, rx > 5 and rx < 355 and 0 or rx, ry > 5 and ry < 355 and 0 or ry, rz+1)
+	
+	local x, y, z = unpack(activeShop.previewpos)
+	if getDistanceBetweenPoints3D(x, y, z, getElementPosition(car)) > 2 then
+		setElementPosition(car, x, y, z)
+	end
 end
 
 function hideCarshopUI()
