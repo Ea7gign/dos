@@ -1,30 +1,4 @@
--- ////////////////////////////////////
--- //			MYSQL				 //
--- ////////////////////////////////////		
-sqlUsername = exports.mysql:getMySQLUsername()
-sqlPassword = exports.mysql:getMySQLPassword()
-sqlDB = exports.mysql:getMySQLDBName()
-sqlHost = exports.mysql:getMySQLHost()
-sqlPort = exports.mysql:getMySQLPort()
-
-handler = mysql_connect(sqlHost, sqlUsername, sqlPassword, sqlDB, sqlPort)
-
-function checkMySQL()
-	if not (mysql_ping(handler)) then
-		handler = mysql_connect(sqlHost, sqlUsername, sqlPassword, sqlDB, sqlPort)
-	end
-end
-setTimer(checkMySQL, 300000, 0)
-
-function closeMySQL()
-	if (handler) then
-		mysql_close(handler)
-	end
-end
-addEventHandler("onResourceStop", getResourceRootElement(getThisResource()), closeMySQL)
--- ////////////////////////////////////
--- //			MYSQL END			 //
--- ////////////////////////////////////
+mysql = exports.mysql
 
 ----------------------[KEY BINDS]--------------------
 function bindKeys()
@@ -54,28 +28,32 @@ function toggleFriends(source)
 		if visible == 0 then -- not already showing
 			local accid = tonumber(getElementData(source, "gameaccountid"))
 			
-			local achresult = mysql_query(handler, "SELECT COUNT(*) FROM achievements WHERE account='" .. accid .. "' LIMIT 1")
-			local myachievements = mysql_result(achresult, 1, 1)
-			mysql_free_result(achresult)
+			local achresult = mysql:query_fetch_assoc("SELECT COUNT(*) as tempnr FROM achievements WHERE account='" .. accid .. "' LIMIT 1")
+			local myachievements = achresult["tempnr"]
 			
 			-- load friends list
-			local result = mysql_query( handler, "SELECT f.friend, a.username, a.friendsmessage, DATEDIFF(NOW(), a.lastlogin), a.country, ( SELECT COUNT(*) FROM achievements b WHERE b.account = a.id ), HOUR(TIMEDIFF(NOW(), a.lastlogin)), MINUTE(TIMEDIFF(NOW(), a.lastlogin)) FROM friends f LEFT JOIN accounts a ON f.friend = a.id WHERE f.id = " .. accid .. " ORDER BY a.lastlogin DESC" )
+			local result = mysql:query("SELECT f.friend, a.username, a.friendsmessage, DATEDIFF(NOW(), a.lastlogin) as daytimediff, a.country, ( SELECT COUNT(*) FROM achievements b WHERE b.account = a.id ) as archievements, HOUR(TIMEDIFF(NOW(), a.lastlogin)) as hourtimediff, MINUTE(TIMEDIFF(NOW(), a.lastlogin)) as minutetimediff FROM friends f LEFT JOIN accounts a ON f.friend = a.id WHERE f.id = ".. accid .. " ORDER BY a.lastlogin DESC" )
 			if result then
 				local friends = { }
-				for result, row in mysql_rows(result) do
-					local id = tonumber( row[1] )
-					local account = row[2]
+				local run = true
+				while run do
+					local row = exports.mysql:fetch_assoc(result)
+					if not (row) then
+						break
+					end
+					local id = tonumber( row["friend"] )
+					local account = row["username"]
 					
 					if account == mysql_null( ) then -- account doesn't exist any longer, drop friends
-						mysql_free_result( mysql_query( handler, "DELETE FROM friends WHERE id = " .. id .. " OR friend = " .. id ) )
+						mysql:query_free("DELETE FROM friends WHERE id = " .. id .. " OR friend = " .. id )
 					else
 						-- Last online
 						local time = getRealTime()
 						local years = (1900+time.year)
 						local yearday = time.yearday
 
-						local timeoffline = tonumber( row[4] ) -- time offline
-						local hour, minute = tonumber( row[7] ), tonumber( row[8] )
+						local timeoffline = tonumber( row["daytimediff"] ) -- time offline
+						local hour, minute = tonumber( row["hourtimediff"] ), tonumber( row["minutetimediff"] )
 						
 						local player = nil
 						for key, value in ipairs(exports.pool:getPoolElementsByType("player")) do
@@ -88,29 +66,28 @@ function toggleFriends(source)
 						local state = "Offline"
 						
 						if player then
-							table.insert( friends, 1, { id, account, row[3], row[5], tonumber( row[6] ) } )
+							table.insert( friends, 1, { id, account, row["friendsmessage"], row["country"], tonumber( row["archievements"] ) } )
 						else
-							table.insert( friends, { id, account, row[3], row[5], tonumber( row[6] ), timeoffline, hour == 0 and -minute or hour } )
+							table.insert( friends, { id, account, row["friendsmessage"], row["country"], tonumber( row["archievements"] ), timeoffline, hour == 0 and -minute or hour } )
 						end
 					end
 				end
 				
-				mysql_free_result( result )
+				mysql:free_result( result )
 				
 				local friendsmessage = ""
-				local result = mysql_query( handler, "SELECT friendsmessage FROM accounts WHERE id = " .. accid )
+				local result = mysql:query_fetch_assoc("SELECT friendsmessage FROM accounts WHERE id = " .. accid )
 				if result then
-					friendsmessage = mysql_result( result, 1, 1 )
+					friendsmessage = result["friendsmessage"]
 					if friendsmessage == mysql_null( ) then
 						friendsmessage = ""
 					end
-					mysql_free_result( result )
 				else
-					outputDebugString( "Friendmessage load failed: " .. mysql_error( handler ) )
+					outputDebugString( "Friendmessage load failed:  s_friends.lua\toggleFriends" )
 				end
 				triggerClientEvent( source, "showFriendsList", source, friends, friendsmessage, myachievements )
 			else
-				outputDebugString( "Friends load failed: " .. mysql_error(handler) )
+				outputDebugString( "Friends load failed: s_friends.lua\toggleFriends" )
 				outputChatBox("Error 600000 - Could not retrieve friends list.", source, 255, 0, 0)
 			end
 		else
@@ -123,13 +100,11 @@ addEvent("sendFriends", false)
 addEventHandler("sendFriends", getRootElement(), toggleFriends)
 
 function updateFriendsMessage(message)
-	local safemessage = mysql_escape_string(handler, tostring(message))
+	local safemessage = mysql:escape_string(tostring(message))
 	local accid = getElementData(source, "gameaccountid")
 	
-	local query = mysql_query(handler, "UPDATE accounts SET friendsmessage='" .. safemessage .. "' WHERE id='" .. accid .. "'")
-	if (query) then
-		mysql_free_result(query)
-	else
+	local query = mysql:query_free("UPDATE accounts SET friendsmessage='" .. safemessage .. "' WHERE id='" .. accid .. "'")
+	if not (query) then
 		outputChatBox("Error updating friends message - ensure you used no special characters!", source, 255, 0, 0)
 	end
 end
@@ -138,15 +113,13 @@ addEventHandler("updateFriendsMessage", getRootElement(), updateFriendsMessage)
 
 function removeFriend(id, username)
 	local accid = tonumber(getElementData(source, "gameaccountid"))
-	local result = mysql_query( handler, "DELETE FROM friends WHERE id = " .. accid .. " AND friend = " .. id )
+	local result = mysql:query_free("DELETE FROM friends WHERE id = " .. accid .. " AND friend = " .. id )
 	if result then
 		local friends = getElementData(source, "friends")
 		if friends then
 			friends[ tonumber(id) ] = nil
 			setElementData(source, "friends", friends, false)
 		end
-		
-		mysql_free_result( result )
 	end
 end
 addEvent("removeFriend", true)
@@ -155,9 +128,8 @@ addEventHandler("removeFriend", getRootElement(), removeFriend)
 function addFriendToDB(player, source)
 	local accid = tonumber(getElementData(source, "gameaccountid"))
 	local targetID = tonumber(getElementData(player, "gameaccountid"))
-	local countresult = mysql_query(handler, "SELECT COUNT(*) FROM friends WHERE id='" .. accid .. "' LIMIT 1")
-	local count = tonumber(mysql_result(countresult, 1, 1))
-	mysql_free_result(countresult)
+	local countresult = mysql:query_fetch_assoc("SELECT COUNT(*) as tempnr FROM friends WHERE id='" .. accid .. "' LIMIT 1")
+	local count = tonumber(countresult["tempnr"])
 	if (count >=23) then
 		outputChatBox("Your friends list is currently full.", source, 255, 0, 0)
 	else
@@ -166,15 +138,14 @@ function addFriendToDB(player, source)
 			if (friends[ targetID ] == true) then
 				outputChatBox("'" .. getPlayerName(player) .. "' is already on your friends list.", source, 255, 194, 14)
 			else 
-				local result = mysql_query( handler, "INSERT INTO friends VALUES (" .. accid .. ", " .. targetID .. ")")
+				local result = mysql:query_free("INSERT INTO friends VALUES (" .. accid .. ", " .. targetID .. ")")
 				if result then
 					friends[ targetID ] = true
 					setElementData(source, "friends", friends, false)
 				
 					outputChatBox("'" .. getPlayerName(player) .. "' was added to your friends list.", source, 255, 194, 14)
-					mysql_free_result( result )
 				else
-					outputDebugString( "Add Friend: " .. mysql_error( handler ) )
+					outputDebugString( "Add Friend failed in s_friends.lua\addFriendToDB")
 				end
 			end
 		end

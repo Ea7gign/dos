@@ -2,22 +2,20 @@ function retrievePlayerInfo(targetPlayer)
 	local accid = tonumber(getElementData(source, "gameaccountid"))
 	local targetID = tonumber(getElementData(targetPlayer, "gameaccountid"))
 	if targetID then
-		local result = mysql_query(handler, "SELECT friend FROM friends WHERE id = " .. accid .. " AND friend = " .. targetID .. " LIMIT 1")
+		local result = mysql:query("SELECT friend FROM friends WHERE id = " .. accid .. " AND friend = " .. targetID .. " LIMIT 1")
 
 		if result then
 			local friend = false
-			if mysql_num_rows( result ) == 1 then
+			if mysql:num_rows( result ) == 1 then
 				friend = true
 			end
-			mysql_free_result( result )
+			mysql:free_result( result )
 			
-			local result = mysql_query(handler, "SELECT description, age, weight, height, skincolor FROM characters WHERE id='" .. getElementData(targetPlayer, "dbid") .. "'")
-			local description = tostring(mysql_result(result, 1, 1))
-			local age = tostring(mysql_result(result, 1, 2))
-			local weight = tostring(mysql_result(result, 1, 3))
-			local height = tostring(mysql_result(result, 1, 4))
-			local race = tonumber(mysql_result(result, 1, 5))
-			mysql_free_result(result)
+			local description = getElementData(targetPlayer, "chardescription")
+			local age = getElementData(targetPlayer, "age")
+			local weight = getElementData(targetPlayer, "weight")
+			local height = getElementData(targetPlayer, "height")
+			local race = getElementData(targetPlayer, "race")
 			
 			triggerClientEvent(source, "displayPlayerMenu", source, targetPlayer, friend, description, age, weight, height, race)
 		end
@@ -25,42 +23,12 @@ function retrievePlayerInfo(targetPlayer)
 end
 addEvent("sendPlayerInfo", true)
 addEventHandler("sendPlayerInfo", getRootElement(), retrievePlayerInfo)
---[[
-function addFriend(player)
-	local accid = tonumber(getElementData(source, "gameaccountid"))
-	local targetID = tonumber(getElementData(player, "gameaccountid"))
-	
-	local countresult = mysql_query(handler, "SELECT COUNT(*) FROM friends WHERE id='" .. accid .. "' LIMIT 1")
-	local count = tonumber(mysql_result(countresult, 1, 1))
-	mysql_free_result(countresult)
-	
-	if (count >=23) then
-		outputChatBox("Your friends list is currently full.", source, 255, 0, 0)
-	else
-		local result = mysql_query( handler, "INSERT INTO friends VALUES (" .. accid .. ", " .. targetID .. ")")
-		if result then
-			local friends = getElementData(source, "friends")
-			if friends then
-				friends[ targetID ] = true
-				setElementData(source, "friends", friends, false)
-			end
-			outputChatBox("'" .. getPlayerName(player) .. "' was added to your friends list.", source, 255, 194, 14)
-			mysql_free_result( result )
-		else
-			outputDebugString( "Add Friend: " .. mysql_error( handler ) )
-		end
-	end
-end
-addEvent("addFriend", true)
-addEventHandler("addFriend", getRootElement(), addFriend)
-]]--
 
 function addFriend(player)
 	local accid = tonumber(getElementData(source, "gameaccountid"))
 	local targetID = tonumber(getElementData(player, "gameaccountid"))
-	local countresult = mysql_query(handler, "SELECT COUNT(*) FROM friends WHERE id='" .. accid .. "' LIMIT 1")
-	local count = tonumber(mysql_result(countresult, 1, 1))
-	mysql_free_result(countresult)
+	local countresult = mysql:query_fetch_assoc("SELECT COUNT(*) as tempnr FROM friends WHERE id='" .. accid .. "' LIMIT 1")
+	local count = tonumber(countresult["tempnr"])
 	
 	if (count >=23) then
 		outputChatBox("Your friends list is currently full.", source, 255, 0, 0)
@@ -121,7 +89,7 @@ function restrainPlayer(player, restrainedObj)
 	setElementData(player, "restrain", 1)
 	setElementData(player, "restrainedObj", restrainedObj)
 	setElementData(player, "restrainedBy", getElementData(source, "dbid"), false)
-	mysql_free_result( mysql_query( handler, "UPDATE characters SET cuffed = 1, restrainedby = " .. getElementData(source, "dbid") .. ", restrainedobj = " .. restrainedObj .. " WHERE id = " .. dbid ) )
+	mysql:query_free("UPDATE characters SET cuffed = 1, restrainedby = " .. getElementData(source, "dbid") .. ", restrainedobj = " .. restrainedObj .. " WHERE id = " .. dbid )
 	
 	exports.global:takeItem(source, restrainedObj)
 
@@ -152,7 +120,7 @@ function unrestrainPlayer(player, restrainedObj)
 		exports['item-system']:deleteAll(47, dbid)
 	end
 	exports.global:giveItem(source, restrainedObj, 1)
-	mysql_free_result( mysql_query( handler, "UPDATE characters SET cuffed = 0, restrainedby = 0, restrainedobj = 0 WHERE id = " .. dbid ) )
+	mysql:query_free("UPDATE characters SET cuffed = 0, restrainedby = 0, restrainedobj = 0 WHERE id = " .. dbid )
 	
 	exports.global:removeAnimation(player)
 end
@@ -169,7 +137,7 @@ function blindfoldPlayer(player)
 	
 	exports.global:takeItem(source, 66) -- take their blindfold
 	setElementData(player, "blindfold", 1)
-	mysql_free_result( mysql_query( handler, "UPDATE characters SET blindfold = 1 WHERE id = " .. getElementData( player, "dbid" ) ) )
+	mysql:query_free("UPDATE characters SET blindfold = 1 WHERE id = " .. getElementData( player, "dbid" ) )
 	fadeCamera(player, false)
 end
 addEvent("blindfoldPlayer", true)
@@ -184,7 +152,7 @@ function removeblindfoldPlayer(player)
 	
 	exports.global:giveItem(source, 66, 1) -- give the remove the blindfold
 	removeElementData(player, "blindfold")
-	mysql_free_result( mysql_query( handler, "UPDATE characters SET blindfold = 0 WHERE id = " .. getElementData( player, "dbid" ) ) )
+	mysql:query_free("UPDATE characters SET blindfold = 0 WHERE id = " .. getElementData( player, "dbid" ) )
 	fadeCamera(player, true)
 end
 addEvent("removeBlindfold", true)
