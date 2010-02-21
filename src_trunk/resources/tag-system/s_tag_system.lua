@@ -1,30 +1,5 @@
--- ////////////////////////////////////
--- //			MYSQL				 //
--- ////////////////////////////////////		
-sqlUsername = exports.mysql:getMySQLUsername()
-sqlPassword = exports.mysql:getMySQLPassword()
-sqlDB = exports.mysql:getMySQLDBName()
-sqlHost = exports.mysql:getMySQLHost()
-sqlPort = exports.mysql:getMySQLPort()
+mysql = exports.mysql
 
-handler = mysql_connect(sqlHost, sqlUsername, sqlPassword, sqlDB, sqlPort)
-
-function checkMySQL()
-	if not (mysql_ping(handler)) then
-		handler = mysql_connect(sqlHost, sqlUsername, sqlPassword, sqlDB, sqlPort)
-	end
-end
-setTimer(checkMySQL, 300000, 0)
-
-function closeMySQL()
-	if (handler) then
-		mysql_close(handler)
-	end
-end
-addEventHandler("onResourceStop", getResourceRootElement(getThisResource()), closeMySQL)
--- ////////////////////////////////////
--- //			MYSQL END			 //
--- ////////////////////////////////////
 tags = {1524, 1525, 1526, 1527, 1528, 1529, 1530, 1531 }
 
 function makeTagObject(cx, cy, cz, rot, interior, dimension)
@@ -35,11 +10,8 @@ function makeTagObject(cx, cy, cz, rot, interior, dimension)
 		setElementDimension(obj, dimension)
 		setElementInterior(obj, interior)
 		
-		local query = mysql_query(handler, "INSERT INTO tags SET x='" .. cx .. "', y='" .. cy .. "', z='" .. cz .. "', interior='" .. interior .. "', dimension='" .. dimension .. "', rx='0', ry='0', rz='" .. rot+90 .. "', modelid='" .. tags[tag] .. "', creationdate=NOW()")
+		local id = mysql:query_insert_free("INSERT INTO tags SET x='" .. cx .. "', y='" .. cy .. "', z='" .. cz .. "', interior='" .. interior .. "', dimension='" .. dimension .. "', rx='0', ry='0', rz='" .. rot+90 .. "', modelid='" .. tags[tag] .. "', creationdate=NOW()")
 		exports.global:sendLocalMeAction(source, "tags the wall.")
-		
-		local id = mysql_insert_id(handler)
-		mysql_free_result(query)
 		setElementData(obj, "dbid", id, false)
 		setElementData(obj, "type", "tag")
 		outputChatBox("You have tagged the wall!", source, 255, 194, 14)
@@ -67,8 +39,7 @@ function makeTagObject(cx, cy, cz, rot, interior, dimension)
 			outputChatBox("You removed the tag. You earnt 30$ for doing so.", source, 255, 194, 14)
 			exports.global:giveMoney(source, 30)
 			destroyElement(object)
-			local query = mysql_query(handler, "DELETE FROM tags WHERE id='" .. id .. "'")
-			mysql_free_result(query)
+			local query = mysql:query_free("DELETE FROM tags WHERE id='" .. id .. "'")
 		end
 		destroyElement(colshape)
 	end
@@ -96,8 +67,7 @@ function clearNearbyTag(thePlayer)
 		if (object) then
 			local id = getElementData(object, "dbid")
 			destroyElement(object)
-			local query = mysql_query(handler, "DELETE FROM tags WHERE id='" .. id .. "'")
-			mysql_free_result(query)
+			local query = mysql:query_free("DELETE FROM tags WHERE id='" .. id .. "'")
 			outputChatBox("Deleted tag with id #" .. id .. ".", thePlayer, 0, 255, 0)
 		else
 			outputChatBox("You are not near any tag.", thePlayer, 255, 0, 0)
@@ -108,28 +78,35 @@ addCommandHandler("clearnearbytag", clearNearbyTag, false, false)
 
 function loadAllTags(res)
 	-- delete old tags
-	mysql_free_result( mysql_query(handler, "DELETE FROM tags WHERE DATEDIFF(NOW(), creationdate) > 7") )
-	local result = mysql_query(handler, "SELECT id, x, y, z, interior, dimension, rx, ry, rz, modelid FROM tags")
+	mysql:query_free("DELETE FROM tags WHERE DATEDIFF(NOW(), creationdate) > 7")
+	
+	-- Load current ones
+	local result = mysql:query("SELECT * FROM tags")
 	local count = 0
+	local highest = 0
 	
 	if (result) then
-		local highest = 0
-		for result, row in mysql_rows(result) do
-			local wyearday = tonumber(row[11])
-			local id = tonumber(row[1])
-				
-			local x = tonumber(row[2])
-			local y = tonumber(row[3])
-			local z = tonumber(row[4])
-				
-			local interior = tonumber(row[5])
-			local dimension = tonumber(row[6])
+		local run = true
+		while run do
+			local row = exports.mysql:fetch_assoc(result)
+			if not (row) then
+				break
+			end
 			
-			local rx = tonumber(row[7])
-			local ry = tonumber(row[8])
-			local rz = tonumber(row[9])
-			local modelid = tonumber(row[10])
-			
+			local id = tonumber(row["id"])
+					
+			local x = tonumber(row["x"])
+			local y = tonumber(row["y"])
+			local z = tonumber(row["z"])
+				
+			local interior = tonumber(row["interior"])
+			local dimension = tonumber(row["dimension"])
+				
+			local rx = tonumber(row["rx"])
+			local ry = tonumber(row["ry"])
+			local rz = tonumber(row["rz"])
+			local modelid = tonumber(row["modelid"])
+				
 			local object = createObject(modelid, x, y, z, rx, ry, rz)
 			exports.pool:allocateElement(object)
 			setElementInterior(object, interior)
@@ -141,11 +118,11 @@ function loadAllTags(res)
 				highest = id
 			end
 		end
-		-- update the auto increment with highest used tag id + 1
-		local query = mysql_query(handler, "ALTER TABLE `tags` AUTO_INCREMENT = " .. (highest + 1))
-		mysql_free_result(query)
-		mysql_free_result(result)
+
+		mysql:query_free("ALTER TABLE `tags` AUTO_INCREMENT = " .. (highest + 1))
+		
 	end
+	mysql:free_result(result)
 	exports.irc:sendMessage("[SCRIPT] Loaded " .. count .. " Tags.")
 end
 addEventHandler("onResourceStart", getResourceRootElement(), loadAllTags)
@@ -153,6 +130,6 @@ addEventHandler("onResourceStart", getResourceRootElement(), loadAllTags)
 addEvent("updateTag", true)
 addEventHandler("updateTag", getRootElement(),
 	function(tag)
-		mysql_free_result( mysql_query( handler, "UPDATE characters SET tag=" .. tag .. " WHERE id = " .. getElementData(source, "dbid") ) )
+		mysql:query_free("UPDATE characters SET tag=" .. tag .. " WHERE id = " .. getElementData(source, "dbid"))
 	end
 )
