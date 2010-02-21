@@ -726,17 +726,22 @@ function adminDeleteFaction(thePlayer, commandName, factionID)
 				local theTeam = exports.pool:getElement("team", factionID)
 				
 				if (theTeam) then
-					local deleted = mysql_query(handler, "DELETE FROM factions WHERE id='" .. factionID .. "'")
-					
-					mysql_free_result(deleted)
-					outputChatBox("Faction #" .. factionID .. " was deleted.", thePlayer, 0, 255, 0)
-					
-					local civTeam = getTeamFromName("Citizen")
-					for key, value in pairs( getPlayersInTeam( theTeam ) ) do
-						setPlayerTeam( value, civTeam )
-						setElementData( value, "faction", -1 )
+					if factionID == 57 then
+						outputChatBox("So you did it! HA! Logged. Now stop deleting factions needed for the script. -Mount", thePlayer, 255, 0, 0)
+						exports.logs:logMessage("[BANKFACTION] " .. getPlayerName( thePlayer ) .. " tried to delete faction " .. getTeamName(theTeam) .. " (#" .. factionID .. ")", 15)
+					else
+						local deleted = mysql_query(handler, "DELETE FROM factions WHERE id='" .. factionID .. "'")
+						
+						mysql_free_result(deleted)
+						outputChatBox("Faction #" .. factionID .. " was deleted.", thePlayer, 0, 255, 0)
+						exports.logs:logMessage("[FACTION] " .. getPlayerName( thePlayer ) .. " deleted faction " .. getTeamName(theTeam) .. " (#" .. factionID .. ")", 15)
+						local civTeam = getTeamFromName("Citizen")
+						for key, value in pairs( getPlayersInTeam( theTeam ) ) do
+							setPlayerTeam( value, civTeam )
+							setElementData( value, "faction", -1 )
+						end
+						destroyElement( theTeam )
 					end
-					destroyElement( theTeam )
 				else
 					outputChatBox("Invalid Faction ID.", thePlayer, 255, 0, 0)
 				end
