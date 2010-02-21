@@ -26,4 +26,5 @@
 		<export function="insert_id" 		type="server" http="false" />
 		<export function="query_rows_assoc" type="server" http="false" />
 		<export function="query_insert_free"type="server" http="false" />
+		<export function="escape_string"    type="server" http="false" />
 </meta>

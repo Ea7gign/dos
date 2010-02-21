@@ -189,3 +189,7 @@ function query_insert_free(str)
 	end
 	return false
 end
+
+function escape_string(str)
+	return mysql_escape_string(MySQLConnection, str)
+end
