@@ -12,7 +12,7 @@ function startWeather(resource)
 	-- tempoarily set the weather to cloudy
 	setWeather(10)
 	
-	local choice = math.random(1, 5)
+	local choice = math.random(1, 3
 		 
 		 -- On server startup, set the weather to a certain type, use the delay variable since its pointless creating a new one.
 		if(choice==1) then
