@@ -109,9 +109,12 @@ function query_free(str)
 		local result = mysql_query(MySQLConnection, str)
 		if (not result) then
 			logSQLError()
+			return false
 		end
 		mysql_free_result(result)
+		return true
 	end
+	return false
 end
 
 function rows_assoc(resultid)
