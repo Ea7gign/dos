@@ -1291,7 +1291,7 @@ function unbanPlayerIP(thePlayer, commandName, ip)
 				end
 			end
 			
-			local query = mysql_query(handler("SELECT COUNT(*) FROM accounts WHERE ip = '" .. ip .. "' AND banned = 1")
+			local query = mysql_query(handler,"SELECT COUNT(*) FROM accounts WHERE ip = '" .. ip .. "' AND banned = 1")
 			if tonumber(mysql_result(query, 1, 1)) > 0 then
 				local query2 = mysql_query(handler, "UPDATE accounts SET banned='0', banned_by=NULL WHERE ip='" .. ip .. "'")
 				mysql_free_result(query2)
