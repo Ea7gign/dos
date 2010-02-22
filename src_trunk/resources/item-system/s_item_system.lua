@@ -646,6 +646,24 @@ function useItem(itemSlot, additional)
 				end
 				mysql_free_result( mysql_query(handler, "UPDATE settings SET value = '" .. mysql_escape_string( handler, toJSON( garages ) ) .. "' WHERE name = 'garagestates'" ) )
 			end
+		elseif (itemID==99) then --[ADDED: 2/22/10 by herbjr] tray
+			giveHealth(source, 50)
+			exports.global:applyAnimation(source, "food", "eat_burger", 4000, false, true, true)
+			toggleAllControls(source, true, true, true)
+			exports.global:sendLocalMeAction(source, "eats their tray of food.")
+			takeItemFromSlot(source, itemSlot)
+		elseif (itemID==100) then --[ADDED: 2/22/10 by herbjr] milk
+			giveHealth(source, 30)
+			exports.global:applyAnimation(source, "VENDING", "VEND_Drink_P", 4000, false, true, true)
+			toggleAllControls(source, true, true, true)
+			exports.global:sendLocalMeAction(source, "drinks a small carton of milk.")
+			takeItemFromSlot(source, itemSlot)
+		elseif (itemID==101) then --[ADDED: 2/22/10 by herbjr] juice
+			giveHealth(source, 30)
+			exports.global:applyAnimation(source, "VENDING", "VEND_Drink_P", 4000, false, true, true)
+			toggleAllControls(source, true, true, true)
+			exports.global:sendLocalMeAction(source, "drinks a small carton of juice.")
+			takeItemFromSlot(source, itemSlot)
 		else
 			outputChatBox("Error 800001 - Report on http://bugs.valhallagaming.net", source, 255, 0, 0)
 		end
