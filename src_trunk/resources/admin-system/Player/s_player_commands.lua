@@ -1179,12 +1179,13 @@ function remoteUnban(thePlayer, targetNick)
 	local bans = getBans()
 	local found = false
 	
-	local result1 = mysql_query(handler, "SELECT id, ip FROM accounts WHERE username='" .. tostring(targetNick) .. "' LIMIT 1")
+	local result1 = mysql_query(handler, "SELECT id, ip, banned FROM accounts WHERE username='" .. tostring(targetNick) .. "' LIMIT 1")
 	
 	if (result1) then
 		if (mysql_num_rows(result1)>0) then
 			local accountid = tonumber(mysql_result(result1, 1, 1))
 			local ip = tostring(mysql_result(result1, 1, 2))
+			local banned = tonumber(mysql_result(result1, 1, 3))
 			mysql_free_result(result1)
 			local bans = getBans()
 			
@@ -1197,6 +1198,11 @@ function remoteUnban(thePlayer, targetNick)
 					found = true
 					break
 				end
+			end
+			
+			if not found and banned == 1 then
+				mysql_free_result( mysql_query( handler, "UPDATE accounts SET banned='0', banned_by=NULL WHERE id='" .. id .. "'") )
+				return true
 			end
 		end
 	end
@@ -1219,11 +1225,12 @@ function unbanPlayer(thePlayer, commandName, nickName)
 					local accountid = tonumber(mysql_result(result1, 1, 1))
 					mysql_free_result(result1)
 					
-					local result = mysql_query(handler, "SELECT ip FROM accounts WHERE id='" .. accountid .. "'")
+					local result = mysql_query(handler, "SELECT ip, banned FROM accounts WHERE id='" .. accountid .. "'")
 						
 					if (result) then
 						if (mysql_num_rows(result)>0) then
 							local ip = tostring(mysql_result(result, 1, 1))
+							local banned = tonumber(mysql_result(result, 1, 2))
 							
 							for key, value in ipairs(bans) do
 								if (ip==getBanIP(value)) then
@@ -1235,7 +1242,12 @@ function unbanPlayer(thePlayer, commandName, nickName)
 									break
 								end
 							end
-						
+							
+							if not found and banned == 1 then
+								mysql_free_result( mysql_query( handler, "UPDATE accounts SET banned='0', banned_by=NULL WHERE id='" .. accountid .. "'") )
+								found = true
+							end
+							
 							if not (found) then
 								outputChatBox("No ban found for '" .. nickName .. "'", thePlayer, 255, 0, 0)
 							end
@@ -1264,6 +1276,7 @@ function unbanPlayerIP(thePlayer, commandName, ip)
 		if not (ip) then
 			outputChatBox("SYNTAX: /" .. commandName .. " [IP]", thePlayer, 255, 194, 14)
 		else
+			ip = mysql_escape_string(handler, ip)
 			local bans = getBans()
 			local found = false
 				
@@ -1277,6 +1290,13 @@ function unbanPlayerIP(thePlayer, commandName, ip)
 					break
 				end
 			end
+			
+			local query = mysql_query(handler("SELECT COUNT(*) FROM accounts WHERE ip = '" .. ip .. "' AND banned = 1")
+			if tonumber(mysql_result(query, 1, 1)) > 0 then
+				local query2 = mysql_query(handler, "UPDATE accounts SET banned='0', banned_by=NULL WHERE ip='" .. ip .. "'")
+				mysql_free_result(query2)
+			end
+			mysql_free_result(query)
 			
 			if not (found) then
 				outputChatBox("No ban found for '" .. ip .. "'", thePlayer, 255, 0, 0)
