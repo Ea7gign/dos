@@ -330,18 +330,25 @@ function loadAllVehicles(res)
 	local null = mysql_null()
 	local result = mysql:query("SELECT * FROM `vehicles` ORDER BY `id` ASC")
 	if result then
-		local run = true
-		while run do
+		while true do
 			local row = exports.mysql:fetch_assoc(result)
 			if not (row) then
 				break
 			end
 			
+			for k, v in pairs( row ) do
+				if v == null then
+					row[k] = nil
+				else
+					row[k] = tonumber(row[k]) or row[k]
+				end
+			end
+			
 			-- Spawn the vehicle
 			local veh = createVehicle(row.model, row.currx, row.curry, row.currz, row.currrx, row.currry, row.currrz, row.plate)
 			if veh then
-				setElementData(veh, "dbid", tonumber(row.id))
-				exports.pool:allocateElement(veh, tonumber(row.id))
+				setElementData(veh, "dbid", row.id)
+				exports.pool:allocateElement(veh, row.id)
 				
 				-- color
 				setVehicleColor(veh, row.color1, row.color2, row.color1, row.color2)
@@ -353,7 +360,7 @@ function loadAllVehicles(res)
 				
 				-- add the vehicle upgrades
 				for i = 0, 16 do
-					local upgrade = tonumber(row['upgrade' .. i])
+					local upgrade = row['upgrade' .. i]
 					if upgrade and upgrade > 0 then
 						addVehicleUpgrade(veh, upgrade)
 					end
@@ -382,11 +389,11 @@ function loadAllVehicles(res)
 				setVehicleSirensOn(veh, row.sirens == 1)
 				
 				-- job
-				if tonumber(row.job) > 0 then
+				if row.job > 0 then
 					toggleVehicleRespawn(veh, true)
 					setVehicleRespawnDelay(veh, 60000)
 					setVehicleIdleRespawnDelay(veh, 180000)
-					setElementData(veh, "job", tonumber(row.job))
+					setElementData(veh, "job", row.job)
 				else
 					setElementData(veh, "job", 0, false)
 				end
@@ -395,12 +402,12 @@ function loadAllVehicles(res)
 				setElementData(veh, "respawnposition", {row.x, row.y, row.z, row.rotx, row.roty, row.rotz}, false)
 				
 				-- element data
-				setElementData(veh, "fuel", tonumber(row.fuel), false)
+				setElementData(veh, "fuel", row.fuel, false)
 				setElementData(veh, "oldx", row.currx, false)
 				setElementData(veh, "oldy", row.curry, false)
 				setElementData(veh, "oldz", row.currz, false)
-				setElementData(veh, "faction", tonumber(row.faction))
-				setElementData(veh, "owner", tonumber(row.owner))
+				setElementData(veh, "faction", row.faction)
+				setElementData(veh, "owner", row.owner)
 				
 				-- impound shizzle
 				setElementData(veh, "Impounded", tonumber(row.Impounded))
@@ -412,29 +419,29 @@ function loadAllVehicles(res)
 				setElementDimension(veh, row.currdimension)
 				setElementInterior(veh, row.currinterior)
 				
-				setElementData(veh, "dimension", tonumber(row.dimension), false)
-				setElementData(veh, "interior", tonumber(row.interior), false)
+				setElementData(veh, "dimension", row.dimension, false)
+				setElementData(veh, "interior", row.interior, false)
 				
 				-- lights
 				setVehicleOverrideLights(veh, row.lights == 0 and 1 or row.lights )
 				
 				-- engine
-				if tonumber(row.hp) <= 350 then
+				if row.hp <= 350 then
 					setElementHealth(veh, 300)
 					setVehicleDamageProof(veh, true)
 					setVehicleEngineState(veh, false)
 					setElementData(veh, "engine", 0, false)
 					setElementData(veh, "enginebroke", 1, false)
 				else
-					setElementHealth(veh, tonumber(row.hp))
+					setElementHealth(veh, row.hp)
 					setVehicleEngineState(veh, row.engine == 1)
-					setElementData(veh, "engine", tonumber(row.engine), false)
+					setElementData(veh, "engine", row.engine, false)
 					setElementData(veh, "enginebroke", 0, false)
 				end
 				setVehicleFuelTankExplodable(veh, false)
 				
 				-- handbrake
-				if tonumber(row.handbrake) > 0 then
+				if row.handbrake > 0 then
 					setVehicleFrozen(veh, true)
 				end
 				
