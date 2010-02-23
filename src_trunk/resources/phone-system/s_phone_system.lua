@@ -298,7 +298,7 @@ function callSomeone(thePlayer, commandName, phoneNumber, ...)
 								end
 								
 								-- target player
-								exports.global:sendLocalMeAction(foundElement, "'s Phone start's to ring.")
+								exports.global:sendLocalMeAction(foundElement, "'s Phone starts to ring.")
 								
 								local secret = getElementData(thePlayer, "cellphone.secret")
 								local cellphone = getElementData(thePlayer, "cellnumber")
