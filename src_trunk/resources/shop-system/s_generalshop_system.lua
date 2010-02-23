@@ -47,7 +47,7 @@ addEventHandler("onPedWasted", getResourceRootElement(),
 	end
 )
 
-local skins = { { 211, 217 }, { 179 }, false, { 178 }, { 82 }, { 80, 81 }, { 28, 29 }, { 169 }, { 171, 172 }, { 142 }, { 171 }, { 171, 172 }, false, {71} }
+local skins = { { 211, 217 }, { 179 }, false, { 178 }, { 82 }, { 80, 81 }, { 28, 29 }, { 169 }, { 171, 172 }, { 142 }, { 171 }, { 171, 172 }, {71} }
 
 function createShopKeeper(x,y,z,interior,dimension,id,shoptype,rotation, skin)
 	if not skin then
@@ -98,7 +98,7 @@ end
 function createGeneralshop(thePlayer, commandName, shoptype, skin)
 	if (exports.global:isPlayerAdmin(thePlayer)) then
 		if(tonumber(shoptype)) then
-			if((tonumber(shoptype) >= 1) and (tonumber(shoptype) < 15)) then
+			if((tonumber(shoptype) >= 1) and (tonumber(shoptype) < 14)) then
 				local skin = tonumber(skin)
 				if skin then
 					local ped = createPed(skin, 0, 0, 3)
@@ -147,6 +147,7 @@ function createGeneralshop(thePlayer, commandName, shoptype, skin)
 			outputChatBox("TYPE 10 = Book Store", thePlayer, 255, 194, 14)
 			outputChatBox("TYPE 11 = Cafe", thePlayer, 255, 194, 14)
 			outputChatBox("TYPE 12 = Christmas", thePlayer, 255, 194, 14)
+			outputChatBox("TYPE 13 = Prison Food Shop", thePlayer, 255, 194, 14)
 		end
 	end
 end

@@ -193,7 +193,7 @@ function  getShopTypeName(shop_type)
 		return "Cafe"
 	elseif(shop_type == 12) then
 		return "Santa's Grotto"
-	elseif(shop_type == 14) then
+	elseif(shop_type == 13) then
 		return "Prison Worker"
 	else
 		return "This isn't a shop. Go Away."
@@ -227,7 +227,7 @@ function getShopTabTitles(shop_type)
 		return {"Food","Drink"}
 	elseif(shop_type == 12) then
 		return {"Presents","Free Food & Drink"}
-	elseif(shop_type == 14) then
+	elseif(shop_type == 13) then
 		return {"Prison Food", "Prison Drink"}
 	else
 		return "This isn't a shop. Go Away."
@@ -393,7 +393,7 @@ function getItemsForSale(shop_type, race, gender)
 			{"Christmas Pudding", "Yum Yum!", "0", 93, 1, 2, false,0},
 		}
 	-- SACF Prison
-	elseif(shop_type == 14) then
+	elseif(shop_type == 13) then
 		item = {
 			-- food
 			{"Mixed Dinner Tray", "Lets play the guessing game.", "0", 99, 1, 1, false, 0},
@@ -434,7 +434,7 @@ function getImageName(shop_type)
 		return "general.png"
 	elseif(shop_type == 12) then
 		return "general.png"
-	elseif(shop_type == 14) then
+	elseif(shop_type == 13) then
 		return "food.png"
 	else
 		return "This isn't a shop. Go Away."
@@ -469,7 +469,7 @@ function getIntroMessage(shop_type)
 		return "You want some chocolate on your rim?."
 	elseif(shop_type == 12) then
 		return "Ho-ho-ho, Merry Christmas!"
-	elseif(shop_type == 14) then
+	elseif(shop_type == 13) then
 		return "Best Prison food around!"
 	else
 		return "This isn't a shop. Go Away."
