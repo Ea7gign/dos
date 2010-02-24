@@ -115,12 +115,12 @@ function hideSpeedo()
 end
 
 function showSpeedo()
-	local source = getPedOccupiedVehicle(getLocalPlayer())
+	source = getPedOccupiedVehicle(getLocalPlayer())
 	if source then
 		if getVehicleOccupant( source ) == getLocalPlayer() then
 			onVehicleEnter(getLocalPlayer(), 0)
-		--elseif getVehicleOccupant( source, 1 ) == getLocalPlayer() then
-			--onVehicleEnter(getLocalPlayer(), 1)
+		elseif getVehicleOccupant( source, 1 ) == getLocalPlayer() then
+			onVehicleEnter(getLocalPlayer(), 1)
 		end
 	end
 end

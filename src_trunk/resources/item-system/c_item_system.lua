@@ -520,6 +520,8 @@ function hideInventory()
 	
 	showCursor(false)
 	setElementData(getLocalPlayer(), "exclusiveGUI", false, false)
+	
+	hideNewInventory()
 end
 addEvent("hideInventory", true)
 addEventHandler("hideInventory", getRootElement(), hideInventory)

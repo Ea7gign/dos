@@ -595,3 +595,13 @@ addEventHandler("finishItemDrop", getLocalPlayer(),
 		inventory = false
 	end
 )
+
+--
+
+function hideNewInventory( )
+	if show then
+		show = false
+		showCursor( false )
+		exports["realism-system"]:showSpeedo()
+	end
+end
