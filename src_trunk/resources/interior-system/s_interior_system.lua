@@ -86,6 +86,7 @@ function createInterior(thePlayer, commandName, interiorId, inttype, cost, ...)
 				local query = mysql_query(handler, "INSERT INTO interiors SET id=" .. id .. ",x='" .. x .. "', y='" .. y .."', z='" .. z .."', type='" .. inttype .. "', owner='" .. owner .. "', locked='" .. locked .. "', cost='" .. cost .. "', name='" .. mysql_escape_string(handler, name) .. "', interior='" .. interiorw .. "', interiorx='" .. ix .. "', interiory='" .. iy .. "', interiorz='" .. iz .. "', dimensionwithin='" .. dimension .. "', interiorwithin='" .. interiorwithin .. "', angle='" .. optAngle .. "', angleexit='" .. rot .. "', max_items='" .. max_items .. "', fee=0")
 				
 				if (query) then
+					outputChatBox("Created Interior with ID " .. id .. ".", thePlayer, 255, 194, 14)
 					mysql_free_result(query)
 					reloadOneInterior(id, false, false)
 				else
