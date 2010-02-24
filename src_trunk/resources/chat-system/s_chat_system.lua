@@ -385,13 +385,14 @@ function departmentradio(thePlayer, commandName, ...)
 	if (theTeam) then
 		local teamID = tonumber(getElementData(theTeam, "id"))
 
-		if (teamID==1 or teamID==2 or teamID==3 or teamID == 30) then
+		if (teamID==1 or teamID==2 or teamID==3 or teamID == 30 or teamID == 71) then
 			if (...) then
 				local message = trunklateText( thePlayer, table.concat({...}, " ") )
 				local PDFaction = getPlayersInTeam(getTeamFromName("Los Santos Police Department"))
 				local ESFaction = getPlayersInTeam(getTeamFromName("Los Santos Emergency Services"))
 				local TowFaction = getPlayersInTeam(getTeamFromName("Best's Towing and Recovery"))
 				local GovFaction = getPlayersInTeam(getTeamFromName("Government of Los Santos"))
+				local SACFFaction = getPlayersInTeam(getTeamFromName("San Andreas Correctional Facility"))
 				local playerName = getPlayerName(thePlayer)
 				
 				exports.logs:logMessage("[IC: Department Radio] " .. playerName .. ": " .. message, 6)
@@ -409,6 +410,10 @@ function departmentradio(thePlayer, commandName, ...)
 				end
 				
 				for key, value in ipairs(GovFaction) do
+					outputChatBox("[DEPARTMENT RADIO] " .. playerName .. " says: " .. message, value, 0, 102, 255)
+				end
+				
+				for key, value in ipairs(SACFFaction) do
 					outputChatBox("[DEPARTMENT RADIO] " .. playerName .. " says: " .. message, value, 0, 102, 255)
 				end
 			else

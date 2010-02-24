@@ -55,6 +55,9 @@ end
 -- 6 = FBI
 -- 7 = Gov
 
+-- 9 = SACF
+-- 10 = SACF CERT (Wtf is CERT?)
+
 -- ES
 function lvesHeal(thePlayer, commandName, targetPartialNick, price)
 	if not (targetPartialNick) or not (price) then -- if missing target player arg.
@@ -721,7 +724,7 @@ end
 addCommandHandler("duty", duty)
 
 
--- SACF
+-- SACF /duty
 function sacfduty(thePlayer, commandName)	
 	local logged = getElementData(thePlayer, "loggedin")
 	
@@ -769,3 +772,54 @@ function sacfduty(thePlayer, commandName)
 	end
 end
 addCommandHandler("duty", sacfduty, false, false)
+
+--SACF /cert
+function sacfduty(thePlayer, commandName)	
+	local logged = getElementData(thePlayer, "loggedin")
+	
+	if (logged==1) then
+		if (isElementWithinColShape(thePlayer, sacfColShape)) then
+		
+			local duty = tonumber(getElementData(thePlayer, "duty"))
+			local theTeam = getPlayerTeam(thePlayer)
+			
+			if getTeamName( theTeam ) == "San Andreas Correctional Facility" then
+				if (duty==0) then
+					outputChatBox("You are now on Cert Duty.", thePlayer)
+					exports.global:sendLocalMeAction(thePlayer, "takes their gear from their locker.")
+					
+					if setElementData(thePlayer, "casualskin", getPedSkin(thePlayer), false) then
+						mysql_free_result( mysql_query( handler, "UPDATE characters SET casualskin = " .. getPedSkin(thePlayer) .. " WHERE id = " .. getElementData(thePlayer, "dbid") ) )
+					end
+					
+					saveWeaponsOnDuty(thePlayer)
+					
+					setPedArmor(thePlayer, 100)
+					setElementHealth(thePlayer, 100)
+					
+					exports.global:giveWeapon(thePlayer, 3, 1) -- Nightstick
+					exports.global:giveWeapon(thePlayer, 41, 1500) -- Pepperspray
+					exports.global:giveWeapon(thePlayer, 29, 500) -- MP5
+					--Taser Here (If possible)
+					
+					setElementModel(thePlayer, 285)
+					
+					setElementData(thePlayer, "duty", 10, false)
+					
+					saveSkin(thePlayer)
+				elseif (duty==10) then
+					restoreWeapons(thePlayer)
+					outputChatBox("You are now off Cert duty.", thePlayer)
+					exports.global:sendLocalMeAction(thePlayer, "puts their gear into their locker.")
+					setPedArmor(thePlayer, 0)
+					setElementData(thePlayer, "duty", 0, false)
+					
+					local casualskin = getElementData(thePlayer, "casualskin")
+					setElementModel(thePlayer, casualskin)
+					saveSkin(thePlayer)
+				end
+			end
+		end
+	end
+end
+addCommandHandler("cert", sacfduty, false, false)
