@@ -45,6 +45,7 @@
 	<file src="websites/images/theatre.png" />
 	<file src="websites/images/vinewood-sign.png" />
 	<file src="websites/images/vinewood-sign2.png" />
+	<file src="websites/images/gnocchi-banner.png" />
 	
 	<!-- Dots -->
 	<file src="websites/images/dots/black_dot.png" />
@@ -194,6 +195,9 @@
 	<script src="websites/bankofsa.lua" type="client"/>
 	<script src="websites/beststowing.lua" type="client"/>
 	<script src="websites/bibles.lua" type="client"/>
+	
+	<!-- G -->
+	<script src="websites/gnocchi.lua" type="client" />
 	
 	<!-- E -->
 	<script src="websites/error.lua" type="client"/>
