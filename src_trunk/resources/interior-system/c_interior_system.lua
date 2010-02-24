@@ -330,11 +330,8 @@ addEventHandler( "setPlayerInsideInterior", getRootElement( ),
 					setPedRotation(localPlayer, rot)
 				end
 				
-				if (x >= 654 and x <= 971 and y >= -3541 and y <= -3205) then
-					triggerEvent("usedElevator", localPlayer)
-					setPedFrozen(localPlayer, true)
-					setPedGravity(localPlayer, 0)
-				end
+				triggerEvent("usedElevator", localPlayer)
+				setPedFrozen(localPlayer, true)
 				
 				triggerServerEvent("onPlayerInteriorChange", localPlayer, thePickup, other)
 				

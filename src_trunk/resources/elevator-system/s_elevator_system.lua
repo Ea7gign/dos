@@ -352,6 +352,7 @@ function enterElevator(player, pickup)
 				end
 			end)
 		elseif isElement(player) then
+			setPedGravity( player, 0 )
 			triggerClientEvent(player, "setPlayerInsideInterior", pickup, other)
 		end
 		playSoundFrontEnd(player, 40)

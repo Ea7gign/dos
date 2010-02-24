@@ -727,6 +727,7 @@ function setPlayerInsideInterior(thePickup, thePlayer)
 	local other = getElementData( thePickup, "other" )
 	if other then
 		local rot = getElementData(thePickup, "angle")
+		setPedGravity( thePlayer, 0 )
 		triggerClientEvent(thePlayer, "setPlayerInsideInterior", thePickup, other, angle)
 	end
 end
