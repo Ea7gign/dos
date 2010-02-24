@@ -1191,5 +1191,6 @@ addEventHandler("onPlayerInteriorChange", getRootElement( ),
 	function( pickup, other )
 		setElementDimension( source, getElementDimension( other ) )
 		setElementInterior( source, getElementInterior( other ) )
+		setCameraInterior( source, getElementInterior( other ) )
 	end
 )
