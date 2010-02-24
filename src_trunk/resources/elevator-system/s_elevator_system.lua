@@ -75,10 +75,6 @@ end
 addCommandHandler("addelevator", createElevator, false, false)
 
 function loadAllElevators(res)
-	local players = exports.pool:getPoolElementsByType("player")
-	for k, thePlayer in ipairs(players) do
-		removeElementData(thePlayer, "UsedElevator")
-	end
 	local result = mysql_query(handler, "SELECT id, x, y, z, tpx, tpy, tpz, dimensionwithin, interiorwithin, dimension, interior, car, disabled FROM elevators")
 	local counter = 0
 	
@@ -230,7 +226,7 @@ function enterElevator(player, pickup)
 	end
 	
 	vehicle = getPedOccupiedVehicle( player )
-	if isInPickup ( player, pickup ) and not getElementData(player, "UsedElevator") and ( ( vehicle and cartp ~= 0 and getVehicleOccupant( vehicle ) == player ) or not vehicle ) then
+	if isInPickup ( player, pickup ) and ( ( vehicle and cartp ~= 0 and getVehicleOccupant( vehicle ) == player ) or not vehicle ) then
 		if not vehicle and cartp == 2 then
 			outputChatBox( "This entrance is for vehicles only.", player, 255, 0, 0 )
 			return
@@ -314,8 +310,8 @@ function enterElevator(player, pickup)
 		end
 		
 		-- teleport the player during the black fade
-		setTimer(function()
-			if vehicle then
+		if vehicle then
+			setTimer(function()
 				if isElement(vehicle) then
 					local offset = getElementData(vehicle, "groundoffset") or 2
 					setElementInterior(vehicle, interior)
@@ -351,33 +347,13 @@ function enterElevator(player, pickup)
 								setPedFrozen(player, true)
 								setPedGravity(player, 0)
 							end
-							
-							resetPlayerData(player)
 						end
 					end
 				end
-			elseif isElement(player) then
-				setElementInterior(player, interior)
-				setCameraInterior(player, interior)
-				setElementDimension(player, dimension)
-				setElementPosition(player, x, y, z)
-				
-				triggerEvent("onPlayerInteriorChange", player, pickup, other)
-				
-				-- fade camera in
-				setTimer(fadeCamera, 1000, 1 , player , true, 2)
-				
-				if interior == 3 or interior == 4 or (x >= 654 and x <= 971 and y >= -3541 and y <= -3205) then
-					triggerClientEvent(player, "usedElevator", player)
-					setPedFrozen(player, true)
-					setPedGravity(player, 0)
-				end
-				
-				resetPlayerData(player)
-			end
-		end, 1000, 1)
-		
-		setElementData(player,"UsedElevator", 1, false)
+			end)
+		elseif isElement(player) then
+			triggerClientEvent(player, "setPlayerInsideInterior", pickup, other)
+		end
 		playSoundFrontEnd(player, 40)
 	end
 end
@@ -388,10 +364,6 @@ function resetGravity()
 end
 addEvent("resetGravity", true)
 addEventHandler("resetGravity", getRootElement(), resetGravity)
-
-function resetPlayerData(player)
-	removeElementData(player,"UsedElevator")
-end
 
 function deleteElevator(thePlayer, commandName, id)
 	if (exports.global:isPlayerLeadAdmin(thePlayer)) then

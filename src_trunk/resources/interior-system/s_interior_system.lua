@@ -726,51 +726,8 @@ function setPlayerInsideInterior(thePickup, thePlayer)
 	-- teleport the player inside the interior
 	local other = getElementData( thePickup, "other" )
 	if other then
-		local dimension = getElementDimension( other )
-		local interior = getElementInterior( other )
-		local x, y, z = getElementPosition( other )
 		local rot = getElementData(thePickup, "angle")
-		
-		-- fade camera to black
-		fadeCamera ( thePlayer, false, 1,0,0,0 )
-		setPedFrozen( thePlayer, true )
-						
-		-- teleport the player during the black fade
-		setTimer(function(thePlayer, thePickup, other)
-			if isElement(thePlayer) then
-				setElementInterior(thePlayer, interior)
-				setCameraInterior(thePlayer, interior)
-				setElementDimension(thePlayer, dimension)
-				setElementPosition(thePlayer, x, y, z)
-				if rot then
-					setPedRotation(thePlayer, rot)
-				end
-				
-				if (x >= 654 and x <= 971 and y >= -3541 and y <= -3205) then
-					triggerClientEvent(thePlayer, "usedElevator", thePlayer)
-					setPedFrozen(thePlayer, true)
-					setPedGravity(thePlayer, 0)
-				end
-				
-				triggerEvent("onPlayerInteriorChange", thePlayer, thePickup, other)
-				
-				-- fade camera in
-				setTimer(fadeCamera, 1000, 1 , thePlayer , true, 2)
-				setTimer(setPedFrozen, 2000, 1, thePlayer, false )
-			end
-		end, 1000, 1, thePlayer, thePickup, other)
-		
-		local name = getElementData(thePickup, "name")
-		if name then
-			local owner = getElementData(thePickup, "owner")
-			local inttype = getElementData(thePickup, "inttype")
-			local cost = getElementData(thePickup, "cost")
-			
-			local ownerName = exports['vehicle-system']:getCharacterName( owner ) or "None"
-			triggerClientEvent(thePlayer, "displayInteriorName", thePlayer, name, ownerName, inttype, cost, getElementData( thePickup, "fee" ))
-
-			playSoundFrontEnd(thePlayer, 40)
-		end
+		triggerClientEvent(thePlayer, "setPlayerInsideInterior", thePickup, other, angle)
 	end
 end
 
@@ -1228,3 +1185,10 @@ function enableAllInteriors( thePlayer )
 	end
 end
 addCommandHandler( "enableallinteriors", enableAllInteriors )
+
+addEventHandler("onPlayerInteriorChange", getRootElement( ),
+	function( pickup, other )
+		setElementDimension( source, getElementDimension( other ) )
+		setElementInterior( source, getElementInterior( other ) )
+	end
+)

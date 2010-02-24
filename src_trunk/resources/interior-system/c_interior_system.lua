@@ -297,3 +297,51 @@ function findParent( element, dimension )
 	local dbid, entrance = findProperty( element, dimension )
 	return entrance
 end
+
+--
+
+local localPlayer = getLocalPlayer()
+local inttimer = nil
+
+addEvent( "setPlayerInsideInterior", true )
+addEventHandler( "setPlayerInsideInterior", getRootElement( ),
+	function( other, rot )
+		if inttimer then
+			return
+		end
+		
+		local dimension = getElementDimension( other )
+		local interior = getElementInterior( other )
+		local x, y, z = getElementPosition( other )
+		
+		-- fade camera to black
+		fadeCamera( false, 1,0,0,0 )
+		setPedFrozen( localPlayer, true )
+		
+		-- teleport the player during the black fade
+		inttimer = setTimer(function(localPlayer, thePickup, other)
+			inttimer = nil
+			if isElement(localPlayer) then
+				setElementInterior(localPlayer, interior)
+				setCameraInterior(interior)
+				setElementDimension(localPlayer, dimension)
+				setElementPosition(localPlayer, x, y, z)
+				if rot then
+					setPedRotation(localPlayer, rot)
+				end
+				
+				if (x >= 654 and x <= 971 and y >= -3541 and y <= -3205) then
+					triggerEvent("usedElevator", localPlayer)
+					setPedFrozen(localPlayer, true)
+					setPedGravity(localPlayer, 0)
+				end
+				
+				triggerServerEvent("onPlayerInteriorChange", localPlayer, thePickup, other)
+				
+				-- fade camera in
+				setTimer(fadeCamera, 1000, 1, true, 2)
+				setTimer(setPedFrozen, 2000, 1, localPlayer, false )
+			end
+		end, 1000, 1, localPlayer, thePickup, other)
+	end
+)
