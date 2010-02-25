@@ -14,8 +14,17 @@ function drawSpeedo()
 			local x = width
 			local y = height
 			
+			-- street names
+			local streetname = getElementData(getLocalPlayer(), "speedo:street" )
+			if streetname then
+				local width = dxGetTextWidth( streetname )
+				local x = width < 200 and ( x - 110 - width / 2 ) or ( x - 10 - width )
+				dxDrawRectangle( x - 8, y - 296, width + 17, 22, tocolor( 5, 5, 5, 220 ) )
+				dxDrawText( streetname, x, y - 292 )
+			end
+			
 			dxDrawImage(x-210, y-275, 200, 200, "disc.png", 0, 0, 0, tocolor(255, 255, 255, 200), false)
-			--outputChatBox(tostring(speed))
+			
 			local speedlimit = getElementData(getLocalPlayer(), "speedo:limit")
 			if speedlimit and getElementType(vehicle) ~= "Boat" and getElementType(vehicle) ~= "Helicopter" and getElementType(vehicle) ~= "Plane" then
 				local ax, ay = x - 243, y - 202

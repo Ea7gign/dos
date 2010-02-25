@@ -5,7 +5,7 @@ local function getAreaID(x, y)
 	return floor((math.max(-3000,math.min(y,3000)) + 3000)/750)*8 + floor((math.max(-3000,math.min(x,3000)) + 3000)/750)
 end
 
-local function getNodeByID(db, nodeID)
+function getNodeByID(db, nodeID)
 	local areaID = floor(nodeID / 65536)
 	return db[areaID][nodeID]
 end
