@@ -118,6 +118,8 @@ function sendLocalText(root, message, r, g, b, distance, exclude)
 		exports['freecam-tv']:add(shownto, message)
 	end
 end
+addEvent("sendLocalText", true)
+addEventHandler("sendLocalText", getRootElement(), sendLocalText)
 
 function sendLocalMeAction(thePlayer, message)
 	sendLocalText(thePlayer, " *" .. getPlayerName(thePlayer):gsub("_", " ") .. ( message:sub( 1, 1 ) == "'" and "" or " " ) .. message, 255, 51, 102)
