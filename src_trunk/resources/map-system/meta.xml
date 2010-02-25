@@ -32,6 +32,7 @@
 	<script src="ES Academy.lua" type="client"/>
 	<script src="FD Interior.lua" type="client"/>
 	<script src="Hospital Int.lua" type="client"/>
+	<script src="ES-Hospital-Rooftop.lua" type="client"/>
 	
 	<!-- 3: Government of Los Santos -->
 	<script src="Gov City Hall.lua" type="client"/>
