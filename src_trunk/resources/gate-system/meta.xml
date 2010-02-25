@@ -25,6 +25,6 @@
 	<script src="Prison Int Rec.lua"/>
 	<script src="Prison Int Cells.lua"/>
 	
-	<script src="MountMansion.lua" type="server"/>
+	<script src="MountIsland.lua" type="server"/>
 	<script src="c_doors.lua" type="client"/>
 </meta>

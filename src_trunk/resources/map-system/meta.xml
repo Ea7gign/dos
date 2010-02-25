@@ -18,7 +18,7 @@
 	<script src="LinoKazuma.lua" type="client"/><!-- Donator Helipad -->
 	<script src="Exile.lua" type="client"/>
 	<script src="daniels_mansion.lua" type="client"/>
-	<script src="MountMansion.lua" type="client"/>
+	<script src="mountisland.lua" type="client"/>
 	<script src="The Silver Mint.lua" type="client"/>
 	<script src="Jefferson Interior Doors.lua" type="client"/>
 	
