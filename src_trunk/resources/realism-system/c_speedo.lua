@@ -19,7 +19,7 @@ function drawSpeedo()
 			if streetname then
 				local width = dxGetTextWidth( streetname )
 				local x = width < 200 and ( x - 110 - width / 2 ) or ( x - 10 - width )
-				dxDrawRectangle( x - 8, y - 296, width + 17, 22, tocolor( 5, 5, 5, 220 ) )
+				dxDrawRectangle( x - 8, y - 296, width + 17, 24, tocolor( 5, 5, 5, 220 ) )
 				dxDrawText( streetname, x, y - 292 )
 			end
 			
