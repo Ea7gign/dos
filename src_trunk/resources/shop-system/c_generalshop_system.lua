@@ -338,7 +338,7 @@ function getItemsForSale(shop_type, race, gender)
 	elseif(shop_type == 8) then
 		item = {
 			{"Ghettoblaster","A black ghettoblaster.", "250", 54, 1, 1, false,10},
-			{"Katana", "Your favourite Japanese sword.", "2000", 8, 1, 1,true,100},
+			--{"Katana", "Your favourite Japanese sword.", "2000", 8, 1, 1,true,100},
 			{"Camera", "A small black analogue camera.", "75", 43, 25,1,true, 30},
 			{"Cellphone", "A stylish, slim cell phone.", "75", 2, 1,1,false,50},
 			{"Radio", "A black radio.", "50", 6, 1,1,false,30},
