@@ -110,7 +110,7 @@ g_items = {
 	{ "Mixed Dinner Tray", "Lets play the guessing game.", 1, 2355, 205, 205, 0, 0.06 },
 	{ "Small Milk Carton", "Lumps included!", 1, 2856, 0, 0, 0, 0 },
 	{ "Small Juice Carton", "Thirsty?", 1, 2647, 0, 0, 0, 0.12 },
-	{ "Cabbage", "For those Vegi-Lovers.", 1, 1213, 0, 0, 0, 0.1 },
+--	{ "Cabbage", "For those Vegi-Lovers.", 1, 1213, 0, 0, 0, 0.1 }, //Need a change of model. The mine '1213' lights up RED at night :)
 	--Chairs = { 1663, 1671, 1720, 1721, 1810, 1811, 2079, 2120, 2121, 2125, 2777, 2788, 1369 }
 }
 
