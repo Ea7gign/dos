@@ -350,7 +350,7 @@ function enterElevator(player, pickup)
 						end
 					end
 				end
-			end)
+			end, 1000, 1)
 		elseif isElement(player) then
 			setPedGravity( player, 0 )
 			triggerClientEvent(player, "setPlayerInsideInterior", pickup, other)
