@@ -333,6 +333,14 @@ function startPhoneAnim(thePlayer)
 	exports.global:applyAnimation(thePlayer, "ped", "phone_talk", -1, true, true, true)
 	setTimer(toggleAllControls, 150, 1, thePlayer, true, true, true)
 end
+function stopPhoneAnim(thePlayer)
+--	exports.global:applyAnimation(thePlayer, "ped", "phone_out", 1300, false)
+--	setTimer(toggleAllControls, 150, 1, thePlayer, true, true, true)
+	setElementData(thePlayer, "forcedanimation", false)
+	toggleAllControls(true, true, false)
+--	setTimer(setPedAnimation, 50, 2, thePlayer)
+	setTimer(triggerServerEvent, 100, 1, "onPlayerStopAnimation", thePlayer, true )
+end
 	
 
 function cancelCall(thePlayer)
@@ -367,10 +375,10 @@ function answerPhone(thePlayer, commandName)
 						triggerClientEvent(nearbyPlayer, "stopRinging", thePlayer)
 					end
 					
-					exports.global:applyAnimation(calling, "ped", "phone_in", 3000, false)
+--					exports.global:applyAnimation(calling, "ped", "phone_in", 3000, false, false, false)
 					setTimer(toggleAllControls, 150, 1, calling, true, true, true)
 					setTimer(startPhoneAnim, 3002, 1, thePlayer)
-					setTimer(startPhoneAnim, 3050, 1, thePlayer)
+					setTimer(stopPhoneAnim, 4050, 1, thePlayer)
 				end
 			elseif not (calling) then
 				outputChatBox("Your phone is not ringing.", thePlayer, 255, 0, 0)

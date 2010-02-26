@@ -9,7 +9,7 @@ function applyAnimation(thePlayer, block, name, animtime, loop, updatePosition, 
 			return false
 		end
 		
-		toggleAllControls(false, true, false)
+		toggleAllControls(true, true, false)
 		
 		if (forced) then
 			setElementData(thePlayer, "forcedanimation", 1)
