@@ -139,15 +139,7 @@ function useItem(itemSlot, additional)
 			exports.global:sendLocalMeAction(source, "drinks a sprunk.")
 			takeItemFromSlot(source, itemSlot)
 		elseif (itemID==10) then -- red dice
-			if tonumber(itemValue) > 1 then
-				local num = 1
-				repeat
-					num = math.random(1,6)
-				until num ~= itemValue - 1 -- item value = 2: wont get 1, 3: no 2 etc.
-				exports.global:sendLocalText(source, " *((Dice)) " .. getPlayerName(source):gsub("_", " ") .. " rolls a dice and gets " .. num ..".", 255, 51, 102)
-			else
-				exports.global:sendLocalText(source, " *((Dice)) " .. getPlayerName(source):gsub("_", " ") .. " rolls a dice and gets " .. math.random( 1, 6 ) ..".", 255, 51, 102)
-			end
+			exports.global:sendLocalText(source, " *((Dice)) " .. getPlayerName(source):gsub("_", " ") .. " rolls a dice and gets " .. math.random( 1, 6 ) ..".", 255, 51, 102)
 		elseif (itemID==11) then -- taco
 			giveHealth(source, 10)
 			exports.global:applyAnimation(source, "FOOD", "EAT_Burger", 4000, false, true, true)

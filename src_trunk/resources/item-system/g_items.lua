@@ -18,7 +18,7 @@ g_items = {
 	{ "Phonebook", "A torn phonebook.", 5, 2824, 0, 0, 0, -0.01 },
 	{ "Sandwich", "A yummy sandwich with cheese.", 1, 2355, 205, 205, 0, 0.06 },
 	{ "Softdrink", "A can of Sprunk.", 1, 2647, 0, 0, 0, 0.12 },
-	{ "Dice", "A red dice with white dots.", 4, 1271, 0, 0, 0, 0.285 }, 
+	{ "Dice", "A white dice with white dots.", 4, 1271, 0, 0, 0, 0.285 }, 
 	{ "Taco", "A greasy mexican taco.", 1, 2215, 205, 205, 0, 0.06 },
 	{ "Burger", "A double cheeseburger with bacon.", 1, 2703, 265, 0, 0, 0.06 },
 	{ "Donut", "Hot sticky sugar covered donut.", 1, 2222, 0, 0, 0, 0.07 },
