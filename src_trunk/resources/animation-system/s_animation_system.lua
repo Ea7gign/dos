@@ -372,6 +372,7 @@ addCommandHandler ( "dance", danceAnimation, false, false )
 -- Crack Animation -------------------------------------------------------------------------
 function crackAnimation(thePlayer, cmd, arg)
 	local logged = getElementData(thePlayer, "loggedin")
+	arg = tonumber(arg)
 	
 	if (logged==1) then
 		if arg == 2 then
