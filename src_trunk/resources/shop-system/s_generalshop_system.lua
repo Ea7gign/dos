@@ -1,30 +1,4 @@
--- ////////////////////////////////////
--- //			MYSQL				 //
--- ////////////////////////////////////		
-sqlUsername = exports.mysql:getMySQLUsername()
-sqlPassword = exports.mysql:getMySQLPassword()
-sqlDB = exports.mysql:getMySQLDBName()
-sqlHost = exports.mysql:getMySQLHost()
-sqlPort = exports.mysql:getMySQLPort()
-
-handler = mysql_connect(sqlHost, sqlUsername, sqlPassword, sqlDB, sqlPort)
-
-function checkMySQL()
-	if not (mysql_ping(handler)) then
-		handler = mysql_connect(sqlHost, sqlUsername, sqlPassword, sqlDB, sqlPort)
-	end
-end
-setTimer(checkMySQL, 300000, 0)
-
-function closeMySQL()
-	if (handler) then
-		mysql_close(handler)
-	end
-end
-addEventHandler("onResourceStop", getResourceRootElement(getThisResource()), closeMySQL)
--- ////////////////////////////////////
--- //			MYSQL END			 //
--- ////////////////////////////////////
+mysql = exports.mysql
 
 -- respawn dead npcs after two minute
 addEventHandler("onPedWasted", getResourceRootElement(),
@@ -116,12 +90,9 @@ function createGeneralshop(thePlayer, commandName, shoptype, skin)
 				local interior = getElementInterior(thePlayer)
 				local rotation = math.ceil(getPedRotation(thePlayer) / 30)*30
 				
-				local query = mysql_query(handler, "INSERT INTO shops SET x='" .. x .. "', y='" .. y .. "', z='" .. z .. "', dimension='" .. dimension .. "', interior='" .. interior .. "', shoptype='" .. shoptype .. "', rotation='" .. rotation .. "',skin="..skin)
+				local id = mysql:query_insert_free("INSERT INTO shops SET x='" .. x .. "', y='" .. y .. "', z='" .. z .. "', dimension='" .. dimension .. "', interior='" .. interior .. "', shoptype='" .. shoptype .. "', rotation='" .. rotation .. "',skin="..skin)
 				
-				if (query) then
-					local id = mysql_insert_id(handler)
-					mysql_free_result(query)
-					
+				if (id) then
 					createShopKeeper(x,y,z,interior,dimension,id,tonumber(shoptype),rotation,skin ~= -1 and skin)
 
 					exports.irc:sendMessage("[ADMIN] " .. getPlayerName(thePlayer) .. " created shop #" .. id .. " - type "..shoptype..".")
@@ -199,8 +170,7 @@ function deleteGeneralShop(thePlayer, commandName, id)
 						local dbid = getElementData(thePed, "dbid")
 						if (tonumber(id)==dbid) then
 							destroyElement(thePed)
-							local query = mysql_query(handler, "DELETE FROM shops WHERE id='" .. dbid .. "' LIMIT 1")
-							mysql_free_result(query)
+							mysql:query_free("DELETE FROM shops WHERE id='" .. dbid .. "' LIMIT 1")
 							exports.irc:sendMessage("[ADMIN] " .. getPlayerName(thePlayer) ..  " deleted shop with ID #" .. id .. ".")
 							outputChatBox("Deleted shop with ID #" .. id .. ".", thePlayer, 0, 255, 0)
 							counter = counter + 1
@@ -218,28 +188,33 @@ end
 addCommandHandler("delshop", deleteGeneralShop, false, false)
 
 function loadAllGeneralshops(res)
-	local result = mysql_query(handler, "SELECT id, x, y, z, dimension, interior, shoptype, rotation, skin FROM shops")
+	local result = mysql:query("SELECT id, x, y, z, dimension, interior, shoptype, rotation, skin FROM shops")
 	
 	local counter = 0
-	if (result) then
-		for result, row in mysql_rows(result) do
-			local id = tonumber(row[1])
-			local x = tonumber(row[2])
-			local y = tonumber(row[3])
-			local z = tonumber(row[4])
-			
-			local dimension = tonumber(row[5])
-			local interior = tonumber(row[6])
-			local shoptype = tonumber(row[7])
-			
-			local rotation = tonumber(row[8])
-			local skin = tonumber(row[9])
-			
-			createShopKeeper(x,y,z,interior,dimension,id,shoptype,rotation,skin ~= -1 and skin)
-			counter = counter + 1
+	
+	while true do
+		local row = exports.mysql:fetch_assoc(result)
+		if not (row) then
+			break
 		end
-		mysql_free_result(result)
+		
+		local id = tonumber(row["id"])
+		local x = tonumber(row["x"])
+		local y = tonumber(row["y"])
+		local z = tonumber(row["z"])
+			
+		local dimension = tonumber(row["dimension"])
+		local interior = tonumber(row["interior"])
+		local shoptype = tonumber(row["shoptype"])
+		
+		local rotation = tonumber(row["rotation"])
+		local skin = tonumber(row["skin"])
+			
+		createShopKeeper(x,y,z,interior,dimension,id,shoptype,rotation,skin ~= -1 and skin)
+		counter = counter + 1
 	end
+	mysql:free_result(result)
+
 	exports.irc:sendMessage("[SCRIPT] Loaded " .. counter .. " general shops.")
 end
 addEventHandler("onResourceStart", getResourceRootElement(), loadAllGeneralshops)
@@ -251,10 +226,8 @@ function clickStoreKeeper(ped)
 
 	local race, gender = -1, -1
 	if(shoptype == 5) then -- if its a clothes shop, we also need the players race
-		--local result = mysql_query(handler, "SELECT gender,skincolor FROM characters WHERE id='" .. getElementData(source, "dbid") .. "' LIMIT 1")
 		gender = getElementData(source,"gender")
 		race = getElementData(source,"race")
-		--mysql_free_result(result)
 	end
 	triggerClientEvent(source, "showGeneralshopUI", source, shoptype, race, gender)
 end
@@ -293,9 +266,8 @@ function givePlayerBoughtItem(itemID, itemValue, theCost, isWeapon, name, supply
 	end
 	
 	if inttype == 1 then
-		local result = mysql_query(handler, "SELECT supplies FROM interiors WHERE id='" .. interior .. "' LIMIT 1")
-		supplies = tonumber(mysql_result(result, 1, 1))
-		mysql_free_result(result)
+		local result = mysql:query_fetch_assoc("SELECT supplies FROM interiors WHERE id='" .. interior .. "' LIMIT 1")
+		supplies = tonumber(result["supplies"])
 	end
 	
 	if not exports.global:hasMoney(source, theCost) then
@@ -322,9 +294,9 @@ function givePlayerBoughtItem(itemID, itemValue, theCost, isWeapon, name, supply
 					local skin = tonumber(itemValue) or 264
 					exports.global:giveItem(source, 16, skin)
 					setElementModel(source, skin)
-					mysql_free_result( mysql_query( handler, "UPDATE characters SET skin = " .. skin .. " WHERE id = " .. getElementData( source, "dbid" ) ) )
+					mysql:query_free("UPDATE characters SET skin = " .. skin .. " WHERE id = " .. getElementData( source, "dbid" ) )
 					if setElementData(source, "casualskin", skin, false) then
-						mysql_free_result( mysql_query( handler, "UPDATE characters SET casualskin = " .. skin .. " WHERE id = " .. getElementData(source, "dbid") ) )
+						mysql:query_free("UPDATE characters SET casualskin = " .. skin .. " WHERE id = " .. getElementData(source, "dbid") )
 					end
 					exports.global:givePlayerAchievement(source, 21)
 				end
@@ -333,8 +305,7 @@ function givePlayerBoughtItem(itemID, itemValue, theCost, isWeapon, name, supply
 				if ticketNumber ~= false then
 					exports.global:takeMoney(source, tonumber(theCost))
 					outputChatBox("You bought a " .. name .. ". The ticket number is: " .. ticketNumber .. ".", source, 255, 194, 14)
-					outputChatBox("The money will be transfered to your account if you win.", source, 255, 194, 14)
-					outputChatBox("You have $"..exports.global:getMoney(source).." left in your wallet.", source, 255, 194, 14)
+					outputChatBox("The money will be transfered to your bank account if you win.", source, 255, 194, 14)
 					theCost = theCost - moniez
 				else
 					outputChatBox("I'm sorry, the lottery is already closed. Wait for the next round.", source, 255, 194, 14)
@@ -379,7 +350,7 @@ function givePlayerBoughtItem(itemID, itemValue, theCost, isWeapon, name, supply
 						return
 					end
 					setPedFightingStyle(source, itemID)
-					mysql_free_result( mysql_query( handler, "UPDATE characters SET fightstyle = " .. itemID .. " WHERE id = " .. getElementData( source, "dbid" ) ) )
+					mysql:query_free("UPDATE characters SET fightstyle = " .. itemID .. " WHERE id = " .. getElementData( source, "dbid" ) )
 					
 					exports.global:givePlayerAchievement(source, 20)
 				end
@@ -415,8 +386,7 @@ function givePlayerBoughtItem(itemID, itemValue, theCost, isWeapon, name, supply
 			end
 			
 			if inttype == 1 then
-				local query = mysql_query(handler, "UPDATE interiors SET supplies = supplies - " .. ( tonumber(supplyCost) or 1 ) .. " WHERE id='" .. interior .. "'")
-				mysql_free_result(query)
+				local query = mysql:query_free("UPDATE interiors SET supplies = supplies - " .. ( tonumber(supplyCost) or 1 ) .. " WHERE id='" .. interior .. "'")
 				-- give the money to the shop owner
 				local owner = getElementData(thePickup, "owner")
 				local theOwner = nil
@@ -428,11 +398,10 @@ function givePlayerBoughtItem(itemID, itemValue, theCost, isWeapon, name, supply
 				end
 				
 				if (theOwner) then
-					--exports.global:givePlayerSafeMoney(theOwner, theCost)
 					local profits = getElementData(theOwner, "businessprofit")
 					setElementData(theOwner, "businessprofit", profits+theCost, false)
 				else
-					mysql_free_result( mysql_query(handler, "UPDATE characters SET bankmoney=bankmoney + " .. tonumber(theCost) .. " WHERE id = " .. owner .. " LIMIT 1") )
+					mysql:query_free( "UPDATE characters SET bankmoney=bankmoney + " .. tonumber(theCost) .. " WHERE id = " .. owner .. " LIMIT 1")
 				end
 				
 				if (supplies-1<10) then
@@ -451,8 +420,7 @@ globalSupplies = 0
 
 function updateGlobalSupplies(value)
 	globalSupplies = globalSupplies + value
-	local query = mysql_query(handler, "UPDATE settings SET value='" .. globalSupplies .. "' WHERE name='globalsupplies'")
-	mysql_free_result(query)
+	mysql:query_free("UPDATE settings SET value='" .. globalSupplies .. "' WHERE name='globalsupplies'")
 end
 addEvent("updateGlobalSupplies", true)
 addEventHandler("updateGlobalSupplies", getRootElement(), updateGlobalSupplies)
@@ -466,10 +434,8 @@ function checkSupplies(thePlayer)
 		owner = getElementData(entrance, "owner")
 		
 		if (tonumber(owner)==getElementData(thePlayer, "dbid") or exports.global:hasItem(thePlayer, 4, dbid) or exports.global:hasItem(thePlayer, 5, dbid)) and (inttype==1) then
-			local query = mysql_query(handler, "SELECT supplies FROM interiors WHERE id='" .. dbid .. "' LIMIT 1")
-			local supplies = mysql_result(query, 1, 1)
-			mysql_free_result(query)
-			
+			local query = mysql:query_fetch_assoc("SELECT supplies FROM interiors WHERE id='" .. dbid .. "' LIMIT 1")
+			local supplies = query["supplies"]	
 			outputChatBox("This business has " .. supplies .. " supplies.", thePlayer, 255, 194, 14)
 		else
 			outputChatBox("You are not in a business or do you do own the business.", thePlayer, 255, 0, 0)
@@ -501,10 +467,8 @@ function orderSupplies(thePlayer, commandName, amount)
 						outputChatBox("You cannot afford that many supplies. (Cost is 2$ per supply).", thePlayer, 255, 0, 0)
 					else
 						globalSupplies = globalSupplies - amount
-						local query = mysql_query(handler, "UPDATE settings SET value='" .. globalSupplies .. "' where name='globalsupplies'")
-						mysql_free_result(query)
-						query = mysql_query(handler, "UPDATE interiors SET supplies= supplies + " .. amount .. " where id='" .. dbid .. "'")
-						mysql_free_result(query)
+						mysql:query_free("UPDATE settings SET value='" .. globalSupplies .. "' where name='globalsupplies'")
+						mysql:query_free("UPDATE interiors SET supplies= supplies + " .. amount .. " where id='" .. dbid .. "'")
 						outputChatBox("You bought " .. amount .. " supplies for your business.", thePlayer, 255, 194, 14)
 					end
 				end
@@ -517,9 +481,7 @@ end
 addCommandHandler("ordersupplies", orderSupplies, false, false)
 
 function resStart()
-	local result = mysql_query(handler, "SELECT value FROM settings WHERE name='globalsupplies' LIMIT 1")
-	globalSupplies = tonumber(mysql_result(result, 1, 1))
-
-	mysql_free_result(result)
+	local result = mysql:query_fetch_assoc("SELECT value FROM settings WHERE name='globalsupplies' LIMIT 1")
+	globalSupplies = result["value"]
 end
 addEventHandler("onResourceStart", getResourceRootElement(), resStart)
