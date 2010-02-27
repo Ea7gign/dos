@@ -11,6 +11,19 @@
 	<file src="img/charbg0.png"/>
 	<file src="img/charbg1.png"/>
 	
+	<file src="gui/account-icon.png"/>
+	<file src="gui/characters-icon.png"/>
+	<file src="gui/help-icon.png"/>
+	<file src="gui/logout-icon.png"/>
+	<file src="gui/settings-icon.png"/>
+	<file src="gui/social-icon.png"/>
+	<file src="gui/submit-app-icon.png"/>
+	<file src="gui/valhalla1.png"/>
+	<file src="gui/valhalla2.png"/>
+	<file src="gui/icon-glow.png"/>
+	<file src="gui/folder-user.png"/>
+	<file src="gui/achievements-icon.png"/>
+	
 	<file src="img/newchar.png"/>
 	<file src="img/000.png"/>
 	<file src="img/007.png"/>

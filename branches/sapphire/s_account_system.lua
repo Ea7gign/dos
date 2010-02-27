@@ -30,6 +30,13 @@ scriptVer = exports.global:getScriptVersion()
 
 salt = "vgrpkeyscotland"
 
+function acceptBeta()
+	outputDebugString("HIT")
+	redirectPlayer(source, "127.0.0.1", getServerPort(), getServerPassword())
+end
+addEvent("acceptBeta", true)
+addEventHandler("acceptBeta", getRootElement(), acceptBeta)
+
 function sendSalt()
 	--local version = nil
 	--if (getVersion().type~="Custom" and getVersion().type~="Release") then
@@ -67,7 +74,7 @@ function resourceStart()
 	setMapName("Valhalla Gaming: Los Santos")
 	
 	setRuleValue("Script Version", tostring(scriptVer))
-	setRuleValue("Author", "VG Scripting Team")
+	setRuleValue("Author", "Daniels")
 
 	for key, value in ipairs(exports.pool:getPoolElementsByType("player")) do
 		triggerEvent("playerJoinResourceStart", value)
@@ -101,7 +108,7 @@ addEventHandler("onPlayerJoin", getRootElement(), onJoin)
 addEvent("playerJoinResourceStart", false)
 addEventHandler("playerJoinResourceStart", getRootElement(), onJoin)
 
---[[
+
 function registerPlayer(username, password)
 	local safeusername = mysql_escape_string(handler, username)
 	
@@ -147,10 +154,9 @@ function registerPlayer(username, password)
 		mysql_free_result(result)
 	end
 end
-addEvent("onPlayerRegister", false)
-addEvent("attemptRegister", true)
-addEventHandler("attemptRegister", getRootElement(), registerPlayer)
-]]
+--addEvent("onPlayerRegister", false)
+--addEvent("attemptRegister", true)
+--addEventHandler("attemptRegister", getRootElement(), registerPlayer)
 
 addEvent("restoreJob", false)
 function spawnCharacter(charname, version)
@@ -176,6 +182,8 @@ function spawnCharacter(charname, version)
 		local health = tonumber(data["health"])
 		local armor = tonumber(data["armor"])
 		local skin = tonumber(data["skin"])
+		setPedSkin(source, skin)
+		
 		local money = tonumber(data["money"])
 		local factionID = tonumber(data["faction_id"])
 		local cuffed = tonumber(data["cuffed"])
@@ -207,19 +215,7 @@ function spawnCharacter(charname, version)
 		local gender = tonumber(data["gender"])
 		local cellphonesecret = tonumber(data["cellphonesecret"])
 		local photos = tonumber(data["photos"])
-		local maxvehicles = tonumber(data["maxvehicles"])
 		
-		local description = data["description"]
-		local age = tonumber(data["age"])
-		local weight = tonumber(data["weight"])
-		local height = tonumber(data["height"])
-		local skincolor = tonumber(data["skincolor"])
-		setElementData(source, "chardescription", description, false)
-		setElementData(source, "age", age, false)
-		setElementData(source, "weight", weight, false)
-		setElementData(source, "height", height, false)
-		setElementData(source, "race", skincolor, false)
-
 		-- LANGUAGES
 		local lang1 = tonumber(data["lang1"])
 		local lang1skill = tonumber(data["lang1skill"])
@@ -503,6 +499,7 @@ function spawnCharacter(charname, version)
 		setElementData(source, "calling", nil, false)
 		setElementData(source, "calltimer", nil, false)
 		setElementData(source, "phonestate", 0, false)
+		--setElementData(source, "radiochannel", radiochannel, false)
 		setElementData(source, "realinvehicle", 0, false)
 		setElementData(source, "duty", duty, false)
 		setElementData(source, "job", job)
@@ -514,8 +511,7 @@ function spawnCharacter(charname, version)
 		setElementData(source, "dutyskin", dutyskin, false)
 		setElementData(source, "phoneoff", phoneoff, false)
 		setElementData(source, "blindfold", blindfold, false)
-		setElementData(source, "gender", gender, false)
-		setElementData(source, "maxvehicles", maxvehicles, false)
+		setElementData(source, "gender", gender)
 		
 		if (restrainedobj>0) then
 			setElementData(source, "restrainedObj", restrainedobj, false)
@@ -574,11 +570,7 @@ function spawnCharacter(charname, version)
 		-- Achievement
 		if not (exports.global:doesPlayerHaveAchievement(source, 38)) then
 			exports.global:givePlayerAchievement(source, 38) -- Welcome to Los Santos
-			-- Welcome tooltip (auto opens the window)
-			if(getResourceFromName("tooltips-system"))then
-				local title = tostring("Welcome to the Valhalla Gaming MTA role play server")
-				triggerClientEvent(source,"tooltips:welcomeHelp", source,1,title)
-			end
+			triggerClientEvent(source, "showCityGuide", source)
 		end
 		
 		-- Weapon stats
@@ -618,9 +610,20 @@ function spawnCharacter(charname, version)
 			outputChatBox("We recommend you upgrade to V" .. getVersion().mta .. " to ensure full script compatability and improve your experience.", source, 255, 0, 0)
 		end
 		
+		outputChatBox("You can visit the Home Menu again by pressing Home.", source, 255, 194, 15)
+		
 		triggerEvent("onCharacterLogin", source, charname, factionID)
 		mysql_free_result(result)
-				
+		
+		-- 2 years achievement
+		--[[
+		local realtime = getRealTime()
+		
+		if (realtime.yearday == 296 and realtime.year+1900 == 2009) then -- october 24th 2009
+			setTimer(giveBirthdayAchievement, 5000, 1, source)
+		end
+		]]
+		
 		if exports.global:isPlayerScripter(source) then
 			triggerClientEvent(source, "runcode:loadScripts", source)
 		end
@@ -635,6 +638,15 @@ addEventHandler("spawnCharacter", getRootElement(), spawnCharacter)
 
 function blindfoldFix(player)
 	fadeCamera(player, true, 2)
+end
+
+function giveBirthdayAchievement(player)
+	exports.global:givePlayerAchievement(player, 44) -- MTA BETA ONLY
+end
+
+function giveBetaAchievement(player)
+	-- MTA BETA ONLY
+	--exports.global:givePlayerAchievement(player, 36) -- MTA BETA ONLY
 end
 
 function timerUnjailPlayer(jailedPlayer)
@@ -709,7 +721,6 @@ function loginPlayer(username, password, operatingsystem)
 		end
 		
 		if not (found) then
-			triggerClientEvent(source, "hideUI", source, false)
 			local admin = tonumber(data["admin"])
 			local hiddenadmin = tonumber(data["hiddenadmin"])
 			local adminduty = tonumber(data["adminduty"])
@@ -724,11 +735,8 @@ function loginPlayer(username, password, operatingsystem)
 			local muted = tonumber(data["muted"])
 			local globalooc = tonumber(data["globalooc"])
 			local blur = tonumber(data["blur"])
-			local help = tonumber(data["help"])
 			local adminreports = tonumber(data["adminreports"])
 			local pmblocked = tonumber(data["pmblocked"])
-			local adblocked = tonumber(data["adblocked"])
-			local newsblocked = tonumber(data["newsblocked"])
 			local warns = tonumber(data["warns"])
 			local chatbubbles = tonumber(data["chatbubbles"])
 			local appstate = tonumber(data["appstate"])
@@ -750,7 +758,6 @@ function loginPlayer(username, password, operatingsystem)
 			setElementData(source, "adminlevel", tonumber(admin))
 			setElementData(source, "hiddenadmin", tonumber(hiddenadmin))
 			setElementData(source, "donator", tonumber(donator))
-			setElementData(source, "tooltips:help", tonumber(help))
 			
 			setElementData(source, "blur", blur)
 			if (blur==0) then
@@ -772,12 +779,7 @@ function loginPlayer(username, password, operatingsystem)
 				outputChatBox("Your application was declined, You can read why, and resubmit a fixed one at www.valhallagaming.net/mtaucp", source, 255, 194, 15)
 				setTimer(kickPlayer, 30000, 1, source, getRootElement(), "Re-Submit an application at www.valhallagaming.net/mtaucp")
 			elseif (banned==1) then
-				clearChatBox(source)
-				outputChatBox("You have been banned from this server by: " .. tostring(banned_by) .. ".", source, 255, 0, 0)
-				outputChatBox("Ban Reason: " .. tostring(banned_reason) .. ".", source, 255, 0, 0)
-				outputChatBox(" ", source)
-				outputChatBox("You can appeal against this ban on our forums at http://www.valhallagaming.net/forums", source)
-				setTimer(kickPlayer, 15000, 1, source, getRootElement(), "Account is banned")
+				triggerClientEvent(source, "loginFail", source, 3)
 			else
 				setElementData(source, "gameaccountloggedin", 1, false)
 				setElementData(source, "gameaccountusername", username)
@@ -790,22 +792,7 @@ function loginPlayer(username, password, operatingsystem)
 				setElementData(source, "globalooc", tonumber(globalooc), false)
 				setElementData(source, "muted", tonumber(muted))
 				setElementData(source, "adminreports", adminreports, false)
-				
-				if donator > 0 then -- check if they're a donator
-					setElementData(source, "pmblocked", pmblocked, false)
-					setElementData(source, "tognews", newsblocked, false)
-					if (adblocked == 1) then
-						setElementData(source, "disableAds", true, false)
-					else
-						setElementData(source, "disableAds", false, false)
-					end
-				else -- no donator, set default things
-					setElementData(source, "pmblocked", 0, false)
-					setElementData(source, "disableAds", false, false)
-					setElementData(source, "tognews", 0, false)
-				end
-				
-				
+				setElementData(source, "pmblocked", pmblocked, false)
 				setElementData(source, "warns", warns, false)
 				setElementData(source, "chatbubbles", chatbubbles, false)
 				
@@ -830,11 +817,9 @@ function loginPlayer(username, password, operatingsystem)
 				
 			end
 		else
-			showChat(source, true)
-			outputChatBox("This account is already logged in. You cannot login more than once.", source, 255, 0, 0)
+			triggerClientEvent(source, "loginFail", source, 2)
 		end
 	else
-		showChat(source, true)
 		local attempts = tonumber(getElementData(source, "loginattempts"))
 		attempts = attempts + 1
 		setElementData(source, "loginattempts", attempts, false)
@@ -842,7 +827,7 @@ function loginPlayer(username, password, operatingsystem)
 		if (attempts>=3) then
 			kickPlayer(source, true, false, false, getRootElement(), "Too many login attempts")
 		else
-			outputChatBox("Invalid Username or Password.", source, 255, 0, 0)
+			triggerClientEvent(source, "loginFail", source, 1)
 		end
 	end
 	
@@ -1029,7 +1014,8 @@ function sendAccounts(thePlayer, id, isChangeChar)
 	
 	local playerid = getElementData(thePlayer, "playerid")
 
-	spawnPlayer(thePlayer, 258.43417358398, -41.489139556885, 1002.0234375, 268.19247436523, 0, 14, 65000+playerid)
+	spawnPlayer(thePlayer, 1409.9384765625, -808.51953125, 91.859375, 172.96313476563, 0, 0, 65000+playerid)
+	--setPedGravity(thePlayer, 0.0)
 	
 	if ( mysql_num_rows(emailresult) > 0 ) then
 		local hasEmail = mysql_result(emailresult, 1, 1)
@@ -1042,6 +1028,9 @@ function sendAccounts(thePlayer, id, isChangeChar)
 	else
 		triggerClientEvent(thePlayer, "showCharacterSelection", thePlayer, accounts)
 	end
+	
+	requestAchievements(thePlayer)
+	requestFriends(thePlayer)
 end
 addEvent("sendAccounts", true)
 addEventHandler("sendAccounts", getRootElement(), sendAccounts)
@@ -1053,14 +1042,49 @@ end
 addEvent("storeEmail", true)
 addEventHandler("storeEmail", getRootElement(), storeEmail)
 
-function requestAchievements()
+function requestFriends(player)
+	local accid = getElementData(player, "gameaccountid")
+	local result = mysql_query( handler, "SELECT f.friend, a.username, a.friendsmessage, a.country FROM friends f LEFT JOIN accounts a ON f.friend = a.id WHERE f.id = " .. accid .. " ORDER BY a.lastlogin DESC" )
+	if result then
+		local friends = { }
+		for result, row in mysql_rows(result) do
+			local id = tonumber( row[1] )
+			local account = row[2]
+			
+			if account == mysql_null( ) then -- account doesn't exist any longer, drop friends
+				mysql_free_result( mysql_query( handler, "DELETE FROM friends WHERE id = " .. id .. " OR friend = " .. id ) )
+			else
+				table.insert( friends, { id, account, row[3], row[4] } )
+			end
+		end
+		
+		mysql_free_result( result )
+		
+		local friendsmessage = ""
+		local result = mysql_query( handler, "SELECT friendsmessage FROM accounts WHERE id = " .. accid )
+		if result then
+			friendsmessage = mysql_result( result, 1, 1 )
+			if friendsmessage == mysql_null( ) then
+				friendsmessage = ""
+			end
+			mysql_free_result( result )
+		else
+			outputDebugString( "Friendmessage load failed: " .. mysql_error( handler ) )
+		end
+		triggerClientEvent( source, "returnFriends", source, friends, friendsmessage )
+	else
+		outputDebugString( "Friends load failed: " .. mysql_error(handler) )
+		outputChatBox("Error 600000 - Could not retrieve friends list.", source, 255, 0, 0)
+	end
+end
+
+function requestAchievements(player)
 	-- Get achievements
-	local gameAccountID = getElementData(source, "gameaccountid")
+	local gameAccountID = getElementData(player, "gameaccountid")
 	local aresult = mysql_query(handler, "SELECT achievementid, date FROM achievements WHERE account='" .. gameAccountID .. "'")
 	
 	local achievements = { }
 	
-	-- Determine the total number of achievements & points
 	if aresult then
 		for result, row in mysql_rows(aresult) do
 			achievements[#achievements+1] = { tonumber( row[1] ), row[2] }
@@ -1068,10 +1092,8 @@ function requestAchievements()
 		mysql_free_result(aresult)
 	end
 	
-	triggerClientEvent(source, "returnAchievements", source, achievements)
+	triggerClientEvent(player, "returnAchievements", player, achievements)
 end
-addEvent("requestAchievements", true)
-addEventHandler("requestAchievements", getRootElement(), requestAchievements)
 
 function deleteCharacterByName(charname)
 	
@@ -1481,17 +1503,6 @@ function cmdToggleBlur(thePlayer, commandName)
 	mysql_free_result( mysql_query( handler, "UPDATE accounts SET blur=" .. ( 1 - blur ) .. " WHERE id = " .. getElementData( thePlayer, "gameaccountid" ) ) )
 end
 addCommandHandler("toggleblur", cmdToggleBlur)
-
-function serverToggleHelp(enabled)
-	if (enabled) then
-		setElementData(source, "tooltips:help", 1)
-	else
-		setElementData(source, "tooltips:help", 0)
-	end
-	mysql_free_result( mysql_query( handler, "UPDATE accounts SET help=" .. getElementData( source, "tooltips:help" ).. " WHERE id = " .. getElementData( source, "gameaccountid" ) ) )
-end
-addEvent("updateHelp", true)
-addEventHandler("updateHelp", getRootElement(), serverToggleHelp)
 
 function cguiSetNewPassword(oldPassword, newPassword)
 	
