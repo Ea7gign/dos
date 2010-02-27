@@ -656,7 +656,7 @@ function useItem(itemSlot, additional)
 			toggleAllControls(source, true, true, true)
 			exports.global:sendLocalMeAction(source, "drinks a small carton of juice.")
 			takeItemFromSlot(source, itemSlot)
-		elseif (itemID==102) then --[ADDED: 2/23/10 by herbjr] juice
+		elseif (itemID==102) then --[ADDED: 2/23/10 by herbjr] Cabbage (Asked for by Misha)
 			giveHealth(source, 15)
 			exports.global:applyAnimation(source, "food", "eat_burger", 4000, false, true, true)
 			toggleAllControls(source, true, true, true)
