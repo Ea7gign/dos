@@ -99,6 +99,6 @@ addEventHandler( "onClientResourceStart", getResourceRootElement( ),
 
 addEventHandler( "onClientResourceStop", getResourceRootElement( ),
 	function( )
-		openFile( )
+		closeFile( )
 	end
 )
