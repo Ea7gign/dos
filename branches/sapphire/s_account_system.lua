@@ -798,7 +798,7 @@ function loginPlayer(username, password, operatingsystem)
 				
 				triggerClientEvent(source, "loginOK", source)
 				sendAccounts(source, id)
-				--setTimer(sendAccounts, 1000, 1, source, id)
+				--setTimer(sendAccounts, 15000, 1, source, id)
 				
 				-- Get login time & date
 				local time = getRealTime()
@@ -1032,7 +1032,6 @@ function sendAccounts(thePlayer, id, isChangeChar)
 	end
 	
 	requestAchievements(thePlayer)
-	requestFriends(thePlayer)
 end
 addEvent("sendAccounts", true)
 addEventHandler("sendAccounts", getRootElement(), sendAccounts)
@@ -1095,6 +1094,7 @@ function requestAchievements(player)
 	end
 	
 	triggerClientEvent(player, "returnAchievements", player, achievements)
+	requestFriends(player)
 end
 
 function deleteCharacterByName(charname)

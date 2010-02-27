@@ -4164,6 +4164,11 @@ local lastItemLeft = 2
 local lastItemRight = 4
 local lastItemAlpha = 1.0
 
+local loadedCharacters = false
+local loadedAchievements = false
+local loadedFriends = false
+local loadingImageRotation = 0
+
 local tFriends =  { }
 local tAchievements =  { }
 
@@ -4623,6 +4628,8 @@ function moveDown()
 					if ( not isLoggedIn() ) then
 						setPedSkin(getLocalPlayer(), tonumber(characterMenu[i + 1]["skin"]))
 					end
+				elseif ( round(characterMenu[i]["ty"], -1) < round(initY + xoffset, -1) ) then -- its in the no mans land
+					characterMenu[i]["ty"] = characterMenu[i]["ty"] - 2*yoffset
 				else
 					characterMenu[i]["ty"] = characterMenu[i]["ty"] - yoffset
 				end
@@ -4675,8 +4682,9 @@ function moveUp()
 			for k = 1, #characterMenu do
 				local i = #characterMenu - (k - 1)
 				if ( round(characterMenu[i]["ty"], -1) == round(initY + xoffset, -1) ) then -- its selected
-					characterMenu[i]["ty"] = characterMenu[i]["ty"] + yoffset
+					characterMenu[i]["ty"] = characterMenu[i]["ty"] + 2*yoffset
 					selIndex = i - 1
+					
 				elseif (i == selIndex) then -- new selected
 					characterMenu[i]["ty"] = characterMenu[i]["ty"] + 2*yoffset
 					
@@ -4785,102 +4793,116 @@ function selectItemFromVerticalMenu()
 	end
 end
 
+
 function drawCharacters()
-	for i = 1, #characterMenu do
-		local name = characterMenu[i]["name"]
-		local age = characterMenu[i]["age"]
-		local cx = characterMenu[i]["cx"]
-		local cy = characterMenu[i]["cy"]
-		local tx = characterMenu[i]["tx"]
-		local ty = characterMenu[i]["ty"]
-		local faction = characterMenu[i]["faction"]
-		local rank = characterMenu[i]["rank"]
-		local lastseen = characterMenu[i]["lastseen"]
-		local skin = characterMenu[i]["skin"]
-		
-		local dist = getDistanceBetweenPoints2D(0, initY + yoffset + 40, 0, cy)
-		
-		
-		local alpha = 255
-		if ( cy < (initY + 2*yoffset)) then
-			alpha = 255 - ( dist/ 2 )
-		else
-			alpha = 255 - (dist / 2)
+	if ( loadedCharacters ) then
+		for i = 1, #characterMenu do
+			local name = characterMenu[i]["name"]
+			local age = characterMenu[i]["age"]
+			local cx = characterMenu[i]["cx"]
+			local cy = characterMenu[i]["cy"]
+			local tx = characterMenu[i]["tx"]
+			local ty = characterMenu[i]["ty"]
+			local faction = characterMenu[i]["faction"]
+			local rank = characterMenu[i]["rank"]
+			local lastseen = characterMenu[i]["lastseen"]
+			local skin = characterMenu[i]["skin"]
+			
+			local dist = getDistanceBetweenPoints2D(0, initY + yoffset + 40, 0, cy)
+			
+			
+			local alpha = 255
+			if ( cy < (initY + 2*yoffset)) then
+				alpha = 255 - ( dist/ 2 )
+			else
+				alpha = 255 - (dist / 2)
+			end
+			
+			-- ANIMATIONS
+			if ( round(cy, -1) > round(ty, -1) ) then -- we need to move down!
+				--if ( round(ty, -1) == round((initY - yoffset + 40), -1) ) then -- up top = move faster since we're covering twice the distance
+				--	characterMenu[i]["cy"] = characterMenu[i]["cy"] - 10
+				--else
+					characterMenu[i]["cy"] = characterMenu[i]["cy"] - 10
+				--end
+			end
+			
+			if ( round(cy, -1) < round(ty, -1) ) then -- we need to move up!
+				--if ( round(ty, -1) == round((initY + yoffset + 40), -1) ) then -- up top = move faster since we're covering twice the distance
+				--	characterMenu[i]["cy"] = characterMenu[i]["cy"] + 10
+				--else
+					characterMenu[i]["cy"] = characterMenu[i]["cy"] + 10
+				--end
+			end
+			
+			local gender = characterMenu[i]["gender"]
+			if (gender == 0) then
+				gender = "Male"
+			else
+				gender = "Female"
+			end
+			
+			local agestring = age .. " year old " .. gender
+			local factionstring = faction
+			if (rank ~= nil) then
+				factionstring = rank .. " of '" .. faction .. "'."
+			end
+			
+			local laststring = "Last Seen: Today"
+			if (tonumber(lastseen) > 0) then
+				laststring = "Last Seen: " .. lastseen .. " Days Ago."
+			end
+			
+			if ( mainMenuItems[currentItem]["text"] == "Characters") then
+				cx = mainMenuItems[currentItem]["cx"]
+				dxDrawText(name, cx+20, cy, cx + 30 + dxGetTextWidth(name, 1, "default-bold"), cy + dxGetFontHeight(1, "default-bold"), tocolor(255, 255, 255, alpha * xmbAlpha * currentItemAlpha), 1, "default-bold", "center", "middle", false, false, false)
+				dxDrawText(agestring, cx+30, cy+20, cx + 30 + dxGetTextWidth(agestring, 0.9, "default"), cy + 20 + dxGetFontHeight(0.9, "default"), tocolor(255, 255, 255, alpha * xmbAlpha * currentItemAlpha), 0.9, "default", "center", "middle", false, false, false)
+				dxDrawText(factionstring, cx+30, cy+40, cx + 30 + dxGetTextWidth(factionstring, 0.9, "default"), cy + 40 + dxGetFontHeight(0.9, "default"), tocolor(255, 255, 255, alpha * xmbAlpha * currentItemAlpha), 0.9, "default", "center", "middle", false, false, false)
+				dxDrawText(laststring, cx+30, cy+60, cx + 30 + dxGetTextWidth(laststring, 0.9, "default"), cy + 60 + dxGetFontHeight(0.9, "default"), tocolor(255, 255, 255, alpha * xmbAlpha * currentItemAlpha), 0.9, "default", "center", "middle", false, false, false)
+				
+				if ( tonumber(skin) < 100 ) then skin = "0" .. skin end
+				dxDrawImage(cx - 78, cy, 78, 64, "img/" .. skin .. ".png", 0, 0, 0, tocolor(255, 255, 255, alpha * xmbAlpha * currentItemAlpha), false)
+			
+			elseif ( mainMenuItems[lastItemLeft]["text"] == "Characters" and lastKey == 1 ) then 
+				cx = mainMenuItems[charactersID]["cx"]
+				dxDrawText(name, cx+20, cy, cx + 30 + dxGetTextWidth(name, 1, "default-bold"), cy + dxGetFontHeight(1, "default-bold"), tocolor(255, 255, 255, alpha * xmbAlpha * lastItemAlpha), 1, "default-bold", "center", "middle", false, false, false)
+				dxDrawText(agestring, cx+30, cy+20, cx + 30 + dxGetTextWidth(agestring, 0.9, "default"), cy + 20 + dxGetFontHeight(0.9, "default"), tocolor(255, 255, 255, alpha * xmbAlpha * lastItemAlpha), 0.9, "default", "center", "middle", false, false, false)
+				dxDrawText(factionstring, cx+30, cy+40, cx + 30 + dxGetTextWidth(factionstring, 0.9, "default"), cy + 40 + dxGetFontHeight(0.9, "default"), tocolor(255, 255, 255, alpha * xmbAlpha * lastItemAlpha), 0.9, "default", "center", "middle", false, false, false)
+				dxDrawText(laststring, cx+30, cy+60, cx + 30 + dxGetTextWidth(laststring, 0.9, "default"), cy + 60 + dxGetFontHeight(0.9, "default"), tocolor(255, 255, 255, alpha * xmbAlpha * lastItemAlpha), 0.9, "default", "center", "middle", false, false, false)
+				
+				if ( tonumber(skin) < 100 ) then skin = "0" .. skin end
+				dxDrawImage(cx - 78, cy, 78, 64, "img/" .. skin .. ".png", 0, 0, 0, tocolor(255, 255, 255, alpha * xmbAlpha * lastItemAlpha), false)
+			elseif ( mainMenuItems[lastItemRight]["text"] == "Characters" and lastKey == 2  ) then
+				cx = mainMenuItems[charactersID]["cx"]
+				dxDrawText(name, cx+20, cy, cx + 30 + dxGetTextWidth(name, 1, "default-bold"), cy + dxGetFontHeight(1, "default-bold"), tocolor(255, 255, 255, alpha * xmbAlpha * lastItemAlpha), 1, "default-bold", "center", "middle", false, false, false)
+				dxDrawText(agestring, cx+30, cy+20, cx + 30 + dxGetTextWidth(agestring, 0.9, "default"), cy + 20 + dxGetFontHeight(0.9, "default"), tocolor(255, 255, 255, alpha * xmbAlpha * lastItemAlpha), 0.9, "default", "center", "middle", false, false, false)
+				dxDrawText(factionstring, cx+30, cy+40, cx + 30 + dxGetTextWidth(factionstring, 0.9, "default"), cy + 40 + dxGetFontHeight(0.9, "default"), tocolor(255, 255, 255, alpha * xmbAlpha * lastItemAlpha), 0.9, "default", "center", "middle", false, false, false)
+				dxDrawText(laststring, cx+30, cy+60, cx + 30 + dxGetTextWidth(laststring, 0.9, "default"), cy + 60 + dxGetFontHeight(0.9, "default"), tocolor(255, 255, 255, alpha * xmbAlpha * lastItemAlpha), 0.9, "default", "center", "middle", false, false, false)
+				
+				if ( tonumber(skin) < 100 ) then skin = "0" .. skin end
+				dxDrawImage(cx - 78, cy, 78, 64, "img/" .. skin .. ".png", 0, 0, 0, tocolor(255, 255, 255, alpha * xmbAlpha * lastItemAlpha), false)
+			--[[else
+				cx = mainMenuItems[charactersID]["cx"]
+				dxDrawText(name, cx+20, cy, cx + 30 + dxGetTextWidth(name, 1, "default-bold"), cy + dxGetFontHeight(1, "default-bold"), tocolor(255, 255, 255, alpha * xmbAlpha * 0.6), 1, "default-bold", "center", "middle", false, false, false)
+				dxDrawText(agestring, cx+30, cy+20, cx + 30 + dxGetTextWidth(agestring, 0.9, "default"), cy + 20 + dxGetFontHeight(0.9, "default"), tocolor(255, 255, 255, alpha * xmbAlpha * 0.6), 0.9, "default", "center", "middle", false, false, false)
+				dxDrawText(factionstring, cx+30, cy+40, cx + 30 + dxGetTextWidth(factionstring, 0.9, "default"), cy + 40 + dxGetFontHeight(0.9, "default"), tocolor(255, 255, 255, alpha * xmbAlpha * 0.6), 0.9, "default", "center", "middle", false, false, false)
+				dxDrawText(laststring, cx+30, cy+60, cx + 30 + dxGetTextWidth(laststring, 0.9, "default"), cy + 60 + dxGetFontHeight(0.9, "default"), tocolor(255, 255, 255, alpha * xmbAlpha * 0.6), 0.9, "default", "center", "middle", false, false, false)
+				
+				if ( tonumber(skin) < 100 ) then skin = "0" .. skin end
+				dxDrawImage(cx - 78, cy, 78, 64, "img/" .. skin .. ".png", 0, 0, 0, tocolor(255, 255, 255, alpha * xmbAlpha * 0.6), false)
+			]]end
 		end
-		
-		-- ANIMATIONS
-		if ( round(cy, -1) > round(ty, -1) ) then -- we need to move down!
-			--if ( round(ty, -1) == round((initY - yoffset + 40), -1) ) then -- up top = move faster since we're covering twice the distance
-			--	characterMenu[i]["cy"] = characterMenu[i]["cy"] - 10
-			--else
-				characterMenu[i]["cy"] = characterMenu[i]["cy"] - 10
-			--end
-		end
-		
-		if ( round(cy, -1) < round(ty, -1) ) then -- we need to move up!
-			--if ( round(ty, -1) == round((initY + yoffset + 40), -1) ) then -- up top = move faster since we're covering twice the distance
-			--	characterMenu[i]["cy"] = characterMenu[i]["cy"] + 10
-			--else
-				characterMenu[i]["cy"] = characterMenu[i]["cy"] + 10
-			--end
-		end
-		
-		local gender = characterMenu[i]["gender"]
-		if (gender == 0) then
-			gender = "Male"
-		else
-			gender = "Female"
-		end
-		
-		local agestring = age .. " year old " .. gender
-		local factionstring = faction
-		if (rank ~= nil) then
-			factionstring = rank .. " of '" .. faction .. "'."
-		end
-		
-		local laststring = "Last Seen: Today"
-		if (tonumber(lastseen) > 0) then
-			laststring = "Last Seen: " .. lastseen .. " Days Ago."
-		end
-		
+	else
 		if ( mainMenuItems[currentItem]["text"] == "Characters") then
-			cx = mainMenuItems[currentItem]["cx"]
-			dxDrawText(name, cx+20, cy, cx + 30 + dxGetTextWidth(name, 1, "default-bold"), cy + dxGetFontHeight(1, "default-bold"), tocolor(255, 255, 255, alpha * xmbAlpha * currentItemAlpha), 1, "default-bold", "center", "middle", false, false, false)
-			dxDrawText(agestring, cx+30, cy+20, cx + 30 + dxGetTextWidth(agestring, 0.9, "default"), cy + 20 + dxGetFontHeight(0.9, "default"), tocolor(255, 255, 255, alpha * xmbAlpha * currentItemAlpha), 0.9, "default", "center", "middle", false, false, false)
-			dxDrawText(factionstring, cx+30, cy+40, cx + 30 + dxGetTextWidth(factionstring, 0.9, "default"), cy + 40 + dxGetFontHeight(0.9, "default"), tocolor(255, 255, 255, alpha * xmbAlpha * currentItemAlpha), 0.9, "default", "center", "middle", false, false, false)
-			dxDrawText(laststring, cx+30, cy+60, cx + 30 + dxGetTextWidth(laststring, 0.9, "default"), cy + 60 + dxGetFontHeight(0.9, "default"), tocolor(255, 255, 255, alpha * xmbAlpha * currentItemAlpha), 0.9, "default", "center", "middle", false, false, false)
-			
-			if ( tonumber(skin) < 100 ) then skin = "0" .. skin end
-			dxDrawImage(cx - 78, cy, 78, 64, "img/" .. skin .. ".png", 0, 0, 0, tocolor(255, 255, 255, alpha * xmbAlpha * currentItemAlpha), false)
-		
+			dxDrawImage(mainMenuItems[charactersID]["cx"] + 35, initY + yoffset + 40, 66, 66, "gui/loading.png", loadingImageRotation, 0, 0, tocolor(255, 255, 255, xmbAlpha * currentItemAlpha * 150), false)
+			loadingImageRotation = loadingImageRotation + 5
 		elseif ( mainMenuItems[lastItemLeft]["text"] == "Characters" and lastKey == 1 ) then 
-			cx = mainMenuItems[charactersID]["cx"]
-			dxDrawText(name, cx+20, cy, cx + 30 + dxGetTextWidth(name, 1, "default-bold"), cy + dxGetFontHeight(1, "default-bold"), tocolor(255, 255, 255, alpha * xmbAlpha * lastItemAlpha), 1, "default-bold", "center", "middle", false, false, false)
-			dxDrawText(agestring, cx+30, cy+20, cx + 30 + dxGetTextWidth(agestring, 0.9, "default"), cy + 20 + dxGetFontHeight(0.9, "default"), tocolor(255, 255, 255, alpha * xmbAlpha * lastItemAlpha), 0.9, "default", "center", "middle", false, false, false)
-			dxDrawText(factionstring, cx+30, cy+40, cx + 30 + dxGetTextWidth(factionstring, 0.9, "default"), cy + 40 + dxGetFontHeight(0.9, "default"), tocolor(255, 255, 255, alpha * xmbAlpha * lastItemAlpha), 0.9, "default", "center", "middle", false, false, false)
-			dxDrawText(laststring, cx+30, cy+60, cx + 30 + dxGetTextWidth(laststring, 0.9, "default"), cy + 60 + dxGetFontHeight(0.9, "default"), tocolor(255, 255, 255, alpha * xmbAlpha * lastItemAlpha), 0.9, "default", "center", "middle", false, false, false)
-			
-			if ( tonumber(skin) < 100 ) then skin = "0" .. skin end
-			dxDrawImage(cx - 78, cy, 78, 64, "img/" .. skin .. ".png", 0, 0, 0, tocolor(255, 255, 255, alpha * xmbAlpha * lastItemAlpha), false)
+			dxDrawImage(mainMenuItems[charactersID]["cx"] + 35, initY + yoffset + 40, 66, 66, "gui/loading.png", loadingImageRotation, 0, 0, tocolor(255, 255, 255, xmbAlpha * lastItemAlpha * 150), false)
+			loadingImageRotation = loadingImageRotation + 5
 		elseif ( mainMenuItems[lastItemRight]["text"] == "Characters" and lastKey == 2  ) then
-			cx = mainMenuItems[charactersID]["cx"]
-			dxDrawText(name, cx+20, cy, cx + 30 + dxGetTextWidth(name, 1, "default-bold"), cy + dxGetFontHeight(1, "default-bold"), tocolor(255, 255, 255, alpha * xmbAlpha * lastItemAlpha), 1, "default-bold", "center", "middle", false, false, false)
-			dxDrawText(agestring, cx+30, cy+20, cx + 30 + dxGetTextWidth(agestring, 0.9, "default"), cy + 20 + dxGetFontHeight(0.9, "default"), tocolor(255, 255, 255, alpha * xmbAlpha * lastItemAlpha), 0.9, "default", "center", "middle", false, false, false)
-			dxDrawText(factionstring, cx+30, cy+40, cx + 30 + dxGetTextWidth(factionstring, 0.9, "default"), cy + 40 + dxGetFontHeight(0.9, "default"), tocolor(255, 255, 255, alpha * xmbAlpha * lastItemAlpha), 0.9, "default", "center", "middle", false, false, false)
-			dxDrawText(laststring, cx+30, cy+60, cx + 30 + dxGetTextWidth(laststring, 0.9, "default"), cy + 60 + dxGetFontHeight(0.9, "default"), tocolor(255, 255, 255, alpha * xmbAlpha * lastItemAlpha), 0.9, "default", "center", "middle", false, false, false)
-			
-			if ( tonumber(skin) < 100 ) then skin = "0" .. skin end
-			dxDrawImage(cx - 78, cy, 78, 64, "img/" .. skin .. ".png", 0, 0, 0, tocolor(255, 255, 255, alpha * xmbAlpha * lastItemAlpha), false)
-		--[[else
-			cx = mainMenuItems[charactersID]["cx"]
-			dxDrawText(name, cx+20, cy, cx + 30 + dxGetTextWidth(name, 1, "default-bold"), cy + dxGetFontHeight(1, "default-bold"), tocolor(255, 255, 255, alpha * xmbAlpha * 0.6), 1, "default-bold", "center", "middle", false, false, false)
-			dxDrawText(agestring, cx+30, cy+20, cx + 30 + dxGetTextWidth(agestring, 0.9, "default"), cy + 20 + dxGetFontHeight(0.9, "default"), tocolor(255, 255, 255, alpha * xmbAlpha * 0.6), 0.9, "default", "center", "middle", false, false, false)
-			dxDrawText(factionstring, cx+30, cy+40, cx + 30 + dxGetTextWidth(factionstring, 0.9, "default"), cy + 40 + dxGetFontHeight(0.9, "default"), tocolor(255, 255, 255, alpha * xmbAlpha * 0.6), 0.9, "default", "center", "middle", false, false, false)
-			dxDrawText(laststring, cx+30, cy+60, cx + 30 + dxGetTextWidth(laststring, 0.9, "default"), cy + 60 + dxGetFontHeight(0.9, "default"), tocolor(255, 255, 255, alpha * xmbAlpha * 0.6), 0.9, "default", "center", "middle", false, false, false)
-			
-			if ( tonumber(skin) < 100 ) then skin = "0" .. skin end
-			dxDrawImage(cx - 78, cy, 78, 64, "img/" .. skin .. ".png", 0, 0, 0, tocolor(255, 255, 255, alpha * xmbAlpha * 0.6), false)
-		]]end
+			dxDrawImage(mainMenuItems[charactersID]["cx"] + 35, initY + yoffset + 40, 66, 66, "gui/loading.png", loadingImageRotation, 0, 0, tocolor(255, 255, 255, xmbAlpha * lastItemAlpha * 150), false)
+			loadingImageRotation = loadingImageRotation + 5
+		end
 	end
 end
 
@@ -5004,6 +5026,7 @@ function saveFriends(friends, friendsmessage)
 		tFriends[k+1]["tx"] = initX
 		tFriends[k+1]["ty"] = initY + k*yoffset + 40
 	end
+	loadedFriends = true
 end
 addEvent("returnFriends", true)
 addEventHandler("returnFriends", getRootElement(), saveFriends)
@@ -5042,87 +5065,100 @@ function isSpawned(id)
 end
 
 function drawFriends()
-	for i = 1, #tFriends do
-		local id = tFriends[i]["id"]
-		local name = tFriends[i]["username"]
-		local message = "'" .. tFriends[i]["message"] .. "'"
-		local country = string.lower(tFriends[i]["country"])
-		local online = tFriends[i]["online"]
-		local character = tFriends[i]["character"]
-		local cx = tFriends[i]["cx"]
-		local cy = tFriends[i]["cy"]
-		local tx = tFriends[i]["tx"]
-		local ty = tFriends[i]["ty"]
-		
-		local dist = getDistanceBetweenPoints2D(0, initY + yoffset + 40, 0, cy)
-		
-		local alpha = 255
-		if ( cy < (initY + 2*yoffset)) then
-			alpha = 255 - ( dist/ 2 )
-		else
-			alpha = 255 - (dist / 2)
-		end
-		
-		-- ANIMATIONS
-		if ( round(cy, -1) > round(ty, -1) ) then -- we need to move down!
-			tFriends[i]["cy"] = tFriends[i]["cy"] - 10
-		end
-		
-		if ( round(cy, -1) < round(ty, -1) ) then -- we need to move up!
-			tFriends[i]["cy"] = tFriends[i]["cy"] + 10
-		end
-		
-		local statusText = "Currently Offline"
-		local characterText = nil
-		
-		if (online) then
-			if ( i ~= 1 ) then
-				statusText = "Online Now!"
+	if ( loadedFriends ) then
+		for i = 1, #tFriends do
+			local id = tFriends[i]["id"]
+			local name = tFriends[i]["username"]
+			local message = "'" .. tFriends[i]["message"] .. "'"
+			local country = string.lower(tFriends[i]["country"])
+			local online = tFriends[i]["online"]
+			local character = tFriends[i]["character"]
+			local cx = tFriends[i]["cx"]
+			local cy = tFriends[i]["cy"]
+			local tx = tFriends[i]["tx"]
+			local ty = tFriends[i]["ty"]
+			
+			local dist = getDistanceBetweenPoints2D(0, initY + yoffset + 40, 0, cy)
+			
+			local alpha = 255
+			if ( cy < (initY + 2*yoffset)) then
+				alpha = 255 - ( dist/ 2 )
 			else
-				statusText = "You are Online!"
+				alpha = 255 - (dist / 2)
 			end
 			
-			if ( isSpawned(id) ) then
-				if ( id == getElementData(getLocalPlayer(), "gameaccountid") ) then
-					character = getPlayerName(getLocalPlayer())
+			-- ANIMATIONS
+			if ( round(cy, -1) > round(ty, -1) ) then -- we need to move down!
+				tFriends[i]["cy"] = tFriends[i]["cy"] - 10
+			end
+			
+			if ( round(cy, -1) < round(ty, -1) ) then -- we need to move up!
+				tFriends[i]["cy"] = tFriends[i]["cy"] + 10
+			end
+			
+			local statusText = "Currently Offline"
+			local characterText = nil
+			
+			if (online) then
+				if ( i ~= 1 ) then
+					statusText = "Online Now!"
+				else
+					statusText = "You are Online!"
 				end
-				characterText = "Playing as '" .. character .. "'."
-			else
-				characterText = "Currently at Home Menu"
+				
+				if ( isSpawned(id) ) then
+					if ( id == getElementData(getLocalPlayer(), "gameaccountid") ) then
+						character = getPlayerName(getLocalPlayer())
+					end
+					characterText = "Playing as '" .. character .. "'."
+				else
+					characterText = "Currently at Home Menu"
+				end
+			end
+
+			cx = mainMenuItems[socialID]["cx"]
+			if ( mainMenuItems[currentItem]["text"] == "Social") then
+				dxDrawText(name, cx+20, cy, cx + 30 + dxGetTextWidth(name, 1, "default-bold"), cy + dxGetFontHeight(1, "default-bold"), tocolor(255, 255, 255, alpha * xmbAlpha * currentItemAlpha), 1, "default-bold", "center", "middle", false, false, false)
+				dxDrawText(statusText, cx+30, cy+20, cx + 30 + dxGetTextWidth(statusText, 0.9, "default"), cy + 20 + dxGetFontHeight(0.9, "default"), tocolor(255, 255, 255, alpha * xmbAlpha * currentItemAlpha), 0.9, "default", "center", "middle", false, false, false)
+				dxDrawText(message, cx+30, cy+40, cx + 30 + dxGetTextWidth(message, 0.9, "default"), cy + 40 + dxGetFontHeight(0.9, "default"), tocolor(255, 255, 255, alpha * xmbAlpha * currentItemAlpha), 0.9, "default", "center", "middle", false, false, false)
+				
+				if (characterText) then
+					dxDrawText(characterText, cx+30, cy+60, cx + 30 + dxGetTextWidth(characterText, 0.9, "default"), cy + 40 + dxGetFontHeight(0.9, "default"), tocolor(255, 255, 255, alpha * xmbAlpha * currentItemAlpha), 0.9, "default", "center", "middle", false, false, false)
+				end
+				
+				dxDrawImage(cx - 16, cy, 16, 11, ":social-system/images/flags/" .. country .. ".png", 0, 0, 0, tocolor(255, 255, 255, alpha * xmbAlpha * currentItemAlpha), false)
+			elseif ( mainMenuItems[lastItemLeft]["text"] == "Social" and lastKey == 1 ) then 
+				dxDrawText(name, cx+20, cy, cx + 30 + dxGetTextWidth(name, 1, "default-bold"), cy + dxGetFontHeight(1, "default-bold"), tocolor(255, 255, 255, alpha * xmbAlpha * lastItemAlpha), 1, "default-bold", "center", "middle", false, false, false)
+				dxDrawText(statusText, cx+30, cy+20, cx + 30 + dxGetTextWidth(statusText, 0.9, "default"), cy + 20 + dxGetFontHeight(0.9, "default"), tocolor(255, 255, 255, alpha * xmbAlpha * lastItemAlpha), 0.9, "default", "center", "middle", false, false, false)
+				dxDrawText(message, cx+30, cy+40, cx + 30 + dxGetTextWidth(message, 0.9, "default"), cy + 40 + dxGetFontHeight(0.9, "default"), tocolor(255, 255, 255, alpha * xmbAlpha * lastItemAlpha), 0.9, "default", "center", "middle", false, false, false)
+				
+				if (characterText) then
+					dxDrawText(characterText, cx+30, cy+60, cx + 30 + dxGetTextWidth(characterText, 0.9, "default"), cy + 40 + dxGetFontHeight(0.9, "default"), tocolor(255, 255, 255, alpha * xmbAlpha * lastItemAlpha), 0.9, "default", "center", "middle", false, false, false)
+				end
+				
+				dxDrawImage(cx - 16, cy, 16, 11, ":social-system/images/flags/" .. country .. ".png", 0, 0, 0, tocolor(255, 255, 255, alpha * xmbAlpha * lastItemAlpha), false)
+			elseif ( mainMenuItems[lastItemRight]["text"] == "Social" and lastKey == 2  ) then
+				dxDrawText(name, cx+20, cy, cx + 30 + dxGetTextWidth(name, 1, "default-bold"), cy + dxGetFontHeight(1, "default-bold"), tocolor(255, 255, 255, alpha * xmbAlpha * lastItemAlpha), 1, "default-bold", "center", "middle", false, false, false)
+				dxDrawText(statusText, cx+30, cy+20, cx + 30 + dxGetTextWidth(statusText, 0.9, "default"), cy + 20 + dxGetFontHeight(0.9, "default"), tocolor(255, 255, 255, alpha * xmbAlpha * lastItemAlpha), 0.9, "default", "center", "middle", false, false, false)
+				dxDrawText(message, cx+30, cy+40, cx + 30 + dxGetTextWidth(message, 0.9, "default"), cy + 40 + dxGetFontHeight(0.9, "default"), tocolor(255, 255, 255, alpha * xmbAlpha * lastItemAlpha), 0.9, "default", "center", "middle", false, false, false)
+				
+				if (characterText) then
+					dxDrawText(characterText, cx+30, cy+60, cx + 30 + dxGetTextWidth(characterText, 0.9, "default"), cy + 40 + dxGetFontHeight(0.9, "default"), tocolor(255, 255, 255, alpha * xmbAlpha * lastItemAlpha), 0.9, "default", "center", "middle", false, false, false)
+				end
+				
+				dxDrawImage(cx - 16, cy, 16, 11, ":social-system/images/flags/" .. country .. ".png", 0, 0, 0, tocolor(255, 255, 255, alpha * xmbAlpha * lastItemAlpha), false)
 			end
 		end
-
-		cx = mainMenuItems[socialID]["cx"]
+	else
 		if ( mainMenuItems[currentItem]["text"] == "Social") then
-			dxDrawText(name, cx+20, cy, cx + 30 + dxGetTextWidth(name, 1, "default-bold"), cy + dxGetFontHeight(1, "default-bold"), tocolor(255, 255, 255, alpha * xmbAlpha * currentItemAlpha), 1, "default-bold", "center", "middle", false, false, false)
-			dxDrawText(statusText, cx+30, cy+20, cx + 30 + dxGetTextWidth(statusText, 0.9, "default"), cy + 20 + dxGetFontHeight(0.9, "default"), tocolor(255, 255, 255, alpha * xmbAlpha * currentItemAlpha), 0.9, "default", "center", "middle", false, false, false)
-			dxDrawText(message, cx+30, cy+40, cx + 30 + dxGetTextWidth(message, 0.9, "default"), cy + 40 + dxGetFontHeight(0.9, "default"), tocolor(255, 255, 255, alpha * xmbAlpha * currentItemAlpha), 0.9, "default", "center", "middle", false, false, false)
-			
-			if (characterText) then
-				dxDrawText(characterText, cx+30, cy+60, cx + 30 + dxGetTextWidth(characterText, 0.9, "default"), cy + 40 + dxGetFontHeight(0.9, "default"), tocolor(255, 255, 255, alpha * xmbAlpha * currentItemAlpha), 0.9, "default", "center", "middle", false, false, false)
-			end
-			
-			dxDrawImage(cx - 16, cy, 16, 11, ":social-system/images/flags/" .. country .. ".png", 0, 0, 0, tocolor(255, 255, 255, alpha * xmbAlpha * currentItemAlpha), false)
+			dxDrawImage(mainMenuItems[socialID]["cx"] + 35, initY + yoffset + 40, 66, 66, "gui/loading.png", loadingImageRotation, 0, 0, tocolor(255, 255, 255, xmbAlpha * currentItemAlpha * 150), false)
+			loadingImageRotation = loadingImageRotation + 5
 		elseif ( mainMenuItems[lastItemLeft]["text"] == "Social" and lastKey == 1 ) then 
-			dxDrawText(name, cx+20, cy, cx + 30 + dxGetTextWidth(name, 1, "default-bold"), cy + dxGetFontHeight(1, "default-bold"), tocolor(255, 255, 255, alpha * xmbAlpha * lastItemAlpha), 1, "default-bold", "center", "middle", false, false, false)
-			dxDrawText(statusText, cx+30, cy+20, cx + 30 + dxGetTextWidth(statusText, 0.9, "default"), cy + 20 + dxGetFontHeight(0.9, "default"), tocolor(255, 255, 255, alpha * xmbAlpha * lastItemAlpha), 0.9, "default", "center", "middle", false, false, false)
-			dxDrawText(message, cx+30, cy+40, cx + 30 + dxGetTextWidth(message, 0.9, "default"), cy + 40 + dxGetFontHeight(0.9, "default"), tocolor(255, 255, 255, alpha * xmbAlpha * lastItemAlpha), 0.9, "default", "center", "middle", false, false, false)
-			
-			if (characterText) then
-				dxDrawText(characterText, cx+30, cy+60, cx + 30 + dxGetTextWidth(characterText, 0.9, "default"), cy + 40 + dxGetFontHeight(0.9, "default"), tocolor(255, 255, 255, alpha * xmbAlpha * lastItemAlpha), 0.9, "default", "center", "middle", false, false, false)
-			end
-			
-			dxDrawImage(cx - 16, cy, 16, 11, ":social-system/images/flags/" .. country .. ".png", 0, 0, 0, tocolor(255, 255, 255, alpha * xmbAlpha * lastItemAlpha), false)
+			dxDrawImage(mainMenuItems[socialID]["cx"] + 35, initY + yoffset + 40, 66, 66, "gui/loading.png", loadingImageRotation, 0, 0, tocolor(255, 255, 255, xmbAlpha * lastItemAlpha * 150), false)
+			loadingImageRotation = loadingImageRotation + 5
 		elseif ( mainMenuItems[lastItemRight]["text"] == "Social" and lastKey == 2  ) then
-			dxDrawText(name, cx+20, cy, cx + 30 + dxGetTextWidth(name, 1, "default-bold"), cy + dxGetFontHeight(1, "default-bold"), tocolor(255, 255, 255, alpha * xmbAlpha * lastItemAlpha), 1, "default-bold", "center", "middle", false, false, false)
-			dxDrawText(statusText, cx+30, cy+20, cx + 30 + dxGetTextWidth(statusText, 0.9, "default"), cy + 20 + dxGetFontHeight(0.9, "default"), tocolor(255, 255, 255, alpha * xmbAlpha * lastItemAlpha), 0.9, "default", "center", "middle", false, false, false)
-			dxDrawText(message, cx+30, cy+40, cx + 30 + dxGetTextWidth(message, 0.9, "default"), cy + 40 + dxGetFontHeight(0.9, "default"), tocolor(255, 255, 255, alpha * xmbAlpha * lastItemAlpha), 0.9, "default", "center", "middle", false, false, false)
-			
-			if (characterText) then
-				dxDrawText(characterText, cx+30, cy+60, cx + 30 + dxGetTextWidth(characterText, 0.9, "default"), cy + 40 + dxGetFontHeight(0.9, "default"), tocolor(255, 255, 255, alpha * xmbAlpha * lastItemAlpha), 0.9, "default", "center", "middle", false, false, false)
-			end
-			
-			dxDrawImage(cx - 16, cy, 16, 11, ":social-system/images/flags/" .. country .. ".png", 0, 0, 0, tocolor(255, 255, 255, alpha * xmbAlpha * lastItemAlpha), false)
+			dxDrawImage(mainMenuItems[socialID]["cx"] + 35, initY + yoffset + 40, 66, 66, "gui/loading.png", loadingImageRotation, 0, 0, tocolor(255, 255, 255, xmbAlpha * lastItemAlpha * 150), false)
+			loadingImageRotation = loadingImageRotation + 5
 		end
 	end
 end
@@ -5142,61 +5178,75 @@ function saveAchievements(achievements)
 		tAchievements[k]["tx"] = initX
 		tAchievements[k]["ty"] = initY + k*yoffset + 40
 	end
+	loadedAchievements = true
 end
 addEvent("returnAchievements", true)
 addEventHandler("returnAchievements", getRootElement(), saveAchievements)
 
 function drawAchievements()
-	for i = 1, #tAchievements do
-		local name = tAchievements[i]["name"]
-		local desc = tAchievements[i]["desc"]
-		local points = "Points: " .. tostring(tAchievements[i]["points"])
-		local date = "Unlocked: " .. tostring(tAchievements[i]["date"])
-		local cx = tAchievements[i]["cx"]
-		local cy = tAchievements[i]["cy"]
-		local tx = tAchievements[i]["tx"]
-		local ty = tAchievements[i]["ty"]
-		
-		local dist = getDistanceBetweenPoints2D(0, initY + yoffset + 40, 0, cy)
-		
-		local alpha = 255
-		if ( cy < (initY + 2*yoffset)) then
-			alpha = 255 - ( dist/ 2 )
-		else
-			alpha = 255 - (dist / 2)
-		end
-		
-		-- ANIMATIONS
-		if ( round(cy, -1) > round(ty, -1) ) then -- we need to move down!
-			tAchievements[i]["cy"] = tAchievements[i]["cy"] - 10
-		end
-		
-		if ( round(cy, -1) < round(ty, -1) ) then -- we need to move up!
-			tAchievements[i]["cy"] = tAchievements[i]["cy"] + 10
-		end
+	if ( loadedAchievements ) then
+		for i = 1, #tAchievements do
+			local name = tAchievements[i]["name"]
+			local desc = tAchievements[i]["desc"]
+			local points = "Points: " .. tostring(tAchievements[i]["points"])
+			local date = "Unlocked: " .. tostring(tAchievements[i]["date"])
+			local cx = tAchievements[i]["cx"]
+			local cy = tAchievements[i]["cy"]
+			local tx = tAchievements[i]["tx"]
+			local ty = tAchievements[i]["ty"]
+			
+			local dist = getDistanceBetweenPoints2D(0, initY + yoffset + 40, 0, cy)
+			
+			local alpha = 255
+			if ( cy < (initY + 2*yoffset)) then
+				alpha = 255 - ( dist/ 2 )
+			else
+				alpha = 255 - (dist / 2)
+			end
+			
+			-- ANIMATIONS
+			if ( round(cy, -1) > round(ty, -1) ) then -- we need to move down!
+				tAchievements[i]["cy"] = tAchievements[i]["cy"] - 10
+			end
+			
+			if ( round(cy, -1) < round(ty, -1) ) then -- we need to move up!
+				tAchievements[i]["cy"] = tAchievements[i]["cy"] + 10
+			end
 
-		cx = mainMenuItems[achievementsID]["cx"]
+			cx = mainMenuItems[achievementsID]["cx"]
+			if ( mainMenuItems[currentItem]["text"] == "Achievements") then
+				dxDrawText(name, cx+20, cy, cx + 30 + dxGetTextWidth(name, 1, "default-bold"), cy + dxGetFontHeight(1, "default-bold"), tocolor(255, 255, 255, alpha * xmbAlpha * currentItemAlpha), 1, "default-bold", "center", "middle", false, false, false)
+				dxDrawText(desc, cx+30, cy+20, cx + 30 + dxGetTextWidth(desc, 0.9, "default"), cy + 20 + dxGetFontHeight(0.9, "default"), tocolor(255, 255, 255, alpha * xmbAlpha * currentItemAlpha), 0.9, "default", "center", "middle", false, false, false)
+				dxDrawText(points, cx+30, cy+40, cx + 30 + dxGetTextWidth(points, 0.9, "default"), cy + 40 + dxGetFontHeight(0.9, "default"), tocolor(255, 255, 255, alpha * xmbAlpha * currentItemAlpha), 0.9, "default", "center", "middle", false, false, false)
+				dxDrawText(date, cx+30, cy+60, cx + 30 + dxGetTextWidth(date, 0.9, "default"), cy + 60 + dxGetFontHeight(0.9, "default"), tocolor(255, 255, 255, alpha * xmbAlpha * currentItemAlpha), 0.9, "default", "center", "middle", false, false, false)
+				
+				dxDrawImage(cx - 78, cy, 78, 64, ":achievement-system/achievement.png", 0, 0, 0, tocolor(255, 255, 255, alpha * xmbAlpha * currentItemAlpha), false)
+			elseif ( mainMenuItems[lastItemLeft]["text"] == "Achievements" and lastKey == 1 ) then 
+				dxDrawText(name, cx+20, cy, cx + 30 + dxGetTextWidth(name, 1, "default-bold"), cy + dxGetFontHeight(1, "default-bold"), tocolor(255, 255, 255, alpha * xmbAlpha * lastItemAlpha), 1, "default-bold", "center", "middle", false, false, false)
+				dxDrawText(desc, cx+30, cy+20, cx + 30 + dxGetTextWidth(desc, 0.9, "default"), cy + 20 + dxGetFontHeight(0.9, "default"), tocolor(255, 255, 255, alpha * xmbAlpha * lastItemAlpha), 0.9, "default", "center", "middle", false, false, false)
+				dxDrawText(points, cx+30, cy+40, cx + 30 + dxGetTextWidth(points, 0.9, "default"), cy + 40 + dxGetFontHeight(0.9, "default"), tocolor(255, 255, 255, alpha * xmbAlpha * lastItemAlpha), 0.9, "default", "center", "middle", false, false, false)
+				dxDrawText(date, cx+30, cy+60, cx + 30 + dxGetTextWidth(date, 0.9, "default"), cy + 60 + dxGetFontHeight(0.9, "default"), tocolor(255, 255, 255, alpha * xmbAlpha * lastItemAlpha), 0.9, "default", "center", "middle", false, false, false)
+				
+				dxDrawImage(cx - 78, cy, 78, 64, ":achievement-system/achievement.png", 0, 0, 0, tocolor(255, 255, 255, alpha * xmbAlpha * lastItemAlpha), false)
+			elseif ( mainMenuItems[lastItemRight]["text"] == "Achievements" and lastKey == 2  ) then
+				dxDrawText(name, cx+20, cy, cx + 30 + dxGetTextWidth(name, 1, "default-bold"), cy + dxGetFontHeight(1, "default-bold"), tocolor(255, 255, 255, alpha * xmbAlpha * lastItemAlpha), 1, "default-bold", "center", "middle", false, false, false)
+				dxDrawText(desc, cx+30, cy+20, cx + 30 + dxGetTextWidth(desc, 0.9, "default"), cy + 20 + dxGetFontHeight(0.9, "default"), tocolor(255, 255, 255, alpha * xmbAlpha * lastItemAlpha), 0.9, "default", "center", "middle", false, false, false)
+				dxDrawText(points, cx+30, cy+40, cx + 30 + dxGetTextWidth(points, 0.9, "default"), cy + 40 + dxGetFontHeight(0.9, "default"), tocolor(255, 255, 255, alpha * xmbAlpha * lastItemAlpha), 0.9, "default", "center", "middle", false, false, false)
+				dxDrawText(date, cx+30, cy+60, cx + 30 + dxGetTextWidth(date, 0.9, "default"), cy + 60 + dxGetFontHeight(0.9, "default"), tocolor(255, 255, 255, alpha * xmbAlpha * lastItemAlpha), 0.9, "default", "center", "middle", false, false, false)
+				
+				dxDrawImage(cx - 78, cy, 78, 64, ":achievement-system/achievement.png", 0, 0, 0, tocolor(255, 255, 255, alpha * xmbAlpha * lastItemAlpha), false)
+			end
+		end
+	else
 		if ( mainMenuItems[currentItem]["text"] == "Achievements") then
-			dxDrawText(name, cx+20, cy, cx + 30 + dxGetTextWidth(name, 1, "default-bold"), cy + dxGetFontHeight(1, "default-bold"), tocolor(255, 255, 255, alpha * xmbAlpha * currentItemAlpha), 1, "default-bold", "center", "middle", false, false, false)
-			dxDrawText(desc, cx+30, cy+20, cx + 30 + dxGetTextWidth(desc, 0.9, "default"), cy + 20 + dxGetFontHeight(0.9, "default"), tocolor(255, 255, 255, alpha * xmbAlpha * currentItemAlpha), 0.9, "default", "center", "middle", false, false, false)
-			dxDrawText(points, cx+30, cy+40, cx + 30 + dxGetTextWidth(points, 0.9, "default"), cy + 40 + dxGetFontHeight(0.9, "default"), tocolor(255, 255, 255, alpha * xmbAlpha * currentItemAlpha), 0.9, "default", "center", "middle", false, false, false)
-			dxDrawText(date, cx+30, cy+60, cx + 30 + dxGetTextWidth(date, 0.9, "default"), cy + 60 + dxGetFontHeight(0.9, "default"), tocolor(255, 255, 255, alpha * xmbAlpha * currentItemAlpha), 0.9, "default", "center", "middle", false, false, false)
-			
-			dxDrawImage(cx - 78, cy, 78, 64, ":achievement-system/achievement.png", 0, 0, 0, tocolor(255, 255, 255, alpha * xmbAlpha * currentItemAlpha), false)
+			dxDrawImage(mainMenuItems[achievementsID]["cx"] + 35, initY + yoffset + 40, 66, 66, "gui/loading.png", loadingImageRotation, 0, 0, tocolor(255, 255, 255, xmbAlpha * currentItemAlpha * 150), false)
+			loadingImageRotation = loadingImageRotation + 5
 		elseif ( mainMenuItems[lastItemLeft]["text"] == "Achievements" and lastKey == 1 ) then 
-			dxDrawText(name, cx+20, cy, cx + 30 + dxGetTextWidth(name, 1, "default-bold"), cy + dxGetFontHeight(1, "default-bold"), tocolor(255, 255, 255, alpha * xmbAlpha * lastItemAlpha), 1, "default-bold", "center", "middle", false, false, false)
-			dxDrawText(desc, cx+30, cy+20, cx + 30 + dxGetTextWidth(desc, 0.9, "default"), cy + 20 + dxGetFontHeight(0.9, "default"), tocolor(255, 255, 255, alpha * xmbAlpha * lastItemAlpha), 0.9, "default", "center", "middle", false, false, false)
-			dxDrawText(points, cx+30, cy+40, cx + 30 + dxGetTextWidth(points, 0.9, "default"), cy + 40 + dxGetFontHeight(0.9, "default"), tocolor(255, 255, 255, alpha * xmbAlpha * lastItemAlpha), 0.9, "default", "center", "middle", false, false, false)
-			dxDrawText(date, cx+30, cy+60, cx + 30 + dxGetTextWidth(date, 0.9, "default"), cy + 60 + dxGetFontHeight(0.9, "default"), tocolor(255, 255, 255, alpha * xmbAlpha * lastItemAlpha), 0.9, "default", "center", "middle", false, false, false)
-			
-			dxDrawImage(cx - 78, cy, 78, 64, ":achievement-system/achievement.png", 0, 0, 0, tocolor(255, 255, 255, alpha * xmbAlpha * lastItemAlpha), false)
+			dxDrawImage(mainMenuItems[achievementsID]["cx"] + 35, initY + yoffset + 40, 66, 66, "gui/loading.png", loadingImageRotation, 0, 0, tocolor(255, 255, 255, xmbAlpha * lastItemAlpha * 150), false)
+			loadingImageRotation = loadingImageRotation + 5
 		elseif ( mainMenuItems[lastItemRight]["text"] == "Achievements" and lastKey == 2  ) then
-			dxDrawText(name, cx+20, cy, cx + 30 + dxGetTextWidth(name, 1, "default-bold"), cy + dxGetFontHeight(1, "default-bold"), tocolor(255, 255, 255, alpha * xmbAlpha * lastItemAlpha), 1, "default-bold", "center", "middle", false, false, false)
-			dxDrawText(desc, cx+30, cy+20, cx + 30 + dxGetTextWidth(desc, 0.9, "default"), cy + 20 + dxGetFontHeight(0.9, "default"), tocolor(255, 255, 255, alpha * xmbAlpha * lastItemAlpha), 0.9, "default", "center", "middle", false, false, false)
-			dxDrawText(points, cx+30, cy+40, cx + 30 + dxGetTextWidth(points, 0.9, "default"), cy + 40 + dxGetFontHeight(0.9, "default"), tocolor(255, 255, 255, alpha * xmbAlpha * lastItemAlpha), 0.9, "default", "center", "middle", false, false, false)
-			dxDrawText(date, cx+30, cy+60, cx + 30 + dxGetTextWidth(date, 0.9, "default"), cy + 60 + dxGetFontHeight(0.9, "default"), tocolor(255, 255, 255, alpha * xmbAlpha * lastItemAlpha), 0.9, "default", "center", "middle", false, false, false)
-			
-			dxDrawImage(cx - 78, cy, 78, 64, ":achievement-system/achievement.png", 0, 0, 0, tocolor(255, 255, 255, alpha * xmbAlpha * lastItemAlpha), false)
+			dxDrawImage(mainMenuItems[achievementsID]["cx"] + 35, initY + yoffset + 40, 66, 66, "gui/loading.png", loadingImageRotation, 0, 0, tocolor(255, 255, 255, xmbAlpha * lastItemAlpha * 150), false)
+			loadingImageRotation = loadingImageRotation + 5
 		end
 	end
 end
@@ -5262,6 +5312,7 @@ function saveCharacters(characters)
 		characterMenu[k]["tx"] = initX
 		characterMenu[k]["ty"] = initY + k*yoffset + 40
 	end
+	loadedCharacters = true
 end
 addEvent("showCharacterSelection", true)
 addEventHandler("showCharacterSelection", getRootElement(), saveCharacters)
