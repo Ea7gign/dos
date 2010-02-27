@@ -492,3 +492,11 @@ function deleteAll( itemID, itemValue )
 		return false
 	end
 end
+
+--
+
+addCommandHandler( "fixinventory", 
+	function( element )
+		sendItems( element, element )
+	end
+)
