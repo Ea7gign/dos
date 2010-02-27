@@ -1,30 +1,5 @@
--- ////////////////////////////////////
--- //			MYSQL				 //
--- ////////////////////////////////////		
-sqlUsername = exports.mysql:getMySQLUsername()
-sqlPassword = exports.mysql:getMySQLPassword()
-sqlDB = exports.mysql:getMySQLDBName()
-sqlHost = exports.mysql:getMySQLHost()
-sqlPort = exports.mysql:getMySQLPort()
+mysql = exports.mysql
 
-handler = mysql_connect(sqlHost, sqlUsername, sqlPassword, sqlDB, sqlPort)
-
-function checkMySQL()
-	if not (mysql_ping(handler)) then
-		handler = mysql_connect(sqlHost, sqlUsername, sqlPassword, sqlDB, sqlPort)
-	end
-end
-setTimer(checkMySQL, 300000, 0)
-
-function closeMySQL()
-	if (handler) then
-		mysql_close(handler)
-	end
-end
-addEventHandler("onResourceStop", getResourceRootElement(getThisResource()), closeMySQL)
--- ////////////////////////////////////
--- //			MYSQL END			 //
--- ////////////////////////////////////
 armoredCars = { [427]=true, [528]=true, [432]=true, [601]=true, [428]=true, [597]=true } -- Enforcer, FBI Truck, Rhino, SWAT Tank, Securicar, SFPD Car
 governmentVehicle = { [416]=true, [427]=true, [490]=true, [528]=true, [407]=true, [544]=true, [523]=true, [596]=true, [597]=true, [598]=true, [599]=true, [601]=true, [428]=true }
 
@@ -34,12 +9,9 @@ function createSpray(thePlayer, commandName)
 		local interior = getElementInterior(thePlayer)
 		local dimension = getElementDimension(thePlayer)
 		
-		local query = mysql_query(handler, "INSERT INTO paynspray SET x='"  .. x .. "', y='" .. y .. "', z='" .. z .. "', interior='" .. interior .. "', dimension='" .. dimension .. "'")
+		local id = mysql:query_insert_free(handler, "INSERT INTO paynspray SET x='"  .. x .. "', y='" .. y .. "', z='" .. z .. "', interior='" .. interior .. "', dimension='" .. dimension .. "'")
 		
-		if (query) then
-			local id = mysql_insert_id(handler)
-			mysql_free_result(query)
-			
+		if (id) then		
 			local shape = createColSphere(x, y, z, 5)
 			exports.pool:allocateElement(shape)
 			setElementInterior(shape, interior)
@@ -58,19 +30,25 @@ end
 addCommandHandler("makepaynspray", createSpray, false, false)
 
 function loadAllSprays(res)
-	local result = mysql_query(handler, "SELECT id, x, y, z, interior, dimension FROM paynspray")
+	local result = mysql:query("SELECT id, x, y, z, interior, dimension FROM paynspray")
 	local count = 0
 	
 	if (result) then
-		for result, row in mysql_rows(result) do
-			local id = tonumber(row[1])
+		local continue = true
+		while continue do
+			local row = mysql:fetch_assoc(result)
+			if not row then
+				break
+			end
+		
+			local id = tonumber(row["id"])
 				
-			local x = tonumber(row[2])
-			local y = tonumber(row[3])
-			local z = tonumber(row[4])
+			local x = tonumber(row["x"])
+			local y = tonumber(row["y"])
+			local z = tonumber(row["z"])
 				
-			local interior = tonumber(row[5])
-			local dimension = tonumber(row[6])
+			local interior = tonumber(row["interior")
+			local dimension = tonumber(row["dimension"])
 			
 			local sprayblip = createBlip(x, y, z, 63, 2, 255, 0, 0, 255, 0, 300)
 			exports.pool:allocateElement(sprayblip)
@@ -83,9 +61,8 @@ function loadAllSprays(res)
 				
 			count = count + 1
 		end
-		mysql_free_result(result)
+		mysql:free_result(result)
 	end
-	exports.irc:sendMessage("[SCRIPT] Loaded " .. count .. " Pay n Sprays.")
 end
 addEventHandler("onResourceStart", getResourceRootElement(), loadAllSprays)
 
@@ -124,11 +101,7 @@ function delSpray(thePlayer, commandName)
 		
 		if (colShape) then
 			local id = getElementData(colShape, "dbid")
-			local result = mysql_query(handler, "DELETE FROM paynspray WHERE id='" .. id .. "'")
-			
-			if (result) then
-				mysql_free_result(result)
-			end
+			mysql:query_free("DELETE FROM paynspray WHERE id='" .. id .. "'")
 			
 			outputChatBox("Pay n Spray #" .. id .. " deleted.", thePlayer)
 			exports.irc:sendMessage(getPlayerName(thePlayer) .. " deleted Pay n Spray #" .. id .. ".")
