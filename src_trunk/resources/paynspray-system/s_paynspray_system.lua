@@ -9,7 +9,7 @@ function createSpray(thePlayer, commandName)
 		local interior = getElementInterior(thePlayer)
 		local dimension = getElementDimension(thePlayer)
 		
-		local id = mysql:query_insert_free(handler, "INSERT INTO paynspray SET x='"  .. x .. "', y='" .. y .. "', z='" .. z .. "', interior='" .. interior .. "', dimension='" .. dimension .. "'")
+		local id = mysql:query_insert_free("INSERT INTO paynspray SET x='"  .. x .. "', y='" .. y .. "', z='" .. z .. "', interior='" .. interior .. "', dimension='" .. dimension .. "'")
 		
 		if (id) then		
 			local shape = createColSphere(x, y, z, 5)
@@ -47,7 +47,7 @@ function loadAllSprays(res)
 			local y = tonumber(row["y"])
 			local z = tonumber(row["z"])
 				
-			local interior = tonumber(row["interior")
+			local interior = tonumber(row["interior"])
 			local dimension = tonumber(row["dimension"])
 			
 			local sprayblip = createBlip(x, y, z, 63, 2, 255, 0, 0, 255, 0, 300)
