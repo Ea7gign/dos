@@ -111,7 +111,7 @@ function savePlayer(reason, player)
 			zone = "Unknown"
 		end
 		
-		local update = mysql:query_free("UPDATE characters SET x='" .. x .. "', y='" .. y .. "', z='" .. z .. "', rotation='" .. rot .. "', health='" .. health .. "', armor='" .. armor .. "', dimension_id='" .. dimension .. "', interior_id='" .. interior .. "', " .. money .. businessprofit .. "lastlogin=NOW(), lastarea='" .. mysql_escape_string(handler, zone) .. "', timeinserver='" .. timeinserver .. "' WHERE id=" .. getElementData(source, "dbid"))
+		local update = mysql:query_free("UPDATE characters SET x='" .. x .. "', y='" .. y .. "', z='" .. z .. "', rotation='" .. rot .. "', health='" .. health .. "', armor='" .. armor .. "', dimension_id='" .. dimension .. "', interior_id='" .. interior .. "', " .. money .. businessprofit .. "lastlogin=NOW(), lastarea='" .. mysql:escape_string(zone) .. "', timeinserver='" .. timeinserver .. "' WHERE id=" .. getElementData(source, "dbid"))
 		if not (update) then
 			outputDebugString( "Saveplayer Update: " .. mysql_error( handler ) )
 		end
