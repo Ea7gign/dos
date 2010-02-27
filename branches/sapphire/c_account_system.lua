@@ -4571,7 +4571,7 @@ end
 
 keyTimer = nil
 function moveRight()
-	if ( mainMenuItems[#mainMenuItems - 1]["tx"] > initX ) then -- can move left
+	if ( round(mainMenuItems[#mainMenuItems - 1]["tx"], -1) > initX ) then -- can move left
 		for i = 1, #mainMenuItems - 1 do
 			mainMenuItems[i]["tx"] = mainMenuItems[i]["tx"] - xoffset
 			
