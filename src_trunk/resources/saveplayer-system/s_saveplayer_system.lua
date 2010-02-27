@@ -1,34 +1,4 @@
--- ////////////////////////////////////
--- //			MYSQL				 //
--- ////////////////////////////////////		
-sqlUsername = exports.mysql:getMySQLUsername()
-sqlPassword = exports.mysql:getMySQLPassword()
-sqlDB = exports.mysql:getMySQLDBName()
-sqlHost = exports.mysql:getMySQLHost()
-sqlPort = exports.mysql:getMySQLPort()
-
-handler = mysql_connect(sqlHost, sqlUsername, sqlPassword, sqlDB, sqlPort)
-
-function checkMySQL()
-	if not (mysql_ping(handler)) then
-		handler = mysql_connect(sqlHost, sqlUsername, sqlPassword, sqlDB, sqlPort)
-	end
-end
-setTimer(checkMySQL, 300000, 0)
-
-function closeMySQL()
-	for key, value in ipairs(exports.pool:getPoolElementsByType("player")) do
-		triggerEvent("savePlayer", value, "Save All")
-	end
-	if (handler) then
-		mysql_close(handler)
-	end
-end
-addEventHandler("onResourceStop", getResourceRootElement(getThisResource()), closeMySQL)
--- ////////////////////////////////////
--- //			MYSQL END			 //
--- ////////////////////////////////////
-
+mysql = exports.mysql
 tweapons = { }
 
 function initWeapons()
@@ -50,15 +20,13 @@ function saveWeapons(thePlayer)
 		cleanWeapons(thePlayer)
 		
 		if (weapons~=false) and (ammo~=false) then
-			local query = mysql_query(handler, "UPDATE characters SET weapons='" .. weapons .. "', ammo='" .. ammo .. "' WHERE id='" .. getElementData(source, "dbid") .. "'")
-			mysql_free_result(query)
+			mysql:query_free("UPDATE characters SET weapons='" .. weapons .. "', ammo='" .. ammo .. "' WHERE id='" .. getElementData(source, "dbid") .. "'")
 		end
 	end
 end
 
 local count = 1
 function syncWeapons(weapons, ammo)
-	--outputDebugString("Got weapon sync packet #" .. count .. " FROM: " .. getPlayerName(source))
 	count = count + 1
 	tweapons[source] = { weapons, ammo }
 end
@@ -143,21 +111,15 @@ function savePlayer(reason, player)
 			zone = "Unknown"
 		end
 		
-		local update = mysql_query(handler, "UPDATE characters SET x='" .. x .. "', y='" .. y .. "', z='" .. z .. "', rotation='" .. rot .. "', health='" .. health .. "', armor='" .. armor .. "', dimension_id='" .. dimension .. "', interior_id='" .. interior .. "', " .. money .. businessprofit .. "lastlogin=NOW(), lastarea='" .. mysql_escape_string(handler, zone) .. "', timeinserver='" .. timeinserver .. "' WHERE id=" .. getElementData(source, "dbid"))
-		if (update) then
-			mysql_free_result(update)
-		else
+		local update = mysql:query_free("UPDATE characters SET x='" .. x .. "', y='" .. y .. "', z='" .. z .. "', rotation='" .. rot .. "', health='" .. health .. "', armor='" .. armor .. "', dimension_id='" .. dimension .. "', interior_id='" .. interior .. "', " .. money .. businessprofit .. "lastlogin=NOW(), lastarea='" .. mysql_escape_string(handler, zone) .. "', timeinserver='" .. timeinserver .. "' WHERE id=" .. getElementData(source, "dbid"))
+		if not (update) then
 			outputDebugString( "Saveplayer Update: " .. mysql_error( handler ) )
 		end
 		
-		local update2 = mysql_query(handler, "UPDATE accounts SET lastlogin=NOW() WHERE id = " .. getElementData(source,"gameaccountid"))
-		if (update2) then
-			mysql_free_result(update2)
-		else
+		local update2 = mysql:query_free("UPDATE accounts SET lastlogin=NOW() WHERE id = " .. getElementData(source,"gameaccountid"))
+		if not (update2) then
 			outputDebugString( "Saveplayer Update2: " .. mysql_error( handler2 ) )
 		end
-		
-		--outputDebugString("Saved player '" .. getPlayerName(source) .. "' [" .. reason .. "].")
 	end
 end
 addEventHandler("onPlayerQuit", getRootElement(), savePlayer)
