@@ -377,9 +377,9 @@ function crackAnimation(thePlayer, cmd, arg)
 	if (logged==1) then
 		if arg == 2 then
 			exports.global:applyAnimation( thePlayer, "CRACK", "crckidle1", -1, true, false, false)
-		if arg == 3 then
+		elseif arg == 3 then
 			exports.global:applyAnimation( thePlayer, "CRACK", "crckidle3", -1, true, false, false)
-		if arg == 4 then
+		elseif arg == 4 then
 			exports.global:applyAnimation( thePlayer, "CRACK", "crckidle4", -1, true, false, false)
 		else
 			exports.global:applyAnimation( thePlayer, "CRACK", "crckidle2", -1, true, false, false)
