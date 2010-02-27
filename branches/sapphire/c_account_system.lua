@@ -4167,10 +4167,18 @@ local lastItemAlpha = 1.0
 local loadedCharacters = false
 local loadedAchievements = false
 local loadedFriends = false
+local loadedAccount = false
+local loadedHelp = false
+local loadedSettings = false
 local loadingImageRotation = 0
+
+local mtaUsername = nil
+local MTAaccountTimer = nil
 
 local tFriends =  { }
 local tAchievements =  { }
+local tAccount = { }
+local tHelp = { }
 
 local currentVerticalItem = 1
 lastKey = 0
@@ -4219,6 +4227,9 @@ function drawBG()
 		drawCharacters()
 		drawAchievements()
 		drawFriends()
+		drawAccount()
+		drawSettings()
+		drawHelp()
 		
 		if (lastItemAlpha > 0.0) then
 			lastItemAlpha = lastItemAlpha - 0.05
@@ -4667,6 +4678,23 @@ function moveDown()
 			keyTimer = setTimer(checkKeyState, 200, 1, "arrow_d")
 			lastKey = 3
 		end
+		
+	-- ACCOUNT
+	elseif ( currentItem == accountID ) then
+		if ( tAccount[#tAccount]["ty"] > (initY + yoffset + 40) ) then -- can move up
+			lastItemAlpha = 1.0
+			for i = 1, #tAccount do
+				if ( round(tAccount[i]["ty"], -1) == round(initY + xoffset, -1) ) then -- its selected
+					tAccount[i]["ty"] = tAccount[i]["ty"] - 2*yoffset
+				elseif ( round(tAccount[i]["ty"], -1) < round(initY + xoffset, -1) ) then -- its in the no mans land
+					tAccount[i]["ty"] = tAccount[i]["ty"] - 2*yoffset
+				else
+					tAccount[i]["ty"] = tAccount[i]["ty"] - yoffset
+				end
+			end
+			keyTimer = setTimer(checkKeyState, 200, 1, "arrow_d")
+			lastKey = 3
+		end
 	end
 end
 
@@ -4731,6 +4759,25 @@ function moveUp()
 					tFriends[i]["ty"] = tFriends[i]["ty"] + 2*yoffset
 				else
 					tFriends[i]["ty"] = tFriends[i]["ty"] + yoffset
+				end
+			end
+			keyTimer = setTimer(checkKeyState, 200, 1, "arrow_u")
+			lastKey = 4
+		end
+		
+	-- ACCOUNT
+	elseif ( currentItem == accountID ) then
+		if ( tAccount[1]["ty"] < (initY + yoffset + 40) ) then -- can move down
+			local selIndex = nil
+			for k = 1, #tAccount do
+				local i = #tAccount - (k - 1)
+				if ( round(tAccount[i]["ty"], -1) == round(initY + xoffset, -1) ) then -- its selected
+					tAccount[i]["ty"] = tAccount[i]["ty"] + yoffset
+					selIndex = i - 1
+				elseif (i == selIndex) then -- new selected
+					tAccount[i]["ty"] = tAccount[i]["ty"] + 2*yoffset
+				else
+					tAccount[i]["ty"] = tAccount[i]["ty"] + yoffset
 				end
 			end
 			keyTimer = setTimer(checkKeyState, 200, 1, "arrow_u")
@@ -5251,6 +5298,228 @@ function drawAchievements()
 	end
 end
 
+function checkForMTAAccount()
+	--[[
+	if ( getPlayerUserName() ) then
+		outputDebugString("DETECTED MTA ACCOUNT: " .. getPlayerUserName())
+		mtaUsername = getPlayerUserName()
+		triggerServerEvent("storeMTAUsername", getLocalPlayer())
+		killTimer(MTAaccountTimer)
+		MTAaccountTimer = nil
+		
+		tAccount[1]["title"] = "MTA Account"
+		tAccount[1]["text"] = tostring(getPlayerUserName())
+	end
+	]]--
+end
+
+local friendAlertUsername = nil
+local friendAlertTimer = nil
+local friendAlertAlpha = 0
+local friendAlertFadeIn = true
+local friendAlertVisible = false
+function showFriendOnline(username)
+	if ( friendAlertVisible ) then
+		hideFriendAlert()
+		removeEventHandler("onClientRender", getRootElement(), showFriendAlert)
+	end
+	
+	-- disable hud elements
+	showPlayerHudComponent("clock", false)
+	showPlayerHudComponent("weapon", false)
+	showPlayerHudComponent("ammo", false)
+	showPlayerHudComponent("health", false)
+	showPlayerHudComponent("armour", false)
+	showPlayerHudComponent("breath", false)
+	showPlayerHudComponent("money", false)
+
+	friendAlertVisible = true
+	friendAlertFadeIn = true
+	friendAlertUsername = username
+	friendAlertAlpha = 0
+	addEventHandler("onClientRender", getRootElement(), showFriendAlert)
+end
+
+function showFriendOnlineFake(key, state, name)
+	showFriendOnline(name)
+end
+bindKey("F5", "down", showFriendOnlineFake, "Chamberlain")
+bindKey("F6", "down", showFriendOnlineFake, "Fox")
+bindKey("F7", "down", showFriendOnlineFake, "smellsliketeenspirit91")
+
+function hideFriendAlert()
+	if ( isTimer(friendAlertTimer) ) then
+		killTimer(friendAlertTimer)
+		friendAlertTimer = nil
+	end
+	
+	friendAlertFadeIn = false
+end
+
+function showFriendAlert()
+	if ( friendAlertAlpha < 150 and friendAlertFadeIn ) then
+		friendAlertAlpha = friendAlertAlpha + 5
+	elseif ( friendAlertAlpha > 0 and not friendAlertFadeIn ) then
+		friendAlertAlpha = friendAlertAlpha - 5
+	end
+	
+	if ( friendAlertAlpha >= 150 and friendAlertFadeIn and not isTimer(friendAlertTimer) ) then
+		friendAlertTimer = setTimer(hideFriendAlert, 3000, 1)
+	elseif ( friendAlertAlpha <= 0 and not friendAlertFadeIn ) then
+		-- enable hud elements
+		showPlayerHudComponent("clock", true)
+		showPlayerHudComponent("weapon", true)
+		showPlayerHudComponent("ammo", true)
+		showPlayerHudComponent("health", true)
+		showPlayerHudComponent("armour", true)
+		showPlayerHudComponent("breath", true)
+		showPlayerHudComponent("money", true)
+		
+		friendAlertAlpha = 0
+		removeEventHandler("onClientRender", getRootElement(), showFriendAlert)
+		
+		friendAlertVisible = false
+	end
+	
+	dxDrawRectangle(width - xoffset*2, 30, xoffset*1.9, 120, tocolor(0, 0, 0, friendAlertAlpha), false)
+	
+	local x = width - xoffset*2
+	local y = 30
+	dxDrawText(friendAlertUsername, x+10, y+10, x + xoffset*1.9, y + 120, tocolor(0,0,0, friendAlertAlpha + 50), 2, "sans", "center", "center", false, false, false)
+	dxDrawText(friendAlertUsername, x, y, x + xoffset*1.9, y + 120, tocolor(255, 255, 255, friendAlertAlpha + 50), 2, "sans", "center", "center", false, false, false)
+
+	local x = width - xoffset*1.6
+	local y = 20 + dxGetFontHeight(2, "sans")
+	dxDrawText("has just signed in.", x+10, y+10, x + xoffset*1.8, y + 120, tocolor(0,0,0, friendAlertAlpha + 50), 1, "sans", "center", "center", false, false, false)
+	dxDrawText("has just signed in.", x, y, x + xoffset*1.8, y + 120, tocolor(255, 255, 255, friendAlertAlpha + 50), 1, "sans", "center", "center", false, false, false)
+end
+	
+
+function drawAccount()
+	if ( loadedAccount ) then
+		for i = 1, #tAccount do
+			local title = tAccount[i]["title"]
+			local text = tAccount[i]["text"]
+			local cx = tAccount[i]["cx"]
+			local cy = tAccount[i]["cy"]
+			local tx = tAccount[i]["tx"]
+			local ty = tAccount[i]["ty"]
+			
+			local dist = getDistanceBetweenPoints2D(0, initY + yoffset + 40, 0, cy)
+			
+			local alpha = 255
+			if ( cy < (initY + 2*yoffset)) then
+				alpha = 255 - ( dist/ 2 )
+			else
+				alpha = 255 - (dist / 2)
+			end
+			
+			-- ANIMATIONS
+			if ( round(cy, -1) > round(ty, -1) ) then -- we need to move down!
+				tAccount[i]["cy"] = tAccount[i]["cy"] - 10
+			end
+			
+			if ( round(cy, -1) < round(ty, -1) ) then -- we need to move up!
+				tAccount[i]["cy"] = tAccount[i]["cy"] + 10
+			end
+
+			cx = mainMenuItems[accountID]["cx"]
+			if ( mainMenuItems[currentItem]["text"] == "Account") then
+				dxDrawText(title, cx+20, cy, cx + 30 + dxGetTextWidth(title, 1, "default-bold"), cy + dxGetFontHeight(1, "default-bold"), tocolor(255, 255, 255, alpha * xmbAlpha * currentItemAlpha), 1, "default-bold", "center", "middle", false, false, false)
+				dxDrawText(text, cx+30, cy+20, cx + 30 + dxGetTextWidth(text, 0.9, "default"), cy + 20 + dxGetFontHeight(0.9, "default"), tocolor(255, 255, 255, alpha * xmbAlpha * currentItemAlpha), 0.9, "default", "left", "middle", false, false, false)
+			elseif ( mainMenuItems[lastItemLeft]["text"] == "Account" and lastKey == 1 ) then 
+				dxDrawText(title, cx+20, cy, cx + 30 + dxGetTextWidth(title, 1, "default-bold"), cy + dxGetFontHeight(1, "default-bold"), tocolor(255, 255, 255, alpha * xmbAlpha * lastItemAlpha), 1, "default-bold", "center", "middle", false, false, false)
+				dxDrawText(text, cx+30, cy+20, cx + 30 + dxGetTextWidth(text, 0.9, "default"), cy + 20 + dxGetFontHeight(0.9, "default"), tocolor(255, 255, 255, alpha * xmbAlpha * lastItemAlpha), 0.9, "default", "left", "middle", false, false, false)
+			elseif ( mainMenuItems[lastItemRight]["text"] == "Account" and lastKey == 2  ) then
+				dxDrawText(title, cx+20, cy, cx + 30 + dxGetTextWidth(title, 1, "default-bold"), cy + dxGetFontHeight(1, "default-bold"), tocolor(255, 255, 255, alpha * xmbAlpha * lastItemAlpha), 1, "default-bold", "center", "middle", false, false, false)
+				dxDrawText(text, cx+30, cy+20, cx + 30 + dxGetTextWidth(text, 0.9, "default"), cy + 20 + dxGetFontHeight(0.9, "default"), tocolor(255, 255, 255, alpha * xmbAlpha * lastItemAlpha), 0.9, "default", "left", "middle", false, false, false)
+			end
+		end
+	else
+		if ( mainMenuItems[currentItem]["text"] == "Account") then
+			dxDrawImage(mainMenuItems[accountID]["cx"] + 35, initY + yoffset + 40, 66, 66, "gui/loading.png", loadingImageRotation, 0, 0, tocolor(255, 255, 255, xmbAlpha * currentItemAlpha * 150), false)
+			loadingImageRotation = loadingImageRotation + 5
+		elseif ( mainMenuItems[lastItemLeft]["text"] == "Account" and lastKey == 1 ) then 
+			dxDrawImage(mainMenuItems[accountID]["cx"] + 35, initY + yoffset + 40, 66, 66, "gui/loading.png", loadingImageRotation, 0, 0, tocolor(255, 255, 255, xmbAlpha * lastItemAlpha * 150), false)
+			loadingImageRotation = loadingImageRotation + 5
+		elseif ( mainMenuItems[lastItemRight]["text"] == "Account" and lastKey == 2  ) then
+			dxDrawImage(mainMenuItems[accountID]["cx"] + 35, initY + yoffset + 40, 66, 66, "gui/loading.png", loadingImageRotation, 0, 0, tocolor(255, 255, 255, xmbAlpha * lastItemAlpha * 150), false)
+			loadingImageRotation = loadingImageRotation + 5
+		end
+	end
+end
+
+function drawSettings()
+	if ( loadedSettings ) then
+		
+	else
+		if ( mainMenuItems[currentItem]["text"] == "Settings") then
+			dxDrawImage(mainMenuItems[settingsID]["cx"] + 35, initY + yoffset + 40, 66, 66, "gui/loading.png", loadingImageRotation, 0, 0, tocolor(255, 255, 255, xmbAlpha * currentItemAlpha * 150), false)
+			loadingImageRotation = loadingImageRotation + 5
+		elseif ( mainMenuItems[lastItemLeft]["text"] == "Settings" and lastKey == 1 ) then 
+			dxDrawImage(mainMenuItems[settingsID]["cx"] + 35, initY + yoffset + 40, 66, 66, "gui/loading.png", loadingImageRotation, 0, 0, tocolor(255, 255, 255, xmbAlpha * lastItemAlpha * 150), false)
+			loadingImageRotation = loadingImageRotation + 5
+		elseif ( mainMenuItems[lastItemRight]["text"] == "Settings" and lastKey == 2  ) then
+			dxDrawImage(mainMenuItems[settingsID]["cx"] + 35, initY + yoffset + 40, 66, 66, "gui/loading.png", loadingImageRotation, 0, 0, tocolor(255, 255, 255, xmbAlpha * lastItemAlpha * 150), false)
+			loadingImageRotation = loadingImageRotation + 5
+		end
+	end
+end
+
+function drawHelp()
+	if ( loadedHelp ) then
+		for i = 1, #tHelp do
+			local title = tHelp[i]["title"]
+			local text = tHelp[i]["text"]
+			local cx = tHelp[i]["cx"]
+			local cy = tHelp[i]["cy"]
+			local tx = tHelp[i]["tx"]
+			local ty = tHelp[i]["ty"]
+			
+			local dist = getDistanceBetweenPoints2D(0, initY + yoffset + 40, 0, cy)
+			
+			local alpha = 255
+			if ( cy < (initY + 2*yoffset)) then
+				alpha = 255 - ( dist/ 2 )
+			else
+				alpha = 255 - (dist / 2)
+			end
+			
+			-- ANIMATIONS
+			if ( round(cy, -1) > round(ty, -1) ) then -- we need to move down!
+				tHelp[i]["cy"] = tHelp[i]["cy"] - 10
+			end
+			
+			if ( round(cy, -1) < round(ty, -1) ) then -- we need to move up!
+				tHelp[i]["cy"] = tHelp[i]["cy"] + 10
+			end
+
+			cx = mainMenuItems[helpID]["cx"]
+			if ( mainMenuItems[currentItem]["text"] == "Help") then
+				dxDrawText(title, cx+20, cy, cx + 30 + dxGetTextWidth(title, 1, "default-bold"), cy + dxGetFontHeight(1, "default-bold"), tocolor(255, 255, 255, alpha * xmbAlpha * currentItemAlpha), 1, "default-bold", "center", "middle", false, false, false)
+				dxDrawText(text, cx+30, cy+20, cx + 30 + dxGetTextWidth(text, 0.9, "default"), cy + 20 + dxGetFontHeight(0.9, "default"), tocolor(255, 255, 255, alpha * xmbAlpha * currentItemAlpha), 0.9, "default", "left", "middle", false, false, false)
+			elseif ( mainMenuItems[lastItemLeft]["text"] == "Help" and lastKey == 1 ) then 
+				dxDrawText(title, cx+20, cy, cx + 30 + dxGetTextWidth(title, 1, "default-bold"), cy + dxGetFontHeight(1, "default-bold"), tocolor(255, 255, 255, alpha * xmbAlpha * lastItemAlpha), 1, "default-bold", "center", "middle", false, false, false)
+				dxDrawText(text, cx+30, cy+20, cx + 30 + dxGetTextWidth(text, 0.9, "default"), cy + 20 + dxGetFontHeight(0.9, "default"), tocolor(255, 255, 255, alpha * xmbAlpha * lastItemAlpha), 0.9, "default", "left", "middle", false, false, false)
+			elseif ( mainMenuItems[lastItemRight]["text"] == "Help" and lastKey == 2  ) then
+				dxDrawText(title, cx+20, cy, cx + 30 + dxGetTextWidth(title, 1, "default-bold"), cy + dxGetFontHeight(1, "default-bold"), tocolor(255, 255, 255, alpha * xmbAlpha * lastItemAlpha), 1, "default-bold", "center", "middle", false, false, false)
+				dxDrawText(text, cx+30, cy+20, cx + 30 + dxGetTextWidth(text, 0.9, "default"), cy + 20 + dxGetFontHeight(0.9, "default"), tocolor(255, 255, 255, alpha * xmbAlpha * lastItemAlpha), 0.9, "default", "left", "middle", false, false, false)
+			end
+		end
+	else
+		if ( mainMenuItems[currentItem]["text"] == "Help") then
+			dxDrawImage(mainMenuItems[helpID]["cx"] + 35, initY + yoffset + 40, 66, 66, "gui/loading.png", loadingImageRotation, 0, 0, tocolor(255, 255, 255, xmbAlpha * currentItemAlpha * 150), false)
+			loadingImageRotation = loadingImageRotation + 5
+		elseif ( mainMenuItems[lastItemLeft]["text"] == "Help" and lastKey == 1 ) then 
+			dxDrawImage(mainMenuItems[helpID]["cx"] + 35, initY + yoffset + 40, 66, 66, "gui/loading.png", loadingImageRotation, 0, 0, tocolor(255, 255, 255, xmbAlpha * lastItemAlpha * 150), false)
+			loadingImageRotation = loadingImageRotation + 5
+		elseif ( mainMenuItems[lastItemRight]["text"] == "Help" and lastKey == 2  ) then
+			dxDrawImage(mainMenuItems[helpID]["cx"] + 35, initY + yoffset + 40, 66, 66, "gui/loading.png", loadingImageRotation, 0, 0, tocolor(255, 255, 255, xmbAlpha * lastItemAlpha * 150), false)
+			loadingImageRotation = loadingImageRotation + 5
+		end
+	end
+end
+
 function manageCamera()
 	setControlState("change_camera", true)
 end
@@ -5280,6 +5549,98 @@ function createXMBMain(characters)
 end
 addEvent("loginOK", true)
 addEventHandler("loginOK", getRootElement(), createXMBMain)
+
+function saveHelpInformation()
+	-- REPORTS
+	tHelp[1] = { }
+	tHelp[1]["title"] = "My Reports"
+	tHelp[1]["text"] = "You currently have no tickets open."
+	tHelp[1]["cx"] = initX
+	tHelp[1]["cy"] = initY + 1*yoffset + 40
+	tHelp[1]["tx"] = initX
+	tHelp[1]["ty"] = initY + 1*yoffset + 40
+	
+	-- REPORTS ABOUT YOU
+	tHelp[2] = { }
+	tHelp[2]["title"] = "Reports Affecting Me"
+	tHelp[2]["text"] = "You currently have no reports regarding yourself."
+	tHelp[2]["cx"] = initX
+	tHelp[2]["cy"] = initY + 2*yoffset + 40
+	tHelp[2]["tx"] = initX
+	tHelp[2]["ty"] = initY + 2*yoffset + 40
+	
+	-- REPORT BUG
+	tHelp[3] = { }
+	tHelp[3]["title"] = "Report a Bug"
+	tHelp[3]["text"] = "Select this to report a bug directly to Mantis."
+	tHelp[3]["cx"] = initX
+	tHelp[3]["cy"] = initY + 3*yoffset + 40
+	tHelp[3]["tx"] = initX
+	tHelp[3]["ty"] = initY + 3*yoffset + 40
+	
+	loadedHelp = true
+end
+
+function saveAccountInformation(mtausername)
+	-- MTA USERNAME/ACCOUNT
+	if ( mtausername ) then
+		mtaUsername = mtausername
+		
+		tAccount[1] = { }
+		tAccount[1]["title"] = "MTA Account"
+		tAccount[1]["text"] = mtausername
+	else
+		MTAaccountTimer = setTimer(checkForMTAAccount, 1000, 0)
+		tAccount[1] = { }
+		tAccount[1]["title"] = "MTA Account"
+		tAccount[1]["text"] = "You currently have no account linked.\nLog into one under Settings -> Community to link it."
+	end
+	tAccount[1]["cx"] = initX
+	tAccount[1]["cy"] = initY + yoffset + 40
+	tAccount[1]["tx"] = initX
+	tAccount[1]["ty"] = initY + yoffset + 40
+	
+	-- FORUM ACCOUNT
+	tAccount[2] = { }
+	tAccount[2]["title"] = "Forum Account"
+	tAccount[2]["text"] = "You currently have no forum account linked.\nSelect this option to link one."
+	tAccount[2]["cx"] = initX
+	tAccount[2]["cy"] = initY + 2*yoffset + 40
+	tAccount[2]["tx"] = initX
+	tAccount[2]["ty"] = initY + 2*yoffset + 40
+	
+	-- PSN ACCOUNT
+	tAccount[3] = { }
+	tAccount[3]["title"] = "Playstation Network® Account"
+	tAccount[3]["text"] = "You currently have no Playstation Network® account linked.\nSelect this option to link one."
+	tAccount[3]["cx"] = initX
+	tAccount[3]["cy"] = initY + 3*yoffset + 40
+	tAccount[3]["tx"] = initX
+	tAccount[3]["ty"] = initY + 3*yoffset + 40
+	
+	-- XBOX LIVE ACCOUNT
+	tAccount[4] = { }
+	tAccount[4]["title"] = "Xbox Live® Account"
+	tAccount[4]["text"] = "You currently have no Xbox Live® account linked.\nSelect this option to link one."
+	tAccount[4]["cx"] = initX
+	tAccount[4]["cy"] = initY + 4*yoffset + 40
+	tAccount[4]["tx"] = initX
+	tAccount[4]["ty"] = initY + 4*yoffset + 40
+	
+	-- STEAM ACCOUNT
+	tAccount[5] = { }
+	tAccount[5]["title"] = "Steam® Account"
+	tAccount[5]["text"] = "You currently have no Steam® account linked.\nSelect this option to link one."
+	tAccount[5]["cx"] = initX
+	tAccount[5]["cy"] = initY + 5*yoffset + 40
+	tAccount[5]["tx"] = initX
+	tAccount[5]["ty"] = initY + 5*yoffset + 40
+	
+	loadedAccount = true
+	saveHelpInformation()
+end
+addEvent("storeAccountInformation", true)
+addEventHandler("storeAccountInformation", getLocalPlayer(), saveAccountInformation)
 
 function saveCharacters(characters)
 	-- load the characters

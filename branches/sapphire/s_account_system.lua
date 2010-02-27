@@ -1075,7 +1075,27 @@ function requestFriends(player)
 		triggerClientEvent( player, "returnFriends", player, friends, friendsmessage )
 	else
 		outputDebugString( "Friends load failed: " .. mysql_error(handler) )
-		outputChatBox("Error 600000 - Could not retrieve friends list.", source, 255, 0, 0)
+		outputChatBox("Error 600000 - Could not retrieve friends list.", player, 255, 0, 0)
+	end
+	requestAccount(player)
+end
+
+function requestAccount(player)
+	local accid = getElementData(player, "gameaccountid")
+	local result = mysql_query(handler, "SELECT mtausername FROM accounts WHERE id = " .. tonumber(accid))
+	
+	if ( result ) then
+		local mtausername = mysql_result(result, 1, 1)
+		
+		if ( mtausername == mysql_null() ) then
+			triggerClientEvent(player, "storeAccountInformation", player)
+		else
+			triggerClientEvent(player, "storeAccountInformation", player, tostring(mtausername))
+		end
+		mysql_free_result(result)
+	else
+		outputDebugString( "Account Information load failed: " .. mysql_error(handler) )
+		outputChatBox("Error 600001 - Could not retrieve account information.", source, 255, 0, 0)
 	end
 end
 
