@@ -5227,8 +5227,13 @@ function createXMBMain(characters)
 		end
 	end
 	bindKey("home", "down", toggleXMB)
-	
+end
+addEvent("loginOK", true)
+addEventHandler("loginOK", getRootElement(), createXMBMain)
+
+function saveCharacters(characters)
 	-- load the characters
+	setCameraMatrix(1401.4228515625, -887.6865234375, 76.401107788086, 1415.453125, -811.09375, 80.234382629395)
 	for k, v in ipairs(characters) do	
 		characterMenu[k] = { }
 		characterMenu[k]["id"] = v[1]
@@ -5259,4 +5264,4 @@ function createXMBMain(characters)
 	end
 end
 addEvent("showCharacterSelection", true)
-addEventHandler("showCharacterSelection", getRootElement(), createXMBMain)
+addEventHandler("showCharacterSelection", getRootElement(), saveCharacters)

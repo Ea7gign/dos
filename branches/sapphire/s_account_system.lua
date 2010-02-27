@@ -796,7 +796,9 @@ function loginPlayer(username, password, operatingsystem)
 				setElementData(source, "warns", warns, false)
 				setElementData(source, "chatbubbles", chatbubbles, false)
 				
+				triggerClientEvent(source, "loginOK", source)
 				sendAccounts(source, id)
+				--setTimer(sendAccounts, 1000, 1, source, id)
 				
 				-- Get login time & date
 				local time = getRealTime()
@@ -1071,7 +1073,7 @@ function requestFriends(player)
 		else
 			outputDebugString( "Friendmessage load failed: " .. mysql_error( handler ) )
 		end
-		triggerClientEvent( source, "returnFriends", source, friends, friendsmessage )
+		triggerClientEvent( player, "returnFriends", player, friends, friendsmessage )
 	else
 		outputDebugString( "Friends load failed: " .. mysql_error(handler) )
 		outputChatBox("Error 600000 - Could not retrieve friends list.", source, 255, 0, 0)
