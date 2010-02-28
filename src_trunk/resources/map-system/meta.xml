@@ -19,6 +19,7 @@
 	<script src="Exile.lua" type="client"/>
 	<script src="daniels_mansion.lua" type="client"/>
 	<script src="mountisland.lua" type="client"/>
+	<script src="Nina.lua" type="client"/>
 	<script src="The Silver Mint.lua" type="client"/>
 	<script src="Jefferson Interior Doors.lua" type="client"/>
 	
