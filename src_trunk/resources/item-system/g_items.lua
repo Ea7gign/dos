@@ -69,7 +69,7 @@ g_items = {
 	{ "Ziebrand Beer", "The finest beer, imported from Holland.", 1, 1520, 0, 0, 0, 0.15 },
 	{ "Mudkip", "So i herd u liek mudkips? mabako's Favorite.", 1, 1579, 0, 0, 0, 0 },
 	{ "Safe", "A safe to store your items in.", 4, 2332, 0, 0, 0, 0 },
-	{ "Emergency Light Becon", "An Emergency Light Becon which you can put on you car.", 7, 2886, 270, 0, 0, 0.1 },
+	{ "Emergency Light Strobes", "An Emergency Light Strobe which you can put on you car.", 7, 2886, 270, 0, 0, 0.1 },
 	{ "Bastradov Vodka", "For your best friends - Bastradov Vodka.", 1, 1512, 0, 0, 0, 0.25 },
 	{ "Scottish Whiskey", "The Best Scottish Whiskey, now exclusively made from Haggis.", 1, 1512, 0, 0, 0, 0.25 },
 	{ "LSPD Badge", "A Los Santos Police Department badge.", 4, 1581, 270, 270, 0, 0 },

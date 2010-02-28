@@ -235,12 +235,12 @@ function getNearbyVehicles(thePlayer, commandName)
 			if (faction>0) then
 				local theTeam = exports.pool:getElement("team", faction)
 				if theTeam then
-					ownerName = getTeamName(value)
+					ownerName = getTeamName(theTeam)
 				end
 			elseif (owner==-1) then
 				ownerName = "Admin"
 			elseif (owner>0) then
-				ownerName = exports['vehicle-system']:getCharacterName( owner )
+				ownerName = exports['vehicle-system']:getCharacterName(owner)
 			else
 				ownerName = "Civilian"
 			end
