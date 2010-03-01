@@ -1,30 +1,4 @@
--- ////////////////////////////////////
--- //			MYSQL				 //
--- ////////////////////////////////////		
-sqlUsername = exports.mysql:getMySQLUsername()
-sqlPassword = exports.mysql:getMySQLPassword()
-sqlDB = exports.mysql:getMySQLDBName()
-sqlHost = exports.mysql:getMySQLHost()
-sqlPort = exports.mysql:getMySQLPort()
-
-handler = mysql_connect(sqlHost, sqlUsername, sqlPassword, sqlDB, sqlPort)
-
-function checkMySQL()
-	if not (mysql_ping(handler)) then
-		handler = mysql_connect(sqlHost, sqlUsername, sqlPassword, sqlDB, sqlPort)
-	end
-end
-setTimer(checkMySQL, 300000, 0)
-
-function closeMySQL()
-	if (handler~=nil) then
-		mysql_close(handler)
-	end
-end
-addEventHandler("onResourceStop", getResourceRootElement(getThisResource()), closeMySQL)
--- ////////////////////////////////////
--- //			MYSQL END			 //
--- ////////////////////////////////////
+mysql = exports.mysql
 
 function addCharacterKillBody( x, y, z, rotation, skin, id, name, interior, dimension )
 	local ped = createPed(skin, x, y, z)
@@ -38,37 +12,41 @@ function addCharacterKillBody( x, y, z, rotation, skin, id, name, interior, dime
 end
 
 function loadAllCorpses(res)
-	local result = mysql_query(handler, "SELECT x, y, z, skin, rotation, id, charactername, interior, dimension FROM characters WHERE cked = 1")
+	local result = mysql:query("SELECT x, y, z, skin, rotation, id, charactername, interior, dimension FROM characters WHERE cked = 1")
 	
 	local counter = 0
 	local rowc = 1
 	
 	if (result) then
-		for result, row in mysql_rows(result) do
-			local x = tonumber(row[1])
-			local y = tonumber(row[2])
-			local z = tonumber(row[3])
-			local skin = tonumber(row[4])
-			local rotation = tonumber(row[5])
-			local id = tonumber(row[6])
-			local name = row[7]
+		local continue = true
+		while continue do
+			local row = mysql:fetch_assoc(result)
+			if not row then
+				break
+			end
+			local x = tonumber(row["x"])
+			local y = tonumber(row["y"])
+			local z = tonumber(row["z"])
+			local skin = tonumber(row["skin"])
+			local rotation = tonumber(row["rotation"])
+			local id = tonumber(row["id"])
+			local name = row["charactername"]
 			if name == mysql_null() then
 				name = ""
 			end
-			local interior = tonumber(row[8])
-			local dimension = tonumber(row[9])
+			local interior = tonumber(row["interior"])
+			local dimension = tonumber(row["dimension"])
 			
 			addCharacterKillBody(x, y, z, rotation, skin, id, name, interior, dimension)
 		end
-		mysql_free_result(result)
+		mysql:free_result(result)
 	end
 	
 	-- Garage Stuff
-	local result = mysql_query( handler, "SELECT value FROM settings WHERE name = 'garagestates'" )
+	local result = mysql:query_fetch_assoc("SELECT value FROM settings WHERE name = 'garagestates'" )
 	if result then
-		local res = mysql_result( result, 1, 1 )
+		local res = result["value"]
 		local garages = fromJSON( res )
-		mysql_free_result( result )
 		
 		if garages then
 			for i = 0, 49 do
@@ -106,17 +84,22 @@ addCommandHandler("nearbycks", getNearbyCKs, false, false)
 -- in remembrance of
 local function showCKList( thePlayer, data )
 	exports.global:givePlayerAchievement( thePlayer, 40 )
-	local result = mysql_query(handler, "SELECT charactername FROM characters WHERE cked = " .. data .. " ORDER BY charactername")
+	local result = mysql:query("SELECT charactername FROM characters WHERE cked = " .. data .. " ORDER BY charactername")
 	if result then
 		local names = {}
-		for result, row in mysql_rows(result) do
-			local name = row[1]
+		local continue = true
+		while continue do
+			row = mysql:fetch_assoc(result)
+			if not row then
+				break
+			end
+			local name = row["charactername"]
 			if name ~= mysql_null() then
 				names[ #names + 1 ] = name
 			end
 		end
 		triggerClientEvent( thePlayer, "showCKList", thePlayer, names, data )
-		mysql_free_result(result)
+		mysql:free_result(result)
 	end
 end
 
