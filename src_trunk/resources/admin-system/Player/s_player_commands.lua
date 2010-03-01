@@ -452,7 +452,7 @@ function buryPlayer(thePlayer, commandName, ...)
 					end
 					
 					outputChatBox(targetPlayer .. " was buried.", thePlayer, 0, 255, 0)
-					exports.logs:logMessage("[/BURY] " .. getElementData(thePlayer, "gameaccountusername") .. "/".. getPlayerName(thePlayer) .." buried ".. targetPlayerName , 4)
+					exports.logs:logMessage("[/BURY] " .. getElementData(thePlayer, "gameaccountusername") .. "/".. getPlayerName(thePlayer) .." buried ".. targetPlayer , 4)
 				end
 			end
 			mysql_free_result(result)
