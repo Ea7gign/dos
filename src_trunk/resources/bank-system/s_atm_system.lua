@@ -7,7 +7,7 @@ function createATM(thePlayer, commandName)
 		
 		z = z - 0.3
 		
-		local query = mysql_query(handler, "INSERT INTO atms SET x='" .. x .. "', y='" .. y .. "', z='" .. z .. "', dimension='" .. dimension .. "', interior='" .. interior .. "', rotation='" .. rotation .. "'")
+		local query = mysql_query(handler, "INSERT INTO atms SET x='" .. x .. "', y='" .. y .. "', z='" .. z .. "', dimension='" .. dimension .. "', interior='" .. interior .. "', rotation='" .. rotation .. "',limit=5000")
 				
 		if (query) then
 			local id = mysql_insert_id(handler)
@@ -18,6 +18,7 @@ function createATM(thePlayer, commandName)
 			setElementDimension(object, dimension)
 			setElementInterior(object, interior)
 			setElementData(object, "depositable", 0, false)
+			setElementData(object, "limit", 5000, false)
 			
 			local px = x + math.sin(math.rad(-rotation)) * 0.8
 			local py = y + math.cos(math.rad(-rotation)) * 0.8
@@ -38,7 +39,7 @@ end
 addCommandHandler("addatm", createATM, false, false)
 
 function loadAllATMs()
-	local result = mysql_query(handler, "SELECT id, x, y, z, rotation, dimension, interior, deposit FROM atms")
+	local result = mysql_query(handler, "SELECT id, x, y, z, rotation, dimension, interior, deposit, limit FROM atms")
 	local counter = 0
 	
 	if (result) then
@@ -52,12 +53,14 @@ function loadAllATMs()
 			local dimension = tonumber(row[6])
 			local interior = tonumber(row[7])
 			local deposit = tonumber(row[8])
+			local limit = tonumber(row[9])
 			
 			local object = createObject(2942, x, y, z, 0, 0, rotation-180)
 			exports.pool:allocateElement(object)
 			setElementDimension(object, dimension)
 			setElementInterior(object, interior)
 			setElementData(object, "depositable", deposit, false)
+			setElementData(object, "limit", limit, false)
 			
 			local px = x + math.sin(math.rad(-rotation)) * 0.8
 			local py = y + math.cos(math.rad(-rotation)) * 0.8
@@ -155,9 +158,10 @@ function showATMInterface(atm)
 		local deposit = false
 		if (depositable == 1) then
 			deposit = true
-		end 
+		end
+		local limit = getElementData(atm, "limit")
 		
-		triggerClientEvent(source, "showBankUI", atm, isInFaction, isFactionLeader, money, deposit)
+		triggerClientEvent(source, "showBankUI", atm, isInFaction, isFactionLeader, money, deposit, limit)
 	end
 end
 addEvent( "requestATMInterface", true )

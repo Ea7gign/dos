@@ -5,7 +5,7 @@ cooldown = nil
 
 lastUsedATM = nil
 _depositable = nil
-limitedwithdraw = 5000
+limitedwithdraw = 0
 
 local localPlayer = getLocalPlayer()
 
@@ -38,10 +38,11 @@ function clickATM(button, state, absX, absY, wx, wy, wz, element)
 end
 addEventHandler( "onClientClick", getRootElement(), clickATM )
 
-function showBankUI(isInFaction, isFactionLeader, factionBalance, depositable)
+function showBankUI(isInFaction, isFactionLeader, factionBalance, depositable, limit)
 	if not (wBank) then
 		_depositable = depositable
 		lastUsedATM = source
+		limitedwithdraw = limit
 		
 		setElementData(getLocalPlayer(), "exclusiveGUI", true, false)
 		
@@ -102,8 +103,10 @@ function showBankUI(isInFaction, isFactionLeader, factionBalance, depositable)
 				lDepositB = guiCreateLabel(0.1, 0.25, 0.5, 0.05, "This ATM does not support the deposit function.", true, tabBusiness)
 				guiSetFont(lDepositB, "default-bold-small")
 				
-				tDepositB = guiCreateLabel(0.67, 0.15, 0.2, 0.05, "Max: $" .. ( limitedwithdraw - ( getElementData( source, "withdrawn" ) or 0 ) ) .. ".", true, tabBusiness)
-				guiSetFont(tDepositB, "default-bold-small")
+				if limitedwithdraw > 0 then
+					tDepositB = guiCreateLabel(0.67, 0.15, 0.2, 0.05, "Max: $" .. ( limitedwithdraw - ( getElementData( source, "withdrawn" ) or 0 ) ) .. ".", true, tabBusiness)
+					guiSetFont(tDepositB, "default-bold-small")
+				end
 			end
 			
 			if hoursplayed > 12 then
@@ -166,8 +169,10 @@ function showBankUI(isInFaction, isFactionLeader, factionBalance, depositable)
 			lDepositP = guiCreateLabel(0.1, 0.25, 0.5, 0.05, "This ATM does not support the deposit function.", true, tabPersonal)
 			guiSetFont(lDepositP, "default-bold-small")
 			
-			tDepositP = guiCreateLabel(0.67, 0.15, 0.2, 0.05, "Max: $" .. ( limitedwithdraw - ( getElementData( source, "withdrawn" ) or 0 ) ) .. ".", true, tabPersonal)
-			guiSetFont(tDepositP, "default-bold-small")
+			if limitedwithdraw > 0 then
+				tDepositP = guiCreateLabel(0.67, 0.15, 0.2, 0.05, "Max: $" .. ( limitedwithdraw - ( getElementData( source, "withdrawn" ) or 0 ) ) .. ".", true, tabPersonal)
+				guiSetFont(tDepositP, "default-bold-small")
+			end
 		end
 		
 		if hoursplayed > 12 then
@@ -227,7 +232,7 @@ function withdrawMoneyPersonal(button)
 			outputChatBox("Please enter a number greater than 0!", 255, 0, 0)
 		elseif (amount>money) then
 			outputChatBox("You do not have enough funds.", 255, 0, 0)
-		elseif not _depositable and oldamount + amount > limitedwithdraw then
+		elseif not _depositable and limitedwithdraw ~= 0 and oldamount + amount > limitedwithdraw then
 			outputChatBox("This ATM only allows you to withdraw $" .. ( limitedwithdraw - oldamount ) .. ".")
 		else
 			setElementData( lastUsedATM, "withdrawn", oldamount + amount, false )
@@ -291,7 +296,7 @@ function withdrawMoneyBusiness(button)
 			outputChatBox("Please enter a number greater than 0!", 255, 0, 0)
 		elseif (amount>gfactionBalance) then
 			outputChatBox("You do not have enough funds.", 255, 0, 0)
-		elseif not _depositable and oldamount + amount > limitedwithdraw then
+		elseif not _depositable and limitedwithdraw ~= 0 and oldamount + amount > limitedwithdraw then
 			outputChatBox("This ATM only allows you to withdraw $" .. ( limitedwithdraw - oldamount ) .. ".")
 		else
 			setElementData( lastUsedATM, "withdrawn", oldamount + amount, false )
