@@ -2,9 +2,8 @@
 function startFishing(thePlayer)
 	local logged = getElementData(thePlayer, "loggedin")
 	if (logged==1) then
-		local result = mysql_query(handler, "SELECT fish FROM characters WHERE id=" .. getElementData(thePlayer, "dbid"))
-		local oldcatch = tonumber(mysql_result(result, 1, 1))
-		mysql_free_result(result)
+		local result = mysql:query_fetch_assoc("SELECT fish FROM characters WHERE id=" .. getElementData(thePlayer, "dbid"))
+		local oldcatch = tonumber(result["fish"])
 
 		if not (thePlayer) then
 			thePlayer = source
@@ -46,7 +45,7 @@ function catchFish(fishSize, totalCatch)
 	if (fishSize >= 100) then
 		exports.global:givePlayerAchievement(source, 35)
 	end
-	mysql_free_result(mysql_query(handler, "UPDATE characters SET fish=" .. tonumber(totalCatch) .. " WHERE id=" .. getElementData(source, "dbid")))
+	mysql:query_free("UPDATE characters SET fish=" .. tonumber(totalCatch) .. " WHERE id=" .. getElementData(source, "dbid"))
 end
 addEvent("catchFish", true)
 addEventHandler("catchFish", getRootElement(), catchFish)
@@ -55,16 +54,15 @@ addEventHandler("catchFish", getRootElement(), catchFish)
 function unloadCatch( totalCatch, profit)
 	exports.global:sendLocalMeAction(source,"sells " .. totalCatch .."lbs of fish.")
 	exports.global:giveMoney(source, profit)
-	mysql_free_result(mysql_query(handler, "UPDATE characters SET fish=0 WHERE id=" .. getElementData(source, "dbid")))
+	mysql:query_free("UPDATE characters SET fish=0 WHERE id=" .. getElementData(source, "dbid"))
 end
 addEvent("sellcatch", true)
 addEventHandler("sellcatch", getRootElement(), unloadCatch)
 
 ------- give a hint when logging on
 function fishingNotice()
-	local result = mysql_query(handler, "SELECT fish FROM characters WHERE id=" .. getElementData(source, "dbid"))
-	local catch = tonumber(mysql_result(result, 1, 1))
-	mysql_free_result(result)
+	local result = mysql:query_fetch_assoc("SELECT fish FROM characters WHERE id=" .. getElementData(source, "dbid"))
+	local catch = result["fish"]
 	
 	if catch > 0 then
 		triggerClientEvent(source, "restoreFishingJob", source, catch)

@@ -30,9 +30,8 @@ function selectPlayer()
 		
 			outputDebugString("Player " .. getPlayerName(theChosenOne) .. " has " .. genderm .. " phone off")
 		else
-			local query = mysql_query(handler, "SELECT hunter FROM characters WHERE charactername='" .. mysql_escape_string(handler, getPlayerName(theChosenOne)) .."'")
-			local huntersFriend = tonumber(mysql_result(query, 1, 1))
-			mysql_free_result(query)
+			local query = mysql:query_fetch_assoc("SELECT hunter FROM characters WHERE charactername='" .. mysql_escape_string(handler, getPlayerName(theChosenOne)) .."'")
+			local huntersFriend = tonumber( query["hunter"] )
 			
 			if (huntersFriend == 0) then  -- are they a friend of hunter?
 				if (count<10) then -- check 10 players before resetting the timer.
