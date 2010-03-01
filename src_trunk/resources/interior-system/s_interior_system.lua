@@ -848,27 +848,28 @@ addEventHandler( "lockUnlockHouse", getRootElement(),
 		local found = nil
 		local nearbyPickups = exports.global:getNearbyElements(source, "pickup", 5)
 		local elevatorres = getResourceRootElement(getResourceFromName("elevator-system"))
+		local min = 5
 		for key, value in ipairs(nearbyPickups) do
 			if isElement( value ) then
 				local vx, vy, vz = getElementPosition(value)
 				local x, y, z = getElementPosition(source)
-				
-				if getDistanceBetweenPoints3D(x, y, z, vx, vy, vz) <= 5 then
+				local dist = getDistanceBetweenPoints3D(x, y, z, vx, vy, vz)
+				if dist <= min then
 					local dbid = getElementData(value, "dbid")
 					if hasKey(source, dbid)then -- house found
 						found = value
 						itemValue = dbid
-						break
+						min = dist
 					elseif getElementData( value, "other" ) and getElementParent( getElementParent( value ) ) == elevatorres then
 						-- it's an elevator
 						if hasKey(source, getElementDimension( value ) ) then
 							found = value
 							itemValue = getElementDimension( value )
-							break
+							min = dist
 						elseif hasKey(source, getElementDimension( getElementData( value, "other" ) ) ) then
 							found = value
 							itemValue = getElementDimension( getElementData( value, "other" ) )
-							break
+							min = dist
 						end
 					end
 				end
