@@ -45,7 +45,7 @@ function loadAllObjects(res)
 		local continue = true
 		while continue do
 			row = mysql:fetch_assoc(result)
-			if not result then
+			if not row then
 				break
 			end
 			local id = tonumber(row["id"])
