@@ -38,7 +38,7 @@ function quitJob(source)
 		if job == 0 then
 			outputChatBox("You are currently unemployed.", source, 255, 0, 0)
 		else
-			local result = mysql:query_fetch_object("SELECT jobcontract FROM characters WHERE id = " .. getElementData(source, "dbid") )
+			local result = mysql:query_fetch_assoc("SELECT jobcontract FROM characters WHERE id = " .. getElementData(source, "dbid") )
 			if result then
 				local contracttime = tonumber( result["jobcontract"] ) or 0
 				if contracttime > 0 then
