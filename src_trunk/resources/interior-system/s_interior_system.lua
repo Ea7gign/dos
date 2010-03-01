@@ -137,6 +137,54 @@ function findProperty(thePlayer, dimension)
 	return 0
 end
 
+local function cleanupProperty( id )
+	if id > 0 then
+		if exports.mysql:query_free( "DELETE FROM dancers WHERE dimension = " .. id ) then
+			local res = getResourceRootElement( getResourceFromName( "dancer-system" ) )
+			if res then
+				for key, value in pairs( getElementsByType( "ped", res ) ) do
+					if getElementDimension( value ) == id then
+						destroyElement( value )
+					end
+				end
+			end
+		end
+		
+		if exports.mysql:query_free( "DELETE FROM shops WHERE dimension = " .. id ) then
+			local res = getResourceRootElement( getResourceFromName( "shop-system" ) )
+			if res then
+				for key, value in pairs( getElementsByType( "ped", res ) ) do
+					if getElementDimension( value ) == id then
+						destroyElement( value )
+					end
+				end
+			end
+		end
+		
+		if exports.mysql:query_free( "DELETE FROM atms WHERE dimension = " .. id ) then
+			local res = getResourceRootElement( getResourceFromName( "bank-system" ) )
+			if res then
+				for key, value in pairs( getElementsByType( "object", res ) ) do
+					if getElementDimension( value ) == id then
+						destroyElement( value )
+					end
+				end
+			end
+		end
+		
+		if exports.mysql:query_free( "DELETE FROM objects WHERE dimension = " .. id ) then
+			local res = getResourceRootElement( getResourceFromName( "object-system" ) )
+			if res then
+				for key, value in pairs( getElementsByType( "object", res ) ) do
+					if getElementDimension( value ) == id then
+						destroyElement( value )
+					end
+				end
+			end
+		end
+	end
+end
+
 function sellProperty(thePlayer, commandName)
 	local dbid, entrance, exit, interiorType = findProperty( thePlayer )
 	if dbid > 0 then
@@ -147,6 +195,7 @@ function sellProperty(thePlayer, commandName)
 		else
 			if exports.global:isPlayerLeadAdmin(thePlayer) or getElementData(entrance, "owner") == getElementData(thePlayer, "dbid") then
 				publicSellProperty(thePlayer, dbid, true, true)
+				cleanupProperty(dbid)
 			else
 				outputChatBox("You do not own this property.", thePlayer, 255, 0, 0)
 			end
@@ -331,6 +380,7 @@ function deleteInterior(thePlayer, commandName)
 				
 				if (query) then
 					mysql_free_result(query)
+					cleanupProperty(dbid)
 					outputChatBox("Interior #" .. dbid .. " Deleted!", thePlayer, 0, 255, 0)
 					exports.irc:sendMessage(getPlayerName(thePlayer) .. " deleted interior #" .. dbid .. ".")
 				else

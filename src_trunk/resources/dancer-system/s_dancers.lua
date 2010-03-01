@@ -157,10 +157,14 @@ function updateDancing( )
 	end
 	
 	for ped, options in pairs( peds ) do
-		setElementPosition( ped, unpack( getElementData( ped, "position" ) ) )
-		local type, offset = unpack( options )
-		local animid = ( currentcycle + offset ) % 4 + 1
-		setPedAnimation( ped, dancingcycles[ type ][ animid ][ 1 ], dancingcycles[ type ][ animid ][ 2 ], -1, true, false, false )
+		if isElement( ped ) then
+			setElementPosition( ped, unpack( getElementData( ped, "position" ) ) )
+			local type, offset = unpack( options )
+			local animid = ( currentcycle + offset ) % 4 + 1
+			setPedAnimation( ped, dancingcycles[ type ][ animid ][ 1 ], dancingcycles[ type ][ animid ][ 2 ], -1, true, false, false )
+		else
+			peds[ ped ] = nil
+		end
 	end
 end
 
