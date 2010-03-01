@@ -37,7 +37,6 @@ exports.pool:allocateElement(bankPickup)
 local shape = getElementColShape(bankPickup)
 setElementInterior(shape, 3)
 setElementInterior(bankPickup, 3)
-setElementData(bankPickup, "depositable", true)
 
 function pickupUse(thePlayer)
 	cancelEvent()
@@ -61,7 +60,7 @@ function pickupUse(thePlayer)
 		
 		local faction = getPlayerTeam(thePlayer)
 		local money = exports.global:getMoney(faction)
-		triggerClientEvent(thePlayer, "showBankUI", thePlayer, isInFaction, isFactionLeader, money)
+		triggerClientEvent(thePlayer, "showBankUI", bankPickup, isInFaction, isFactionLeader, money, true, 0)
 	end
 end
 addEventHandler("onPickupHit", bankPickup, pickupUse)

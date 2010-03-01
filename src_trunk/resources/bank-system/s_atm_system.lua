@@ -1,5 +1,5 @@
 function createATM(thePlayer, commandName)
-	if (exports.global:isPlayerLeadAdmin(thePlayer)) then
+	if (exports.global:isPlayerLeadAdmin(thePlayer)) and ( getElementDimension(thePlayer) > 0 or exports.global:isPlayerScripter(thePlayer) ) then
 		local dimension = getElementDimension(thePlayer)
 		local interior = getElementInterior(thePlayer)
 		local x, y, z  = getElementPosition(thePlayer)
@@ -7,7 +7,7 @@ function createATM(thePlayer, commandName)
 		
 		z = z - 0.3
 		
-		local query = mysql_query(handler, "INSERT INTO atms SET x='" .. x .. "', y='" .. y .. "', z='" .. z .. "', dimension='" .. dimension .. "', interior='" .. interior .. "', rotation='" .. rotation .. "',limit=5000")
+		local query = mysql_query(handler, "INSERT INTO atms SET x='" .. x .. "', y='" .. y .. "', z='" .. z .. "', dimension='" .. dimension .. "', interior='" .. interior .. "', rotation='" .. rotation .. "',`limit`=5000")
 				
 		if (query) then
 			local id = mysql_insert_id(handler)
@@ -39,7 +39,7 @@ end
 addCommandHandler("addatm", createATM, false, false)
 
 function loadAllATMs()
-	local result = mysql_query(handler, "SELECT id, x, y, z, rotation, dimension, interior, deposit, limit FROM atms")
+	local result = mysql_query(handler, "SELECT id, x, y, z, rotation, dimension, interior, deposit, `limit` FROM atms")
 	local counter = 0
 	
 	if (result) then
