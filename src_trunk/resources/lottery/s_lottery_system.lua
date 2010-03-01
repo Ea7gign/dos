@@ -77,7 +77,7 @@ function drawLottery()
 	drawTimer2 = setTimer ( drawLottery, 86400000, 1 )
 	mysql:free_result(result)
 	
-	mysql:query_free("TRUNCATE TABLE lottery") )
+	mysql:query_free("TRUNCATE TABLE lottery")
 	call( getResourceFromName( "item-system" ), "deleteAll", 68 )
 end
 
