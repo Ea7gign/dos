@@ -12,7 +12,7 @@ function addCharacterKillBody( x, y, z, rotation, skin, id, name, interior, dime
 end
 
 function loadAllCorpses(res)
-	local result = mysql:query("SELECT x, y, z, skin, rotation, id, charactername, interior, dimension FROM characters WHERE cked = 1")
+	local result = mysql:query("SELECT x, y, z, skin, rotation, id, charactername, interior_id, dimension_id FROM characters WHERE cked = 1")
 	
 	local counter = 0
 	local rowc = 1
@@ -34,8 +34,8 @@ function loadAllCorpses(res)
 			if name == mysql_null() then
 				name = ""
 			end
-			local interior = tonumber(row["interior"])
-			local dimension = tonumber(row["dimension"])
+			local interior = tonumber(row["interior_id"])
+			local dimension = tonumber(row["dimension_id"])
 			
 			addCharacterKillBody(x, y, z, rotation, skin, id, name, interior, dimension)
 		end
