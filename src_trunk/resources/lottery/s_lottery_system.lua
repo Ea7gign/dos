@@ -1,31 +1,4 @@
--- ////////////////////////////////////
--- //			MYSQL				 //
--- ////////////////////////////////////		
-sqlUsername = exports.mysql:getMySQLUsername()
-sqlPassword = exports.mysql:getMySQLPassword()
-sqlDB = exports.mysql:getMySQLDBName()
-sqlHost = exports.mysql:getMySQLHost()
-sqlPort = exports.mysql:getMySQLPort()
-
-handler = mysql_connect(sqlHost, sqlUsername, sqlPassword, sqlDB, sqlPort)
-
-function checkMySQL()
-	if not (mysql_ping(handler)) then
-		handler = mysql_connect(sqlHost, sqlUsername, sqlPassword, sqlDB, sqlPort)
-	end
-end
-setTimer(checkMySQL, 300000, 0)
-
-function closeMySQL()
-	if (handler) then
-		mysql_close(handler)
-		handler = nil
-	end
-end
-addEventHandler("onResourceStop", getResourceRootElement(getThisResource()), closeMySQL)
--- ////////////////////////////////////
--- //			MYSQL END			 //
--- ////////////////////////////////////
+mysql = exports.mysql
 
 function correctTime(res)
 	local hour, minutes = getTime()
@@ -45,12 +18,12 @@ function correctTime(res)
 	end
 	
 	-- check for lottery setting
-	local result = mysql_query( handler, "SELECT COUNT(*) FROM settings WHERE name = 'lotteryjackpot'" )
+	local result = mysql:query("SELECT value FROM settings WHERE name = 'lotteryjackpot'" )
 	if result then
-		if tonumber( mysql_result( result, 1, 1 ) ) == 0 then
-			mysql_free_result( mysql_query( handler, "INSERT INTO settings (name, value) VALUES ('lotteryjackpot', 0)" ) )
+		if mysql:num_rows(result) == 0 then
+			mysql:query_free("INSERT INTO settings (name, value) VALUES ('lotteryjackpot', 0)")
 		end
-		mysql_free_result( result )
+		mysql:free_result( result )
 	end
 end
 addEventHandler("onResourceStart", getResourceRootElement(), correctTime)
@@ -58,19 +31,20 @@ addEventHandler("onResourceStart", getResourceRootElement(), correctTime)
 function giveTicket(aPlayer)
 	local PlayerID = getElementData(aPlayer, "dbid")
 	local ticketNumber = tostring(math.random(1000, 9999))
-	local result = mysql_query(handler, "SELECT characterid FROM lottery WHERE ticketnumber = " .. ticketNumber )
-	if (mysql_num_rows(result) == 0) then
-		mysql_free_result( mysql_query( handler, "INSERT INTO lottery (characterid, ticketnumber) VALUES (" .. PlayerID .. ", " .. ticketNumber .. " )" ) )
-		mysql_free_result( mysql_query( handler, "UPDATE settings SET value = value + 30 WHERE name = 'lotteryjackpot'" ) )	
+	local result = mysql:query("SELECT characterid FROM lottery WHERE ticketnumber = " .. ticketNumber )
+	if (mysql:num_rows(result) == 0) then
+		mysql:free_result( result )
+		mysql:query_free( "INSERT INTO lottery (characterid, ticketnumber) VALUES (" .. PlayerID .. ", " .. ticketNumber .. " )" ) 
+		mysql:query_free( "UPDATE settings SET value = value + 30 WHERE name = 'lotteryjackpot'" ) 
 		return tonumber(ticketNumber), 40 -- should be above the value + xxx
 	else
-		local result = mysql_query( handler, "SELECT COUNT(*) FROM lottery" )
+		mysql:free_result( result )
+		local result = mysql:query_fetch_assoc("SELECT COUNT(*) as tickets FROM lottery" )
 		if result then
-			if tonumber( mysql_result( result, 1, 1 ) or 0 ) >= 8999 then
-				mysql_free_result( result )
+			if tonumber( result["tickets"] ) >= 8999 then
 				return false
 			end
-			mysql_free_result( result )
+			
 		else
 			return giveTicket(aPlayer)
 		end
@@ -78,34 +52,32 @@ function giveTicket(aPlayer)
 end
 
 function drawLottery()
-	local query = mysql_query(handler, "SELECT value FROM settings WHERE name = 'lotteryjackpot'")
-	local jackpot = tonumber(mysql_result(query, 1, 1))
-	mysql_free_result(query)
+	local query = mysql:query_fetch_assoc("SELECT value FROM settings WHERE name = 'lotteryjackpot'")
+	local jackpot = query["value"]
 	
 	local drawNumbers = tostring(math.random(1000, 9999))
-	local result = mysql_query(handler, "SELECT characterid, c.charactername FROM lottery l LEFT JOIN characters c ON l.characterid = c.id  WHERE ticketnumber = " .. drawNumbers)
-	if (mysql_num_rows(result) ~= 0) then
-		local charid = tonumber(mysql_result(result, 1, 1))
-		local charname = mysql_result(result, 1, 2)
-		
+	local result = mysql:query("SELECT characterid as id, c.charactername as name FROM lottery l LEFT JOIN characters c ON l.characterid = c.id  WHERE ticketnumber = " .. drawNumbers)
+	if (mysql:num_rows(result) ~= 0) then
+		local row = mysql:fetch_assoc(result)
+		local charid = row["id"]
+		local charname = row["name"]
 		local player = getPlayerFromName(charname)
 		if player then
 			local bankmoney = getElementData(player, "bankmoney")
 			setElementData(player, "bankmoney", bankmoney+jackpot)
 		else
-			local query = mysql_query(handler, "UPDATE characters SET bankmoney=bankmoney+" .. jackpot .. " WHERE id=" .. charid)
-			mysql_free_result(query)
+			mysql:query_free("UPDATE characters SET bankmoney=bankmoney+" .. jackpot .. " WHERE id=" .. charid)
 		end
-		mysql_free_result( mysql_query( handler, "INSERT INTO wiretransfers (`from`, `to`, `amount`, `reason`, `type`) VALUES (0, " .. charid .. ", " .. jackpot .. ", 'Won lottery', 3)" ) )
-		mysql_free_result( mysql_query( handler, "UPDATE settings SET value = 0 WHERE name = 'lotteryjackpot'" ) )
+		mysql:query_free( "INSERT INTO wiretransfers (`from`, `to`, `amount`, `reason`, `type`) VALUES (0, " .. charid .. ", " .. jackpot .. ", 'Won lottery', 3)" )
+		mysql:query_free( "UPDATE settings SET value = 0 WHERE name = 'lotteryjackpot'" )
 		outputChatBox("* [LOTTERY] The winner of the lottery is: " .. charname:gsub("_", " ") .. "! The Jackpot of $" .. jackpot .. " will be transfered to his/her account.", getRootElement(), 0, 255, 0)
 	else
 		outputChatBox("* [LOTTERY] Nobody wins. The jackpot of $" .. jackpot .. " has been accumulated.", getRootElement(), 255, 255, 0)
 	end
 	drawTimer2 = setTimer ( drawLottery, 86400000, 1 )
-	mysql_free_result(result)
+	mysql:free_result(result)
 	
-	mysql_free_result( mysql_query(handler, "TRUNCATE TABLE lottery") )
+	mysql:query_free("TRUNCATE TABLE lottery") )
 	call( getResourceFromName( "item-system" ), "deleteAll", 68 )
 end
 
