@@ -1,5 +1,5 @@
 -- Computer window
-local wComputer,desktopImage,internetButton, emailButton, shutdownButton, chatButton = nil
+wComputer,desktopImage,internetButton, emailButton, shutdownButton, chatButton = nil
 	-- Internet window
 	wInternet, internet_close_button, internet_address_label, address_bar, go_button, internet_pane, shadow_top, shadow_left, shadow_bottom = nil
 	-- Email Login

@@ -224,5 +224,6 @@
 	<!-- S -->
 	<script src="websites/sadesigns.lua" type="client"/>
 	<script src="websites/sanetwork.lua" type="client"/>
+	<script src="websites/snake.lua" type="client"/>
 	
 </meta>
