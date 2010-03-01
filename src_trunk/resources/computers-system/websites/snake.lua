@@ -155,7 +155,7 @@ function www_snake_sa( )
 	guiSetText(address_bar,"www.snake.sa")
 	bg = guiCreateStaticImage(0,0,width,height,"websites/colours/0.png",false,internet_pane)
 	
-	btn = guiCreateButton( ( width - 200 ) / 2, ( height - 50 ) / 2, 200, 50, "Play", false, internet_pane )
+	btn = guiCreateButton( ( width - 200 ) / 2, ( height - 50 ) / 2, 200, 50, "Play", false, bg )
 	addEventHandler( "onClientGUIClick", btn,
 		function( )
 			if not active then
