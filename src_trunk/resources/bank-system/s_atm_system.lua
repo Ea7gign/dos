@@ -157,7 +157,7 @@ function showATMInterface(atm)
 			deposit = true
 		end 
 		
-		triggerClientEvent(source, "showBankUI", source, isInFaction, isFactionLeader, money, deposit)
+		triggerClientEvent(source, "showBankUI", atm, isInFaction, isFactionLeader, money, deposit)
 	end
 end
 addEvent( "requestATMInterface", true )

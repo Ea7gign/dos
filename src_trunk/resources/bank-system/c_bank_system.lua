@@ -4,6 +4,8 @@ gfactionBalance = nil
 cooldown = nil
 
 lastUsedATM = nil
+_depositable = nil
+limitedwithdraw = 5000
 
 local localPlayer = getLocalPlayer()
 
@@ -38,6 +40,9 @@ addEventHandler( "onClientClick", getRootElement(), clickATM )
 
 function showBankUI(isInFaction, isFactionLeader, factionBalance, depositable)
 	if not (wBank) then
+		_depositable = depositable
+		lastUsedATM = source
+		
 		setElementData(getLocalPlayer(), "exclusiveGUI", true, false)
 		
 		local width, height = 600, 400
@@ -96,6 +101,9 @@ function showBankUI(isInFaction, isFactionLeader, factionBalance, depositable)
 			else
 				lDepositB = guiCreateLabel(0.1, 0.25, 0.5, 0.05, "This ATM does not support the deposit function.", true, tabBusiness)
 				guiSetFont(lDepositB, "default-bold-small")
+				
+				tDepositB = guiCreateLabel(0.67, 0.15, 0.2, 0.05, "Max: $" .. ( limitedwithdraw - ( getElementData( source, "withdrawn" ) or 0 ) ) .. ".", true, tabBusiness)
+				guiSetFont(tDepositB, "default-bold-small")
 			end
 			
 			if hoursplayed > 12 then
@@ -157,6 +165,9 @@ function showBankUI(isInFaction, isFactionLeader, factionBalance, depositable)
 		else
 			lDepositP = guiCreateLabel(0.1, 0.25, 0.5, 0.05, "This ATM does not support the deposit function.", true, tabPersonal)
 			guiSetFont(lDepositP, "default-bold-small")
+			
+			tDepositP = guiCreateLabel(0.67, 0.15, 0.2, 0.05, "Max: $" .. ( limitedwithdraw - ( getElementData( source, "withdrawn" ) or 0 ) ) .. ".", true, tabPersonal)
+			guiSetFont(tDepositP, "default-bold-small")
 		end
 		
 		if hoursplayed > 12 then
@@ -211,11 +222,21 @@ function withdrawMoneyPersonal(button)
 		local amount = tonumber(guiGetText(tWithdrawP))
 		local money = getElementData(localPlayer, "bankmoney")
 		
+		local oldamount = getElementData( lastUsedATM, "withdrawn" ) or 0
 		if not amount or amount <= 0 or math.ceil( amount ) ~= amount then
 			outputChatBox("Please enter a number greater than 0!", 255, 0, 0)
 		elseif (amount>money) then
 			outputChatBox("You do not have enough funds.", 255, 0, 0)
+		elseif not _depositable and oldamount + amount > limitedwithdraw then
+			outputChatBox("This ATM only allows you to withdraw $" .. ( limitedwithdraw - oldamount ) .. ".")
 		else
+			setElementData( lastUsedATM, "withdrawn", oldamount + amount, false )
+			setTimer( 
+				function( atm, amount )
+					setElementData( atm, "withdrawn", getElementData( atm, "withdrawn" ) - amount )
+				end,
+				120000, 1, lastUsedATM, amount
+			)
 			hideBankUI()
 			triggerServerEvent("withdrawMoneyPersonal", localPlayer, amount)
 		end
@@ -265,11 +286,21 @@ function withdrawMoneyBusiness(button)
 	if (button=="left") then
 		local amount = tonumber(guiGetText(tWithdrawB))
 		
+		local oldamount = getElementData( lastUsedATM, "withdrawn" ) or 0
 		if not amount or amount <= 0 or math.ceil( amount ) ~= amount then
 			outputChatBox("Please enter a number greater than 0!", 255, 0, 0)
 		elseif (amount>gfactionBalance) then
 			outputChatBox("You do not have enough funds.", 255, 0, 0)
+		elseif not _depositable and oldamount + amount > limitedwithdraw then
+			outputChatBox("This ATM only allows you to withdraw $" .. ( limitedwithdraw - oldamount ) .. ".")
 		else
+			setElementData( lastUsedATM, "withdrawn", oldamount + amount, false )
+			setTimer( 
+				function( atm, amount )
+					setElementData( atm, "withdrawn", getElementData( atm, "withdrawn" ) - amount, false )
+				end,
+				120000, 1, lastUsedATM, amount
+			)
 			hideBankUI()
 			triggerServerEvent("withdrawMoneyBusiness", localPlayer, amount)
 		end
