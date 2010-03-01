@@ -30,7 +30,7 @@ function selectPlayer()
 		
 			outputDebugString("Player " .. getPlayerName(theChosenOne) .. " has " .. genderm .. " phone off")
 		else
-			local query = mysql:query_fetch_assoc("SELECT hunter FROM characters WHERE charactername='" .. mysql_escape_string(handler, getPlayerName(theChosenOne)) .."'")
+			local query = mysql:query_fetch_assoc("SELECT hunter FROM characters WHERE charactername='" .. mysql:escape_string(getPlayerName(theChosenOne)) .."'")
 			local huntersFriend = tonumber( query["hunter"] )
 			
 			if (huntersFriend == 0) then  -- are they a friend of hunter?
