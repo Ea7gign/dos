@@ -1,30 +1,4 @@
--- ////////////////////////////////////
--- //			MYSQL				 //
--- ////////////////////////////////////		
-sqlUsername = exports.mysql:getMySQLUsername()
-sqlPassword = exports.mysql:getMySQLPassword()
-sqlDB = exports.mysql:getMySQLDBName()
-sqlHost = exports.mysql:getMySQLHost()
-sqlPort = exports.mysql:getMySQLPort()
-
-handler = mysql_connect(sqlHost, sqlUsername, sqlPassword, sqlDB, sqlPort)
-
-function checkMySQL()
-	if not (mysql_ping(handler)) then
-		handler = mysql_connect(sqlHost, sqlUsername, sqlPassword, sqlDB, sqlPort)
-	end
-end
-setTimer(checkMySQL, 300000, 0)
-
-function closeMySQL()
-	if (handler) then
-		mysql_close(handler)
-	end
-end
-addEventHandler("onResourceStop", getResourceRootElement(getThisResource()), closeMySQL)
--- ////////////////////////////////////
--- //			MYSQL END			 //
--- ////////////////////////////////////
+mysql = exports.mysql
 
 fuellessVehicle = { [594]=true, [537]=true, [538]=true, [569]=true, [590]=true, [606]=true, [607]=true, [610]=true, [590]=true, [569]=true, [611]=true, [584]=true, [608]=true, [435]=true, [450]=true, [591]=true, [472]=true, [473]=true, [493]=true, [595]=true, [484]=true, [430]=true, [453]=true, [452]=true, [446]=true, [454]=true, [497]=true, [592]=true, [577]=true, [511]=true, [548]=true, [512]=true, [593]=true, [425]=true, [520]=true, [417]=true, [487]=true, [553]=true, [488]=true, [563]=true, [476]=true, [447]=true, [519]=true, [460]=true, [469]=true, [513]=true, [509]=true, [510]=true, [481]=true }
 
@@ -156,12 +130,8 @@ function createFuelPoint(thePlayer, commandName)
 		local dimension = getElementDimension(thePlayer)
 		local interior = getElementInterior(thePlayer)
 		
-		local result = mysql_query(handler, "INSERT INTO fuelstations SET x='" .. x .. "', y='" .. y .. "', z='" .. z .. "', interior='" .. interior .. "', dimension='" .. dimension .. "'")
-		
-		if (result) then
-			local id = mysql_insert_id(handler)
-			mysql_free_result(result)
-		
+		local id = mysql:query_insert_free("INSERT INTO fuelstations SET x='" .. x .. "', y='" .. y .. "', z='" .. z .. "', interior='" .. interior .. "', dimension='" .. dimension .. "'")
+		if (id) then
 			local theSphere = createColSphere(x, y, z, 20)
 			exports.pool:allocateElement(theSphere)
 			setElementDimension(theSphere, dimension)
@@ -212,18 +182,22 @@ end
 setTimer(randomizeFuelPrice, 3600000, randomizeFuelPrice)
 
 function loadFuelPoints(res)
-	local result = mysql_query(handler, "SELECT id, x, y, z, dimension, interior FROM fuelstations")
+	local result = mysql:query("SELECT id, x, y, z, dimension, interior FROM fuelstations")
 	local counter = 0
 	
 	if (result) then
-		for result, row in mysql_rows(result) do
-			local id = row[1]
-			local x = tonumber(row[2])
-			local y = tonumber(row[3])
-			local z = tonumber(row[4])
+		local continue = true
+		while continue do
+			local row = mysql:fetch_assoc(result)
+			if not row then break end
 			
-			local dimension = tonumber(row[5])
-			local interior = tonumber(row[6])
+			local id = row["id"]
+			local x = tonumber(row["x"])
+			local y = tonumber(row["y"])
+			local z = tonumber(row["z"])
+			
+			local dimension = tonumber(row["dimension"])
+			local interior = tonumber(row["interior"])
 			
 			local theSphere = createColSphere(x, y, z, 20)
 			exports.pool:allocateElement(theSphere)
@@ -233,9 +207,8 @@ function loadFuelPoints(res)
 			setElementData(theSphere, "dbid", id, false)
 			counter = counter + 1
 		end
-		mysql_free_result(result)
+		mysql:free_result(result)
 	end
-	exports.irc:sendMessage("[SCRIPT] Loaded " .. counter .. " Fuel stations.")
 end
 addEventHandler("onResourceStart", getResourceRootElement(), loadFuelPoints)
 
@@ -470,12 +443,7 @@ function delFuelPoint(thePlayer, commandName)
 			if (shapeType) then
 				if (shapeType=="fuel") then
 					local id = getElementData(colShape, "dbid")
-					local result = mysql_query(handler, "DELETE FROM fuelstations WHERE id='" .. id .. "'")
-					
-					if (result) then
-						mysql_free_result(result)
-					end
-					
+					local result = mysql:query_free("DELETE FROM fuelstations WHERE id='" .. id .. "'")				
 					outputChatBox("Fuel station #" .. id .. " deleted.", thePlayer)
 					exports.irc:sendMessage("[ADMIN] " .. getPlayerName(thePlayer) .. " deleted fuel station #" .. id .. ".")
 					destroyElement(colShape)
