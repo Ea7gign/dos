@@ -62,7 +62,7 @@ addEventHandler("sellcatch", getRootElement(), unloadCatch)
 ------- give a hint when logging on
 function fishingNotice()
 	local result = mysql:query_fetch_assoc("SELECT fish FROM characters WHERE id=" .. getElementData(source, "dbid"))
-	local catch = result["fish"]
+	local catch = tonumber(result["fish"])
 	
 	if catch > 0 then
 		triggerClientEvent(source, "restoreFishingJob", source, catch)
