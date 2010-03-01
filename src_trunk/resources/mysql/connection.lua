@@ -20,6 +20,8 @@ local port = tonumber( get( "port" ) ) or 3306
 -- global things.
 local MySQLConnection = nil
 local resultPool = { }
+local sqllog = false
+local countqueries = 0
 
 -- connectToDatabase - Internal function, to spawn a DB connection
 function connectToDatabase(res)
@@ -50,6 +52,7 @@ addEventHandler("onResourceStop", getResourceRootElement(getThisResource()), des
 function logSQLError(str)
 	local message = str or 'N/A'
 	outputDebugString("MYSQL ERROR "..mysql_errno(MySQLConnection) .. ": " .. mysql_error(MySQLConnection))
+	exports['logs']:logMessage("MYSQL ERROR :O! "..mysql_errno(MySQLConnection) .. ": " .. mysql_error(MySQLConnection), 24)
 end
 
 function getFreeResultPoolID()
@@ -90,6 +93,11 @@ function escape_string(str)
 end
 
 function query(str)
+	if sqllog then
+		exports['logs']:logMessage(str, 24)
+	end
+	countqueries = countqueries + 1
+	
 	if (ping()) then
 		local result = mysql_query(MySQLConnection, str)
 		if (not result) then
@@ -105,13 +113,9 @@ function query(str)
 end
 
 function query_free(str)
-	if (ping()) then
-		local result = mysql_query(MySQLConnection, str)
-		if (not result) then
-			logSQLError()
-			return false
-		end
-		mysql_free_result(result)
+	local queryresult = query(str)
+	if  not (queryresult == false) then
+		free_result(queryresult)
 		return true
 	end
 	return false
@@ -192,4 +196,18 @@ end
 
 function escape_string(str)
 	return mysql_escape_string(MySQLConnection, str)
+end
+
+function debugMode()
+	if (sqllog) then
+		sqllog = false
+	else
+		sqllog = true
+	end
+	return sqllog
+end
+
+function returnQueryStats()
+	return countqueries
+	-- maybe later more
 end

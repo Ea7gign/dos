@@ -11,7 +11,7 @@
 		
 		<!-- above is legacy -->
 		
-		<script src="connection.lua" type="server" />
+		<script src="connection.lua"        type="server" />
 		<export function="ping" 			type="server" http="false" />
 		<export function="escape_string" 	type="server" http="false" />
 		<export function="query" 			type="server" http="false" />
@@ -27,4 +27,6 @@
 		<export function="query_rows_assoc" type="server" http="false" />
 		<export function="query_insert_free"type="server" http="false" />
 		<export function="escape_string"    type="server" http="false" />
+		<export function="debugMode"        type="server" http="false" />
+		<export function="returnQueryStats" type="server" http="false" />
 </meta>
