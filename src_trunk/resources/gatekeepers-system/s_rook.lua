@@ -16,10 +16,10 @@ function rookIntro () -- When player enters the colSphere create GUI with intro 
 		local theTeam = getPlayerTeam(source)
 		local factionType = getElementData(theTeam, "type")
 		
-		local query = mysql_query(handler, "SELECT rook, faction_leader FROM characters WHERE charactername='" .. mysql_escape_string(handler, getPlayerName(source)) .."'")
-		local rooksFriend = tonumber(mysql_result(query, 1, 1))
-		local factionLeader = tonumber(mysql_result(query, 1, 2))
-		mysql_free_result(query)
+		local query = mysql:query_fetch_object("SELECT rook, faction_leader FROM characters WHERE charactername='" .. mysql:escape_string(getPlayerName(source)) .."'")
+		local rooksFriend = tonumber(query["rook"])
+		local factionLeader = tonumber(query["faction_leader"])
+
 		if not(factionType==0) or factionLeader==0 then
 			exports.global:sendLocalText(source, "Rook says: Keep on walkin'. Grown men tryin' to talk around here.", 255, 255, 255, 10)
 		else
@@ -94,8 +94,7 @@ function rookStatement7_S()
 	local name = string.gsub(getPlayerName(source), "_", " ")
 	exports.global:sendLocalText(source, name .. " whispers: I hear that.", 255, 255, 255, 5)
 	exports.global:sendLocalText(source, "Rook whispers: Peace, homie.", 255, 255, 255, 5)
-	local query = mysql_query(handler, "UPDATE characters SET rook='1' WHERE charactername='" .. mysql_escape_string(handler, getPlayerName(source)) .. "' LIMIT 1")
-	mysql_free_result(query)
+	mysql:query_free("UPDATE characters SET rook='1' WHERE charactername='" .. mysql:escape_string(getPlayerName(source)) .. "' LIMIT 1")
 	resetRookConvoStateDelayed()
 end
 addEvent( "rookStatement7ServerEvent", true )

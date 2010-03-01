@@ -38,11 +38,10 @@ function tyIntro () -- When player enters the colSphere create GUI with intro ou
 		triggerClientEvent(source, "closeTyWindow", getRootElement())
 	else
 		-- Friend of Ty/Rook
-		local query = mysql_query(handler, "SELECT tyrese, rook, faction_leader FROM characters WHERE charactername='" .. mysql_escape_string(handler, getPlayerName(source)) .."'")
-		local tysFriend = tonumber(mysql_result(query, 1, 1))
-		local rooksFriend = tonumber(mysql_result(query, 1, 2))
-		local factionLeader = tonumber(mysql_result(query, 1, 3))
-		mysql_free_result(query)
+		local query = mysql:query_fetch_assoc("SELECT tyrese, rook, faction_leader FROM characters WHERE charactername='" .. mysql:escape_string(getPlayerName(source)) .."'")
+		local tysFriend = tonumber(query["tyrese"])
+		local rooksFriend = tonumber(query["rook"])
+		local factionLeader = tonumber(query["faction_leader"])
 		
 		if factionLeader == 0 then
 			exports.global:sendLocalText(source, "Ty shouts: Yo', I'm busy!", 255, 255, 255, 10)
@@ -139,8 +138,7 @@ function tyStatement8_S()
 	
 	resetTyConvoStateDelayed()
 	
-	local query = mysql_query(handler, "UPDATE characters SET tyrese='1' WHERE charactername='" .. mysql_escape_string(handler, getPlayerName(source)) .. "' LIMIT 1")
-	mysql_free_result(query)
+	mysql:query_free("UPDATE characters SET tyrese='1' WHERE charactername='" .. mysql:escape_string(getPlayerName(source)) .. "' LIMIT 1")
 end
 addEvent( "tyStatement8ServerEvent", true )
 addEventHandler( "tyStatement8ServerEvent", getRootElement(), tyStatement8_S )
@@ -168,8 +166,7 @@ function tyStatement10_S()
 	
 	resetTyConvoStateDelayed()
 	
-	local query = mysql_query(handler, "UPDATE characters SET tyrese='1' WHERE charactername='" .. mysql_escape_string(handler, getPlayerName(source)) .. "' LIMIT 1")
-	mysql_free_result(query)
+	mysql:query_free("UPDATE characters SET tyrese='1' WHERE charactername='" .. mysql:escape_string(getPlayerName(source)) .. "' LIMIT 1")
 end
 addEvent( "tyStatement10ServerEvent", true )
 addEventHandler( "tyStatement10ServerEvent", getRootElement(), tyStatement10_S )

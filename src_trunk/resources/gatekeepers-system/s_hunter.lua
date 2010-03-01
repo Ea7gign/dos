@@ -25,9 +25,9 @@ function hunterIntro () -- When player enters the colSphere create GUI with intr
 	if(getElementData(hunter, "activeConvo")==1)then
 		outputChatBox("Hunter doesn't want to talk to you.", source, 255, 0, 0)
 	else
-		local query = mysql_query(handler, "SELECT hunter FROM characters WHERE charactername='" .. mysql_escape_string(handler, getPlayerName(source)) .."'")
-		local huntersFriend = tonumber(mysql_result(query, 1, 1))
-		mysql_free_result(query)
+		local query = mysql:query_fetch_assoc("SELECT hunter FROM characters WHERE charactername='" .. mysql:escape_string(getPlayerName(source)) .."'")
+		local huntersFriend = tonumber(query["hunter"])
+		
 		if(huntersFriend==1)then -- If they are already a friend.
 			exports.global:sendLocalText( hunter, "Hunter says: Hey, man.  I'll call you when I got some work for you.", 255, 255, 255, 10 )
 		else -- If they are not a friend.
@@ -149,8 +149,7 @@ function statement11_S()
 	exports.global:sendLocalText(source, "Hunter says: You can expect my call. I might see you on the circuit some time too.", 255, 255, 255, 10) -- Hunter's next question
 	exports.global:sendLocalMeAction( source,"jots down their number on a scrap of paper and hands it to Hunter.")
 	resetHunterConvoStateDelayed()
-	local query = mysql_query(handler, "UPDATE characters SET hunter='1' WHERE charactername='" .. mysql_escape_string(handler, getPlayerName(source)) .. "' LIMIT 1")
-	mysql_free_result(query)
+	mysql:query_free("UPDATE characters SET hunter='1' WHERE charactername='" .. mysql:escape_string(getPlayerName(source)) .. "' LIMIT 1")
 end
 addEvent( "hunterStatement11ServerEvent", true )
 addEventHandler( "hunterStatement11ServerEvent", getRootElement(), statement11_S )

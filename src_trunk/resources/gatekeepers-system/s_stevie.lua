@@ -1,30 +1,5 @@
--- ////////////////////////////////////
--- //			MYSQL				 //
--- ////////////////////////////////////		
-sqlUsername = exports.mysql:getMySQLUsername()
-sqlPassword = exports.mysql:getMySQLPassword()
-sqlDB = exports.mysql:getMySQLDBName()
-sqlHost = exports.mysql:getMySQLHost()
-sqlPort = exports.mysql:getMySQLPort()
+mysql = exports.mysql
 
-handler = mysql_connect(sqlHost, sqlUsername, sqlPassword, sqlDB, sqlPort)
-
-function checkMySQL()
-	if not (mysql_ping(handler)) then
-		handler = mysql_connect(sqlHost, sqlUsername, sqlPassword, sqlDB, sqlPort)
-	end
-end
-setTimer(checkMySQL, 300000, 0)
-
-function closeMySQL()
-	if (handler~=nil) then
-		mysql_close(handler)
-	end
-end
-addEventHandler("onResourceStop", getResourceRootElement(getThisResource()), closeMySQL)
--- ////////////////////////////////////
--- //			MYSQL END			 //
--- ////////////////////////////////////
 local phoneState = 0
 local doneDeals = getElementData( getRootElement( ), "stevie.done" ) or 0
 
@@ -236,9 +211,7 @@ function stevieSuccess_S()
 	exports.global:giveItem(source, 55, 1) -- change the ID.
 	
 	-- set the players "stevie" stat to "1" meaning they have met him and successfully made it through the conversation.
-	local query = mysql_query(handler, "UPDATE characters SET stevie='1' WHERE charactername='" .. mysql_escape_string(handler, getPlayerName(source)) .. "' LIMIT 1") -- NOT WORKING
-	mysql_free_result(query)
-	
+	mysql:query_free("UPDATE characters SET stevie='1' WHERE charactername='" .. mysql:escape_string(getPlayerName(source)) .. "' LIMIT 1") -- NOT WORKING
 	exports.logs:logMessage("[STEVIE] " .. getElementData(thePlayer, "gameaccountusername") .. "/".. getPlayerName(thePlayer) .." got Stevie' his businesscard" , 4)
 end
 addEvent( "stevieSuccessServerEvent", true )
@@ -302,10 +275,10 @@ function startPhoneCall(thePlayer)
 						toggleAllControls(thePlayer, true, true, true)
 						setTimer(startPhoneAnim, 3050, 2, thePlayer)
 						-- are they a friend?
-						local query = mysql_query(handler, "SELECT stevie, faction_leader FROM characters WHERE charactername='" .. mysql_escape_string(handler, getPlayerName(thePlayer)) .."'")
-						local steviesFriend = tonumber(mysql_result(query, 1, 1))
-						local factionLeader = tonumber(mysql_result(query, 1, 2))
-						mysql_free_result(query)
+						local query = mysql:query_fetch_assoc("SELECT stevie, faction_leader FROM characters WHERE charactername='" .. mysql:escape_string(getPlayerName(thePlayer)) .."'")
+						local steviesFriend = tonumber(query["stevie"])
+						local factionLeader = tonumber(query["faction_leader"])
+						
 						-- are they in law enforcement?
 						local theTeam = getPlayerTeam(thePlayer)
 						local factionType = getElementData(theTeam, "type")
