@@ -699,7 +699,7 @@ function kickballsAnimation(thePlayer, cmd, arg)
 		exports.global:applyAnimation( thePlayer, "FIGHT_E", "FightKick_B", 1, false, false, false)
 	end
 end
-addCommandHandler ( "kickballs", kickballs, false, false )
+addCommandHandler ( "kickballs", kickballsAnimation, false, false )
 
 -- /grabbottle Amination -------------------------------------------------------------------------
 function grabbAnimation(thePlayer, cmd, arg)
