@@ -22,7 +22,7 @@ enumTypes = {
 	"adminlock",
 	"weaponspawn",
 	"moneyspawn",
-	"sql"
+	"sqlqueries"
 }
 
 
