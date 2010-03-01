@@ -1,30 +1,4 @@
--- ////////////////////////////////////
--- //			MYSQL				 //
--- ////////////////////////////////////		
-sqlUsername = exports.mysql:getMySQLUsername()
-sqlPassword = exports.mysql:getMySQLPassword()
-sqlDB = exports.mysql:getMySQLDBName()
-sqlHost = exports.mysql:getMySQLHost()
-sqlPort = exports.mysql:getMySQLPort()
-
-handler = mysql_connect(sqlHost, sqlUsername, sqlPassword, sqlDB, sqlPort)
-
-function checkMySQL()
-	if not (mysql_ping(handler)) then
-		handler = mysql_connect(sqlHost, sqlUsername, sqlPassword, sqlDB, sqlPort)
-	end
-end
-setTimer(checkMySQL, 300000, 0)
-
-function closeMySQL()
-	if (handler) then
-		mysql_close(handler)
-	end
-end
-addEventHandler("onResourceStop", getResourceRootElement(getThisResource()), closeMySQL)
--- ////////////////////////////////////
--- //			MYSQL END			 //
--- ////////////////////////////////////
+mysql = exports.mysql
 
 local peds = { }
 
@@ -48,18 +22,22 @@ local dancingcycles =
 
 addEventHandler( "onResourceStart", getResourceRootElement( ),
 	function( )
-		local result = mysql_query( handler, "SELECT id, x, y, z, rotation, skin, type, interior, dimension, offset FROM dancers" )
-		for res, row in mysql_rows( result ) do
-			local id = tonumber( row[1] )
-			local x = tonumber( row[2] )
-			local y = tonumber( row[3] )
-			local z = tonumber( row[4] )
-			local rotation = tonumber( row[5] )
-			local skin = tonumber( row[6] )
-			local type = tonumber( row[7] )
-			local interior = tonumber( row[8] )
-			local dimension = tonumber( row[9] )
-			local offset = tonumber( row[10] )
+		local result = mysql:query("SELECT id, x, y, z, rotation, skin, type, interior, dimension, offset FROM dancers" )
+		local continue = true
+		while continue do
+			local row = mysql:fetch_assoc(result)
+			if not row then break end
+			
+			local id = tonumber( row["id"] )
+			local x = tonumber( row["x"] )
+			local y = tonumber( row["y"] )
+			local z = tonumber( row["z"] )
+			local rotation = tonumber( row["rotation"] )
+			local skin = tonumber( row["skin"] )
+			local type = tonumber( row["type"] )
+			local interior = tonumber( row["interior"] )
+			local dimension = tonumber( row["dimension"] )
+			local offset = tonumber( row["offset"] )
 			
 			local ped = createPed( skin, x, y, z )
 			setElementData( ped, "dbid", id, false )
@@ -70,7 +48,7 @@ addEventHandler( "onResourceStart", getResourceRootElement( ),
 			
 			peds[ ped ] = { type, offset }
 		end
-		mysql_free_result( result )
+		mysql:free_result( result )
 		
 		setTimer( updateDancing, 50, 1 )
 		setTimer( updateDancing, 12000, 0 )
@@ -91,18 +69,14 @@ addCommandHandler( "adddancer",
 				local interior = getElementInterior( thePlayer )
 				local dimension = getElementDimension( thePlayer )
 				
-				local query = mysql_query( handler, "SELECT COUNT(*) FROM dancers WHERE dimension = " .. dimension )
+				local query = mysql:query_fetch_assoc("SELECT COUNT(*) as number FROM dancers WHERE dimension = " .. dimension )
 				if query then
-					local num = tonumber( mysql_result( query, 1, 1 ) ) or 5
-					mysql_free_result( query )
+					local num = tonumber( query["number"] ) or 5
 					if dimension == 0 or num < 3 or exports.global:isPlayerScripter( thePlayer ) then
 						local ped = createPed( skin, x, y, z )
 						if ped then
-							local result = mysql_query( handler, "INSERT INTO dancers (x,y,z,rotation,skin,type,interior,dimension,offset) VALUES (" .. x .. "," .. y .. "," .. z .. "," .. rotation .. "," .. skin .. "," .. type .. "," .. interior .. "," .. dimension .. "," .. offset .. ")" )
-							if result then
-								local id = mysql_insert_id( handler )
-								mysql_free_result( result )
-								
+							local id = mysql:query_insert_free("INSERT INTO dancers (x,y,z,rotation,skin,type,interior,dimension,offset) VALUES (" .. x .. "," .. y .. "," .. z .. "," .. rotation .. "," .. skin .. "," .. type .. "," .. interior .. "," .. dimension .. "," .. offset .. ")" )
+							if id then
 								setElementData( ped, "dbid", id, false )
 								setElementData( ped, "position", { x, y, z, rotation }, false )
 								setPedRotation( ped, rotation )
@@ -115,7 +89,7 @@ addCommandHandler( "adddancer",
 								outputChatBox( "Added Dancer with ID " .. id .. ".", thePlayer, 0, 255, 0 )
 							else
 								destroyElement( ped )
-								outputDebugString( mysql_error( handler ) )
+								outputDebugString( "SQL error from /adddancer" )
 								outputChatBox( "SQL Error.", thePlayer, 255, 0, 0 )
 							end
 						else
@@ -125,7 +99,7 @@ addCommandHandler( "adddancer",
 						outputChatBox( "You can only have 3 dancers per interior.", thePlayer, 255, 0, 0 )
 					end
 				else
-					outputDebugString( mysql_error( handler ) )
+					outputDebugString( "sql error from /adddancer" )
 					outputChatBox( "SQL Error.", thePlayer, 255, 0, 0 )
 				end
 			end
@@ -161,7 +135,7 @@ addCommandHandler( "deldancer",
 			else
 				for ped in pairs( peds ) do
 					if getElementData( ped, "dbid" ) == tonumber( id ) then
-						mysql_free_result( mysql_query( handler, "DELETE FROM dancers WHERE id = " .. id ) )
+						mysql:query_free("DELETE FROM dancers WHERE id = " .. id )
 						
 						destroyElement( ped )
 						
