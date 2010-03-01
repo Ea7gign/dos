@@ -96,14 +96,13 @@ function arrestPlayer(thePlayer, commandName, targetPlayerNick, fine, jailtime, 
 									exports['item-system']:deleteAll(47, dbid)
 								end
 								exports.global:giveItem(thePlayer, restrainedObj, 1)
-								mysql_free_result( mysql_query( handler, "UPDATE characters SET cuffed = 0, restrainedby = 0, restrainedobj = 0 WHERE id = " .. getElementData( targetPlayer, "dbid" ) ) )
+								mysql:query_free("UPDATE characters SET cuffed = 0, restrainedby = 0, restrainedobj = 0 WHERE id = " .. getElementData( targetPlayer, "dbid" ) )
 							end
 							setPedWeaponSlot(targetPlayer,0)
 							
 							setElementData(targetPlayer, "pd.jailstation", targetCol)
 							
-							local query = mysql_query(handler, "UPDATE characters SET pdjail='1', pdjail_time='" .. jailtime .. "', pdjail_station='" .. targetCol .. "', cuffed = 0, restrainedby = 0, restrainedobj = 0 WHERE id = " .. getElementData( targetPlayer, "dbid" ) )
-							mysql_free_result(query)
+							mysql:query_free("UPDATE characters SET pdjail='1', pdjail_time='" .. jailtime .. "', pdjail_station='" .. targetCol .. "', cuffed = 0, restrainedby = 0, restrainedobj = 0 WHERE id = " .. getElementData( targetPlayer, "dbid" ) )
 							outputChatBox("You jailed " .. targetPlayerNick .. " for " .. jailtime .. " Minutes.", thePlayer, 255, 0, 0)
 							
 							local x, y, z = getElementPosition(cells[targetCol])
@@ -117,17 +116,12 @@ function arrestPlayer(thePlayer, commandName, targetPlayerNick, fine, jailtime, 
 							-- Show the message to the faction
 							local theTeam = getTeamFromName("Los Santos Police Department")
 							local teamPlayers = getPlayersInTeam(theTeam)
-							
-							local result = mysql_query(handler, "SELECT faction_id, faction_rank FROM characters WHERE charactername='" .. mysql_escape_string(handler, username) .. "' LIMIT 1")
-							
-							local factionID = tonumber(mysql_result(result, 1, 1))
-							local factionRank = tonumber(mysql_result(result, 1, 2))
-							
-							mysql_free_result(result)
-							
-							local titleresult = mysql_query(handler, "SELECT rank_" .. factionRank .. " FROM factions WHERE id='" .. factionID .. "' LIMIT 1")
-							local factionRankTitle = tostring(mysql_result(titleresult, 1, 1))
-							mysql_free_result(titleresult)
+
+							local factionID = getElementData(thePlayer, "faction")
+							local factionRank = getElementData(thePlayer, "factionrank")
+														
+							local factionRanks = getElementData(theTeam, "ranks")
+							local factionRankTitle = factionRanks[factionRank]
 							
 							outputChatBox("You were arrested by " .. username .. " for " .. jailtime .. " minute(s).", targetPlayer, 0, 102, 255)
 							outputChatBox("Crimes Committed: " .. reason .. ".", targetPlayer, 0, 102, 255)
@@ -166,8 +160,7 @@ function timerPDUnjailPlayer(jailedPlayer)
 		if (timeLeft<=0) and (theMagicTimer) then
 			killTimer(theMagicTimer) -- 0001290: PD /release bug
 			fadeCamera(jailedPlayer, false)
-			local query = mysql_query(handler, "UPDATE characters SET pdjail_time='0', pdjail='0', pdjail_station='0' WHERE id=" .. getElementData(jailedPlayer, "dbid"))
-			mysql_free_result(query)
+			mysql:query_free("UPDATE characters SET pdjail_time='0', pdjail='0', pdjail_station='0' WHERE id=" .. getElementData(jailedPlayer, "dbid"))
 			setElementDimension(jailedPlayer, getElementData(jailedPlayer, "pd.jailstation") <= 4 and 1 or 10583)
 			setElementInterior(jailedPlayer, 10)
 			setCameraInterior(jailedPlayer, 10)
@@ -189,8 +182,7 @@ function timerPDUnjailPlayer(jailedPlayer)
 			outputChatBox("Your time has been served.", jailedPlayer, 0, 255, 0)
 
 		elseif (timeLeft>0) then
-			local query = mysql_query(handler, "UPDATE characters SET pdjail_time='" .. timeLeft .. "' WHERE id=" .. getElementData(jailedPlayer, "dbid"))
-			mysql_free_result(query)
+			mysql:query_free("UPDATE characters SET pdjail_time='" .. timeLeft .. "' WHERE id=" .. getElementData(jailedPlayer, "dbid"))
 		end
 	end
 end

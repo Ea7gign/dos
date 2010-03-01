@@ -1,30 +1,4 @@
--- ////////////////////////////////////
--- //			MYSQL				 //
--- ////////////////////////////////////		
-sqlUsername = exports.mysql:getMySQLUsername()
-sqlPassword = exports.mysql:getMySQLPassword()
-sqlDB = exports.mysql:getMySQLDBName()
-sqlHost = exports.mysql:getMySQLHost()
-sqlPort = exports.mysql:getMySQLPort()
-
-handler = mysql_connect(sqlHost, sqlUsername, sqlPassword, sqlDB, sqlPort)
-
-function checkMySQL()
-	if not (mysql_ping(handler)) then
-		handler = mysql_connect(sqlHost, sqlUsername, sqlPassword, sqlDB, sqlPort)
-	end
-end
-setTimer(checkMySQL, 300000, 0)
-
-function closeMySQL()
-	if (handler) then
-		mysql_close(handler)
-	end
-end
-addEventHandler("onResourceStop", getResourceRootElement(getThisResource()), closeMySQL)
--- ////////////////////////////////////
--- //			MYSQL END			 //
--- ////////////////////////////////////
+mysql = exports.mysql
 
 local smallRadius = 5 --units
 
@@ -127,11 +101,11 @@ function takeLicense(thePlayer, commandName, targetPartialNick, licenseType, hou
 	
 		if (ftype==2) then
 			if not (targetPartialNick) then
-				outputChatBox("SYNTAX: /" .. commandName .. " [Player Partial Nick][license Type 1:Driving 2:Weapon] [Hours]", thePlayer)
+				outputChatBox("SYNTAX: /" .. commandName .. " [Player Partial Nick] [license Type 1:Driving 2:Weapon] [Hours]", thePlayer)
 			else
 				hours = tonumber(hours)
 				if not (licenseType) or not (hours) or hours < 0 then
-					outputChatBox("SYNTAX: /" .. commandName .. " [Player Partial Nick][license Type 1:Driving 2:Weapon] [Hours]", thePlayer)
+					outputChatBox("SYNTAX: /" .. commandName .. " [Player Partial Nick] [license Type 1:Driving 2:Weapon] [Hours]", thePlayer)
 				else
 					local targetPlayer, targetPlayerName = exports.global:findPlayerByPartialNick(thePlayer, targetPartialNick)
 					if targetPlayer then
@@ -139,8 +113,7 @@ function takeLicense(thePlayer, commandName, targetPartialNick, licenseType, hou
 						
 						if (tonumber(licenseType)==1) then
 							if(tonumber(getElementData(targetPlayer, "license.car")) == 1) then
-								local query = mysql_query(handler, "UPDATE characters SET car_license='" .. -hours .. "' WHERE id=" .. getElementData(targetPlayer, "dbid") .. " LIMIT 1")
-								mysql_free_result(query)
+								mysql:query_free("UPDATE characters SET car_license='" .. -hours .. "' WHERE id=" .. getElementData(targetPlayer, "dbid") .. " LIMIT 1")
 								outputChatBox(name.." has revoked your driving license.", targetPlayer, 255, 194, 14)
 								outputChatBox("You have revoked " .. targetPlayerName .. "'s driving license.", thePlayer, 255, 194, 14)
 								setElementData(targetPlayer, "license.car", -hours)
@@ -149,8 +122,7 @@ function takeLicense(thePlayer, commandName, targetPartialNick, licenseType, hou
 							end
 						elseif (tonumber(licenseType)==2) then
 							if(tonumber(getElementData(targetPlayer, "license.gun")) == 1) then
-								local query = mysql_query(handler, "UPDATE characters SET gun_license='" .. -hours .. "' WHERE id=" .. getElementData(targetPlayer, "dbid") .. " LIMIT 1")
-								mysql_free_result(query)
+								mysql:query_free("UPDATE characters SET gun_license='" .. -hours .. "' WHERE id=" .. getElementData(targetPlayer, "dbid") .. " LIMIT 1")
 								outputChatBox(name.." has revoked your weapon license.", targetPlayer, 255, 194, 14)
 								outputChatBox("You have revoked " .. targetPlayerName .. "'s weapon license.", thePlayer, 255, 194, 14)
 								setElementData(targetPlayer, "license.gun", -hours)
