@@ -1,30 +1,4 @@
--- ////////////////////////////////////
--- //			MYSQL				 //
--- ////////////////////////////////////		
-sqlUsername = exports.mysql:getMySQLUsername()
-sqlPassword = exports.mysql:getMySQLPassword()
-sqlDB = exports.mysql:getMySQLDBName()
-sqlHost = exports.mysql:getMySQLHost()
-sqlPort = exports.mysql:getMySQLPort()
-
-handler = mysql_connect(sqlHost, sqlUsername, sqlPassword, sqlDB, sqlPort)
-
-function checkMySQL()
-	if not (mysql_ping(handler)) then
-		handler = mysql_connect(sqlHost, sqlUsername, sqlPassword, sqlDB, sqlPort)
-	end
-end
-setTimer(checkMySQL, 300000, 0)
-
-function closeMySQL()
-	if (handler) then
-		mysql_close(handler)
-	end
-end
-addEventHandler("onResourceStop", getResourceRootElement(getThisResource()), closeMySQL)
--- ////////////////////////////////////
--- //			MYSQL END			 //
--- ////////////////////////////////////
+mysql = exports.mysql
 
 function playerDeath()
 	if getElementData(source, "adminjailed") then
@@ -58,12 +32,8 @@ function respawnPlayer(thePlayer)
 		exports.global:giveMoney( getTeamFromName("Los Santos Emergency Services"), math.ceil((1-tax)*cost) )
 		exports.global:giveMoney( getTeamFromName("Government of Los Santos"), math.ceil(tax*cost) )
 			
-		local update = mysql_query(handler, "UPDATE characters SET deaths = deaths + 1 WHERE charactername='" .. mysql_escape_string(handler, getPlayerName(thePlayer)) .. "'")
-		
-		if (update) then
-			mysql_free_result(update)
-		end
-		
+		mysql:query_free("UPDATE characters SET deaths = deaths + 1 WHERE charactername='" .. mysql:escape_string(getPlayerName(thePlayer)) .. "'")
+
 		setCameraInterior(thePlayer, 0)
 		
 		local text = "You have recieved treatment from the Los Santos Emergency Services."
