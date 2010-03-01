@@ -667,7 +667,7 @@ function phoneBook(thePlayer, commandName, partialNick)
 					local continue = true
 					while true do
 						local row = mysql:fetch_assoc(result)
-						if not result then break end
+						if not row then break end
 						local phoneNumber = tonumber(row["cellnumber"])
 						local username = tostring(row["charactername"])
 						username = string.gsub(username, "_", " ")
