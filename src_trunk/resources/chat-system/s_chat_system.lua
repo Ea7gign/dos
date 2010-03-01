@@ -1,30 +1,5 @@
--- ////////////////////////////////////
--- //			MYSQL				 //
--- ////////////////////////////////////		
-sqlUsername = exports.mysql:getMySQLUsername()
-sqlPassword = exports.mysql:getMySQLPassword()
-sqlDB = exports.mysql:getMySQLDBName()
-sqlHost = exports.mysql:getMySQLHost()
-sqlPort = exports.mysql:getMySQLPort()
+mysql = exports.mysql
 
-handler = mysql_connect(sqlHost, sqlUsername, sqlPassword, sqlDB, sqlPort)
-
-function checkMySQL()
-	if not (mysql_ping(handler)) then
-		handler = mysql_connect(sqlHost, sqlUsername, sqlPassword, sqlDB, sqlPort)
-	end
-end
-setTimer(checkMySQL, 300000, 0)
-
-function closeMySQL()
-	if (handler~=nil) then
-		mysql_close(handler)
-	end
-end
-addEventHandler("onResourceStop", getResourceRootElement(getThisResource()), closeMySQL)
--- ////////////////////////////////////
--- //			MYSQL END			 //
--- ////////////////////////////////////
 function trunklateText(thePlayer, text, factor)
 	if getElementData(thePlayer,"alcohollevel") and getElementData(thePlayer,"alcohollevel") > 0 then
 		local level = math.ceil( getElementData(thePlayer,"alcohollevel") * #text / ( factor or 5.5 ) )
@@ -481,7 +456,7 @@ function playerToggleOOC(thePlayer, commandName)
 			outputChatBox("You have now enabled Global OOC Chat.", thePlayer, 255, 194, 14)
 			setElementData(thePlayer, "globalooc", 1, false)
 		end
-		mysql_free_result( mysql_query( handler, "UPDATE accounts SET globalooc=" .. getElementData(thePlayer, "globalooc") .. " WHERE id = " .. getElementData(thePlayer, "gameaccountid") ) )
+		mysql:query_free("UPDATE accounts SET globalooc=" .. getElementData(thePlayer, "globalooc") .. " WHERE id = " .. getElementData(thePlayer, "gameaccountid"))
 	end
 end
 addCommandHandler("toggleooc", playerToggleOOC, false, false)
@@ -871,7 +846,6 @@ function toggleRadio(thePlayer, commandName, slot)
 				end
 			end
 		end
-		--mysql_free_result( mysql_query( handler, "UPDATE characters SET radiochannel=" .. channel .. " WHERE id = " .. getElementData(thePlayer, "dbid") ) )
 	else
 		outputChatBox("You do not have a radio!", thePlayer, 255, 0, 0)
 	end
@@ -1084,7 +1058,7 @@ function playerChangeChatbubbleMode(thePlayer, commandName, mode)
 				outputChatBox("All chatbubbles are now visible.", thePlayer, 255, 194, 14)
 			end
 			setElementData(thePlayer, "chatbubbles", mode, false)
-			mysql_free_result( mysql_query( handler, "UPDATE accounts SET chatbubbles=" .. mode .. " WHERE id = " .. getElementData( thePlayer, "gameaccountid" ) ) )
+			mysql:query_free("UPDATE accounts SET chatbubbles=" .. mode .. " WHERE id = " .. getElementData( thePlayer, "gameaccountid" ) )
 		end
 	end
 end
@@ -1138,7 +1112,7 @@ function togglePM(thePlayer, commandName)
 			setElementData(thePlayer, "pmblocked", 1, false)
 			outputChatBox("PM's are now disabled.", thePlayer, 255, 0, 0)
 		end
-		mysql_free_result( mysql_query( handler, "UPDATE accounts SET pmblocked=" .. getElementData(thePlayer, "pmblocked") .. " WHERE id = " .. getElementData(thePlayer, "gameaccountid") ) )
+		mysql:query_free("UPDATE accounts SET pmblocked=" .. getElementData(thePlayer, "pmblocked") .. " WHERE id = " .. getElementData(thePlayer, "gameaccountid"))
 	end
 end
 addCommandHandler("togpm", togglePM)
@@ -1152,11 +1126,11 @@ function toggleAds(thePlayer, commandName)
 		if (adblocked) then -- enable the ads again
 			setElementData(thePlayer, "disableAds", false, false)
 			outputChatBox("Ads are now enabled.", thePlayer, 0, 255, 0)
-			mysql_free_result( mysql_query( handler, "UPDATE accounts SET adblocked=0 WHERE id = " .. getElementData(thePlayer, "gameaccountid") ) )
+			mysql:query_free("UPDATE accounts SET adblocked=0 WHERE id = " .. getElementData(thePlayer, "gameaccountid") )
 		else -- disable them D:
 			setElementData(thePlayer, "disableAds", true, false)
 			outputChatBox("Ads are now disabled.", thePlayer, 255, 0, 0)
-			mysql_free_result( mysql_query( handler, "UPDATE accounts SET adblocked=1 WHERE id = " .. getElementData(thePlayer, "gameaccountid") ) )
+			mysql:query_free("UPDATE accounts SET adblocked=1 WHERE id = " .. getElementData(thePlayer, "gameaccountid") )
 		end
 	end
 end
@@ -1406,7 +1380,7 @@ function togNews(thePlayer, commandName)
 			outputChatBox("/news enabled.", thePlayer, 255, 194, 14)
 			setElementData(thePlayer, "tognews", 0, false)
 		end
-		mysql_free_result( mysql_query( handler, "UPDATE accounts SET newsblocked=" .. getElementData(thePlayer, "tognews") .. " WHERE id = " .. getElementData(thePlayer, "gameaccountid") ) )
+		mysql:query_free("UPDATE accounts SET newsblocked=" .. getElementData(thePlayer, "tognews") .. " WHERE id = " .. getElementData(thePlayer, "gameaccountid") )
 	end
 end
 addCommandHandler("tognews", togNews, false, false)
