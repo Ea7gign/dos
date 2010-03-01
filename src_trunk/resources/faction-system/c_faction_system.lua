@@ -1,6 +1,14 @@
 gFactionWindow, gMemberGrid, gMOTDLabel, colName, colRank, colWage, colLastLogin, colLocation, colLeader, colOnline, gButtonKick, gButtonPromote, gButtonDemote, gButtonEditRanks, gButtonEditMOTD, gButtonInvite, gButtonLeader, gButtonQuit, gButtonExit, wConfirmQuit = nil
 theMotd, theTeam, arrUsernames, arrRanks, arrLeaders, arrOnline, arrFactionRanks, arrLocations, arrFactionWages, arrLastLogin, membersOnline, membersOffline, gButtonRespawn = nil
 
+local function checkF3( )
+	if not f3state and getKeyState( "f3" ) then
+		hideFactionMenu( )
+	else
+		f3state = getKeyState( "f3" )
+	end
+end
+
 function showFactionMenu(motd, memberUsernames, memberRanks, memberLeaders, memberOnline, memberLastLogin, memberLocation, factionRanks, factionWages, factionTheTeam)
 	if (gFactionWindow==nil) then
 		invitedPlayer = nil
@@ -143,6 +151,9 @@ function showFactionMenu(motd, memberUsernames, memberRanks, memberLeaders, memb
 			
 			addEventHandler("onClientGUIClick", gButtonQuit, btQuitFaction, false)
 			addEventHandler("onClientGUIClick", gButtonExit, hideFactionMenu, false)
+			
+			addEventHandler("onClientRender", getRootElement(), checkF3)
+			f3state = getKeyState( "f3" )
 	else
 		hideFactionMenu()
 	end
@@ -591,6 +602,7 @@ function hideFactionMenu()
 	-- Clear variables (should reduce lag a tiny bit clientside)
 	gFactionWindow, gMemberGrid, gMOTDLabel, colName, colRank, colWage, colLastLogin, colLocation, colLeader, colOnline, gButtonKick, gButtonPromote, gButtonDemote, gButtonEditRanks, gButtonEditMOTD, gButtonInvite, gButtonLeader, gButtonQuit, gButtonExit = nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil
 	theMotd, theTeam, arrUsernames, arrRanks, arrLeaders, arrOnline, arrFactionRanks, arrLocations, arrFactionWages, arrLastLogin, membersOnline, membersOffline = nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil
+	removeEventHandler("onClientRender", getRootElement(), checkF3)
 end
 addEvent("hideFactionMenu", true)
 addEventHandler("hideFactionMenu", getRootElement(), hideFactionMenu)
