@@ -1,30 +1,4 @@
--- ////////////////////////////////////
--- //			MYSQL				 //
--- ////////////////////////////////////		
-sqlUsername = exports.mysql:getMySQLUsername()
-sqlPassword = exports.mysql:getMySQLPassword()
-sqlDB = exports.mysql:getMySQLDBName()
-sqlHost = exports.mysql:getMySQLHost()
-sqlPort = exports.mysql:getMySQLPort()
-
-handler = mysql_connect(sqlHost, sqlUsername, sqlPassword, sqlDB, sqlPort)
-
-function checkMySQL()
-	if not (mysql_ping(handler)) then
-		handler = mysql_connect(sqlHost, sqlUsername, sqlPassword, sqlDB, sqlPort)
-	end
-end
-setTimer(checkMySQL, 300000, 0)
-
-function closeMySQL()
-	if (handler) then
-		mysql_close(handler)
-	end
-end
-addEventHandler("onResourceStop", getResourceRootElement(getThisResource()), closeMySQL)
--- ////////////////////////////////////
--- //			MYSQL END			 //
--- ////////////////////////////////////
+mysql = exports.mysql
 
 --TAX
 tax = 15 -- percent
@@ -33,7 +7,7 @@ function getTaxAmount()
 end
 function setTaxAmount(new)
 	tax = math.max( 0, math.min( 30, math.ceil( new ) ) )
-	mysql_free_result( mysql_query( handler, "UPDATE settings SET value = " .. tax .. " WHERE name = 'tax'" ) )
+	mysql:query_free("UPDATE settings SET value = " .. tax .. " WHERE name = 'tax'" )
 end
 
 --INCOME TAX
@@ -43,30 +17,32 @@ function getIncomeTaxAmount()
 end
 function setIncomeTaxAmount(new)
 	incometax = math.max( 0, math.min( 25, math.ceil( new ) ) )
-	mysql_free_result( mysql_query( handler, "UPDATE settings SET value = " .. incometax .. " WHERE name = 'incometax'" ) )
+	mysql:query_free("UPDATE settings SET value = " .. incometax .. " WHERE name = 'incometax'" )
 end
 
 -- load income and normal tax on startup
 addEventHandler( "onResourceStart", getResourceRootElement( ),
 	function( )
-		local result = mysql_query( handler, "SELECT value FROM settings WHERE name = 'tax'" )
+		local result = mysql:query("SELECT value FROM settings WHERE name = 'tax'" )
 		if result then
-			if mysql_num_rows( result ) == 0 then
-				mysql_free_result( mysql_query( handler, "INSERT INTO settings (name, value) VALUES ('tax', " .. tax .. ")" ) )
+			if mysql:num_rows( result ) == 0 then
+				mysql:query_free("INSERT INTO settings (name, value) VALUES ('tax', " .. tax .. ")" )
 			else
-				tax = tonumber( mysql_result( result, 1, 1 ) ) or 15
+				local row = mysql:fetch_assoc(result)
+				tax = tonumber( row["value"] ) or 15
 			end
-			mysql_free_result( result )
+			mysql:free_result( result )
 		end
 		
-		local result = mysql_query( handler, "SELECT value FROM settings WHERE name = 'incometax'" )
+		local result = mysql:query( "SELECT value FROM settings WHERE name = 'incometax'" )
 		if result then
-			if mysql_num_rows( result ) == 0 then
-				mysql_free_result( mysql_query( handler, "INSERT INTO settings (name, value) VALUES ('incometax', " .. incometax .. ")" ) )
+			if mysql:num_rows( result ) == 0 then
+				mysql:query_free("INSERT INTO settings (name, value) VALUES ('incometax', " .. incometax .. ")" )
 			else
-				incometax = tonumber( mysql_result( result, 1, 1 ) ) or 10
+				local row = mysql:fetch_assoc(result)
+				incometax = tonumber( row["value"] ) or 10
 			end
-			mysql_free_result( result )
+			mysql:free_result( result )
 		end
 	end
 )
@@ -82,10 +58,10 @@ function giveMoney(thePlayer, amount)
 		
 		setElementData(thePlayer, "money", getMoney( thePlayer ) + amount )
 		if getElementType(thePlayer) == "player" then
-			mysql_free_result( mysql_query( handler, "UPDATE characters SET money = money + " .. amount .. " WHERE id = " .. getElementData( thePlayer, "dbid" ) ) )
+			mysql:query_free("UPDATE characters SET money = money + " .. amount .. " WHERE id = " .. getElementData( thePlayer, "dbid" ) )
 			givePlayerMoney( thePlayer, amount )
 		elseif getElementType(thePlayer) == "team" then
-			mysql_free_result( mysql_query( handler, "UPDATE factions SET bankbalance = bankbalance + " .. amount .. " WHERE id = " .. getElementData( thePlayer, "id" ) ) )
+			mysql:query_free("UPDATE factions SET bankbalance = bankbalance + " .. amount .. " WHERE id = " .. getElementData( thePlayer, "id" ) )
 		end
 		return true
 	end
@@ -109,10 +85,10 @@ function takeMoney(thePlayer, amount, rest)
 		elseif hasMoney(thePlayer, amount) then
 			setElementData(thePlayer, "money", money - amount )
 			if getElementType(thePlayer) == "player" then
-				mysql_free_result( mysql_query( handler, "UPDATE characters SET money = money - " .. amount .. " WHERE id = " .. getElementData( thePlayer, "dbid" ) ) )
+				mysql:query_free("UPDATE characters SET money = money - " .. amount .. " WHERE id = " .. getElementData( thePlayer, "dbid" ) )
 				takePlayerMoney( thePlayer, amount )
 			elseif getElementType(thePlayer) == "team" then
-				mysql_free_result( mysql_query( handler, "UPDATE factions SET bankbalance = bankbalance - " .. amount .. " WHERE id = " .. getElementData( thePlayer, "id" ) ) )
+				mysql:query_free("UPDATE factions SET bankbalance = bankbalance - " .. amount .. " WHERE id = " .. getElementData( thePlayer, "id" ) )
 			end
 			return true, amount
 		end
@@ -127,10 +103,10 @@ function setMoney(thePlayer, amount)
 		
 		setElementData(thePlayer, "money", amount )
 		if getElementType(thePlayer) == "player" then
-			mysql_free_result( mysql_query( handler, "UPDATE characters SET money = " .. amount .. " WHERE id = " .. getElementData( thePlayer, "dbid" ) ) )
+			mysql:query_free("UPDATE characters SET money = " .. amount .. " WHERE id = " .. getElementData( thePlayer, "dbid" ) )
 			setPlayerMoney( thePlayer, amount )
 		elseif getElementType(thePlayer) == "team" then
-			mysql_free_result( mysql_query( handler, "UPDATE factions SET bankbalance = " .. amount .. " WHERE id = " .. getElementData( thePlayer, "id" ) ) )
+			mysql:query_free("UPDATE factions SET bankbalance = " .. amount .. " WHERE id = " .. getElementData( thePlayer, "id" ) )
 		end
 		return true
 	end
