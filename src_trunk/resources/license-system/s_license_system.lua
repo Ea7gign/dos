@@ -1,42 +1,4 @@
--- ////////////////////////////////////
--- //			MYSQL				 //
--- ////////////////////////////////////		
-sqlUsername = exports.mysql:getMySQLUsername()
-sqlPassword = exports.mysql:getMySQLPassword()
-sqlDB = exports.mysql:getMySQLDBName()
-sqlHost = exports.mysql:getMySQLHost()
-sqlPort = exports.mysql:getMySQLPort()
-
-handler = mysql_connect(sqlHost, sqlUsername, sqlPassword, sqlDB, sqlPort)
-
-function checkMySQL()
-	if not (mysql_ping(handler)) then
-		handler = mysql_connect(sqlHost, sqlUsername, sqlPassword, sqlDB, sqlPort)
-	end
-end
-setTimer(checkMySQL, 300000, 0)
-
-function closeMySQL()
-	if (handler~=nil) then
-		mysql_close(handler)
-	end
-end
-addEventHandler("onResourceStop", getResourceRootElement(getThisResource()), closeMySQL)
--- ////////////////////////////////////
--- //			MYSQL END			 //
--- ////////////////////////////////////
-
---licenseColSphere = createColSphere(358.25839233398, 161.80035400391, 1008.3828125, 3)
---exports.pool:allocateElement(licenseColSphere)
---setElementInterior(licenseColSphere, 3)
---setElementDimension(licenseColSphere, 125)
-
---function hitLicenseColShape(thePlayer, matchingDimension)
---	if (matchingDimension) then
---		triggerClientEvent(thePlayer, "onLicense", thePlayer)
---	end
---end
---addEventHandler("onColShapeHit", licenseColSphere, hitLicenseColShape)
+mysql = exports.mysql
 
 function onLicenseServer()
 	local gender = getElementData(source, "gender")
@@ -59,15 +21,13 @@ function giveLicense(license, cost)
 		setElementData(source, "license.car", 1)
 		setElementData(theVehicle, "handbrake", 1, false)
 		setVehicleFrozen(theVehicle, true)
-		local query = mysql_query(handler, "UPDATE characters SET car_license='1' WHERE charactername='" .. mysql_escape_string(handler, getPlayerName(source)) .. "' LIMIT 1")
-		mysql_free_result(query)
+		mysql:query_free("UPDATE characters SET car_license='1' WHERE charactername='" .. mysql:escape_string(getPlayerName(source)) .. "' LIMIT 1")
 		outputChatBox("Congratulations, you've passed the second part of your driving examination.", source, 255, 194, 14)
 		outputChatBox("You are now fully licenses to drive on the public streets. You have paid the $350 processing fee.", source, 255, 194, 14)
 		exports.global:takeMoney(source, cost)
 	elseif (license==2) then
 		setElementData(source, "license.gun", 1)
-		local query = mysql_query(handler, "UPDATE characters SET gun_license='1' WHERE charactername='" .. mysql_escape_string(handler, getPlayerName(source)) .. "' LIMIT 1")
-		mysql_free_result(query)
+		mysql:free_result("UPDATE characters SET gun_license='1' WHERE charactername='" .. mysql:escape_string(getPlayerName(source)) .. "' LIMIT 1")
 		outputChatBox("You obtained your weapons license.", source, 255, 194, 14)
 		exports.global:takeMoney(source, cost)
 	end
@@ -83,8 +43,7 @@ addEventHandler("payFee", getRootElement(), payFee)
 
 function passTheory()
 	setElementData(source,"license.car",3) -- Set data to "theory passed"
-	local query = mysql_query(handler, "UPDATE characters SET car_license='3' WHERE charactername='" .. mysql_escape_string(handler, getPlayerName(source)) .. "' LIMIT 1")
-	mysql_free_result(query)
+	mysql:query_free("UPDATE characters SET car_license='3' WHERE charactername='" .. mysql:escape_string(getPlayerName(source)) .. "' LIMIT 1")
 end
 addEvent("theoryComplete", true)
 addEventHandler("theoryComplete", getRootElement(), passTheory)
