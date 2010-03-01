@@ -1,64 +1,38 @@
--- ////////////////////////////////////
--- //			MYSQL				 //
--- ////////////////////////////////////		
-sqlUsername = exports.mysql:getMySQLUsername()
-sqlPassword = exports.mysql:getMySQLPassword()
-sqlDB = exports.mysql:getMySQLDBName()
-sqlHost = exports.mysql:getMySQLHost()
-sqlPort = exports.mysql:getMySQLPort()
-
-handler = mysql_connect(sqlHost, sqlUsername, sqlPassword, sqlDB, sqlPort)
-
-function checkMySQL()
-	if not (mysql_ping(handler)) then
-		handler = mysql_connect(sqlHost, sqlUsername, sqlPassword, sqlDB, sqlPort)
-	end
-end
-setTimer(checkMySQL, 300000, 0)
-
-function closeMySQL()
-	if (handler) then
-		mysql_close(handler)
-	end
-end
-addEventHandler("onResourceStop", getResourceRootElement(getThisResource()), closeMySQL)
--- ////////////////////////////////////
--- //			MYSQL END			 //
--- ////////////////////////////////////
+mysql = exports.mysql
 
 -- PUBLIC PHONES
 addEventHandler( "onResourceStart", getResourceRootElement( ),
 	function( )
-		local result = mysql_query(handler, "SELECT id, x, y, z, dimension FROM publicphones")
-		local count = 0
-		
+		local result = mysql:query("SELECT id, x, y, z, dimension FROM publicphones")
 		if (result) then
-			for result, row in mysql_rows(result) do
-				local id = tonumber(row[1])
+			local continue = true
+			while continue do
+				row = mysql:fetch_assoc(result)
+				if not (row) then
+					break
+				end
+				local id = tonumber(row["id"])
 					
-				local x = tonumber(row[2])
-				local y = tonumber(row[3])
-				local z = tonumber(row[4])
+				local x = tonumber(row["x"])
+				local y = tonumber(row["y"])
+				local z = tonumber(row["z"])
 					
-				local dimension = tonumber(row[5])
+				local dimension = tonumber(row["dimension"])
 				
 				local shape = createColSphere(x, y, z, 1)
 				exports.pool:allocateElement(shape)
 				setElementDimension(shape, dimension)
 				setElementData(shape, "dbid", id, false)
-				
-				count = count + 1
 			end
-			mysql_free_result(result)
+			mysql:free_result(result)
 		end
 	end
 )
 
 function SmallestID( ) -- finds the smallest ID in the SQL instead of auto increment
-	local result = mysql_query(handler, "SELECT MIN(e1.id+1) AS nextID FROM publicphones AS e1 LEFT JOIN publicphones AS e2 ON e1.id +1 = e2.id WHERE e2.id IS NULL")
+	local result = mysql:query_fetch_assoc("SELECT MIN(e1.id+1) AS nextID FROM publicphones AS e1 LEFT JOIN publicphones AS e2 ON e1.id +1 = e2.id WHERE e2.id IS NULL")
 	if result then
-		local id = tonumber(mysql_result(result, 1, 1)) or 1
-		mysql_free_result(result)
+		local id = tonumber(result["nextID"]) or 1
 		return id
 	end
 	return false
@@ -70,10 +44,9 @@ function addPhone(thePlayer, commandName)
 		local dimension = getElementDimension(thePlayer)
 		
 		local id = SmallestID()
-		local query = mysql_query(handler, "INSERT INTO publicphones SET id=" .. id .. ", x="  .. x .. ", y=" .. y .. ", z=" .. z .. ", dimension=" .. dimension)
+		local query = mysql:query_free("INSERT INTO publicphones SET id=" .. id .. ", x="  .. x .. ", y=" .. y .. ", z=" .. z .. ", dimension=" .. dimension)
 		
 		if (query) then
-			mysql_free_result(query)
 			
 			local shape = createColSphere(x, y, z, 1)
 			exports.pool:allocateElement(shape)
@@ -127,11 +100,7 @@ function delPhone(thePlayer, commandName, id)
 			
 			if (colShape) then
 				local id = getElementData(colShape, "dbid")
-				local result = mysql_query(handler, "DELETE FROM publicphones WHERE id=" .. id)
-				
-				if (result) then
-					mysql_free_result(result)
-				end
+				local result = mysql:query_free("DELETE FROM publicphones WHERE id=" .. id)
 				
 				outputChatBox("Phone #" .. id .. " deleted.", thePlayer)
 				destroyElement(colShape)
@@ -692,12 +661,13 @@ function phoneBook(thePlayer, commandName, partialNick)
 				outputChatBox("SYNTAX: /phonebook [Partial Name]", thePlayer, 255, 194, 14)
 			else
 				exports.global:sendLocalMeAction(thePlayer, "looks into their phonebook.")
-				local result = mysql_query(handler, "SELECT cellnumber, charactername FROM characters WHERE charactername LIKE '%" .. mysql_escape_string(handler, partialNick) .. "%' AND cellnumber >= 15000")
+				local result = mysql:query("SELECT cellnumber, charactername FROM characters WHERE charactername LIKE '%" .. mysql:escape_string(partialNick) .. "%' AND cellnumber >= 15000")
 				
-				if (mysql_num_rows(result)>0) then
-					for result, row in mysql_rows(result) do
-						local phoneNumber = tonumber(row[1])
-						local username = tostring(row[2])
+				if (mysql:num_rows(result)>0) then
+					local continue = true
+					while true do
+						local phoneNumber = tonumber(row["cellnumber"])
+						local username = tostring(row["charactername"])
 						username = string.gsub(username, "_", " ")
 						
 						outputChatBox(username .. " - #" .. phoneNumber .. ".", thePlayer)
@@ -705,7 +675,7 @@ function phoneBook(thePlayer, commandName, partialNick)
 				else
 					outputChatBox("You find no one with that name.", thePlayer, 255, 194, 14)
 				end
-				mysql_free_result(result)
+				mysql:free_result(result)
 			end
 		else
 			outputChatBox("Believe it or not, it's hard to use a phonebook you do not have.", thePlayer, 255, 0, 0)
@@ -729,7 +699,7 @@ function togglePhone(thePlayer, commandName)
 				outputChatBox("You switched your phone off.", thePlayer, 255, 0, 0)
 			end
 			setElementData(thePlayer, "phoneoff", 1 - phoneoff, false)
-			mysql_free_result( mysql_query( handler, "UPDATE characters SET phoneoff=" .. ( 1 - phoneoff ) .. " WHERE id = " .. getElementData(thePlayer, "dbid") ) )
+			mysql:query_free( "UPDATE characters SET phoneoff=" .. ( 1 - phoneoff ) .. " WHERE id = " .. getElementData(thePlayer, "dbid") )
 		end
 	end
 end
@@ -770,16 +740,15 @@ function sendSMS(thePlayer, commandName, number, ...)
 							if isElement( thePlayer ) then
 								local id = getElementData( thePlayer, "dbid" )
 								if id then
-									local impounded = mysql_query(handler, "SELECT COUNT(*) FROM vehicles WHERE owner = " .. id .. " and Impounded > 0")
+									local impounded = mysql:query_fetch_assoc("SELECT COUNT(*) as no FROM vehicles WHERE owner = " .. id .. " and Impounded > 0")
 									if impounded then
+										local amount = tonumber(impounded["no"])
 										exports.global:sendLocalMeAction(thePlayer, "receives a text message.")
-										local amount = tonumber(mysql_result(impounded, 1, 1)) or 0
 										if amount > 0 then
 											outputChatBox("((Best's Towing & Recovery)) #999 [SMS]: " .. amount .. " of your vehicles are impounded. Head over to the Impound to release them.", thePlayer, 120, 255, 80)
 										else
 											outputChatBox("((Best's Towing & Recovery)) #999 [SMS]: None of your vehicles are impounded.", thePlayer, 120, 255, 80)
 										end
-										mysql_free_result(impounded)
 									end
 								end
 							end
