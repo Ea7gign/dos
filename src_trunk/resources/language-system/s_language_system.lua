@@ -1,30 +1,4 @@
--- ////////////////////////////////////
--- //			MYSQL				 //
--- ////////////////////////////////////		
-sqlUsername = exports.mysql:getMySQLUsername()
-sqlPassword = exports.mysql:getMySQLPassword()
-sqlDB = exports.mysql:getMySQLDBName()
-sqlHost = exports.mysql:getMySQLHost()
-sqlPort = exports.mysql:getMySQLPort()
-
-handler = mysql_connect(sqlHost, sqlUsername, sqlPassword, sqlDB, sqlPort)
-
-function checkMySQL()
-	if not (mysql_ping(handler)) then
-		handler = mysql_connect(sqlHost, sqlUsername, sqlPassword, sqlDB, sqlPort)
-	end
-end
-setTimer(checkMySQL, 300000, 0)
-
-function closeMySQL()
-	if (handler) then
-		mysql_close(handler)
-	end
-end
-addEventHandler("onResourceStop", getResourceRootElement(getThisResource()), closeMySQL)
--- ////////////////////////////////////
--- //			MYSQL END			 //
--- ////////////////////////////////////
+mysql = exports.mysql
 
 function increaseLanguageSkill(player, language)
 	local hasLanguage, slot = doesPlayerHaveLanguage(player, language)
@@ -35,7 +9,7 @@ function increaseLanguageSkill(player, language)
 			if chance == 1 then
 				triggerClientEvent(player, "increaseInSkill", player, language)
 				setElementData(player, "languages.lang" .. slot .. "skill", currSkill+1, false)
-				mysql_free_result( mysql_query( handler, "UPDATE characters SET lang" .. slot .. "skill = " .. currSkill + 1 .. " WHERE id = " .. getElementData( player, "dbid" ) ) )
+				mysql:query_free("UPDATE characters SET lang" .. slot .. "skill = " .. currSkill + 1 .. " WHERE id = " .. getElementData( player, "dbid" )) 
 			end
 		end
 	end
@@ -64,7 +38,7 @@ function removeLanguage(player, language)
 		-- unbindKey(player, tostring(slot), "down", "chatbox")
 		setElementData(player, "languages.lang" .. slot, 0)
 		setElementData(player, "languages.lang" .. slot .. "skill", 0)
-		mysql_free_result( mysql_query( handler, "UPDATE characters SET lang" .. slot .. " = 0, lang" .. slot .. "skill = 0 WHERE id = " .. getElementData( player, "dbid" ) ) )
+		mysql:query_free("UPDATE characters SET lang" .. slot .. " = 0, lang" .. slot .. "skill = 0 WHERE id = " .. getElementData( player, "dbid" ) )
 		return true
 	else
 		return false
@@ -223,7 +197,7 @@ function learnLanguage(player, lang, showmessages, skill)
 			
 			setElementData(player, "languages.lang" .. freeslot, lang, false)
 			setElementData(player, "languages.lang" .. freeslot .. "skill", skill or 0, false)
-			mysql_free_result( mysql_query( handler, "UPDATE characters SET lang" .. freeslot .. " = " .. lang .. ", lang" .. freeslot .. "skill = " .. ( skill or 0 ) .. " WHERE id = " .. getElementData( player, "dbid" ) ) )
+			mysql:query_free("UPDATE characters SET lang" .. freeslot .. " = " .. lang .. ", lang" .. freeslot .. "skill = " .. ( skill or 0 ) .. " WHERE id = " .. getElementData( player, "dbid" ) )
 			
 			-- bindKey(player, tostring( freeslot ), "down", "chatbox", getLanguageName( lang ))
 
@@ -255,7 +229,7 @@ function useLanguage(lang)
 	if (hasLanguage) then
 		outputChatBox("You are now using " .. languages[lang] .. " as your language.", source, 255, 194, 14)
 		setElementData(source, "languages.current", slot, false)
-		mysql_free_result( mysql_query( handler, "UPDATE characters SET currLang = " .. slot .. " WHERE id = " .. getElementData( source, "dbid" ) ) )
+		mysql:query_free("UPDATE characters SET currLang = " .. slot .. " WHERE id = " .. getElementData( source, "dbid" ) )
 			
 		showLanguages(source)
 	end
@@ -272,7 +246,7 @@ function unlearnLanguage(lang)
 		
 		local nextSlot = getNextLanguageSlot(source)
 		setElementData(source, "languages.current", nextSlot, false)
-		mysql_free_result( mysql_query( handler, "UPDATE characters SET currLang = " .. nextSlot .. " WHERE id = " .. getElementData( source, "dbid" ) ) )
+		mysql:query_free( "UPDATE characters SET currLang = " .. nextSlot .. " WHERE id = " .. getElementData( source, "dbid" ) )
 		showLanguages(source)
 	end
 end
