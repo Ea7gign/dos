@@ -465,6 +465,10 @@ function sitAnimation(thePlayer, cmd, arg)
 				exports.global:applyAnimation( thePlayer, "FOOD", "FF_Sit_Look", -1, true, false, false)
 			elseif arg == 3 then
 				exports.global:applyAnimation( thePlayer, "Attractors", "Stepsit_loop", -1, true, false, false)
+			elseif arg == 4 then
+				exports.global:applyAnimation( thePlayer, "BEACH", "ParkSit_W_loop", 1, true, false, false)
+			elseif arg == 5 then
+				exports.global:applyAnimation( thePlayer, "BEACH", "ParkSit_M_loop", 1, true, false, false)
 			else
 				exports.global:applyAnimation( thePlayer, "ped", "SEAT_idle", -1, true, false, false)
 			end
@@ -687,3 +691,22 @@ function winAnimation(thePlayer, cmd, arg)
 	end
 end
 addCommandHandler ( "win", winAnimation, false, false )
+
+-- /kickballs Amination -------------------------------------------------------------------------
+function kickballsAnimation(thePlayer, cmd, arg)
+	local logged = getElementData(thePlayer, "loggedin")
+	if (logged==1) then
+		exports.global:applyAnimation( thePlayer, "FIGHT_E", "FightKick_B", 1, false, false, false)
+	end
+end
+addCommandHandler ( "kickballs", kickballs, false, false )
+
+-- /grabbottle Amination -------------------------------------------------------------------------
+function grabbAnimation(thePlayer, cmd, arg)
+	local logged = getElementData(thePlayer, "loggedin")
+
+	if (logged==1) then
+		exports.global:applyAnimation( thePlayer, "BAR", "Barserve_bottle", 2000, false, false, false)
+	end
+end
+addCommandHandler ( "grabbottle", grabbAnimation, false, false )
