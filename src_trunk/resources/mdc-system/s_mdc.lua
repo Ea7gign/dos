@@ -1,43 +1,17 @@
--- ////////////////////////////////////
--- //			MYSQL				 //
--- ////////////////////////////////////		
-sqlUsername = exports.mysql:getMySQLUsername()
-sqlPassword = exports.mysql:getMySQLPassword()
-sqlDB = exports.mysql:getMySQLDBName()
-sqlHost = exports.mysql:getMySQLHost()
-sqlPort = exports.mysql:getMySQLPort()
-
-handler = mysql_connect(sqlHost, sqlUsername, sqlPassword, sqlDB, sqlPort)
-
-function checkMySQL()
-	if not (mysql_ping(handler)) then
-		handler = mysql_connect(sqlHost, sqlUsername, sqlPassword, sqlDB, sqlPort)
-	end
-end
-setTimer(checkMySQL, 300000, 0)
-
-function closeMySQL()
-	if (handler) then
-		mysql_close(handler)
-	end
-end
-addEventHandler("onResourceStop", getResourceRootElement(getThisResource()), closeMySQL)
--- ////////////////////////////////////
--- //			MYSQL END			 //
--- ////////////////////////////////////
+mysql = exports.mysql
 
 -- function adds a new suspect to the database, where the details are stored in the table, "details"
 function addNewSuspectToDatabase(details)
 
 	-- check to see if the suspect is already in the database
-	local result = mysql_query(handler, "SELECT suspect_name FROM suspectDetails WHERE suspect_name='" .. details[1] .. "'")
+	local result = mysql:query("SELECT suspect_name FROM suspectDetails WHERE suspect_name='" .. details[1] .. "'")
 	local name
-	if (mysql_num_rows(result)>0) then
+	if (mysql:num_rows(result)>0) then
 		name = "exists"
 	else
 		name = nil
 	end
-	mysql_free_result(result)
+	mysql:free_result(result)
 	
 	-- if the player has attached a photo, get the suspects skin
 	if (details[9] ) then
@@ -68,12 +42,7 @@ function addNewSuspectToDatabase(details)
 	-- if player is not already in the database, insert them
 	
 	if (name==nil) then
-		local result = mysql_query(handler, "INSERT INTO suspectDetails SET suspect_name='" .. details[1] .. "', birth='" .. details[2] .. "', gender='" .. details[3] .. "', ethnicy='" .. details[4] .. "', cell='" .. (tonumber(details[5]) or 0) .. "', occupation='" .. details[6] .. "', address='" .. details[7] .. "', other='" .. details[8] .. "', is_wanted='0', wanted_reason='None', wanted_punishment='None', wanted_by='None', photo='" .. details[9] .. "', done_by='" .. details[10] .. "'")
-		if result then
-			mysql_free_result(result)
-		else
-			exports.irc:sendAdminMessage(tostring(mysql_error(handler)))
-		end
+		mysql:query_free("INSERT INTO suspectDetails SET suspect_name='" .. details[1] .. "', birth='" .. details[2] .. "', gender='" .. details[3] .. "', ethnicy='" .. details[4] .. "', cell='" .. (tonumber(details[5]) or 0) .. "', occupation='" .. details[6] .. "', address='" .. details[7] .. "', other='" .. details[8] .. "', is_wanted='0', wanted_reason='None', wanted_punishment='None', wanted_by='None', photo='" .. details[9] .. "', done_by='" .. details[10] .. "'")
 	end
 end
 addEvent("onAddNewSuspect", true)
@@ -83,9 +52,8 @@ addEventHandler("onAddNewSuspect", getRootElement(), addNewSuspectToDatabase)
 function addUpdateSuspectToDatabase(details)
 
 	-- check to see if the suspect is already in the database
-	local result = mysql_query(handler, "SELECT suspect_name FROM suspectDetails WHERE suspect_name='" .. details[1] .. "'")
-	local name = mysql_result(result, 1, 1)
-	mysql_free_result(result)
+	local result = mysql:query_fetch_assoc("SELECT suspect_name FROM suspectDetails WHERE suspect_name='" .. mysql:escape_string(details[1]) .. "'")
+	local name = result["suspect_name"]
 	
 	local updatePhoto = details[9]
 	
@@ -114,32 +82,31 @@ function addUpdateSuspectToDatabase(details)
 	if (name) then
 	
 		local sucess
-	
+		
+		-- build our query
+		local query = "UPDATE suspectDetails SET birth='" ..  mysql:escape_string(details[2]) .. "', gender='" ..  mysql:escape_string(details[3]) .. "', ethnicy='" ..  mysql:escape_string(details[4]) .. "', cell='" ..  mysql:escape_string(details[5]) .. "', occupation='" ..  mysql:escape_string(details[6]) .. "', address='" ..  mysql:escape_string(details[7]) .. "', other='" ..  mysql:escape_string(details[8]) .. "', done_by='" ..  mysql:escape_string(details[10]) .. "'"
 		if(updatePhoto) then
-			local query = mysql_query(handler, "UPDATE suspectDetails SET birth='" .. details[2] .. "', gender='" .. details[3] .. "', ethnicy='" .. details[4] .. "', cell='" .. details[5] .. "', occupation='" .. details[6] .. "', address='" .. details[7] .. "', other='" .. details[8] .. "', photo='" .. details[9] .. "', done_by='" .. details[10] .. "' WHERE suspect_name='" .. details[1] .. "'")
-			mysql_free_result(query)
-		else
-			local query = mysql_query(handler, "UPDATE suspectDetails SET birth='" .. details[2] .. "', gender='" .. details[3] .. "', ethnicy='" .. details[4] .. "', cell='" .. details[5] .. "', occupation='" .. details[6] .. "', address='" .. details[7] .. "', other='" .. details[8] .. "', done_by='" .. details[10] .. "' WHERE suspect_name='" .. details[1] .. "'")
-			mysql_free_result(query)
+			query = query .. ", photo='" ..  mysql:escape_string(details[9]) .. "'"
 		end
+		query = query .. " WHERE suspect_name='" ..  mysql:escape_string(details[1]) .. "'"
+		mysql:query_free(query)
 		
 		if(sucess) then
 			-- get the new details and send them back to the client
-			local result = mysql_query(handler, "SELECT suspect_name, birth, gender, ethnicy, cell, occupation, address, otherphoto, done_by FROM suspectDetails WHERE suspect_name='" .. details[1] .. "' LIMIT 1")
+			local result = mysql:query_fetch_assoc("SELECT suspect_name, birth, gender, ethnicy, cell, occupation, address, otherphoto, done_by FROM suspectDetails WHERE suspect_name='" .. mysql:escape_string(details[1]) .. "' LIMIT 1")
 			
 			-- backwards compatability for jasons code...
 			local tableresult = { }
 			tableresult[1] = { }
-			tableresult[1][1] = mysql_result(result, 1, 1)
-			tableresult[1][2] = mysql_result(result, 1, 2)
-			tableresult[1][3] = mysql_result(result, 1, 3)
-			tableresult[1][4] = mysql_result(result, 1, 4)
-			tableresult[1][5] = mysql_result(result, 1, 5)
-			tableresult[1][6] = mysql_result(result, 1, 6)
-			tableresult[1][7] = mysql_result(result, 1, 7)
-			tableresult[1][8] = mysql_result(result, 1, 8)
-			tableresult[1][9] = mysql_result(result, 1, 9)
-			mysql_free_result(result)
+			tableresult[1][1] = result["suspect_name"]
+			tableresult[1][2] = result["birth"]
+			tableresult[1][3] = result["gender"]
+			tableresult[1][4] = result["ethnicy"]
+			tableresult[1][5] = result["cell"]
+			tableresult[1][6] = result["occupation"]
+			tableresult[1][7] = result["address"]
+			tableresult[1][8] = result["otherphoto"]
+			tableresult[1][9] = result["done_by"]
 			
 			triggerClientEvent(client, "onSaveSuspectDetailsClient", client, details[1] , tableresult)
 		end
@@ -156,32 +123,26 @@ addEventHandler("onUpdateSuspectDetails", getRootElement(), addUpdateSuspectToDa
 function getSuspectDetails(suspectName)
 
 	-- get the details
-	local result = mysql_query(handler, "SELECT suspect_name, birth, gender, ethnicy, cell, occupation, address, other, is_wanted, wanted_punishment, wanted_by, photo, done_by FROM suspectDetails WHERE suspect_name='" .. suspectName .. "' LIMIT 1")
+	local result = mysql:query_fetch_assoc("SELECT suspect_name, birth, gender, ethnicy, cell, occupation, address, other, is_wanted, wanted_punishment, wanted_by, photo, done_by FROM suspectDetails WHERE suspect_name='" .. mysql:escape_string(suspectName) .. "' LIMIT 1")
 	
 	-- send the details to the client
 	if(result) then
-		if (mysql_num_rows(result)>0) then
-			-- backwards compatability for jasons code...
-			local tableresult = { }
-			tableresult[1] = { }
-			tableresult[1][1] = mysql_result(result, 1, 1)
-			tableresult[1][2] = mysql_result(result, 1, 2)
-			tableresult[1][3] = mysql_result(result, 1, 3)
-			tableresult[1][4] = mysql_result(result, 1, 4)
-			tableresult[1][5] = mysql_result(result, 1, 5)
-			tableresult[1][6] = mysql_result(result, 1, 6)
-			tableresult[1][7] = mysql_result(result, 1, 7)
-			tableresult[1][8] = mysql_result(result, 1, 8)
-			tableresult[1][9] = mysql_result(result, 1, 9)
-			tableresult[1][10] = mysql_result(result, 1, 10)
-			tableresult[1][11] = mysql_result(result, 1, 11)
-			tableresult[1][12] = mysql_result(result, 1, 12)
-			tableresult[1][13] = mysql_result(result, 1, 13)
-			triggerClientEvent(client, "onSaveSuspectDetailsClient", client, suspectName, tableresult)
-		else
-			triggerClientEvent(client, "onSaveSuspectDetailsClient", client, suspectName, nil )
-		end
-		mysql_free_result(result)
+		local tableresult = { }
+		tableresult[1] = { }
+		tableresult[1][1] = result["suspect_name"]
+		tableresult[1][2] = result["birth"]
+		tableresult[1][3] = result["gender"]
+		tableresult[1][4] = result["ethnicy"]
+		tableresult[1][5] = result["cell"]
+		tableresult[1][6] = result["occupation"]
+		tableresult[1][7] = result["address"]
+		tableresult[1][8] = result["other"]
+		tableresult[1][9] = result["is_wanted"]
+		tableresult[1][10] = result["wanted_punishment"]
+		tableresult[1][11] = result["wanted_by"]
+		tableresult[1][12] = result["photo"]
+		tableresult[1][13] = result["done_by"]
+		triggerClientEvent(client, "onSaveSuspectDetailsClient", client, suspectName, tableresult)
 	else
 		triggerClientEvent(client, "onSaveSuspectDetailsClient", client, suspectName, nil )
 	end
@@ -194,14 +155,14 @@ addEventHandler("onGetSuspectDetails", getRootElement(), getSuspectDetails)
 function getSuspectWhoAreWanted()
 	
 	-- get the details
-	local result = mysql_query(handler, "SELECT suspect_name FROM suspectDetails WHERE is_wanted='1'")
+	local result = mysql:query("SELECT suspect_name FROM suspectDetails WHERE is_wanted='1'")
 	
-	if (mysql_num_rows(result)>0) then
+	if (mysql:num_rows(result)>0) then
 		-- backwards compatability for jasons code...
 		local tableresult = { }
 		local tablecount = 1
 		while true do
-			local row = mysql_fetch_assoc(result)
+			local row = mysql:fetch_assoc(result)
 			if (not row) then break end
 			tableresult[tablecount] = { }
 			tableresult[tablecount][1] = row["suspect_name"]
@@ -211,7 +172,7 @@ function getSuspectWhoAreWanted()
 	else
 		triggerClientEvent(client, "onSaveSuspectWantedClient", client, nil )
 	end
-	mysql_free_result(result)
+	mysql:free_result(result)
 	
 end
 addEvent("onGetWantedSuspects", true)
@@ -221,14 +182,12 @@ addEventHandler("onGetWantedSuspects", getRootElement(), getSuspectWhoAreWanted)
 -- function updates the suspects warrant details
 function addUpdateSuspectWarrantToDatabase(warrantDetails)
 	-- check to see if the suspect is already in the database
-	local result = mysql_query(handler, "SELECT suspect_name FROM suspectDetails WHERE suspect_name='" .. warrantDetails[1] .. "'")
-	local name = mysql_result(result, 1, 1)
-	mysql_free_result(result)
+	local result = mysql:query_fetch_assoc("SELECT suspect_name FROM suspectDetails WHERE suspect_name='" .. mysql:escape_string(warrantDetails[1]) .. "'")
+	local name = result["suspect_name"]
 	
 	--if player is already in the database, updatethem
 	if (name) then
-		local query = mysql_query(handler, "UPDATE suspectDetails SET is_wanted = '"..warrantDetails[2].."', wanted_reason = '"..warrantDetails[3].."', wanted_punishment = '"..warrantDetails[4].."', wanted_by = '"..warrantDetails[5].."' WHERE suspect_name = '"..warrantDetails[1].. "'")
-		mysql_free_result(query)
+		mysql:query_free("UPDATE suspectDetails SET is_wanted = '"..mysql:escape_string(warrantDetails[2]).."', wanted_reason = '"..mysql:escape_string(warrantDetails[3]).."', wanted_punishment = '"..mysql:escape_string(warrantDetails[4]).."', wanted_by = '"..mysql:escape_string(warrantDetails[5]).."' WHERE suspect_name = '"..mysql:escape_string(warrantDetails[1]).. "'")
 	end
 
 end
@@ -238,12 +197,11 @@ addEventHandler("onUpdateSuspectWarrantDetails", getRootElement(), addUpdateSusp
 
 -- function saves a crime to the database
 function saveCrime(details)
-	if(string.len(details[12]) > 351) then
+	if(string.len(details[12]) > 350) then
 		outputChatBox("Too much information passed, unable to save crime - please add again.", client, 255, 0 ,0, true)
 	else	
 		-- insert the crimes
-		local query = mysql_query(handler, "INSERT INTO suspectCrime SET suspect_name='" .. details[1] .. "', time='" .. details[2] .. "', date='" .. details[3] .. "', officers='" .. details[4] .. "', ticket='" .. details[5] .. "', arrest='" .. details[6] .. "', fine='" .. details[7] .. "', ticket_price='" .. details[8] .. "', arrest_price='" .. details[9] .. "', fine_price='" .. details[10] .. "', illegal_items='" .. details[11] .. "', details='" .. details[12] .. "', done_by='" .. details[13] .. "'")
-		mysql_free_result(query)
+		mysql:query_free("INSERT INTO suspectCrime SET suspect_name='" .. mysql:escape_string(details[1]) .. "', time='" .. mysql:escape_string(details[2]) .. "', date='" .. mysql:escape_string(details[3]) .. "', officers='" .. mysql:escape_string(details[4]) .. "', ticket='" .. mysql:escape_string(details[5]) .. "', arrest='" .. mysql:escape_string(details[6]) .. "', fine='" .. mysql:escape_string(details[7]) .. "', ticket_price='" .. mysql:escape_string(details[8]) .. "', arrest_price='" .. mysql:escape_string(details[9]) .. "', fine_price='" .. mysql:escape_string(details[10]) .. "', illegal_items='" .. mysql:escape_string(details[11]) .. "', details='" .. mysql:escape_string(details[12]) .. "', done_by='" .. mysql:escape_string(details[13]) .. "'")
 
 		outputChatBox("Crime added sucessfully.", client, 0, 255 ,0, true)
 	end
@@ -254,15 +212,15 @@ addEventHandler("onSaveSuspectCrime", getRootElement(), saveCrime)
 
 -- function returns all of the crimes for a suspect to the player
 function getSuspectCrime(name)
-	local result = mysql_query(handler, "SELECT id, suspect_name, time, date, officers, ticket, arrest, fine, ticket_price, arrest_price, fine_price, illegal_items, details, done_by FROM suspectCrime WHERE suspect_name='" .. name .. "'")
+	local result = mysql:query("SELECT id, suspect_name, time, date, officers, ticket, arrest, fine, ticket_price, arrest_price, fine_price, illegal_items, details, done_by FROM suspectCrime WHERE suspect_name='" .. mysql:escape_string(name) .. "'")
 	
 	if (result) then
-		if (mysql_num_rows(result)>0) then
+		if (mysql:num_rows(result)>0) then
 			-- backwards compatability for jasons code...
 			local tableresult = { }
 			local tablecount = 1
 			while true do
-				local row = mysql_fetch_assoc(result)
+				local row = mysql:fetch_assoc(result)
 				if (not row) then break end
 				tableresult[tablecount] = { }
 				tableresult[tablecount][1] = row["id"]
@@ -281,12 +239,12 @@ function getSuspectCrime(name)
 				tableresult[tablecount][14] = row["done_by"]
 				
 				tablecount = tablecount + 1
-			end
-			mysql_free_result(result)
-			
+			end		
 			triggerClientEvent("onClientSaveSuspectCrimes", client, tableresult)
+		else
+			triggerClientEvent("onClientSaveSuspectCrimes", client, nil)
 		end
-		mysql_free_result(result)
+		mysql:free_result(result)
 	end
 
 end
@@ -296,8 +254,7 @@ addEventHandler("onGetSuspectCrimes", getRootElement(), getSuspectCrime)
 
 -- function deletes a crime from the database
 function deleteCrime(crimeID)
-	local query = mysql_query(handler, "DELETE FROM suspectCrime WHERE id='" .. tonumber(crimeID) .. "'")
-	mysql_free_result(query)
+	mysql:query_free("DELETE FROM suspectCrime WHERE id='" .. tonumber(crimeID) .. "'")
 end
 addEvent("onDeleteCrime", true)
 addEventHandler("onDeleteCrime", getRootElement(), deleteCrime)
@@ -308,22 +265,15 @@ addEventHandler("onDeleteCrime", getRootElement(), deleteCrime)
 function clientLogIn(logInDetails)
 
 	-- get the log in details for the client
-	local result = mysql_query(handler, "SELECT user_name, password, high_command FROM mdcUsers WHERE user_name='" .. tostring(logInDetails[1]) .. "' LIMIT 1")
+	local result = mysql:query_fetch_assoc("SELECT user_name,password,high_command FROM mdcUsers WHERE user_name='" .. mysql:escape_string(tostring(logInDetails[1])) .. "' and password='".. mysql:escape_string(tostring(logInDetails[2])) .."' LIMIT 1")
 	
 	if(result) then
-		if(tostring(mysql_result(result, 1, 2)) == logInDetails[2])then--encrypt(logInDetails[2])) then
-			-- tell the client that the log in details were corect
-			-- backwards compatability for jasons code...
-			local tableresult = { }
-			tableresult[1] = { }
-			tableresult[1][1] = mysql_result(result, 1, 1)
-			tableresult[1][2] = mysql_result(result, 1, 2)
-			tableresult[1][3] = mysql_result(result, 1, 3)
-			triggerClientEvent("onCorrectLogInDetails", client, tableresult)
-		else
-			outputChatBox("Invalid Username or Password specified.", client, 255, 0, 0, true)
-		end
-		mysql_free_result(result)
+		local tableresult = { }
+		tableresult[1] = { }
+		tableresult[1][1] = result["user_name"]
+		tableresult[1][2] = result["password"]
+		tableresult[1][3] = result["high_command"]
+		triggerClientEvent("onCorrectLogInDetails", client, tableresult)
 	else
 		outputChatBox("Invalid username or password specified.", client, 255, 0, 0, true)
 	end
@@ -331,68 +281,55 @@ end
 addEvent("onClientLogInToMDC", true)
 addEventHandler("onClientLogInToMDC", getRootElement(), clientLogIn)
 
-
 -- function updates the users account details
 function UpdateAccount(details)
-	-- ADD encrypt TO DETAILS 2
-	local query = mysql_query(handler, "UPDATE mdcUsers SET password = '"..details[2].."', high_command = '"..details[3].."' WHERE user_name = '"..details[1].."'")
-	mysql_free_result(query)
+	mysql:query_free("UPDATE mdcUsers SET password = '"..mysql:escape_string(details[2]).."', high_command = '"..mysql:escape_string(details[3]).."' WHERE user_name = '"..mysql:escape_string(details[1]).."'")
 end
 addEvent("onUpdateAccount", true)
 addEventHandler("onUpdateAccount", getRootElement(), UpdateAccount)
 
-
-
-
 -- function updates the users account details
 function CreateAccount(details)
-	local result = mysql_query(handler, "SELECT user_name FROM mdcUsers where user_name='" .. details[1] .. "'")
+	local result = mysql:query("SELECT user_name FROM mdcUsers where user_name='" .. mysql:escape_string(details[1]) .. "'")
 	
-	if not (mysql_num_rows(result)>0) then
-		local query = mysql_query(handler, "INSERT INTO mdcUsers SET user_name='" .. details[1] .. "', password='" .. details[2] .. "', high_command='" .. details[3] .. "'")
-		mysql_free_result(query)
+	if not (mysql:num_rows(result)>0) then
+		mysql:query_free("INSERT INTO mdcUsers SET user_name='" .. mysql:escape_string(details[1]) .. "', password='" .. mysql:escape_string(details[2]) .. "', high_command='" .. mysql:escape_string(details[3]) .. "'")
 		outputChatBox("Account: "..details[1].." with password "..details[2].." and high command limits: '"..details[3].."' sucessfully created.", client, 0, 255, 0, true)
 	else
 		outputChatBox("Unable to create the account: "..details[1].." since it already exists in the database.", client, 255, 0, 0, true)
 	end
-	mysql_free_result(result)
+	mysql:free_result(result)
 end
 addEvent("onCreateAccount", true)
 addEventHandler("onCreateAccount", getRootElement(), CreateAccount)
 
-
-
 -- function removes the user from the database
 function RemoveAccount(details)
-	local result = mysql_query(handler, "SELECT user_name FROM mdcUsers where user_name='" .. details[1] .. "'")
+	local result = mysql:query("SELECT user_name FROM mdcUsers where user_name='" .. mysql:escape_string(details[1]) .. "'")
 	
-	if (mysql_num_rows(result)>0) then
-		local query = mysql_query(handler, "DELETE FROM mdcUsers WHERE user_name='" .. details[1] .. "'")
-		mysql_free_result(query)
+	if (mysql:num_rows(result)>0) then
+		mysql:query_free("DELETE FROM mdcUsers WHERE user_name='" .. mysql:escape_string(details[1]) .. "'")
 		outputChatBox("Account: "..details[1].." has been removed from the database.", client, 0, 255, 0, true)
 	else
 		outputChatBox("Unable to remove the account: "..details[1].." since it does not exist in the database.", client, 255, 0, 0, true)
 	end
-	mysql_free_result(result)
+	mysql:free_result(result)
 end
 addEvent("onRemoveAccount", true)
 addEventHandler("onRemoveAccount", getRootElement(), RemoveAccount)
 
 
 function getAccountInfo(account)
-	local result = mysql_query(handler, "SELECT user_name, password, high_command FROM mdcUsers WHERE user_name='" .. account .. "'")
-
+	local result = mysql:query_fetch_assoc("SELECT user_name, password, high_command FROM mdcUsers WHERE user_name='" .. mysql:escape_string(account) .. "'")
 	if(result) then
 		-- backwards compatability for jasons code...
 		local tableresult = { }
 		tableresult[1] = { }
-		tableresult[1][1] = mysql_result(result, 1, 1)
-		tableresult[1][2] = mysql_result(result, 1, 2)
-		tableresult[1][3] = mysql_result(result, 1, 3)
-		mysql_free_result(result)
+		tableresult[1][1] = result["user_name"]
+		tableresult[1][2] = result["password"]
+		tableresult[1][3] = result["high_command"]
 		triggerClientEvent("onSaveUserAccountDetails", client, tableresult)
 	end
-
 end
 addEvent("onGetAccountInfo", true)
 addEventHandler("onGetAccountInfo", getRootElement(), getAccountInfo)
@@ -400,64 +337,65 @@ addEventHandler("onGetAccountInfo", getRootElement(), getAccountInfo)
 
 -- function gets all of the active  user accounts and their high command limits, and sends it to the client
 function getAllAccountInfo()
-	local result = mysql_query(handler, "SELECT user_name, high_command FROM mdcUsers")
+	local result = mysql:query("SELECT user_name, high_command FROM mdcUsers")
 
 	if(result) then
 		-- backwards compatability for jasons code...
 		local tableresult = { }
 		
 		local count = 1
-		for result, row in mysql_rows(result) do
+		local continue = true
+		while continue do
+			row = mysql:fetch_assoc(result)
+			if not row then break end
 			tableresult[count] = { }
-			tableresult[count][1] = row[1]
-			tableresult[count][2] = row[2]
+			tableresult[count][1] = row["user_name"]
+			tableresult[count][2] = row["high_command"]
 			count = count + 1
 		end
-		mysql_free_result(result)
+		mysql:free_result(result)
 		triggerClientEvent("onSaveAllAccounts", client, tableresult)
 	end
-
 end
 addEvent("onGetAllAccounts", true)
 addEventHandler("onGetAllAccounts", getRootElement(), getAllAccountInfo)
 
 
 function getAllSuspects()
-	local result = mysql_query(handler, "SELECT suspect_name, done_by FROM suspectDetails")
-	
-	
+	local result = mysql:query("SELECT suspect_name, done_by FROM suspectDetails")
+
 	-- backwards compatability for jasons code...
 	local tableresult = { }
 		
 	local count = 1
-	for result, row in mysql_rows(result) do
+	local continue = true
+	while continue do
+		row = mysql:fetch_assoc(result)
+		if not row then break end
 		tableresult[count] = { }
-		tableresult[count][1] = row[1]
-		tableresult[count][2] = row[2]
+		tableresult[count][1] = row["suspect_name"]
+		tableresult[count][2] = row["done_by"]
 		count = count + 1
 	end
-	mysql_free_result(result)
+	mysql:free_result(result)
 	triggerClientEvent("onSaveAllSuspects", client, tableresult)
 end
 addEvent("onGetAllSuspects", true)
 addEventHandler("onGetAllSuspects", getRootElement(), getAllSuspects)
 
 
-
 -- function gets all of the active  user accounts and their high command limits, and sends it to the client
 function deleteSuspect(name)
-	local result = mysql_query(handler, "SELECT suspect_name FROM suspectDetails WHERE suspect_name='" .. tostring(name) .. "'")
+	local result = mysql:query("SELECT suspect_name FROM suspectDetails WHERE suspect_name='" .. mysql:escape_string(tostring(name)) .. "'")
 	
-	if (mysql_num_rows(result)>0) then
-		local query = mysql_query(handler, "DELETE FROM suspectDetails WHERE suspect_name='" .. name .. "'")
-		mysql_free_result(query)
-		local query = mysql_query(handler, "DELETE FROM suspectCrime WHERE suspect_name='" .. name .. "'")
-		mysql_free_result(query)
+	if (mysql:num_rows(result)>0) then
+		mysql:query_free("DELETE FROM suspectDetails WHERE suspect_name='" .. mysql:escape_string(name) .. "'")
+		mysql:query_free("DELETE FROM suspectCrime WHERE suspect_name='" ..mysql:escape_string(name) .. "'")
 		outputChatBox("Sucessfull deletion of suspect: "..name..", including all of their crimes.", client, 0, 255, 0, true)
 	else
 		outputChatBox("Could not delete suspect "..name.." since they do not exist in the database.", client, 255, 0, 0, true)
 	end
-	mysql_free_result(result)
+	mysql:free_result(result)
 end
 addEvent("onDeleteSuspect", true)
 addEventHandler("onDeleteSuspect", getRootElement(), deleteSuspect)
