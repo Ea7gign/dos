@@ -1,30 +1,4 @@
--- ////////////////////////////////////
--- //			MYSQL				 //
--- ////////////////////////////////////		
-sqlUsername = exports.mysql:getMySQLUsername()
-sqlPassword = exports.mysql:getMySQLPassword()
-sqlDB = exports.mysql:getMySQLDBName()
-sqlHost = exports.mysql:getMySQLHost()
-sqlPort = exports.mysql:getMySQLPort()
-
-handler = mysql_connect(sqlHost, sqlUsername, sqlPassword, sqlDB, sqlPort)
-
-function checkMySQL()
-	if not (mysql_ping(handler)) then
-		handler = mysql_connect(sqlHost, sqlUsername, sqlPassword, sqlDB, sqlPort)
-	end
-end
-setTimer(checkMySQL, 300000, 0)
-
-function closeMySQL()
-	if (handler) then
-		mysql_close(handler)
-	end
-end
-addEventHandler("onResourceStop", getResourceRootElement(getThisResource()), closeMySQL)
--- ////////////////////////////////////
--- //			MYSQL END			 //
--- ////////////////////////////////////
+mysql = exports.mysql
 
 function createNewObject(thePlayer, commandName, modelid)
 	if (exports.global:isPlayerLeadAdmin(thePlayer)) then
@@ -37,11 +11,10 @@ function createNewObject(thePlayer, commandName, modelid)
 			local dimension = getElementDimension(thePlayer)
 			local rotation = getPedRotation(thePlayer)
 			
-			local query = mysql_query(handler, "INSERT INTO objects SET x='"  .. x .. "', y='" .. y .. "', z='" .. z .. "', interior='" .. interior .. "', dimension='" .. dimension .. "', modelid='" .. modelid .. "', rotation='" .. rotation .. "'")
+			local query = mysql:query_insert_free("INSERT INTO objects SET x='"  .. x .. "', y='" .. y .. "', z='" .. z .. "', interior='" .. interior .. "', dimension='" .. dimension .. "', modelid='" .. modelid .. "', rotation='" .. rotation .. "'")
 			
 			if (query) then
-				local id = mysql_insert_id(handler)
-				mysql_free_result(query)
+				local id = query
 				
 				local object = createObject(tonumber(modelid), x, y, z, 0, 0, rotation)
 				exports.pool:allocateElement(object)
@@ -65,22 +38,27 @@ end
 addCommandHandler("addobject", createNewObject, false, false)
 
 function loadAllObjects(res)
-	local result = mysql_query(handler, "SELECT id, x, y, z, interior, dimension, rotation, modelid FROM objects")
+	local result = mysql:query("SELECT id, x, y, z, interior, dimension, rotation, modelid FROM objects")
 	local count = 0
 	
 	if (result) then
-		for result, row in mysql_rows(result) do
-			local id = tonumber(row[1])
+		local continue = true
+		while continue do
+			row = mysql:fetch_assoc(result)
+			if not result then
+				break
+			end
+			local id = tonumber(row["id"])
 				
-			local x = tonumber(row[2])
-			local y = tonumber(row[3])
-			local z = tonumber(row[4])
+			local x = tonumber(row["x"])
+			local y = tonumber(row["y"])
+			local z = tonumber(row["z"])
 				
-			local interior = tonumber(row[5])
-			local dimension = tonumber(row[6])
+			local interior = tonumber(row["interior"])
+			local dimension = tonumber(row["dimension"])
 			
-			local rotation = tonumber(row[7])
-			local modelid = tonumber(row[8])
+			local rotation = tonumber(row["rotation"])
+			local modelid = tonumber(row["modelid"])
 				
 			local object = createObject(modelid, x, y, z, 0, 0, rotation)
 			
@@ -93,9 +71,8 @@ function loadAllObjects(res)
 				count = count + 1
 			end
 		end
-		mysql_free_result(result)
+		mysql:free_result(result)
 	end
-	exports.irc:sendMessage("[SCRIPT] Loaded " .. count .. " Objects.")
 end
 addEventHandler("onResourceStart", getResourceRootElement(), loadAllObjects)
 
@@ -144,11 +121,7 @@ function delObject(thePlayer, commandName, targetID)
 			
 			if (object) then
 				local id = getElementData(object, "dbid")
-				local result = mysql_query(handler, "DELETE FROM objects WHERE id='" .. id .. "'")
-						
-				if (result) then
-					mysql_free_result(result)
-				end
+				local result = mysql:query_free(handler, "DELETE FROM objects WHERE id='" .. id .. "'")
 						
 				outputChatBox("Object #" .. id .. " deleted.", thePlayer)
 				exports.irc:sendMessage(getPlayerName(thePlayer) .. " deleted Object #" .. id .. ".")
