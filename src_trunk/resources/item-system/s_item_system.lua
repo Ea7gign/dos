@@ -1272,7 +1272,7 @@ function givePlayerBadge(thePlayer, commandName, targetPlayer, badgeNumber )
 	local teamName = getTeamName(theTeam)
 	
 	if (teamName=="Los Santos Police Department") or (teamName=="Los Santos Emergency Services") or (teamName=="Government of Los Santos") or (teamName=="San Andreas Network") or (teamName=="Best's Towing and Recovery") then -- Are they in the PD or ES or Gov?
-		local leader = getElementData(source, "factionleader")
+		local leader = getElementData(thePlayer, "factionleader")
 		
 		if not (tonumber(leader)==1) then -- If the player is not the leader
 			outputChatBox("You must be a faction leader to issue badges.", thePlayer, 255, 0, 0) -- If they aren't leader they can't give out badges.
