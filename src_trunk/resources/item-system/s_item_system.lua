@@ -1271,7 +1271,7 @@ function givePlayerBadge(thePlayer, commandName, targetPlayer, badgeNumber )
 	local theTeam = getPlayerTeam(thePlayer)
 	local teamName = getTeamName(theTeam)
 	
-	if (teamName=="Los Santos Police Department") or (teamName=="Los Santos Emergency Services") or (teamName=="Government of Los Santos") or (teamName=="San Andreas Network") then -- Are they in the PD or ES or Gov?
+	if (teamName=="Los Santos Police Department") or (teamName=="Los Santos Emergency Services") or (teamName=="Government of Los Santos") or (teamName=="San Andreas Network") or (teamName=="Best's Towing and Recovery") then -- Are they in the PD or ES or Gov?
 		local query = mysql_query(handler, "SELECT faction_leader FROM characters WHERE id='" .. getElementData(thePlayer, "dbid") .. "'")
 		local leader = tonumber(mysql_result(query, 1, 1))
 		mysql_free_result(query)
@@ -1279,7 +1279,7 @@ function givePlayerBadge(thePlayer, commandName, targetPlayer, badgeNumber )
 		if not (tonumber(leader)==1) then -- If the player is not the leader
 			outputChatBox("You must be a faction leader to issue badges.", thePlayer, 255, 0, 0) -- If they aren't leader they can't give out badges.
 		else	
-			if not (targetPlayer) or ( not (badgeNumber) and teamName~="San Andreas Network" ) then
+			if not (targetPlayer) or ( not (badgeNumber) and teamName~="San Andreas Network" ) or ( not (badgeNumber) and teamName~="Best's Towing and Recovery") then
 				outputChatBox("SYNTAX: /" .. commandName .. " [Player Partial Nick / ID][Badge Number]", thePlayer, 255, 194, 14)
 			else
 				local targetPlayer, targetPlayerName = exports.global:findPlayerByPartialNick(thePlayer, targetPlayer)
@@ -1305,6 +1305,9 @@ function givePlayerBadge(thePlayer, commandName, targetPlayer, badgeNumber )
 						elseif (teamName=="Government of Los Santos") then -- If the player is a GOV leader
 							exports.global:giveItem(targetPlayer, 87, badgeNumber) -- Give the player the badge.
 							exports.global:sendLocalMeAction(thePlayer, "issues "..targetPlayerName.." a Los Santos Government badge with number "..badgeNumber..".")
+						elseif (teamName=="Best's Towing and Recovery") then
+							exports.global:giveItem(targetPlayer, 82, getPlayerName(targetPlayer):gsub("_", " "))
+							exports.global:sendLocalMeAction(thePlayer, "issues "..targetPlayerName.." a Best's Towing and Recovery ID.")						
 						end
 					end
 				end

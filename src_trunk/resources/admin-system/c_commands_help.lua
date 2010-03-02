@@ -80,7 +80,8 @@ function commandsHelp()
 					{ "SAN", "/forecast", "Shows a weather forecast.", "/forecast" },
 					{ "SAN", "/pollresults", "Shows the results of the elections.", "/pollresults" },
 					{ "BTR", "/towtruck", "Calls a towtruck to your current location.", "/towtruck" },
-					{ "BTR", "/resettowbackup", "Removes the blip created with /towtruck.", "/resettowbackup" }
+					{ "BTR", "/resettowbackup", "Removes the blip created with /towtruck.", "/resettowbackup" },
+					{ "BTR", "/impoundbike", "Sets a Bike that is in the impound lot as impounded.", "/impoundbike" }
 				},
 				{
 					name = "Vehicles",

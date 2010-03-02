@@ -96,9 +96,63 @@ function UnlockVehicle(element, matchingdimension)
 		end
 	end
 end
+-- Command to impound Bikes:
+function setbikeimpound(player, matchingDimension)
+	local query = mysql:query_fetch_assoc("SELECT faction_leader FROM characters WHERE id='" .. getElementData(player, "dbid") .. "'")
+	local leader = tonumber(query["faction_leader"])
+
+	local veh = getPedOccupiedVehicle(player)
+	if (getElementData(player,"faction")) == 30 then
+		if (isPedInVehicle(player)) then
+			if (getVehicleType(veh) == "Bike") or (getVehicleType(veh) == "BMX") then
+				local owner = getElementData(veh, "owner")
+				local faction = getElementData(veh, "faction")
+				local dbid = getElementData(veh, "dbid")
+				local impounded = getElementData(veh, "Impounded")
+				if (owner > 0) then
+					if (faction > 3 or faction < 0) then
+						if (source == towSphere2) then
+							--PD make sure its not marked as impounded so it cannot be recovered and unlock/undp it
+							setVehicleLocked(veh, false)
+							setElementData(veh, "Impounded", 0)
+							setElementData(veh, "enginebroke", 0, false)
+							setVehicleDamageProof(veh, false)
+							setVehicleEngineState(veh, false)
+							outputChatBox("((Please remember to /park and /handbrake your vehicle in our car park.))", player, 255, 194, 14)
+						else
+							if (tonumber(leader)==1) then
+								if (getElementData(veh, "faction") ~= 30) then
+									if (impounded == 0) then
+										setElementData(veh, "Impounded", getRealTime().yearday)
+										setVehicleLocked(veh, false)
+										setElementData(veh, "enginebroke", 1, false)
+										setVehicleEngineState(veh, false)
+										outputChatBox("((Please remember to /park and /handbrake your vehicle in our car park.))", player, 255, 194, 14)
+										isin = false
+									end
+								end
+							else
+								outputChatBox("Command only usable by BTR Leader.", player, 255, 194, 14)
+							end
+						end
+					else
+						outputChatBox("This Faction's vehicle cannot be impounded.", player, 255, 194, 14)
+					end
+				end
+			else
+				outputChatBox("You can only use this command to impound MoterBikes and BMX.", player, 255, 194, 14)
+			end
+		else
+			outputChatBox("You are not in a vehicle.", player, 255, 0, 0)
+		end
+	end
+end
+addCommandHandler("impoundbike", setbikeimpound)
 
 addEventHandler("onColShapeHit", towSphere, UnlockVehicle)
 addEventHandler("onColShapeHit", towSphere2, UnlockVehicle)
+
+
 
 function payRelease(vehID)
 	if exports.global:takeMoney(source, 95) then
