@@ -91,7 +91,15 @@ addEventHandler( "apps:showhistory", getRootElement( ),
 				while continue do
 					local row = mysql:fetch_assoc(result)
 					if not row then break end
-					table.insert( info, row )
+					local record = {}
+					record[1] = row["date"]
+					record[2] = row["action"]
+					record[3] = row["reason"]
+					record[4] = row["duration"]
+					record[5] = row["username"]
+					record[6] = row["user_char"]
+					
+					table.insert( info, record )
 				end
 				triggerClientEvent( source, "cshowAdminHistory", source, info )
 				mysql:free_result( result )
