@@ -93,7 +93,7 @@ addEventHandler( "apps:showhistory", getRootElement( ),
 					if not row then break end
 					table.insert( info, row )
 				end
-				triggerClientEvent( source, "cshowAdminHistory", nil, info )
+				triggerClientEvent( source, "cshowAdminHistory", source, info )
 				mysql:free_result( result )
 			else
 				outputDebugString( "apps-system\apps:showhistory: Error." )
