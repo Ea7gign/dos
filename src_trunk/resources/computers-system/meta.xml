@@ -201,6 +201,7 @@
 	
 	<!-- E -->
 	<script src="websites/error.lua" type="client"/>
+	<script src="websites/entertainment.lua" type="client"/>
 	
 	<!-- F -->
 	<script src="websites/fields.lua" type="client"/>
