@@ -176,7 +176,7 @@ addEventHandler( "apps:showsingle", localPlayer,
 			--	end, false
 			--)
 			history = guiCreateButton( 620, 340, 80, 20, "History", false, wApp )
-			addEventHandler( "onClientGUIClick", back,
+			addEventHandler( "onClientGUIClick", history,
 				function( button, state )
 					if button == "left" and state == "up" then
 						--guiSetVisible( wApp, false )
