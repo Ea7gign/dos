@@ -175,6 +175,14 @@ addEventHandler( "cshowAdminHistory", getRootElement(),
 			showCursor( false )
 		else
 			local sx, sy = guiGetScreenSize()
+			
+			local name
+			if source ~= nil then
+				name = getPlayerName( source )
+			else
+				name = "Application"
+			end
+			
 			wHist = guiCreateWindow( sx / 2 - 350, sy / 2 - 250, 700, 500, "Admin History: " .. getPlayerName( source ), false )
 			
 			-- date, action, reason, duration, , a.username, c.charactername
