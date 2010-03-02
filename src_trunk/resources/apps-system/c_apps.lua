@@ -104,7 +104,7 @@ addEventHandler( "apps:showall", localPlayer,
 local wApp = nil
 local texts = {}
 local account = nil
-local accept, deny, close, back
+local accept, deny, close, back, history
 
 addEvent( "apps:showsingle", true )
 addEventHandler( "apps:showsingle", localPlayer,
@@ -165,16 +165,27 @@ addEventHandler( "apps:showsingle", localPlayer,
 					end
 				end, false
 			)
-			back = guiCreateButton( 620, 340, 80, 20, "Back", false, wApp )
+			--back = guiCreateButton( 620, 340, 80, 20, "Back", false, wApp )
+			--addEventHandler( "onClientGUIClick", back,
+			--	function( button, state )
+			--		if button == "left" and state == "up" then
+			--			guiSetVisible( wApp, false )
+			--			guiSetInputEnabled( false )
+			--			triggerServerEvent( "apps:show", localPlayer )
+			--		end
+			--	end, false
+			--)
+			history = guiCreateButton( 620, 340, 80, 20, "History", false, wApp )
 			addEventHandler( "onClientGUIClick", back,
 				function( button, state )
 					if button == "left" and state == "up" then
-						guiSetVisible( wApp, false )
-						guiSetInputEnabled( false )
-						triggerServerEvent( "apps:show", localPlayer )
+						--guiSetVisible( wApp, false )
+						--guiSetInputEnabled( false )
+						triggerServerEvent( "apps:showhistory", localPlayer, account )
 					end
 				end, false
 			)
+			
 		else
 			guiSetVisible( wApp, true )
 		end

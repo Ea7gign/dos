@@ -76,3 +76,27 @@ addEventHandler( "apps:update", getRootElement( ),
 		end
 	end
 )
+
+addEvent( "apps:showhistory", true )
+addEventHandler( "apps:showhistory", getRootElement( ),
+	function( account )
+		if exports.global:isPlayerAdmin( source ) and tonumber(account.id) then
+			local targetID = account.id
+			local result = mysql:query("SELECT date, action, reason, duration, a.username, user_char FROM adminhistory h LEFT JOIN accounts a ON a.id = h.admin WHERE user = " .. targetID .. " ORDER BY h.id DESC" )
+			if result then
+				local info = {}
+				local continue = true
+				while continue do
+					local row = mysql:fetch_assoc(result)
+					if not row then break end
+					table.insert( info, row )
+				end
+				triggerClientEvent( source, "cshowAdminHistory", target, info )
+				mysql:free_result( result )
+			else
+				outputDebugString( "apps-system\apps:showhistory: Error." )
+				outputChatBox( "Failed to retrieve history.", source, 255, 0, 0)
+			end
+		end
+	end
+)
