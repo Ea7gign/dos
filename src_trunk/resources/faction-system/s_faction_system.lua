@@ -405,7 +405,7 @@ function callbackToggleLeader(playerName, isLeader)
 				if (getElementData(source, "factionMenu")==1) then
 					triggerClientEvent(thePlayer, "hideFactionMenu", getRootElement())
 				end
-				setElementData(thePlayer, "factionleader", 0s, false)
+				setElementData(thePlayer, "factionleader", 0, false)
 			end
 			
 			-- Send message to everyone in the faction
