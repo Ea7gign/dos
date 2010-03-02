@@ -38,10 +38,10 @@ function tyIntro () -- When player enters the colSphere create GUI with intro ou
 		triggerClientEvent(source, "closeTyWindow", getRootElement())
 	else
 		-- Friend of Ty/Rook
-		local query = mysql:query_fetch_assoc("SELECT tyrese, rook, faction_leader FROM characters WHERE charactername='" .. mysql:escape_string(getPlayerName(source)) .."'")
+		local query = mysql:query_fetch_assoc("SELECT tyrese, rook FROM characters WHERE charactername='" .. mysql:escape_string(getPlayerName(source)) .."'")
 		local tysFriend = tonumber(query["tyrese"])
 		local rooksFriend = tonumber(query["rook"])
-		local factionLeader = tonumber(query["faction_leader"])
+		local factionLeader = tonumber( getElementData(source, "factionleader"))
 		
 		if factionLeader == 0 then
 			exports.global:sendLocalText(source, "Ty shouts: Yo', I'm busy!", 255, 255, 255, 10)

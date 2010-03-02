@@ -16,9 +16,9 @@ function rookIntro () -- When player enters the colSphere create GUI with intro 
 		local theTeam = getPlayerTeam(source)
 		local factionType = getElementData(theTeam, "type")
 		
-		local query = mysql:query_fetch_object("SELECT rook, faction_leader FROM characters WHERE charactername='" .. mysql:escape_string(getPlayerName(source)) .."'")
+		local query = mysql:query_fetch_object("SELECT rook FROM characters WHERE charactername='" .. mysql:escape_string(getPlayerName(source)) .."'")
 		local rooksFriend = tonumber(query["rook"])
-		local factionLeader = tonumber(query["faction_leader"])
+		local factionLeader = tonumber( getElementData(source, "factionleader") )
 
 		if not(factionType==0) or factionLeader==0 then
 			exports.global:sendLocalText(source, "Rook says: Keep on walkin'. Grown men tryin' to talk around here.", 255, 255, 255, 10)

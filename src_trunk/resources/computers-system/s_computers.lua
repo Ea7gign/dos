@@ -1,8 +1,7 @@
 mysql = exports.mysql
 
 function leader_check (accountName, password)
-	local query = mysql:query_fetch_assoc("SELECT faction_leader FROM characters WHERE id='" .. getElementData(source, "dbid") .. "'")
-	local leader = tonumber(query["faction_leader"])
+	local leader = tonumber( getElementData(source, "factionleader") )
 		
 	if not (tonumber(leader)==1) then -- If the player is not the leader
 		triggerClientEvent("notLeader",source)

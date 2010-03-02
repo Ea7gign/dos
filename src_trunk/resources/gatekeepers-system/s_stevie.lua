@@ -275,9 +275,9 @@ function startPhoneCall(thePlayer)
 						toggleAllControls(thePlayer, true, true, true)
 						setTimer(startPhoneAnim, 3050, 2, thePlayer)
 						-- are they a friend?
-						local query = mysql:query_fetch_assoc("SELECT stevie, faction_leader FROM characters WHERE charactername='" .. mysql:escape_string(getPlayerName(thePlayer)) .."'")
+						local query = mysql:query_fetch_assoc("SELECT stevie FROM characters WHERE charactername='" .. mysql:escape_string(getPlayerName(thePlayer)) .."'")
 						local steviesFriend = tonumber(query["stevie"])
-						local factionLeader = tonumber(query["faction_leader"])
+						local factionLeader = tonumber(getElementData(source, "factionleader"))
 						
 						-- are they in law enforcement?
 						local theTeam = getPlayerTeam(thePlayer)

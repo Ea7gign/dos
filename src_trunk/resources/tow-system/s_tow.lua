@@ -98,8 +98,7 @@ function UnlockVehicle(element, matchingdimension)
 end
 -- Command to impound Bikes:
 function setbikeimpound(player, matchingDimension)
-	local query = mysql:query_fetch_assoc("SELECT faction_leader FROM characters WHERE id='" .. getElementData(player, "dbid") .. "'")
-	local leader = tonumber(query["faction_leader"])
+	local leader = tonumber( getElementData(player, "factionleader") ) 
 
 	local veh = getPedOccupiedVehicle(player)
 	if (getElementData(player,"faction")) == 30 then
