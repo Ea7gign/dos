@@ -208,6 +208,7 @@ function spawnCharacter(charname, version)
 		local cellphonesecret = tonumber(data["cellphonesecret"])
 		local photos = tonumber(data["photos"])
 		local maxvehicles = tonumber(data["maxvehicles"])
+		local factionleader = tonumber(data["faction_leader"])
 		
 		local description = data["description"]
 		local age = tonumber(data["age"])
@@ -395,6 +396,7 @@ function spawnCharacter(charname, version)
 			else
 				factionName = "Citizen"
 				factionID = -1
+				factionleader = 0
 				outputChatBox("Your faction has been deleted, and you have been set factionless.", source, 255, 0, 0)
 				mysql_query(handler, "UPDATE characters SET faction_id='-1', faction_rank='1' WHERE id='" .. id .. "' LIMIT 1")
 			end
@@ -409,6 +411,7 @@ function spawnCharacter(charname, version)
 		local theTeam = getTeamFromName(tostring(factionName))
 		setPlayerTeam(source, theTeam)
 		setElementData(source, "factionrank", factionrank)
+		setElementData(source, "factionleader", factionleader, false)
 		
 		if factionID == 1 then
 			exports.global:givePlayerAchievement(source, 2)

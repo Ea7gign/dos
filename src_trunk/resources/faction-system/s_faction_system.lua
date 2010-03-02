@@ -343,6 +343,7 @@ function callbackRemovePlayer(removedPlayerName)
 			setPlayerTeam(removedPlayer, getTeamFromName("Citizen"))
 			setElementData(removedPlayer, "faction", -1, false)
 			setElementData(removedPlayer, "dutyskin", -1, false)
+			setElementData(removedPlayer, "factionleader", 0, false)
 			if getElementData(removedPlayer, "duty") and getElementData(removedPlayer, "duty") > 0 then
 				exports.global:takeAllWeapons(removedPlayer)
 				setElementData(removedPlayer, "duty", 0, false)
@@ -381,6 +382,11 @@ function callbackToggleLeader(playerName, isLeader)
 			for k, v in ipairs(teamPlayers) do
 				outputChatBox(username .. " promoted " .. playerName .. " to leader.", v)
 			end
+			
+			local thePlayer = getPlayerFromName(playerName)
+			if(thePlayer) then -- Player is online, tell them
+				setElementData(thePlayer, "factionleader", 1, false)
+			end
 		else
 			outputChatBox("Failed to promote " .. removedPlayerName .. " to faction leader, Contact an admin.", source, 255, 0, 0)
 		end
@@ -399,6 +405,7 @@ function callbackToggleLeader(playerName, isLeader)
 				if (getElementData(source, "factionMenu")==1) then
 					triggerClientEvent(thePlayer, "hideFactionMenu", getRootElement())
 				end
+				setElementData(thePlayer, "factionleader", 0s, false)
 			end
 			
 			-- Send message to everyone in the faction
