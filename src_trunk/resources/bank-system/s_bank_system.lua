@@ -1,34 +1,9 @@
--- ////////////////////////////////////
--- //			MYSQL				 //
--- ////////////////////////////////////		
-sqlUsername = exports.mysql:getMySQLUsername()
-sqlPassword = exports.mysql:getMySQLPassword()
-sqlDB = exports.mysql:getMySQLDBName()
-sqlHost = exports.mysql:getMySQLHost()
-sqlPort = exports.mysql:getMySQLPort()
+mysql = exports.mysql
 
-handler = mysql_connect(sqlHost, sqlUsername, sqlPassword, sqlDB, sqlPort)
-
-function checkMySQL()
-	if not (mysql_ping(handler)) then
-		handler = mysql_connect(sqlHost, sqlUsername, sqlPassword, sqlDB, sqlPort)
-	end
-end
-setTimer(checkMySQL, 300000, 0)
-
-function closeMySQL()
-	if (handler) then
-		mysql_close(handler)
-	end
-end
-addEventHandler("onResourceStop", getResourceRootElement(getThisResource()), closeMySQL)
--- ////////////////////////////////////
--- //			MYSQL END			 //
--- ////////////////////////////////////
 addEventHandler( "onResourceStart", getResourceRootElement(),
 	function()
 		-- delete all old wiretransfers
-		mysql_free_result( mysql_query( handler, "DELETE FROM wiretransfers WHERE time < NOW() - INTERVAL 2 WEEK" ) )
+		mysql:query_free("DELETE FROM wiretransfers WHERE time < NOW() - INTERVAL 2 WEEK" )
 	end
 )
 
@@ -40,28 +15,24 @@ setElementInterior(bankPickup, 3)
 
 function pickupUse(thePlayer)
 	cancelEvent()
-	local result = mysql_query(handler, "SELECT faction_id, faction_leader FROM characters WHERE id = " .. getElementData(thePlayer, "dbid") .. " LIMIT 1")
 	
-	if (result) then
-		local faction_id = tonumber(mysql_result(result, 1, 1))
-		local faction_leader = tonumber(mysql_result(result, 1, 2))
-		mysql_free_result(result)
+	local faction_id = tonumber( getResourceData(thePlayer, "faction") )
+	local faction_leader = tonumber( getResourceData(thePlayer, "factionleader"))
 		
-		local isInFaction = false
-		local isFactionLeader = false
+	local isInFaction = false
+	local isFactionLeader = false
 		
-		if (faction_id>0) then
-			isInFaction = true
-		end
-		
-		if (faction_leader==1) then
-			isFactionLeader = true
-		end
-		
-		local faction = getPlayerTeam(thePlayer)
-		local money = exports.global:getMoney(faction)
-		triggerClientEvent(thePlayer, "showBankUI", bankPickup, isInFaction, isFactionLeader, money, true, 0)
+	if (faction_id>0) then
+		isInFaction = true
 	end
+		
+	if (faction_leader==1) then
+		isFactionLeader = true
+	end
+		
+	local faction = getPlayerTeam(thePlayer)
+	local money = exports.global:getMoney(faction)
+	triggerClientEvent(thePlayer, "showBankUI", bankPickup, isInFaction, isFactionLeader, money, true, 0)
 end
 addEventHandler("onPickupHit", bankPickup, pickupUse)
 
@@ -73,7 +44,7 @@ function withdrawMoneyPersonal(amount)
 		setElementData(source, "bankmoney", money)
 		saveBank(source)
 		
-		mysql_free_result( mysql_query( handler, "INSERT INTO wiretransfers (`from`, `to`, `amount`, `reason`, `type`) VALUES (0, " .. getElementData(source, "dbid") .. ", " .. -amount .. ", '', 0)" ) )
+		mysql:query_free("INSERT INTO wiretransfers (`from`, `to`, `amount`, `reason`, `type`) VALUES (0, " .. getElementData(source, "dbid") .. ", " .. -amount .. ", '', 0)" )
 
 		outputChatBox("You withdraw " .. amount .. "$ from your personal account.", source, 255, 194, 14)
 	else
@@ -88,9 +59,7 @@ function depositMoneyPersonal(amount)
 		local money = getElementData(source, "bankmoney")
 		setElementData(source, "bankmoney", money+amount)
 		saveBank(source)
-		
-		mysql_free_result( mysql_query( handler, "INSERT INTO wiretransfers (`from`, `to`, `amount`, `reason`, `type`) VALUES (" .. getElementData(source, "dbid") .. ", 0, " .. amount .. ", '', 1)" ) )
-
+		mysql:query_free("INSERT INTO wiretransfers (`from`, `to`, `amount`, `reason`, `type`) VALUES (" .. getElementData(source, "dbid") .. ", 0, " .. amount .. ", '', 1)" )
 		outputChatBox("You deposited " .. amount .. "$ into your personal account.", source, 255, 194, 14)
 	end
 end
@@ -101,8 +70,7 @@ function withdrawMoneyBusiness(amount)
 	local theTeam = getPlayerTeam(source)
 	if exports.global:takeMoney(theTeam, amount) then
 		if exports.global:giveMoney(source, amount) then
-			mysql_free_result( mysql_query( handler, "INSERT INTO wiretransfers (`from`, `to`, `amount`, `reason`, `type`) VALUES (" .. -getElementData(theTeam, "id") .. ", " .. getElementData(source, "dbid") .. ", " .. amount .. ", '', 4)" ) )
-
+			mysql:query_free("INSERT INTO wiretransfers (`from`, `to`, `amount`, `reason`, `type`) VALUES (" .. -getElementData(theTeam, "id") .. ", " .. getElementData(source, "dbid") .. ", " .. amount .. ", '', 4)" ) 
 			outputChatBox("You withdraw " .. amount .. "$ from your business account.", source, 255, 194, 14)
 		end
 	end
@@ -114,8 +82,7 @@ function depositMoneyBusiness(amount)
 	if exports.global:takeMoney(source, amount) then
 		local theTeam = getPlayerTeam(source)
 		if exports.global:giveMoney(theTeam, amount) then
-			mysql_free_result( mysql_query( handler, "INSERT INTO wiretransfers (`from`, `to`, `amount`, `reason`, `type`) VALUES (" .. getElementData(source, "dbid") .. ", " .. -getElementData(theTeam, "id") .. ", " .. amount .. ", '', 5)" ) )
-
+			mysql:query_free("INSERT INTO wiretransfers (`from`, `to`, `amount`, `reason`, `type`) VALUES (" .. getElementData(source, "dbid") .. ", " .. -getElementData(theTeam, "id") .. ", " .. amount .. ", '', 5)" )
 			outputChatBox("You deposited " .. amount .. "$ into your business account.", source, 255, 194, 14)
 		end
 	end
@@ -124,19 +91,20 @@ addEvent("depositMoneyBusiness", true)
 addEventHandler("depositMoneyBusiness", getRootElement(), depositMoneyBusiness)
 
 function transferMoneyToPersonal(business, name, amount, reason)
-	reason = mysql_escape_string(handler, reason)
+	reason = mysql:escape_string(reason)
 	local reciever = getPlayerFromName(string.gsub(name," ","_"))
 	local dbid = nil
 	if not reciever then
-		local result = mysql_query(handler, "SELECT id FROM characters WHERE charactername='" .. mysql_escape_string(handler, string.gsub(name," ","_")) .. "' LIMIT 1")
+		local result = mysql:query("SELECT id FROM characters WHERE charactername='" .. mysql:escape_string(string.gsub(name," ","_")) .. "' LIMIT 1")
 		if result then
-			if mysql_num_rows(result) > 0 then
-				dbid = tonumber(mysql_result(result, 1, 1))
+			if mysql:num_rows(result) > 0 then
+				local row = mysql:fetch_assoc(result)
+				dbid = tonumber(row["id"])
 				found = true
 			end
-			mysql_free_result(result)
+			mysql:free_result(result)
 		else
-			outputDebugString("s_bank_system.lua: mysql_query failed: (" .. mysql_errno(handler) .. ") " .. mysql_error(handler), 1, 255, 0, 0)
+			outputDebugString("s_bank_system.lua: mysql:query failed", 1, 255, 0, 0)
 		end
 	else
 		dbid = getElementData(reciever, "dbid")
@@ -148,7 +116,7 @@ function transferMoneyToPersonal(business, name, amount, reason)
 		if business then
 			local theTeam = getPlayerTeam(source)
 			if exports.global:takeMoney(theTeam, amount) then
-				mysql_free_result( mysql_query( handler, "INSERT INTO wiretransfers (`from`, `to`, `amount`, `reason`, `type`) VALUES (" .. ( -getElementData( theTeam, "id" ) ) .. ", " .. dbid .. ", " .. amount .. ", '" .. reason .. "', 3)" ) )
+				mysql:query_free("INSERT INTO wiretransfers (`from`, `to`, `amount`, `reason`, `type`) VALUES (" .. ( -getElementData( theTeam, "id" ) ) .. ", " .. dbid .. ", " .. amount .. ", '" .. reason .. "', 3)" )
 			end
 		else
 			if reciever == source then
@@ -157,7 +125,7 @@ function transferMoneyToPersonal(business, name, amount, reason)
 			end
 			if getElementData(source, "bankmoney") - amount >= 0 then
 				setElementData(source, "bankmoney", getElementData(source, "bankmoney") - amount)
-				mysql_free_result( mysql_query( handler, "INSERT INTO wiretransfers (`from`, `to`, `amount`, `reason`, `type`) VALUES (" .. getElementData(source, "dbid") .. ", " .. dbid .. ", " .. amount .. ", '" .. reason .. "', 2)" ) )
+				mysql:query_free("INSERT INTO wiretransfers (`from`, `to`, `amount`, `reason`, `type`) VALUES (" .. getElementData(source, "dbid") .. ", " .. dbid .. ", " .. amount .. ", '" .. reason .. "', 2)" ) 
 			else
 				outputChatBox( "No.", source, 255, 0, 0 )
 				return
@@ -168,8 +136,7 @@ function transferMoneyToPersonal(business, name, amount, reason)
 			setElementData(reciever, "bankmoney", getElementData(reciever, "bankmoney") + amount)
 			saveBank(reciever)
 		else
-			local query = mysql_query(handler, "UPDATE characters SET bankmoney=bankmoney+" .. amount .. " WHERE id=" .. dbid)
-			mysql_free_result(query)
+			mysql:query_free("UPDATE characters SET bankmoney=bankmoney+" .. amount .. " WHERE id=" .. dbid)
 		end
 		triggerClientEvent(source, "hideBankUI", source)
 		outputChatBox("You transfered " .. amount .. "$ from your "..(business and "business" or "personal").." account to "..name..(string.sub(name,-1) == "s" and "'" or "'s").." account.", source, 255, 194, 14)
@@ -218,34 +185,38 @@ function tellTransfers(source, dbid, event)
 	-- `w.time` - INTERVAL 1 hour as 'newtime'
 	-- hour correction
 	
-	local query = mysql_query(handler, "SELECT w.*, a.charactername, b.charactername,w.`time` - INTERVAL 1 hour as 'newtime' FROM wiretransfers w LEFT JOIN characters a ON a.id = `from` LEFT JOIN characters b ON b.id = `to` WHERE " .. where .. " ORDER BY id DESC LIMIT 40")
+	local query = mysql:query("SELECT w.*, a.charactername as characterfrom, b.charactername as characterto,w.`time` - INTERVAL 1 hour as 'newtime' FROM wiretransfers w LEFT JOIN characters a ON a.id = `from` LEFT JOIN characters b ON b.id = `to` WHERE " .. where .. " ORDER BY id DESC LIMIT 40")
 	if query then
-		for result, row in mysql_rows(query) do
-			local id = tonumber(row[1])
-			local amount = tonumber(row[4])
+		local continue = true
+		while continue do
+			row = mysql:fetch_assoc(query)
+			if not row then break end
+			
+			local id = tonumber(row["id"])
+			local amount = tonumber(row["amount"])
 			--local time = row[6]
-			local time = row[10]
-			local type = tonumber(row[7])
-			local reason = row[5]
+			local time = row["newtime"]
+			local type = tonumber(row["type"])
+			local reason = row["reason"]
 			if reason == mysql_null() then
 				reason = ""
 			end
 			
 			local from, to = "-", "-"
-			if row[8] ~= mysql_null() then
-				from = row[8]:gsub("_", " ")
-			elseif tonumber(row[2]) then
-				num = tonumber(row[2]) 
+			if row["characterfrom"] ~= mysql_null() then
+				from = row["characterfrom"]:gsub("_", " ")
+			elseif tonumber(row["from"]) then
+				num = tonumber(row["from"]) 
 				if num < 0 then
 					from = getTeamName(exports.pool:getElement("team", -num))
 				elseif num == 0 and ( type == 6 or type == 7 ) then
 					from = "Government"
 				end
 			end
-			if row[9] ~= mysql_null() then
-				to = row[9]:gsub("_", " ")
-			elseif tonumber(row[3]) and tonumber(row[3]) < 0 then
-				to = getTeamName(exports.pool:getElement("team", -tonumber(row[3])))
+			if row["characterto"] ~= mysql_null() then
+				to = row["characterto"]:gsub("_", " ")
+			elseif tonumber(row["to"]) and tonumber(row["to"]) < 0 then
+				to = getTeamName(exports.pool:getElement("team", -tonumber(row["to"])))
 			end
 			
 			if type >= 2 and type <= 5 and tonumber(row[2]) == dbid then
@@ -260,9 +231,9 @@ function tellTransfers(source, dbid, event)
 			
 			triggerClientEvent(source, event, source, id, amount, time, type, from, to, reason)
 		end
-		mysql_free_result(query)
+		mysql:free_result(query)
 	else
-		outputDebugString(mysql_error(handler), 2)
+		outputDebugString("Mysql error @ s_bank_system.lua\tellTransfers", 2)
 	end
 end
 
@@ -276,6 +247,6 @@ addEventHandler("tellTransfersBusiness", getRootElement(), tellTransfersBusiness
 
 function saveBank( thePlayer )
 	if getElementData( thePlayer, "loggedin" ) == 1 then
-		mysql_free_result(mysql_query(handler, "UPDATE characters SET bankmoney=" .. (tonumber(getElementData( thePlayer, "bankmoney" )) or 0) .. " WHERE id=" .. getElementData( thePlayer, "dbid" )))
+		mysql:query_free("UPDATE characters SET bankmoney=" .. (tonumber(getElementData( thePlayer, "bankmoney" )) or 0) .. " WHERE id=" .. getElementData( thePlayer, "dbid" ))
 	end
 end

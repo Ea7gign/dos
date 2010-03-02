@@ -7,12 +7,9 @@ function createATM(thePlayer, commandName)
 		
 		z = z - 0.3
 		
-		local query = mysql_query(handler, "INSERT INTO atms SET x='" .. x .. "', y='" .. y .. "', z='" .. z .. "', dimension='" .. dimension .. "', interior='" .. interior .. "', rotation='" .. rotation .. "',`limit`=5000")
+		local id = mysql:query_insert_free("INSERT INTO atms SET x='" .. x .. "', y='" .. y .. "', z='" .. z .. "', dimension='" .. dimension .. "', interior='" .. interior .. "', rotation='" .. rotation .. "',`limit`=5000")
 				
-		if (query) then
-			local id = mysql_insert_id(handler)
-			mysql_free_result(query)
-			
+		if (id) then
 			local object = createObject(2942, x, y, z, 0, 0, rotation-180)
 			exports.pool:allocateElement(object)
 			setElementDimension(object, dimension)
@@ -39,21 +36,25 @@ end
 addCommandHandler("addatm", createATM, false, false)
 
 function loadAllATMs()
-	local result = mysql_query(handler, "SELECT id, x, y, z, rotation, dimension, interior, deposit, `limit` FROM atms")
+	local result = mysql:query("SELECT id, x, y, z, rotation, dimension, interior, deposit, `limit` FROM atms")
 	local counter = 0
 	
 	if (result) then
-		for result, row in mysql_rows(result) do
-			local id = tonumber(row[1])
-			local x = tonumber(row[2])
-			local y = tonumber(row[3])
-			local z = tonumber(row[4])
+		local continue = true
+		while continue do
+			local row = mysql:fetch_assoc(result)
+			if not row then break end
+			
+			local id = tonumber(row["id"])
+			local x = tonumber(row["x"])
+			local y = tonumber(row["y"])
+			local z = tonumber(row["z"])
 
-			local rotation = tonumber(row[5])
-			local dimension = tonumber(row[6])
-			local interior = tonumber(row[7])
-			local deposit = tonumber(row[8])
-			local limit = tonumber(row[9])
+			local rotation = tonumber(row["rotation"])
+			local dimension = tonumber(row["dimension"])
+			local interior = tonumber(row["interior"])
+			local deposit = tonumber(row["deposit"])
+			local limit = tonumber(row["limit"])
 			
 			local object = createObject(2942, x, y, z, 0, 0, rotation-180)
 			exports.pool:allocateElement(object)
@@ -70,9 +71,8 @@ function loadAllATMs()
 			
 			counter = counter + 1
 		end
-		mysql_free_result(result)
+		mysql:free_result(result)
 	end
-	exports.irc:sendMessage("[SCRIPT] Loaded " .. counter .. " ATMs.")
 end
 addEventHandler("onResourceStart", getResourceRootElement(), loadAllATMs)
 
@@ -94,11 +94,7 @@ function deleteATM(thePlayer, commandName, id)
 			end
 			
 			if (counter>0) then -- ID Exists
-				local query = mysql_query(handler, "DELETE FROM atms WHERE id='" .. id .. "'")
-				
-				if (query) then
-					mysql_free_result(query)
-				end
+				local query = mysql:query_free("DELETE FROM atms WHERE id='" .. id .. "'")
 				
 				outputChatBox("ATM #" .. id .. " Deleted!", thePlayer, 0, 255, 0)
 				exports.irc:sendMessage(getPlayerName(thePlayer) .. " deleted ATM #" .. id .. ".")
@@ -134,35 +130,30 @@ end
 addCommandHandler("nearbyatms", getNearbyATMs, false, false)
 
 function showATMInterface(atm)
-	local result = mysql_query(handler, "SELECT faction_id, faction_leader FROM characters WHERE id = " .. getElementData(source, "dbid") .. " LIMIT 1")
+	local faction_id = tonumber( getElementData(source, "faction") )
+	local faction_leader = tonumber( getElementData(source, "factionleader") )
+
+	local isInFaction = false
+	local isFactionLeader = false
 	
-	if (result) then
-		local faction_id = tonumber(mysql_result(result, 1, 1))
-		local faction_leader = tonumber(mysql_result(result, 1, 2))
-		mysql_free_result(result)
-		
-		local isInFaction = false
-		local isFactionLeader = false
-		
-		if faction_id and faction_id > 0 then
-			isInFaction = true
-			if faction_leader == 1 then
-				isFactionLeader = true
-			end
+	if faction_id and faction_id > 0 then
+		isInFaction = true
+		if faction_leader == 1 then
+			isFactionLeader = true
 		end
-		
-		local faction = getPlayerTeam(source)
-		local money = exports.global:getMoney(faction)
-		
-		local depositable = getElementData(atm, "depositable")
-		local deposit = false
-		if (depositable == 1) then
-			deposit = true
-		end
-		local limit = getElementData(atm, "limit")
-		
-		triggerClientEvent(source, "showBankUI", atm, isInFaction, isFactionLeader, money, deposit, limit)
 	end
+	
+	local faction = getPlayerTeam(source)
+	local money = exports.global:getMoney(faction)
+
+	local depositable = getElementData(atm, "depositable")
+	local deposit = false
+	if (depositable == 1) then
+		deposit = true
+	end
+	local limit = getElementData(atm, "limit")
+	
+	triggerClientEvent(source, "showBankUI", atm, isInFaction, isFactionLeader, money, deposit, limit)
 end
 addEvent( "requestATMInterface", true )
 addEventHandler( "requestATMInterface", getRootElement(), showATMInterface )
