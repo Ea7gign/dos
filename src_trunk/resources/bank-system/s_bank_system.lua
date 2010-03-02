@@ -16,8 +16,8 @@ setElementInterior(bankPickup, 3)
 function pickupUse(thePlayer)
 	cancelEvent()
 	
-	local faction_id = tonumber( getResourceData(thePlayer, "faction") )
-	local faction_leader = tonumber( getResourceData(thePlayer, "factionleader"))
+	local faction_id = tonumber( getElementData(thePlayer, "faction") )
+	local faction_leader = tonumber( getElementData(thePlayer, "factionleader"))
 		
 	local isInFaction = false
 	local isFactionLeader = false
