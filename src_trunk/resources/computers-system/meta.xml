@@ -215,6 +215,8 @@
 	<script src="websites/lses/lses.gov_join.lua" type="client"/>
 	<script src="websites/lses/lses.gov_members.lua" type="client"/>
 	<script src="websites/lspd.lua" type="client"/>
+	<script src="websites/lsiflight.lua" type="client"/>
+	<file src="websites/images/lsifsi.png"/>
 	
 	<!-- N -->
 	<script src="websites/natslife_s.lua" type="server"/>

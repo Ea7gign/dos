@@ -221,6 +221,15 @@ function www_sanetwork_sa()
 				get_page(url)
 			end,false)
 			
+		-- Los Santos Internation Flight School
+		local top_link_4_bp = guiCreateStaticImage(474,185,6,6,"websites/images/dots/red_dot.png",false,bg)
+		local top_link_4 = guiCreateLabel(490,178,142,16,"LSI Flight School",false,bg)
+		guiLabelSetColor(top_link_4,38,38,38)
+		addEventHandler("onClientGUIClick",top_link_4,function()
+				local url = tostring("www.lsiflight.sa")
+				get_page(url)
+			end,false)
+			
 	------------
 	-- Footer --
 	------------
@@ -384,6 +393,15 @@ Police are appealing for witnesses to aid in their investigations.",false,bg)
 		guiLabelSetColor(top_link_4,38,38,38)
 		addEventHandler("onClientGUIClick",top_link_4,function()
 				local url = tostring("www.bankofsa.sa")
+				get_page(url)
+			end,false)
+			
+		-- Los Santos Internation Flight School
+		local top_link_4_bp = guiCreateStaticImage(474,185,6,6,"websites/images/dots/red_dot.png",false,bg)
+		local top_link_4 = guiCreateLabel(490,178,142,16,"LSI Flight School",false,bg)
+		guiLabelSetColor(top_link_4,38,38,38)
+		addEventHandler("onClientGUIClick",top_link_4,function()
+				local url = tostring("www.lsiflight.sa")
 				get_page(url)
 			end,false)
 			
@@ -551,6 +569,15 @@ The train came to rest at the railroad bridge next to the basketball courts in E
 				local url = tostring("www.bankofsa.sa")
 				get_page(url)
 			end,false)
+
+		-- Los Santos Internation Flight School
+		local top_link_4_bp = guiCreateStaticImage(474,185,6,6,"websites/images/dots/red_dot.png",false,bg)
+		local top_link_4 = guiCreateLabel(490,178,142,16,"LSI Flight School",false,bg)
+		guiLabelSetColor(top_link_4,38,38,38)
+		addEventHandler("onClientGUIClick",top_link_4,function()
+				local url = tostring("www.lsiflight.sa")
+				get_page(url)
+			end,false)			
 			
 	------------
 	-- Footer --
@@ -726,6 +753,15 @@ I was able to snag one photo of the man, identified as Hans Vanderburg, as he ju
 				get_page(url)
 			end,false)
 			
+		-- Los Santos Internation Flight School
+		local top_link_4_bp = guiCreateStaticImage(474,185,6,6,"websites/images/dots/red_dot.png",false,bg)
+		local top_link_4 = guiCreateLabel(490,178,142,16,"LSI Flight School",false,bg)
+		guiLabelSetColor(top_link_4,38,38,38)
+		addEventHandler("onClientGUIClick",top_link_4,function()
+				local url = tostring("www.lsiflight.sa")
+				get_page(url)
+			end,false)			
+			
 	------------
 	-- Footer --
 	------------
@@ -883,6 +919,15 @@ After accepting the $2 million deal, the cars were moved off site to one of Mr. 
 		guiLabelSetColor(top_link_4,38,38,38)
 		addEventHandler("onClientGUIClick",top_link_4,function()
 				local url = tostring("www.bankofsa.sa")
+				get_page(url)
+			end,false)
+			
+		-- Los Santos Internation Flight School
+		local top_link_4_bp = guiCreateStaticImage(474,185,6,6,"websites/images/dots/red_dot.png",false,bg)
+		local top_link_4 = guiCreateLabel(490,178,142,16,"LSI Flight School",false,bg)
+		guiLabelSetColor(top_link_4,38,38,38)
+		addEventHandler("onClientGUIClick",top_link_4,function()
+				local url = tostring("www.lsiflight.sa")
 				get_page(url)
 			end,false)
 			
@@ -1062,6 +1107,15 @@ SAN has multiple pictures of the scene as this was taking place. We have clear d
 				get_page(url)
 			end,false)
 			
+		-- Los Santos Internation Flight School
+		local top_link_4_bp = guiCreateStaticImage(474,185,6,6,"websites/images/dots/red_dot.png",false,bg)
+		local top_link_4 = guiCreateLabel(490,178,142,16,"LSI Flight School",false,bg)
+		guiLabelSetColor(top_link_4,38,38,38)
+		addEventHandler("onClientGUIClick",top_link_4,function()
+				local url = tostring("www.lsiflight.sa")
+				get_page(url)
+			end,false)
+			
 	------------
 	-- Footer --
 	------------
@@ -1221,6 +1275,15 @@ With the reckless and uncaring drivers in this city, BT&R is a vital resource to
 		guiLabelSetColor(top_link_4,38,38,38)
 		addEventHandler("onClientGUIClick",top_link_4,function()
 				local url = tostring("www.bankofsa.sa")
+				get_page(url)
+			end,false)
+			
+		-- Los Santos Internation Flight School
+		local top_link_4_bp = guiCreateStaticImage(474,185,6,6,"websites/images/dots/red_dot.png",false,bg)
+		local top_link_4 = guiCreateLabel(490,178,142,16,"LSI Flight School",false,bg)
+		guiLabelSetColor(top_link_4,38,38,38)
+		addEventHandler("onClientGUIClick",top_link_4,function()
+				local url = tostring("www.lsiflight.sa")
 				get_page(url)
 			end,false)
 			
@@ -1384,6 +1447,15 @@ function www_sanetwork_sa_careless_citizens_burden_each_other_to_improve_city()
 		guiLabelSetColor(top_link_4,38,38,38)
 		addEventHandler("onClientGUIClick",top_link_4,function()
 				local url = tostring("www.bankofsa.sa")
+				get_page(url)
+			end,false)
+			
+		-- Los Santos Internation Flight School
+		local top_link_4_bp = guiCreateStaticImage(474,185,6,6,"websites/images/dots/red_dot.png",false,bg)
+		local top_link_4 = guiCreateLabel(490,178,142,16,"LSI Flight School",false,bg)
+		guiLabelSetColor(top_link_4,38,38,38)
+		addEventHandler("onClientGUIClick",top_link_4,function()
+				local url = tostring("www.lsiflight.sa")
 				get_page(url)
 			end,false)
 			
