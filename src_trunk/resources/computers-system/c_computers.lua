@@ -303,7 +303,7 @@ function openEmailWindow()
 		elseif (teamName=="First Court of San Andreas") then
 			address_f = guiCreateRadioButton(79,121,200,16,"@justice.gov",false,wEmail)
 		elseif (teamName=="Los Santos International Flight School") then
-			address_f = guiCreateRadioButton(79,121,200,16,"@lsi-flight.sa",false,wEmail)
+			address_f = guiCreateRadioButton(79,121,200,16,"@lsiflight.sa",false,wEmail)
 		end
 		
 		password_label = guiCreateLabel(13,154,63,16,"Password:",false,wEmail)
@@ -342,7 +342,7 @@ function openEmailWindow()
 					elseif (teamName=="First Court of San Andreas") then
 						full_username = tostring(username.."@justice.gov")
 					elseif (teamName=="Los Santos International Flight School") then
-						full_username = tostring(username.."@lsi-flight.sa")
+						full_username = tostring(username.."@lsiflight.sa")
 					end
 				end
 				
@@ -385,7 +385,7 @@ function openEmailWindow()
 					elseif (teamName=="First Court of San Andreas") then
 						full_username = tostring(username.."@justice.gov")
 					elseif (teamName=="Los Santos International Flight School") then
-						full_username = tostring(username.."@lsi-flight.sa")
+						full_username = tostring(username.."@lsiflight.sa")
 					end
 					triggerServerEvent("leaderCheck",getLocalPlayer(),full_username,password)
 				end
