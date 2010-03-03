@@ -306,9 +306,9 @@ function stopPhoneAnim(thePlayer)
 --	exports.global:applyAnimation(thePlayer, "ped", "phone_out", 1300, false)
 --	setTimer(toggleAllControls, 150, 1, thePlayer, true, true, true)
 	setElementData(thePlayer, "forcedanimation", false)
-	toggleAllControls(true, true, false)
+	toggleAllControls(thePlayer, true, true, false)
 --	setTimer(setPedAnimation, 50, 2, thePlayer)
-	setTimer(triggerServerEvent, 100, 1, "onPlayerStopAnimation", thePlayer, true )
+	setTimer(triggerEvent, 100, 1, "onPlayerStopAnimation", thePlayer, true )
 end
 	
 
