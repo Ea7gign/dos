@@ -2,7 +2,7 @@ mysql = exports.mysql
 
 fuellessVehicle = { [594]=true, [537]=true, [538]=true, [569]=true, [590]=true, [606]=true, [607]=true, [610]=true, [590]=true, [569]=true, [611]=true, [584]=true, [608]=true, [435]=true, [450]=true, [591]=true, [472]=true, [473]=true, [493]=true, [595]=true, [484]=true, [430]=true, [453]=true, [452]=true, [446]=true, [454]=true, [497]=true, [592]=true, [577]=true, [511]=true, [548]=true, [512]=true, [593]=true, [425]=true, [520]=true, [417]=true, [487]=true, [553]=true, [488]=true, [563]=true, [476]=true, [447]=true, [519]=true, [460]=true, [469]=true, [513]=true, [509]=true, [510]=true, [481]=true }
 
-FUEL_PRICE = 1.5
+FUEL_PRICE = 2
 MAX_FUEL = 100
 
 oldFuel = { }
@@ -52,7 +52,7 @@ addEventHandler("onElementDestroy", getRootElement(), onDestroy)
 function fuelDepleting()
 	local players = exports.pool:getPoolElementsByType("player")
 	for k, v in ipairs(players) do
-		if isPedInVehicle(v) and not exports.global:isPlayerSilverDonator(v) then
+		if isPedInVehicle(v) then
 			local veh = getPedOccupiedVehicle(v)
 			if (veh) then
 				local seat = getPedOccupiedVehicleSeat(v)
@@ -72,7 +72,6 @@ function fuelDepleting()
 						if engine == 1 then
 							if fuel >= 1 then
 								distance = getDistanceBetweenPoints2D(x, y, oldx, oldy)
-								-- outputChatBox("distance " .. distance .. "!", v, 255, 0, 0)
 								if (distance==0) then
 									distance = 5  -- fuel leaking away when not moving
 								end
@@ -248,7 +247,7 @@ function fillVehicle(thePlayer, commandName, amount)
 				local ftype = getElementData(faction, "type")
 				local fid = getElementData(faction, "id")
 				
-				if (ftype~=2) and (ftype~=3) and (ftype~=4) and (fid~=30) then
+				if (ftype~=2) and (ftype~=3) and (ftype~=4) and (fid~=30) and not (exports.global:isPlayerSilverDonator(thePlayer)) then
 					local money = exports.global:getMoney(thePlayer)
 					
 					local tax = exports.global:getTaxAmount()
@@ -395,7 +394,7 @@ function fuelTheVehicle(thePlayer, theVehicle, theShape, theLitres, free)
 			if (getVehicleEngineState(theVehicle) == false) then
 				local tax = exports.global:getTaxAmount()
 				local fuelCost = math.floor(theLitres*(FUEL_PRICE + (tax*FUEL_PRICE)))
-			
+
 				if (free) then
 					fuelCost = 0
 				end
