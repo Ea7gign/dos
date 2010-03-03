@@ -1,5 +1,5 @@
 wLicense, licenseList, bAcceptLicense, bCancel = nil
-local Johnson = createPed(71, 253.795318, 116.915336, 1003.21875)
+local Johnson = createPed(280, 253.795318, 116.915336, 1003.21875)
 setPedRotation(Johnson, 91.4609375)
 setElementDimension(Johnson, 1)
 setElementInterior(Johnson, 10)
@@ -120,7 +120,7 @@ end
    
 questions = { }
 questions[1] = {"Which side of the street should you drive on?", "Left", "Right", "Either", 2}
-questions[2] = {"At an intersection with a four-way stop, which driver can go first?", "The driver to the left of you.", "The driver to the right of you.", "Who ever reached the intersection first.", 1}
+questions[2] = {"At an intersection with a four-way stop, which driver can go first?", "The driver to the left of you.", "The driver to the right of you.", "Who ever reached the intersection first.", 2}
 questions[3] = {"What would be a reason for approaching a sharp curve slowly?", "To save wear and tear on your tires.", "To be able to take in the scenery.", "To be able to stop if someone is in the roadway.", 3}
 questions[4] = {"When a traffic light is red you should...", "Bring the vehicle to a complete stop.", "Continue.", "Continue if nothing is coming.", 1} 
 questions[5] = {"Drivers must yield to pedestrians:", "At all times.", "On private property.", "Only in a crosswalk. ", 1}
@@ -128,7 +128,7 @@ questions[6] = {"The blind spots where trucks will not be able to see you are:",
 questions[7] = {"There is an emergency vehicle coming from behind you with emergency lights on and flashing. You should:", "Slow down and keep moving.", "Pull over to the right and stop.", "Maintain your speed. ", 2}
 questions[8] = {"On a road with two or more lanes traveling in the same direction, the driver should:", " Drive in any lane.", "Drive in the left lane.", "Drive in the right lane except to pass.", 3}
 questions[9] = {"In bad weather, you should make your car easier for others to see by:", " Turning on your headlights.", "Turning on your emergency flashers.", "Flash your high beams.", 1}
-questions[10] = {"You may not park within how many feet of a fire hydrant?", "10 feet", "15 feet", "20 feet", 1}
+questions[10] = {"You may not park within how many feet of a fire hydrant?", "10 feet", "15 feet", "20 feet", 2}
 
 guiIntroLabel1 = nil
 guiIntroProceedButton = nil
