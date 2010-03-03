@@ -14,13 +14,13 @@
 	<script src="Busstops_LS_LineAB.lua" type="client"/>
 	<script src="Pershing_Square.lua" type="client"/>
 	<script src="swimming_pool.lua" type="client"/>
+	<script src="Jefferson Interior Doors.lua" type="client"/>
+
 	<script src="ein-barn.lua" type="client"/>
 	<script src="LinoKazuma.lua" type="client"/><!-- Donator Helipad -->
 	<script src="daniels_mansion.lua" type="client"/>
 	<script src="mountisland.lua" type="client"/>
 	<script src="Nina.lua" type="client"/>
-	<script src="The Silver Mint.lua" type="client"/>
-	<script src="Jefferson Interior Doors.lua" type="client"/>
 	
 	<!-- Los Santos Police Department -->
 	<script src="PD Impound.lua" type="client"/>
@@ -73,7 +73,7 @@
 	<!-- 64: Los Santos International Flight School -->
 	<script src="Flight School.lua" type="client"/>
 	
-	<!-- ??: Prison -->
+	<!-- 71: San Andreas Correctional Facility -->
 	<script src="Prison Ext.lua" type="client"/>
 	<script src="Prison Int Rec.lua" type="client"/>
 	<script src="Prison Int Cells.lua" type="client"/>
