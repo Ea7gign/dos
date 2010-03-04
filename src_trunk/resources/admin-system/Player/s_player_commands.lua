@@ -1675,7 +1675,7 @@ function gotoPlayer(thePlayer, commandName, target)
 end
 addCommandHandler("goto", gotoPlayer, false, false)
 
-function getPlayer(thePlayer, commandName, from, to)
+--[[function getPlayer(thePlayer, commandName, from, to)
 	if (exports.global:isPlayerAdmin(thePlayer)) then
 		if(not from or not to) then
 			outputChatBox("SYNTAX: /" .. commandName .. " [Sending Player] [To Player]", thePlayer, 255, 194, 14)
@@ -1722,7 +1722,104 @@ function getPlayer(thePlayer, commandName, from, to)
 		end
 	end
 end
-addCommandHandler("sendto", getPlayer, false, false)
+addCommandHandler("sendto", getPlayer, false, false)--]]
+
+function utp(thePlayer, commandName, from, to)
+	if (exports.global:isPlayerAdmin(thePlayer)) then
+		if (not from or not to) then
+			outputChatBox("SYNTAX: /" .. commandName .. " [Sending Player/Car] [To Player/Car]", thePlayer, 255, 194, 14)
+		else
+			--checking if it is an player or car
+			local first, targetPlayerName1 = exports.global:findPlayerByPartialNick(thePlayer, from)
+			local second, targetPlayerName2 = exports.global:findPlayerByPartialNick(thePlayer, to)
+			if (first and not second) then
+				local logged = getElementData(first, "loggedin")
+				if (logged==1) then
+					local veh = exports.pool:getElement("vehicle", tonumber(to))
+					if (veh) then
+						local rx, ry, rz = getVehicleRotation(veh)
+						local x, y, z = getElementPosition(veh)
+						x = x + ( ( math.cos ( math.rad ( rz ) ) ) * 5 )
+						y = y + ( ( math.sin ( math.rad ( rz ) ) ) * 5 )
+						
+						setElementPosition(first, x, y, z)
+						setPedRotation(first, rz)
+						setElementInterior(first, getElementInterior(veh))
+						setElementDimension(first, getElementDimension(veh))
+						
+						local username = getPlayerName(thePlayer)
+						outputChatBox(targetPlayerName1:gsub("_"," ") .. " was teleported to the vehicles location.", thePlayer, 255, 194, 14)
+						outputChatBox("Admin " .. username:gsub("_"," ") .. " has teleported you to the vehicles location.", first, 255, 194, 14)
+					else
+						outputChatBox("Invalid Vehicle ID.", thePlayer, 255, 0, 0)
+					end
+				else
+					outputChatBox("Player is not logged in.", thePlayer, 255, 0, 0)
+				end
+			elseif (second and not first) then
+				local logged = getElementData(second, "loggedin")
+				if (logged==1) then
+					local veh = exports.pool:getElement("vehicle", tonumber(from))
+					if (veh) then
+						local rx, ry, rz = getVehicleRotation(veh)
+						local x, y, z = getElementPosition(veh)
+						x = x + ( ( math.cos ( math.rad ( rz ) ) ) * 5 )
+						y = y + ( ( math.sin ( math.rad ( rz ) ) ) * 5 )
+						
+						setVehicleTurnVelocity(veh, 0, 0, 0)
+						setElementPosition(veh, x, y, z + 1)
+						setTimer(setVehicleTurnVelocity, 50, 20, veh, 0, 0, 0)
+						setElementInterior(veh, interior)
+						setElementDimension(veh, dimension)
+						
+						local username = getPlayerName(thePlayer)
+						outputChatBox("The vehicle was teleported to " .. targetPlayerName1:gsub("_"," ") .. " location.", thePlayer, 255, 194, 14)
+						outputChatBox("Admin " .. username:gsub("_"," ") .. " has teleported the vehicle to your location.", second, 255, 194, 14)
+					else
+						outputChatBox("Player is not logged in.", thePlayer, 255, 0, 0)
+					end
+				else
+					outputChatBox("Player is not logged in.", thePlayer, 255, 0, 0)				
+				end
+			elseif (first and second) then
+				local logged1 = getElementData(first, "loggedin")
+				local logged2 = getElementData(second, "loggedin")
+				
+				if (not logged1 or not logged2) then
+					outputChatBox("At least one of the players is not logged in.", thePlayer, 255, 0 , 0)
+				else
+					local x, y, z = getElementPosition(second)
+					local interior = getElementInterior(second)
+					local dimension = getElementDimension(second)
+					local r = getPedRotation(second)
+					
+					-- Maths calculations to stop the target being stuck in the player
+					x = x + ( ( math.cos ( math.rad ( r ) ) ) * 2 )
+					y = y + ( ( math.sin ( math.rad ( r ) ) ) * 2 )
+
+					if (isPedInVehicle(first)) then
+						local veh = getPedOccupiedVehicle(first)
+						setVehicleTurnVelocity(veh, 0, 0, 0)
+						setElementPosition(veh, x, y, z + 1)
+						setTimer(setVehicleTurnVelocity, 50, 20, veh, 0, 0, 0)
+						setElementInterior(veh, interior)
+						setElementDimension(veh, dimension)
+						
+					else
+						setElementPosition(first, x, y, z)
+						setElementInterior(first, interior)
+						setElementDimension(first, dimension)
+					end
+					local username = getPlayerName(thePlayer)
+					outputChatBox(" You have teleported player " .. targetPlayerName1:gsub("_"," ") .. " to " .. targetPlayerName2:gsub("_"," ") .. ".", thePlayer)
+					outputChatBox(" An admin " .. username:gsub("_"," ") .. " has teleported you to " .. targetPlayerName2:gsub("_"," ") .. ". ", first)
+					outputChatBox(" An admin " .. username:gsub("_"," ") .. " has teleported " .. targetPlayerName1:gsub("_"," ") .. " to you.", second)
+				end
+			end
+		end
+	end
+end
+addCommandHandler("sendto", utp, false, false)
 
 ----------------------------[GET PLAYER HERE]---------------------------------------
 function getPlayer(thePlayer, commandName, target)
@@ -2661,3 +2758,30 @@ function divorce(thePlayer, commandName, targetPlayer)
 	end
 end
 addCommandHandler("divorce", divorce)
+
+function vehicleLimit(admin, command, player, limit)
+	if exports.global:isPlayerLeadAdmin(admin) then
+		if (not player and not limit) then
+			outputChatBox("SYNTAX: /" .. command .. " [Player] [Limit]", admin, 255, 194, 14)
+		else
+			local tplayer, targetPlayerName = exports.global:findPlayerByPartialNick(admin, player)
+			if (tplayer) then			
+				local query = mysql_query(handler, "SELECT maxvehicles FROM characters WHERE id = " .. getElementData(tplayer, "dbid"))
+				if (query) then
+					local newl = tonumber(limit)
+					if (newl) then
+						mysql_free_result(mysql_query(handler, "UPDATE characters SET maxvehicles = '" .. newl .. "' WHERE id = " .. getElementData( tplayer, "dbid" ) ) )
+						outputChatBox("You have set " .. targetPlayerName:gsub("_", " ") .. " vehicle limit to " .. newl .. ".", admin, 255, 194, 14)
+						outputChatBox("Admin " .. getPlayerName(admin):gsub("_"," ") .. " has set your vehicle limit to " .. newl .. ".", tplayer, 255, 194, 14)
+					else
+						outputChatBox("nope, newl", admin)
+					end
+				else
+					outputChatBox("nope, query", admin)
+					outputDebugString( mysql_error( handler ) )
+				end
+			end			
+		end
+	end
+end
+addCommandHandler("setvehlimit", vehicleLimit)
