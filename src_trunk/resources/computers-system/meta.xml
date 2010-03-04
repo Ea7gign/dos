@@ -231,4 +231,8 @@
 	<script src="websites/sanetwork.lua" type="client"/>
 	<script src="websites/snake.lua" type="client"/>
 	
+	<!-- Y -->
+	<script src="websites/yoshitsuneenterprises.lua" type="client"/>
+	<file src="websites/images/yoshitsune-i.png" type="client"/>
+	
 </meta>
